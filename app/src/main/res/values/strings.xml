@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">NHS Co-Locate</string>
-    <string name="location_permission">\u2022 your device’s location, to record places you’ve spent time in</string>
-    <string name="bluetooth_permission">\u2022 Bluetooth, to record when your device is near others using this app</string>
+    <string name="location_permission">\u2022 your device’s <b>location</b>, to record places you’ve spent time in</string>
+    <string name="bluetooth_permission">\u2022 <b>Bluetooth</b>, to record when your device is near others using this app</string>
     <string name="onboarding_title">Permissions We Need</string>
     <string name="permission_rationale">This data will also be sent to the NHS so we can understand how coronavirus is spreading.</string>
     <string name="explanation_link"><u>See how we’ll use this data</u></string>
