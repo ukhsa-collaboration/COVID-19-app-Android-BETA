@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             && grantResults.first() == PERMISSION_GRANTED
             && grantResults.last() == PERMISSION_GRANTED
         ) {
-            startActivity(Intent(this, DiagnosisActivity::class.java))
+            startActivity(Intent(this, DiagnoseActivity::class.java))
         }
     }
 }

@@ -23,7 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DiagnosisActivity" />
+        <activity android:name=".DiagnoseActivity" />
+        <activity android:name=".OkActivity" />
+        <activity android:name=".IsolateActivity" />
     </application>
 
 </manifest>

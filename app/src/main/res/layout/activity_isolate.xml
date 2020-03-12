@@ -32,9 +32,22 @@
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/isolate_disclaimer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/logo"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/isolate_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/isolate_disclaimer"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
@@ -42,50 +55,16 @@
         tools:context=".MainActivity">
 
         <TextView
-            android:id="@+id/diagnosis"
+            android:id="@+id/isolate_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingMultiplier="1.18"
-            android:text="@string/diagnosed"
+            android:text="@string/isolate_title"
             android:textSize="32sp"
             android:textStyle="bold" />
 
-        <RadioGroup
-            android:id="@+id/diagnosis_answer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:layout_below="@id/diagnosis"
-            >
-
-            <RadioButton
-                android:id="@+id/yes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/yes"
-                android:textSize="48sp"
-                />
-
-            <RadioButton
-                android:id="@+id/no"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:text="@string/no"
-                android:textSize="48sp"
-                />
-
-        </RadioGroup>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/confirm_diagnosis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="14dp"
-            android:background="#007F3B"
-            android:text="@string/next"
-            android:textColor="#FFFFFF" />
     </RelativeLayout>
+
+
 
 </RelativeLayout>

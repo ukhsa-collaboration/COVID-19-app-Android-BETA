@@ -2,11 +2,14 @@ package com.example.colocate
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 
-class DiagnosisActivity : AppCompatActivity() {
+class DiagnoseActivity : AppCompatActivity() {
 
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private lateinit var bluetoothLeAdvertiser: BluetoothLeAdvertiser
@@ -16,7 +19,7 @@ class DiagnosisActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null || !bluetoothAdapter!!.isMultipleAdvertisementSupported ) {
+        if (bluetoothAdapter == null || !bluetoothAdapter!!.isMultipleAdvertisementSupported) {
             setContentView(R.layout.activity_activate_bluetooth)
             return
         }
@@ -26,22 +29,27 @@ class DiagnosisActivity : AppCompatActivity() {
         bluetoothLeAdvertiser = bluetoothAdapter!!.bluetoothLeAdvertiser
         bluetoothLeScanner = bluetoothAdapter!!.bluetoothLeScanner
 
-        val advertiseCallback: AdvertiseCallback = object : AdvertiseCallback() {
-            override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
-                super.onStartSuccess(settingsInEffect)
-                Log.i(
-                    "Advertising",
-                    "Started advertising with settings ${settingsInEffect.toString()}"
-                )
+        startAdvertising()
+        startScanning()
+
+        val radioGroup = findViewById<RadioGroup>(R.id.diagnosis_answer)
+
+        findViewById<Button>(R.id.confirm_diagnosis).setOnClickListener {
+            val selected = radioGroup.checkedRadioButtonId
+            if (selected == -1)
+                return@setOnClickListener
+
+            val intent = if (selected == R.id.yes) {
+                Intent(this, IsolateActivity::class.java)
+            } else {
+                Intent(this, OkActivity::class.java)
             }
+
+            startActivity(intent)
         }
+    }
 
-        bluetoothLeAdvertiser.startAdvertising(
-            advertiseSettings(),
-            advertiseData(),
-            advertiseCallback
-        )
-
+    private fun startScanning() {
         val scanCallback: ScanCallback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
@@ -72,6 +80,24 @@ class DiagnosisActivity : AppCompatActivity() {
             listOf(scanFilter()),
             scanSettings(),
             scanCallback
+        )
+    }
+
+    private fun startAdvertising() {
+        val advertiseCallback: AdvertiseCallback = object : AdvertiseCallback() {
+            override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
+                super.onStartSuccess(settingsInEffect)
+                Log.i(
+                    "Advertising",
+                    "Started advertising with settings ${settingsInEffect.toString()}"
+                )
+            }
+        }
+
+        bluetoothLeAdvertiser.startAdvertising(
+            advertiseSettings(),
+            advertiseData(),
+            advertiseCallback
         )
     }
 }
