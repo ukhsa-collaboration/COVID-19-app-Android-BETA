@@ -4,7 +4,7 @@
     <string name="bluetooth_permission">\u2022 Bluetooth, to record when your device is near others using this app</string>
     <string name="onboarding_title">Permissions We Need</string>
     <string name="permission_rationale">This data will also be sent to the NHS so we can understand how coronavirus is spreading.</string>
-    <string name="explanation_link">&lt;a href=https://google.com>See how we’ll use this data&lt;/a></string>
+    <string name="explanation_link"><u>See how we’ll use this data</u></string>
     <string name="next_steps">You’ll be asked to consent to these permissions on the next screen.</string>
     <string name="understand">I Understand</string>
     <string name="app_rationale">To trace people who you come into contact with, this app will automatically access:</string>
