@@ -17,7 +17,7 @@ class DiagnosisActivity : AppCompatActivity() {
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         if (bluetoothAdapter == null || !bluetoothAdapter!!.isMultipleAdvertisementSupported ) {
-            setContentView(R.layout.activity_diagnosis)
+            setContentView(R.layout.activity_activate_bluetooth)
             return
         }
 

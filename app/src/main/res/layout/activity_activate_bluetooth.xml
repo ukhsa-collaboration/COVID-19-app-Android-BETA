@@ -36,6 +36,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/logo"
+        android:layout_marginTop="48dp"
+        android:textSize="46sp"
         android:text="@string/please_activate_bluetooth"
         />
 
