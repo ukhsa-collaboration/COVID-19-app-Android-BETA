@@ -9,4 +9,7 @@
     <string name="understand">I Understand</string>
     <string name="app_rationale">To trace people who you come into contact with, this app will automatically access:</string>
     <string name="app_title">Coronavirus Tracing</string>
+    <string name="please_activate_bluetooth">Please activate Bluetooth</string>
+    <string name="diagnosed">Have you been diagnosed with coronavirus?</string>
+    <string name="next">next</string>
 </resources>
