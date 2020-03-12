@@ -1,4 +1,4 @@
-package com.example.samplebluetooth
+package com.example.colocate
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.example.samplebluetooth
+package com.example.colocate
 
 import androidx.appcompat.app.AppCompatActivity
 
