@@ -37,34 +37,82 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/logo"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/isolate_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/isolate_disclaimer"
-        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
         android:orientation="vertical"
         tools:context=".MainActivity">
 
         <TextView
-            android:id="@+id/isolate_title"
+            android:id="@+id/isolate_disclaimer_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorDanger"
             android:lineSpacingMultiplier="1.18"
-            android:text="@string/isolate_title"
+            android:padding="16dp"
+            android:text="@string/isolate_disclaimer_title"
+            android:textColor="@color/white"
             android:textSize="32sp"
             android:textStyle="bold" />
 
     </RelativeLayout>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/isolate_disclaimer">
 
+        <RelativeLayout
+            android:id="@+id/isolate_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            tools:context=".MainActivity">
 
+            <TextView
+                android:id="@+id/isolate_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp"
+                android:lineSpacingMultiplier="1.18"
+                android:text="@string/isolate_title"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/isolate_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/isolate_title"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/isolate_message"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/isolate_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/isolate_message"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/isolate_share"
+                android:textSize="16sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/isolate_notify"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/isolate_share"
+                android:layout_marginBottom="14dp"
+                android:background="#007F3B"
+                android:text="@string/notify"
+                android:textColor="@color/white" />
+
+        </RelativeLayout>
+
+    </ScrollView>
 </RelativeLayout>

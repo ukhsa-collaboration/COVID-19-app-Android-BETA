@@ -49,11 +49,11 @@
         tools:context=".MainActivity">
 
         <TextView
-            android:id="@+id/isolate_disclaimer_title"
+            android:id="@+id/ok_disclaimer_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingMultiplier="1.18"
-            android:text="@string/isolate_disclaimer_title"
+            android:text="@string/ok_disclaimer_title"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -61,9 +61,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/isolate_disclaimer_title"
+            android:layout_below="@+id/ok_disclaimer_title"
             android:layout_marginTop="12dp"
-            android:text="@string/isolate_disclaimer_body"
+            android:text="@string/ok_disclaimer_body"
             android:textColor="@color/white" />
 
     </RelativeLayout>
