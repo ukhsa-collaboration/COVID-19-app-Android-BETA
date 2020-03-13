@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
         val confirm = findViewById<AppCompatButton>(R.id.confirm_onboarding)
         confirm.setOnClickListener {
-            requestPermissions(arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+            requestPermissions(arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_LOCATION)
         }
 
     }
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == 1
+        if (requestCode == REQUEST_LOCATION
             && grantResults.size == 2
             && grantResults.first() == PERMISSION_GRANTED
             && grantResults.last() == PERMISSION_GRANTED

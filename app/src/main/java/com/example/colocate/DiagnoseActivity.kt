@@ -1,24 +1,34 @@
 package com.example.colocate
 
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.*
+import android.bluetooth.BluetoothAdapter.STATE_CONNECTED
 import android.bluetooth.le.*
 import android.content.Intent
 import android.os.Bundle
+import android.os.ParcelUuid
 import android.util.Log
 import android.widget.Button
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
+import java.util.*
 
 class DiagnoseActivity : AppCompatActivity() {
 
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private lateinit var bluetoothLeAdvertiser: BluetoothLeAdvertiser
     private var bluetoothAdapter: BluetoothAdapter? = null
+    private val BluetoothAdapter.isDisabled: Boolean
+        get() = !isEnabled
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        bluetoothAdapter?.takeIf { it.isDisabled }?.apply {
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+        }
         if (bluetoothAdapter == null || !bluetoothAdapter!!.isMultipleAdvertisementSupported) {
             setContentView(R.layout.activity_activate_bluetooth)
             return
