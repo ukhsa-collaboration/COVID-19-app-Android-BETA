@@ -15,9 +15,6 @@ import java.util.*
 
 class DiagnoseActivity : AppCompatActivity() {
 
-    private lateinit var bluetoothLeScanner: BluetoothLeScanner
-    private lateinit var bluetoothLeAdvertiser: BluetoothLeAdvertiser
-    private var bluetoothAdapter: BluetoothAdapter? = null
     private val BluetoothAdapter.isDisabled: Boolean
         get() = !isEnabled
 
@@ -25,12 +22,12 @@ class DiagnoseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
         bluetoothAdapter?.takeIf { it.isDisabled }?.apply {
             val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }
-        if (bluetoothAdapter == null || !bluetoothAdapter!!.isMultipleAdvertisementSupported) {
+        if (bluetoothAdapter == null || !bluetoothAdapter.isMultipleAdvertisementSupported) {
             setContentView(R.layout.activity_activate_bluetooth)
             return
         }

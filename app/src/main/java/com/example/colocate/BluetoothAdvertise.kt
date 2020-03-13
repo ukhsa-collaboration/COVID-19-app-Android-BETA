@@ -10,7 +10,6 @@ import java.util.*
 fun advertiseData(): AdvertiseData {
     val mBuilder = AdvertiseData.Builder()
     val uuid = UUID.fromString(APP_UUID)
-
     mBuilder.addServiceUuid(ParcelUuid(uuid))
     return mBuilder.build()
 }

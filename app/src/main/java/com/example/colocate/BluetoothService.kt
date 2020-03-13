@@ -13,28 +13,29 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 
 class BluetoothService : Service() {
-    private lateinit var bluetoothLeScanner: BluetoothLeScanner
-    private lateinit var bluetoothLeAdvertiser: BluetoothLeAdvertiser
-    private var bluetoothAdapter: BluetoothAdapter? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        startForeground(COLOCATE_SERVICE_ID, notification())
+    }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null) {
-            return START_STICKY_COMPATIBILITY
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+
+        if (bluetoothAdapter == null || !isPermissionGranted()) {
+            return START_NOT_STICKY
         }
 
-        bluetoothLeAdvertiser = bluetoothAdapter!!.bluetoothLeAdvertiser
-        bluetoothLeScanner = bluetoothAdapter!!.bluetoothLeScanner
+        startAdvertising(bluetoothAdapter.bluetoothLeAdvertiser)
+        startScanning(bluetoothAdapter.bluetoothLeScanner)
 
-        startAdvertising()
-        startScanning()
 
-        startForeground(COLOCATE_SERVICE_ID, notification())
-        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
+    private fun isPermissionGranted() = true
 
     private fun notification(): Notification {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -43,9 +44,7 @@ class BluetoothService : Service() {
                 "NHS Colocate",
                 NotificationManager.IMPORTANCE_DEFAULT
             ).let {
-                (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
-                    it
-                )
+                (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(it)
             }
             NotificationCompat.Builder(this, COLOCATE_NOTIFICATION_ID).build()
         } else {
@@ -53,7 +52,7 @@ class BluetoothService : Service() {
         }
     }
 
-    private fun startScanning() {
+    private fun startScanning(bluetoothLeScanner: BluetoothLeScanner) {
         val scanCallback: ScanCallback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
                 super.onScanResult(callbackType, result)
@@ -87,13 +86,22 @@ class BluetoothService : Service() {
         )
     }
 
-    private fun startAdvertising() {
+    private fun startAdvertising(bluetoothLeAdvertiser: BluetoothLeAdvertiser) {
         val advertiseCallback: AdvertiseCallback = object : AdvertiseCallback() {
             override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
                 super.onStartSuccess(settingsInEffect)
                 Log.i(
                     "Advertising",
                     "Started advertising with settings ${settingsInEffect.toString()}"
+                )
+            }
+
+
+            override fun onStartFailure(errorCode: Int) {
+                super.onStartFailure(errorCode)
+                Log.e(
+                    "Advertising",
+                    "Failed to start with error code $errorCode"
                 )
             }
         }
