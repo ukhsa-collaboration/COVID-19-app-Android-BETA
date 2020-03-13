@@ -1,17 +1,12 @@
 package com.example.colocate
 
-import android.bluetooth.*
-import android.bluetooth.BluetoothAdapter.STATE_CONNECTED
-import android.bluetooth.le.*
+import android.bluetooth.BluetoothAdapter
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.os.ParcelUuid
-import android.util.Log
 import android.widget.Button
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
-import java.util.*
 
 class DiagnoseActivity : AppCompatActivity() {
 

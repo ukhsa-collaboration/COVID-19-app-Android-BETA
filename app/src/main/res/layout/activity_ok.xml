@@ -6,31 +6,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/logo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:paddingStart="6dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="6dp"
-        android:paddingBottom="12dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/nhs" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/app_title"
-            android:textColor="#ffffff"
-            android:textSize="23sp"
-            android:textStyle="bold" />
-    </LinearLayout>
-
+    <include layout="@layout/banner" />
 
     <RelativeLayout
         android:id="@+id/ok_disclaimer"
@@ -38,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/logo"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
         android:background="@color/colorPrimary"
         android:orientation="vertical"
@@ -83,14 +59,16 @@
             android:id="@+id/ok_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/frutiger_bold"
             android:lineSpacingMultiplier="1.18"
             android:text="@string/ok_title"
-            android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textSize="32sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:layout_below="@+id/ok_title"
             android:text="@string/ok_info_content" />
 
@@ -111,16 +89,19 @@
             android:id="@+id/ok_symptom_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/frutiger_bold"
             android:lineSpacingMultiplier="1.18"
+
             android:text="@string/ok_symptom_title"
-            android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textSize="32sp" />
 
 
         <TextView
             android:id="@+id/ok_symptom_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:layout_below="@id/ok_symptom_title"
             android:lineSpacingMultiplier="1.18"
             android:text="@string/ok_symptom_content" />
@@ -131,6 +112,7 @@
             android:layout_alignParentBottom="true"
             android:background="#007F3B"
             android:text="@string/check_my_symptoms"
+            android:fontFamily="@font/frutiger_bold"
             android:textColor="@color/white" />
     </RelativeLayout>
 

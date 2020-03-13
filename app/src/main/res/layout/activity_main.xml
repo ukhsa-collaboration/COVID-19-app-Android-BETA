@@ -7,39 +7,15 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/logo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:paddingStart="6dp"
-        android:paddingEnd="6dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/nhs" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/app_title"
-            android:textStyle="bold"
-            android:textSize="23sp"
-            android:textColor="@color/white" />
-    </LinearLayout>
+    <include layout="@layout/banner" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/logo"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="36dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
         android:orientation="vertical"
         tools:context=".MainActivity">
 
@@ -49,9 +25,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_marginBottom="24dp"
+            android:fontFamily="@font/frutiger_bold"
             android:text="@string/onboarding_title"
-            android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textSize="32sp" />
 
         <TextView
             android:id="@+id/app_rationale"
@@ -100,10 +76,10 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
-            android:text="@string/explanation_link"
-            android:textColor="@color/colorAccent"
-
             android:linksClickable="true"
+            android:text="@string/explanation_link"
+
+            android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
         <TextView
@@ -123,6 +99,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="14dp"
             android:background="#007F3B"
+            android:fontFamily="@font/frutiger_bold"
             android:text="@string/understand"
             android:textColor="@color/white" />
     </RelativeLayout>

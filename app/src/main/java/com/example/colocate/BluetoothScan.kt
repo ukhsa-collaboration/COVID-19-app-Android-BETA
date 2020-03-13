@@ -4,7 +4,6 @@ package com.example.colocate
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanSettings
 import android.os.ParcelUuid
-import java.nio.ByteBuffer
 import java.util.*
 
 

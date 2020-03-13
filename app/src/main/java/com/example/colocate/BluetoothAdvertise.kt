@@ -4,7 +4,6 @@ package com.example.colocate
 import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
 import android.os.ParcelUuid
-import java.nio.ByteBuffer
 import java.util.*
 
 fun advertiseData(): AdvertiseData {
