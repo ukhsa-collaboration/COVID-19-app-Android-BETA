@@ -11,13 +11,17 @@
     <string name="app_title">Coronavirus Tracing</string>
     <string name="please_activate_bluetooth">Please activate Bluetooth</string>
     <string name="diagnosed">Have you been diagnosed with coronavirus?</string>
-    <string name="next">next</string>
+    <string name="next">Next</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="notify">Notify</string>
+    <string name="isolate_disclaimer_title">You need to isolate yourself and stay at home</string>
     <string name="isolate_title">Help us keep others safe</string>
+    <string name="isolate_message">This app has recorded all contact you’ve had with other people using this app over the past 14 days.</string>
+    <string name="isolate_share">Sharing this information with the NHS means we can notify these people to take steps to keep themselves safe.</string>
     <string name="ok_title">How you can protect yourself and others</string>
-    <string name="isolate_disclaimer_title">You\'re okay right now</string>
-    <string name="isolate_disclaimer_body">This is a real-time status based on people you’ve been in contact with.\n
+    <string name="ok_disclaimer_title">You\'re okay right now</string>
+    <string name="ok_disclaimer_body">This is a real-time status based on people you’ve been in contact with.\n
 \n
 You’ll get an alert if your status changes.\n
 \n
