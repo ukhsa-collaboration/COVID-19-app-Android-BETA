@@ -1,17 +1,21 @@
 package com.example.colocate
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.le.*
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import androidx.core.app.NotificationCompat
 
 class BluetoothService : Service() {
     private lateinit var bluetoothLeScanner: BluetoothLeScanner
     private lateinit var bluetoothLeAdvertiser: BluetoothLeAdvertiser
     private var bluetoothAdapter: BluetoothAdapter? = null
-
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -27,17 +31,27 @@ class BluetoothService : Service() {
         startAdvertising()
         startScanning()
 
+        startForeground(COLOCATE_SERVICE_ID, notification())
         return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
 
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        super.onTaskRemoved(rootIntent)
+    private fun notification(): Notification {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel(
+                COLOCATE_NOTIFICATION_ID,
+                "NHS Colocate",
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).let {
+                (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(
+                    it
+                )
+            }
+            NotificationCompat.Builder(this, COLOCATE_NOTIFICATION_ID).build()
+        } else {
+            NotificationCompat.Builder(this).build()
+        }
     }
-
 
     private fun startScanning() {
         val scanCallback: ScanCallback = object : ScanCallback() {

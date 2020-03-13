@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <!--  Fine location needed for bluetooth on Android 9+ : https://developer.android.com/guide/topics/connectivity/bluetooth-le   -->
     <!--  Our minimum is 26 at the moment   -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
