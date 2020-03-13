@@ -27,6 +27,8 @@
         <activity android:name=".DiagnoseActivity" />
         <activity android:name=".OkActivity" />
         <activity android:name=".IsolateActivity" />
+
+        <service android:name=".BluetoothService" android:enabled="true"/>
     </application>
 
 </manifest>

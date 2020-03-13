@@ -4,6 +4,7 @@ import android.bluetooth.*
 import android.bluetooth.BluetoothAdapter.STATE_CONNECTED
 import android.bluetooth.le.*
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.ParcelUuid
 import android.util.Log
@@ -36,11 +37,11 @@ class DiagnoseActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_diagnosis)
 
-        bluetoothLeAdvertiser = bluetoothAdapter!!.bluetoothLeAdvertiser
-        bluetoothLeScanner = bluetoothAdapter!!.bluetoothLeScanner
-
-        startAdvertising()
-        startScanning()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(Intent(this, BluetoothService::class.java))
+        } else {
+            startService(Intent(this, BluetoothService::class.java))
+        }
 
         val radioGroup = findViewById<RadioGroup>(R.id.diagnosis_answer)
 
@@ -57,57 +58,5 @@ class DiagnoseActivity : AppCompatActivity() {
 
             startActivity(intent)
         }
-    }
-
-    private fun startScanning() {
-        val scanCallback: ScanCallback = object : ScanCallback() {
-            override fun onScanResult(callbackType: Int, result: ScanResult?) {
-                super.onScanResult(callbackType, result)
-                Log.i(
-                    "Scanning",
-                    "Received ${result.toString()}"
-                )
-            }
-
-            override fun onBatchScanResults(results: MutableList<ScanResult>?) {
-                super.onBatchScanResults(results)
-                Log.i(
-                    "Scanning",
-                    "Received ${results.toString()}"
-                )
-            }
-
-            override fun onScanFailed(errorCode: Int) {
-                super.onScanFailed(errorCode)
-                Log.e(
-                    "Scanning",
-                    "Scan failed $errorCode"
-                )
-            }
-        }
-
-        bluetoothLeScanner.startScan(
-            listOf(scanFilter()),
-            scanSettings(),
-            scanCallback
-        )
-    }
-
-    private fun startAdvertising() {
-        val advertiseCallback: AdvertiseCallback = object : AdvertiseCallback() {
-            override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
-                super.onStartSuccess(settingsInEffect)
-                Log.i(
-                    "Advertising",
-                    "Started advertising with settings ${settingsInEffect.toString()}"
-                )
-            }
-        }
-
-        bluetoothLeAdvertiser.startAdvertising(
-            advertiseSettings(),
-            advertiseData(),
-            advertiseCallback
-        )
     }
 }
