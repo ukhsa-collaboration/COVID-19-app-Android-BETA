@@ -2,11 +2,11 @@ package com.example.colocate
 
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 
 class DiagnoseActivity : AppCompatActivity() {
 
@@ -29,11 +29,7 @@ class DiagnoseActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_diagnosis)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(Intent(this, BluetoothService::class.java))
-        } else {
-            startService(Intent(this, BluetoothService::class.java))
-        }
+        ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
 
         val radioGroup = findViewById<RadioGroup>(R.id.diagnosis_answer)
 

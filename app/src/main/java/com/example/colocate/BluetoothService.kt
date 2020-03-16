@@ -48,7 +48,7 @@ class BluetoothService : Service() {
             }
             NotificationCompat.Builder(this, COLOCATE_NOTIFICATION_ID).build()
         } else {
-            NotificationCompat.Builder(this).build()
+            NotificationCompat.Builder(this, "").build()
         }
     }
 
