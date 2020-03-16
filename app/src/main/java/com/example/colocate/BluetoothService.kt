@@ -44,7 +44,8 @@ class BluetoothService : Service() {
                 "NHS Colocate",
                 NotificationManager.IMPORTANCE_DEFAULT
             ).let {
-                (getSystemService(NOTIFICATION_SERVICE) as NotificationManager).createNotificationChannel(it)
+                (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
+                    .createNotificationChannel(it)
             }
             NotificationCompat.Builder(this, COLOCATE_NOTIFICATION_ID).build()
         } else {
@@ -55,7 +56,6 @@ class BluetoothService : Service() {
     private fun startScanning(bluetoothLeScanner: BluetoothLeScanner) {
         val scanCallback: ScanCallback = object : ScanCallback() {
             override fun onScanResult(callbackType: Int, result: ScanResult?) {
-                super.onScanResult(callbackType, result)
                 Log.i(
                     "Scanning",
                     "Received ${result.toString()}"
@@ -63,7 +63,6 @@ class BluetoothService : Service() {
             }
 
             override fun onBatchScanResults(results: MutableList<ScanResult>?) {
-                super.onBatchScanResults(results)
                 Log.i(
                     "Scanning",
                     "Received ${results.toString()}"
@@ -71,7 +70,6 @@ class BluetoothService : Service() {
             }
 
             override fun onScanFailed(errorCode: Int) {
-                super.onScanFailed(errorCode)
                 Log.e(
                     "Scanning",
                     "Scan failed $errorCode"
@@ -89,7 +87,6 @@ class BluetoothService : Service() {
     private fun startAdvertising(bluetoothLeAdvertiser: BluetoothLeAdvertiser) {
         val advertiseCallback: AdvertiseCallback = object : AdvertiseCallback() {
             override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
-                super.onStartSuccess(settingsInEffect)
                 Log.i(
                     "Advertising",
                     "Started advertising with settings ${settingsInEffect.toString()}"
@@ -98,7 +95,6 @@ class BluetoothService : Service() {
 
 
             override fun onStartFailure(errorCode: Int) {
-                super.onStartFailure(errorCode)
                 Log.e(
                     "Advertising",
                     "Failed to start with error code $errorCode"

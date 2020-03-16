@@ -8,15 +8,14 @@ import java.util.*
 
 
 fun scanFilter(): ScanFilter {
-    val mBuilder = ScanFilter.Builder()
-    val uuid = UUID.fromString(APP_UUID)
-    mBuilder.setServiceUuid(ParcelUuid(uuid))
-    return mBuilder.build()
+    return ScanFilter.Builder()
+        .setServiceUuid(ParcelUuid(UUID.fromString(APP_UUID)))
+        .build()
 }
 
 fun scanSettings(): ScanSettings {
-    val mBuilder = ScanSettings.Builder()
-    mBuilder.setReportDelay(0)
-    mBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
-    return mBuilder.build()
+    return ScanSettings.Builder()
+        .setReportDelay(0)
+        .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
+        .build()
 }
