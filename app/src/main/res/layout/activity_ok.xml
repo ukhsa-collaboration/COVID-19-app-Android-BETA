@@ -67,9 +67,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/ok_title"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_below="@+id/ok_title"
             android:text="@string/ok_info_content" />
 
     </RelativeLayout>
@@ -91,7 +91,6 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/frutiger_bold"
             android:lineSpacingMultiplier="1.18"
-
             android:text="@string/ok_symptom_title"
             android:textSize="32sp" />
 
@@ -100,9 +99,9 @@
             android:id="@+id/ok_symptom_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/ok_symptom_title"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_below="@id/ok_symptom_title"
             android:lineSpacingMultiplier="1.18"
             android:text="@string/ok_symptom_content" />
 
@@ -110,9 +109,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="16dp"
             android:background="#007F3B"
-            android:text="@string/check_my_symptoms"
             android:fontFamily="@font/frutiger_bold"
+            android:text="@string/check_my_symptoms"
             android:textColor="@color/white" />
     </RelativeLayout>
 

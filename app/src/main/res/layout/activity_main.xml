@@ -76,9 +76,9 @@
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
+            android:focusable="true"
             android:linksClickable="true"
             android:text="@string/explanation_link"
-
             android:textColor="@color/colorAccent"
             android:textSize="16sp" />
 
@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="14dp"
+            android:layout_marginBottom="16dp"
             android:background="#007F3B"
             android:fontFamily="@font/frutiger_bold"
             android:text="@string/understand"
