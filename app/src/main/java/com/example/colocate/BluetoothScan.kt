@@ -8,7 +8,7 @@ import android.os.ParcelUuid
 
 fun scanFilter(): ScanFilter {
     return ScanFilter.Builder()
-        .setServiceUuid(ParcelUuid.fromString(APP_UUID))
+        .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
 }
 

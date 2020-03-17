@@ -7,7 +7,9 @@ import android.os.ParcelUuid
 
 fun advertiseData(): AdvertiseData {
     return AdvertiseData.Builder()
-        .addServiceUuid(ParcelUuid.fromString(APP_UUID))
+        .addServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
+        .setIncludeDeviceName(false)
+        .setIncludeTxPowerLevel(true)
         .build()
 }
 
