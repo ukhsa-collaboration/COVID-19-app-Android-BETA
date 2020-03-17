@@ -4,11 +4,10 @@ package com.example.colocate
 import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
 import android.os.ParcelUuid
-import java.util.*
 
 fun advertiseData(): AdvertiseData {
     return AdvertiseData.Builder()
-        .addServiceUuid(ParcelUuid(UUID.fromString(APP_UUID)))
+        .addServiceUuid(ParcelUuid.fromString(APP_UUID))
         .build()
 }
 
