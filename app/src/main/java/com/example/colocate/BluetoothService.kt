@@ -4,15 +4,26 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.*
+import android.bluetooth.BluetoothAdapter.STATE_CONNECTED
+import android.bluetooth.BluetoothDevice.TRANSPORT_LE
+import android.bluetooth.BluetoothGatt.GATT_SUCCESS
 import android.bluetooth.le.*
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 
+
 class BluetoothService : Service() {
+
+    private lateinit var bluetoothManager: BluetoothManager
+    private lateinit var bluetoothAdapter: BluetoothAdapter
+    private lateinit var gattServer: BluetoothGattServer
+
+    private lateinit var context: Context
 
     override fun onCreate() {
         super.onCreate()
@@ -22,15 +33,19 @@ class BluetoothService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        val manager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?
 
-        if (bluetoothAdapter == null || !isPermissionGranted()) {
+        if (manager?.adapter == null || !isPermissionGranted()) {
             return START_NOT_STICKY
         }
 
+        bluetoothManager = manager
+        bluetoothAdapter = manager.adapter
+        context = this
+
+        openGattServer()
         startAdvertising(bluetoothAdapter.bluetoothLeAdvertiser)
         startScanning(bluetoothAdapter.bluetoothLeScanner)
-
 
         return START_STICKY
     }
@@ -54,19 +69,62 @@ class BluetoothService : Service() {
     }
 
     private fun startScanning(bluetoothLeScanner: BluetoothLeScanner) {
-        val scanCallback: ScanCallback = object : ScanCallback() {
-            override fun onScanResult(callbackType: Int, result: ScanResult?) {
+        val gattCallBack = object : BluetoothGattCallback() {
+            override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
+                Log.i("onServicesDiscovered", "status: $status")
+
+                if (status == GATT_SUCCESS) {
+                    val characteristic = gatt.getService(COLOCATE_SERVICE_UUID)
+                        .getCharacteristic(DEVICE_CHARACTERISTIC_UUID)
+
+                    gatt.readCharacteristic(characteristic)
+                }
+            }
+
+            override fun onCharacteristicRead(
+                gatt: BluetoothGatt,
+                characteristic: BluetoothGattCharacteristic,
+                status: Int
+            ) {
                 Log.i(
-                    "Scanning",
-                    "Received ${result.toString()}"
+                    "onCharacteristicRead",
+                    "UUID: ${characteristic.uuid} - Value: ${String(characteristic.value)}"
                 )
             }
 
-            override fun onBatchScanResults(results: MutableList<ScanResult>?) {
+            override fun onConnectionStateChange(
+                gatt: BluetoothGatt,
+                status: Int,
+                newState: Int
+            ) {
+                Log.i(
+                    "onConnectionStateChange",
+                    "status: $status, state: $newState"
+                )
+
+                if (newState == STATE_CONNECTED) {
+                    gatt.discoverServices()
+                }
+            }
+
+        }
+
+        val scanCallback: ScanCallback = object : ScanCallback() {
+            override fun onScanResult(callbackType: Int, result: ScanResult) {
+                onResult(result)
+            }
+
+            override fun onBatchScanResults(results: List<ScanResult>) {
+                results.forEach { onResult(it) }
+            }
+
+            private fun onResult(result: ScanResult) {
                 Log.i(
                     "Scanning",
-                    "Received ${results.toString()}"
+                    "Received $result"
                 )
+
+                result.device.connectGatt(context, false, gattCallBack, TRANSPORT_LE)
             }
 
             override fun onScanFailed(errorCode: Int) {
@@ -93,7 +151,6 @@ class BluetoothService : Service() {
                 )
             }
 
-
             override fun onStartFailure(errorCode: Int) {
                 Log.e(
                     "Advertising",
@@ -108,4 +165,40 @@ class BluetoothService : Service() {
             advertiseCallback
         )
     }
+
+    private fun openGattServer() {
+        val callback = object : BluetoothGattServerCallback() {
+            override fun onCharacteristicReadRequest(
+                device: BluetoothDevice?,
+                requestId: Int,
+                offset: Int,
+                characteristic: BluetoothGattCharacteristic
+            ) {
+                Log.i("onCharacteristicReadRequest", "UUID: ${characteristic.uuid}")
+
+                gattServer.sendResponse(device, requestId, GATT_SUCCESS, 0, "ABC".toByteArray())
+            }
+        }
+
+        gattServer = bluetoothManager.openGattServer(this, callback)
+
+        gattServer.addService(createGattService())
+    }
+
+    private fun createGattService(): BluetoothGattService {
+        val characteristic = BluetoothGattCharacteristic(
+            DEVICE_CHARACTERISTIC_UUID,
+            BluetoothGattCharacteristic.PROPERTY_READ,
+            BluetoothGattCharacteristic.PERMISSION_READ
+        )
+
+        return BluetoothGattService(
+            COLOCATE_SERVICE_UUID,
+            BluetoothGattService.SERVICE_TYPE_PRIMARY
+        )
+            .apply {
+                addCharacteristic(characteristic)
+            }
+    }
 }
+

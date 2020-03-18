@@ -16,7 +16,7 @@ fun advertiseData(): AdvertiseData {
 fun advertiseSettings(): AdvertiseSettings {
     return AdvertiseSettings.Builder()
         .setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_POWER)
-        .setConnectable(false)
+        .setConnectable(true)
         .setTimeout(0)
         .setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_MEDIUM)
         .build()
