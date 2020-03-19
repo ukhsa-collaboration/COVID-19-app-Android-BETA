@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
 <resources>
     <string name="app_name">NHS Co-Locate</string>
     <string name="location_permission">\u2022 your device’s <b>location</b>, to record places you’ve spent time in</string>

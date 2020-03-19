@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
 package com.example.colocate
 
 import androidx.test.espresso.Espresso.onView
