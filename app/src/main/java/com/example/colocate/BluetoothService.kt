@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothAdapter.STATE_CONNECTED
 import android.bluetooth.BluetoothDevice.TRANSPORT_LE
 import android.bluetooth.BluetoothGatt.GATT_SUCCESS
 import android.bluetooth.le.*
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
@@ -19,11 +18,7 @@ import androidx.core.app.NotificationCompat
 
 class BluetoothService : Service() {
 
-    private lateinit var bluetoothManager: BluetoothManager
-    private lateinit var bluetoothAdapter: BluetoothAdapter
-    private lateinit var gattServer: BluetoothGattServer
-
-    private lateinit var context: Context
+    private lateinit var bluetoothGattServer: BluetoothGattServer
 
     override fun onCreate() {
         super.onCreate()
@@ -33,21 +28,29 @@ class BluetoothService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val manager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?
+        val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?
 
-        if (manager?.adapter == null || !isPermissionGranted()) {
+        if (bluetoothManager?.adapter == null || !isPermissionGranted()) {
             return START_NOT_STICKY
         }
 
-        bluetoothManager = manager
-        bluetoothAdapter = manager.adapter
-        context = this
-
-        openGattServer()
-        startAdvertising(bluetoothAdapter.bluetoothLeAdvertiser)
-        startScanning(bluetoothAdapter.bluetoothLeScanner)
+        openGattServer(bluetoothManager)
+        startAdvertising(bluetoothManager.adapter.bluetoothLeAdvertiser)
+        startScanning(bluetoothManager.adapter.bluetoothLeScanner)
 
         return START_STICKY
+    }
+
+    override fun onDestroy() {
+        cleanup()
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        cleanup()
+    }
+
+    private fun cleanup() {
+        bluetoothGattServer.close()
     }
 
     private fun isPermissionGranted() = true
@@ -124,7 +127,7 @@ class BluetoothService : Service() {
                     "Received $result"
                 )
 
-                result.device.connectGatt(context, false, gattCallBack, TRANSPORT_LE)
+                result.device.connectGatt(this@BluetoothService, false, gattCallBack, TRANSPORT_LE)
             }
 
             override fun onScanFailed(errorCode: Int) {
@@ -166,7 +169,7 @@ class BluetoothService : Service() {
         )
     }
 
-    private fun openGattServer() {
+    private fun openGattServer(bluetoothManager: BluetoothManager) {
         val callback = object : BluetoothGattServerCallback() {
             override fun onCharacteristicReadRequest(
                 device: BluetoothDevice?,
@@ -176,13 +179,19 @@ class BluetoothService : Service() {
             ) {
                 Log.i("onCharacteristicReadRequest", "UUID: ${characteristic.uuid}")
 
-                gattServer.sendResponse(device, requestId, GATT_SUCCESS, 0, "ABC".toByteArray())
+                bluetoothGattServer.sendResponse(
+                    device,
+                    requestId,
+                    GATT_SUCCESS,
+                    0,
+                    "ABC".toByteArray()
+                )
             }
         }
 
-        gattServer = bluetoothManager.openGattServer(this, callback)
+        bluetoothGattServer = bluetoothManager.openGattServer(this, callback)
 
-        gattServer.addService(createGattService())
+        bluetoothGattServer.addService(createGattService())
     }
 
     private fun createGattService(): BluetoothGattService {
