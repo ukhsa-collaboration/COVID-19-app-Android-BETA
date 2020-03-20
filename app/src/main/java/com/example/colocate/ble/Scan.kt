@@ -5,7 +5,7 @@
 package com.example.colocate.ble
 
 
-import android.bluetooth.BluetoothAdapter.STATE_CONNECTED
+import android.bluetooth.BluetoothAdapter.*
 import android.bluetooth.BluetoothDevice.TRANSPORT_LE
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGatt.GATT_SUCCESS
@@ -50,6 +50,8 @@ class Scan(
 
 private class ScanningCallback(private val context: Context) : ScanCallback() {
 
+    private val devices = mutableSetOf<String>()
+
     override fun onScanResult(callbackType: Int, result: ScanResult) {
         onResult(result)
     }
@@ -64,7 +66,19 @@ private class ScanningCallback(private val context: Context) : ScanCallback() {
             "Received $result"
         )
 
-        result.device.connectGatt(context, false, GattClientCallback(), TRANSPORT_LE)
+        val address = result.device.address
+
+        if (devices.contains(address)) {
+            Log.i(
+                "Scanning",
+                "Ignoring the already connected device: $address"
+            )
+            return
+        }
+
+        devices.add(address)
+
+        result.device.connectGatt(context, false, GattClientCallback(devices), TRANSPORT_LE)
     }
 
     override fun onScanFailed(errorCode: Int) {
@@ -75,7 +89,7 @@ private class ScanningCallback(private val context: Context) : ScanCallback() {
     }
 }
 
-private class GattClientCallback : BluetoothGattCallback() {
+private class GattClientCallback(private val devices: MutableSet<String>) : BluetoothGattCallback() {
     private var rssi: Int? = null
     private var identifier: String? = null
 
@@ -125,6 +139,9 @@ private class GattClientCallback : BluetoothGattCallback() {
 
         if (newState == STATE_CONNECTED) {
             gatt.discoverServices()
+        } else if (newState == STATE_DISCONNECTING || newState == STATE_DISCONNECTED) {
+            Log.i("onConnectionStateChange", "Disconnecting...")
+            devices.remove(gatt.device.address)
         }
     }
 }
