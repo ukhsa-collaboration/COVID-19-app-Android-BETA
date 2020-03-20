@@ -15,6 +15,7 @@ import android.bluetooth.le.*
 import android.content.Context
 import android.os.ParcelUuid
 import android.util.Log
+import java.util.*
 
 class Scan(
     context: Context,
@@ -31,7 +32,7 @@ class Scan(
         .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
         .build()
 
-    private val scanCallBack = ScanningCallback(context, GattClientCallback())
+    private val scanCallBack = ScanningCallback(context)
 
     fun start() {
         bluetoothLeScanner.startScan(
@@ -47,10 +48,7 @@ class Scan(
 }
 
 
-private class ScanningCallback(
-    private val context: Context,
-    private val gattClientCallBack: GattClientCallback
-) : ScanCallback() {
+private class ScanningCallback(private val context: Context) : ScanCallback() {
 
     override fun onScanResult(callbackType: Int, result: ScanResult) {
         onResult(result)
@@ -66,7 +64,7 @@ private class ScanningCallback(
             "Received $result"
         )
 
-        result.device.connectGatt(context, false, gattClientCallBack, TRANSPORT_LE)
+        result.device.connectGatt(context, false, GattClientCallback(), TRANSPORT_LE)
     }
 
     override fun onScanFailed(errorCode: Int) {
@@ -78,6 +76,14 @@ private class ScanningCallback(
 }
 
 private class GattClientCallback : BluetoothGattCallback() {
+    private var rssi: Int? = null
+    private var identifier: String? = null
+
+    private fun storeIfReady() {
+        if (this.rssi != null && this.identifier != null) {
+            Log.i("Storing", "Identifier: $identifier - Rssi: $rssi")
+        }
+    }
 
     override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
         Log.i("onServicesDiscovered", "status: $status")
@@ -86,8 +92,14 @@ private class GattClientCallback : BluetoothGattCallback() {
             gatt.getService(COLOCATE_SERVICE_UUID).getCharacteristic(DEVICE_CHARACTERISTIC_UUID)
                 .let {
                     gatt.readCharacteristic(it)
+                    gatt.readRemoteRssi()
                 }
         }
+    }
+
+    override fun onReadRemoteRssi(gatt: BluetoothGatt, rssi: Int, status: Int) {
+        this.rssi = rssi
+        storeIfReady()
     }
 
     override fun onCharacteristicRead(
@@ -96,9 +108,8 @@ private class GattClientCallback : BluetoothGattCallback() {
         status: Int
     ) {
         if (characteristic.isDeviceIdentifier()) {
-            Log.i(
-                "onCharacteristicRead", "Device Identifier: ${String(characteristic.value)}"
-            )
+            this.identifier = UUID.nameUUIDFromBytes(characteristic.value).toString()
+            storeIfReady()
         }
     }
 

@@ -6,13 +6,21 @@ package com.example.colocate.ble
 
 import android.bluetooth.*
 import android.bluetooth.BluetoothGatt.GATT_SUCCESS
-import android.bluetooth.BluetoothGattCharacteristic.*
-import android.bluetooth.BluetoothGattService.*
+import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_READ
+import android.bluetooth.BluetoothGattCharacteristic.PROPERTY_READ
+import android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY
 import android.content.Context
 import android.util.Log
+import java.nio.ByteBuffer
+import java.util.*
 
 class Gatt(private val context: Context, private val bluetoothManager: BluetoothManager) {
-    private val value = "AB12CD45".toByteArray()
+    private val identifier: ByteArray = UUID.randomUUID().let { uuid ->
+        ByteBuffer.wrap(ByteArray(16)).also {
+            it.putLong(uuid.mostSignificantBits)
+            it.putLong(uuid.leastSignificantBits)
+        }.array()
+    }
 
     private val service: BluetoothGattService = BluetoothGattService(
         COLOCATE_SERVICE_UUID,
@@ -46,7 +54,7 @@ class Gatt(private val context: Context, private val bluetoothManager: Bluetooth
                         requestId,
                         GATT_SUCCESS,
                         0,
-                        value
+                        identifier
                     )
                 }
             }
