@@ -113,9 +113,8 @@ private class ScanningCallback(private val context: Context) : ScanCallback() {
 
         devices.add(address)
 
-        result.device.connectGatt(
-            context, false,
-            GattClientCallback(devices), TRANSPORT_LE
+        result.device.connectGatt(context, false,
+            GattClientCallback(context, devices), TRANSPORT_LE
         )
     }
 

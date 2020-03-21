@@ -5,10 +5,18 @@
 package com.example.colocate.ble
 
 import android.bluetooth.*
+import android.content.Context
 import android.util.Log
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
 import java.util.*
 
-class GattClientCallback(private val devices: MutableSet<String>) :
+class GattClientCallback(
+    private val context: Context,
+    private val devices: MutableSet<String>
+) :
     BluetoothGattCallback() {
     private var rssi: Int? = null
     private var identifier: String? = null
@@ -19,6 +27,15 @@ class GattClientCallback(private val devices: MutableSet<String>) :
                 "Storing",
                 "Identifier: $identifier - Rssi: $rssi"
             )
+            val input = workDataOf(
+                "identifier" to identifier,
+                "rssi" to rssi
+            )
+            val request = OneTimeWorkRequestBuilder<SaveContactWorker>()
+                .setInputData(input)
+                .build()
+            WorkManager.getInstance(context)
+                .enqueue(request)
             gatt.disconnect()
         }
     }
