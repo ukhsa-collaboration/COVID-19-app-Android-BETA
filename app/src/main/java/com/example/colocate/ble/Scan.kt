@@ -19,6 +19,9 @@ class Scan(
     private val filters = listOf(
         ScanFilter.Builder()
             .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
+            .build(),
+        ScanFilter.Builder()
+            .setServiceUuid(null) // For detecting iPhone when in background
             .build()
     )
 
