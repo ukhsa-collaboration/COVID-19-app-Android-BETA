@@ -46,8 +46,6 @@ class Gatt(private val context: Context, private val bluetoothManager: Bluetooth
                 offset: Int,
                 characteristic: BluetoothGattCharacteristic
             ) {
-                Log.i("onCharacteristicReadRequest", "UUID: ${characteristic.uuid}")
-
                 if (characteristic.isDeviceIdentifier()) {
                     server.sendResponse(
                         device,
