@@ -16,13 +16,50 @@ class Scan(
     context: Context,
     private val bluetoothLeScanner: BluetoothLeScanner
 ) {
+    private val coLocateServiceUuidFilter = ScanFilter.Builder()
+        .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
+        .build()
+
+    /*
+     When the iPhone app goes into the background iOS changes how services are advertised:
+  
+         1) The service uuid is now null
+         2) The information to identify the service is encoded into the manufacturing data in a
+         unspecified/undocumented way.
+  
+        The below filter is based on observation of the advertising packets produced by an iPhone running
+        the app in the background.
+       */
+    private val coLocateBackgroundedIPhoneFilter = ScanFilter.Builder()
+        .setServiceUuid(null)
+        .setManufacturerData(
+            76,
+            byteArrayOf(
+                0x01, // 0
+                0x00, // 1
+                0x00, // 2
+                0x00, // 3
+                0x00, // 4
+                0x00, // 5
+                0x00, // 6
+                0x00, // 7
+                0x00, // 8
+                0x00, // 9
+                0x40, // 10
+                0x00, // 11
+                0x00, // 12
+                0x00, // 13
+                0x00, // 14
+                0x00, // 15
+                0x00  // 16
+            )
+        )
+        .build()
+
+
     private val filters = listOf(
-        ScanFilter.Builder()
-            .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
-            .build(),
-        ScanFilter.Builder()
-            .setServiceUuid(null) // For detecting iPhone when in background
-            .build()
+        coLocateServiceUuidFilter,
+        coLocateBackgroundedIPhoneFilter
     )
 
     private val settings = ScanSettings.Builder()
