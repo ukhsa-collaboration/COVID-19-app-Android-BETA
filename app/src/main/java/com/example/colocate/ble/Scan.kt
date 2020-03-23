@@ -92,7 +92,7 @@ private class ScanningCallback(private val context: Context) : ScanCallback() {
     }
 
     override fun onBatchScanResults(results: List<ScanResult>) {
-        results.forEach { onResult(it) }
+        results.distinctBy { it.device.address }.forEach { onResult(it) }
     }
 
     private fun onResult(result: ScanResult) {
