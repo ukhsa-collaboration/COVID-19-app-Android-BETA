@@ -12,6 +12,11 @@ import com.squareup.moshi.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.util.*
 
 class SaveContactWorker(private val context: Context, params: WorkerParameters) :
     CoroutineWorker(context, params) {
@@ -20,11 +25,12 @@ class SaveContactWorker(private val context: Context, params: WorkerParameters) 
         withContext(Dispatchers.IO) {
             val id = inputData.getString("identifier")
                 ?: return@withContext Result.failure()
-            // figure out how to average over the last few measurements
-            // to compute distance
-//            val rssi = inputData.getString("rssi")
-//                ?: return@withContext Result.failure()
 
+            // 255 is invalid for rssi
+            val rssi = inputData.getInt("rssi", 255)
+            if (rssi == 255) {
+                return@withContext Result.failure()
+            }
 
             try {
                 val file = File(context.filesDir, EVENT_FILENAME)
@@ -32,7 +38,13 @@ class SaveContactWorker(private val context: Context, params: WorkerParameters) 
                 val moshi = Moshi.Builder().build()
 
                 val adapter = moshi.adapter(ContactEvent::class.java)
-                val event = adapter.toJson(ContactEvent(id))
+
+                val timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.UK).let {
+                    it.timeZone = TimeZone.getTimeZone("UTC")
+                    it.format(Date())
+                }
+
+                val event = adapter.toJson(ContactEvent(id, rssi, timestamp))
                     .replace("\n", "")
                 file.appendText("$event\n")
 
@@ -44,7 +56,6 @@ class SaveContactWorker(private val context: Context, params: WorkerParameters) 
                 Result.failure()
             }
         }
-
 
     companion object {
         const val EVENT_FILENAME = "events.json"
