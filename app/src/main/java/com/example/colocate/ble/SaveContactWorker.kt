@@ -12,7 +12,6 @@ import com.squareup.moshi.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.util.*
 
 class SaveContactWorker(private val context: Context, params: WorkerParameters) :
     CoroutineWorker(context, params) {
@@ -26,34 +25,18 @@ class SaveContactWorker(private val context: Context, params: WorkerParameters) 
 //            val rssi = inputData.getString("rssi")
 //                ?: return@withContext Result.failure()
 
-            val event = ContactEvent(id)
 
             try {
                 val file = File(context.filesDir, EVENT_FILENAME)
+                file.createNewFile()
+                val moshi = Moshi.Builder().build()
 
-                val moshi = Moshi.Builder()
-//                    .add(UUID::class.java, object : JsonAdapter<UUID>() {
-//                        override fun fromJson(reader: JsonReader): UUID? =
-//                            UUID.fromString(reader.nextString())
-//                        override fun toJson(writer: JsonWriter, value: UUID?) {
-//                            writer.value(value.toString())
-//                        }
-//                    })
-                    .build()
+                val adapter = moshi.adapter(ContactEvent::class.java)
+                val event = adapter.toJson(ContactEvent(id))
+                    .replace("\n", "")
+                file.appendText("$event\n")
 
-                val adapter: JsonAdapter<List<ContactEvent>> = moshi.adapter(
-                    Types.newParameterizedType(MutableList::class.java, ContactEvent::class.java)
-                )
-
-                val previous = if (file.createNewFile() || file.readBytes().isEmpty()) {
-                    mutableListOf()
-                } else {
-                    adapter.fromJson(file.readText()) ?: listOf()
-                }
-                val events = previous.plus(event)
-
-                Log.i(TAG, "#events ${events.size} last event ${events.last()}")
-                file.writeText(adapter.toJson(events))
+                Log.i(TAG, "event ${event}")
 
                 Result.success()
             } catch (e: Exception) {
