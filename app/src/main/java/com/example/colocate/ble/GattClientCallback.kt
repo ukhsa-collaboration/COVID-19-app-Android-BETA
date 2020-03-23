@@ -32,12 +32,10 @@ class GattClientCallback(private val devices: MutableSet<String>) :
         }
 
         gatt.getService(COLOCATE_SERVICE_UUID)
-            .getCharacteristic(DEVICE_CHARACTERISTIC_UUID)
-            .let {
-                if (it != null) {
-                    gatt.readCharacteristic(it)
-                    gatt.readRemoteRssi()
-                }
+            ?.getCharacteristic(DEVICE_CHARACTERISTIC_UUID)
+            ?.let {
+                gatt.readCharacteristic(it)
+                gatt.readRemoteRssi()
             }
     }
 
