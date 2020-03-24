@@ -10,12 +10,11 @@ import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import java.lang.Exception
 
-typealias SuccessCallback = (Registration) -> Unit
 typealias ErrorCallback = (Exception) -> Unit
 
 class ResidentApi(private val httpClient: HttpClient) {
 
-    fun register(onSuccess: SuccessCallback = {}, onError: ErrorCallback = {}) {
+    fun register(onSuccess: (Registration) -> Unit = {}, onError: ErrorCallback = {}) {
         httpClient.post(HttpRequest("/api/residents", JSONObject()), {
             json: JSONObject -> onSuccess(mapResponseToRegistration(json))
         }, {
@@ -23,8 +22,12 @@ class ResidentApi(private val httpClient: HttpClient) {
         })
     }
 
-    fun register(token: String, onSuccess: SuccessCallback = {}, onError: ErrorCallback = {}) {
-
+    fun register(token: String, onSuccess: () -> Unit = {}, onError: ErrorCallback = {}) {
+        httpClient.post(HttpRequest("/api/devices/$token", JSONObject()), {
+                json: JSONObject -> onSuccess()
+        }, {
+                error: Exception -> onError(error)
+        })
     }
 
     private fun mapResponseToRegistration(jsonObject: JSONObject): Registration {

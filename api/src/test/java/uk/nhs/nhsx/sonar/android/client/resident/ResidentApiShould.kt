@@ -35,6 +35,22 @@ class ResidentApiShould {
     }
 
     @Test
+    fun postATokenWhenRegistering() {
+        val httpClient = mock(HttpClient::class.java)
+        val cut =
+            ResidentApi(
+                httpClient
+            )
+
+        cut.register("some-token")
+
+        val requestCaptor = argumentCaptor<HttpRequest>()
+
+        verify(httpClient).post(requestCaptor.capture(), any(), any())
+        assertThat(requestCaptor.firstValue.urlPath).isEqualTo("/api/devices/some-token")
+    }
+
+    @Test
     fun callTheSuccessCallbackInCaseOfSuccess() {
         val httpClient = mock(HttpClient::class.java)
         val cut =

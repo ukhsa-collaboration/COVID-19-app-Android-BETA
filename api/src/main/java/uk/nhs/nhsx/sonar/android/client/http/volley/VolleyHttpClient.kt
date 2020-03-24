@@ -11,7 +11,6 @@ import com.android.volley.toolbox.JsonObjectRequest
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
-import kotlin.collections.HashMap
 
 
 open class VolleyHttpClient(
@@ -55,20 +54,13 @@ open class VolleyHttpClient(
         onSuccess: (JSONObject) -> Unit,
         onError: (Exception) -> Unit
     ): JsonObjectRequest {
-        return object : JsonObjectRequest(method, url + urlPath, JSONObject(),
+        return UnsignedJsonObjectRequest(method, url + urlPath, JSONObject(),
             Response.Listener { response ->
                 onSuccess(response)
             },
             Response.ErrorListener { error ->
                 onError(error)
             })
-        {
-            override fun getHeaders(): Map<String?, String?> {
-                val headers = HashMap<String?, String?>()
-                headers["Accept"] = "application/json"
-                return headers
-            }
-        }
     }
 
     private fun createSignedRequest(
