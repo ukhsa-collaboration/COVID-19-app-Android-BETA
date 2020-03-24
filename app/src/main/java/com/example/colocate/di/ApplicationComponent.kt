@@ -16,7 +16,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
-import java.util.*
+import java.util.UUID
 import javax.inject.Named
 
 @Component(modules = [PersistenceModule::class, AppModule::class, BluetoothModule::class, NetworkModule::class])
@@ -76,7 +76,7 @@ class PersistenceModule(private val applicationContext: Context) {
 
     @Provides
     fun provideResidentIdProvider(): ResidentIdProvider {
-        return object: ResidentIdProvider {
+        return object : ResidentIdProvider {
             override fun getResidentId(): UUID {
                 return UUID.randomUUID()
             }

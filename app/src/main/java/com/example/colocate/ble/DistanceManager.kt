@@ -50,5 +50,4 @@ class DistanceManager {
     }
 
     fun detected(): Map<String, String> = ranges
-
 }

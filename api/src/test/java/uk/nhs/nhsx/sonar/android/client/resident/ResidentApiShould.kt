@@ -63,7 +63,7 @@ class ResidentApiShould {
                 "dummy"
             )
 
-        cut.register({ registration ->  expectedRegistration = registration })
+        cut.register({ registration -> expectedRegistration = registration })
 
         val onSuccessCaptor = argumentCaptor<(JSONObject) -> Unit>()
 
@@ -83,7 +83,7 @@ class ResidentApiShould {
             )
         var expectedError = Exception("something")
 
-        cut.register({}, { error ->  expectedError = error })
+        cut.register({}, { error -> expectedError = error })
 
         val onErrorCaptor = argumentCaptor<(Exception) -> Unit>()
         verify(httpClient).post(any(), any(), onErrorCaptor.capture())
@@ -99,4 +99,3 @@ class ResidentApiShould {
         return jsonRegistration
     }
 }
-

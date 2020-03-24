@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (hasLocationPermission()) {
-            //ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
+            // ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
             startActivity(Intent(this, DiagnoseActivity::class.java))
         }
     }
@@ -37,10 +36,10 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == REQUEST_LOCATION
-            && grantResults.size == 2
-            && grantResults.first() == PERMISSION_GRANTED
-            && grantResults.last() == PERMISSION_GRANTED
+        if (requestCode == REQUEST_LOCATION &&
+            grantResults.size == 2 &&
+            grantResults.first() == PERMISSION_GRANTED &&
+            grantResults.last() == PERMISSION_GRANTED
         ) {
             startActivity(Intent(this, DiagnoseActivity::class.java))
         }

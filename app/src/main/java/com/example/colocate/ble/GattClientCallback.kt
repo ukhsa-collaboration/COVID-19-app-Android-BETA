@@ -4,9 +4,13 @@
 
 package com.example.colocate.ble
 
-import android.bluetooth.*
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt
+import android.bluetooth.BluetoothGattCallback
+import android.bluetooth.BluetoothGattCharacteristic
 import timber.log.Timber
-import java.util.*
+import java.util.UUID
 
 class GattClientCallback(
     private val devices: MutableSet<String>,

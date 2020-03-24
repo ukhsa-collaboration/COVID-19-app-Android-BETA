@@ -6,10 +6,7 @@
 package uk.nhs.nhsx.sonar.android.client.http.volley
 
 import android.util.Base64
-import com.android.volley.NetworkResponse
 import com.android.volley.Response
-import com.android.volley.toolbox.HttpHeaderParser
-import com.android.volley.toolbox.JsonObjectRequest
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDateTime
 import org.json.JSONObject

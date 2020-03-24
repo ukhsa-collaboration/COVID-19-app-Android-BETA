@@ -6,11 +6,13 @@ import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
 import org.json.JSONObject
 
-open class UnsignedJsonObjectRequest(method: Int,
-                                url: String,
-                                request: JSONObject,
-                                listener: Response.Listener<JSONObject>,
-                                errorListener: Response.ErrorListener): JsonObjectRequest(method, url, request, listener, errorListener) {
+open class UnsignedJsonObjectRequest(
+    method: Int,
+    url: String,
+    request: JSONObject,
+    listener: Response.Listener<JSONObject>,
+    errorListener: Response.ErrorListener
+) : JsonObjectRequest(method, url, request, listener, errorListener) {
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<JSONObject?>? {
         return if (response.data.isEmpty()) {

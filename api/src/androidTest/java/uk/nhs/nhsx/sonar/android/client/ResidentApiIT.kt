@@ -7,9 +7,6 @@ package uk.nhs.nhsx.sonar.android.client
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
-import uk.nhs.nhsx.sonar.android.client.resident.Registration
-import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.awaitility.kotlin.await
@@ -18,7 +15,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
+import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
+import uk.nhs.nhsx.sonar.android.client.resident.Registration
+import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
 
 @RunWith(AndroidJUnit4::class)
 class ResidentApiIT {

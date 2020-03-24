@@ -12,12 +12,10 @@ import com.nhaarman.mockitokotlin2.argumentCaptor
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
-import org.mockito.Mockito.*
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.client.test.SignatureUtils
-import java.lang.RuntimeException
-import java.security.NoSuchAlgorithmException
-import javax.crypto.KeyGenerator
 
 class VolleyHttpClientShould {
 
@@ -32,7 +30,6 @@ class VolleyHttpClientShould {
             )
 
         cut.post(HttpRequest("/api", JSONObject()), {}) {
-
         }
 
         val requestCaptor = argumentCaptor<JsonObjectRequest>()

@@ -4,7 +4,6 @@
 
 package com.example.colocate.ble
 
-
 import android.bluetooth.le.AdvertiseCallback
 import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
@@ -48,7 +47,7 @@ private class AdvertisingCallback : AdvertiseCallback() {
     override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
         Log.i(
             "Advertising",
-            "Started advertising with settings ${settingsInEffect.toString()}"
+            "Started advertising with settings $settingsInEffect"
         )
     }
 

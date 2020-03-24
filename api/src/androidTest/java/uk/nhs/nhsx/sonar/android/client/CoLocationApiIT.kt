@@ -22,7 +22,6 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.crypto.KeyGenerator
 import kotlin.test.assertFalse
 
-
 @RunWith(AndroidJUnit4::class)
 class CoLocationApiIT {
     lateinit var server: MockWebServer

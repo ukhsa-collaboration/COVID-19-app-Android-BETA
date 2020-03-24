@@ -44,7 +44,6 @@ class IsolateViewModel(
 
     sealed class Result {
         object Success : Result()
-        data class Error(val e: Exception): Result()
+        data class Error(val e: Exception) : Result()
     }
-
 }

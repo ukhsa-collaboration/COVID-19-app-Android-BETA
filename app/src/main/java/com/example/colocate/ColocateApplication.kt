@@ -5,7 +5,12 @@
 package com.example.colocate
 
 import android.app.Application
-import com.example.colocate.di.*
+import com.example.colocate.di.AppModule
+import com.example.colocate.di.ApplicationComponent
+import com.example.colocate.di.BluetoothModule
+import com.example.colocate.di.DaggerApplicationComponent
+import com.example.colocate.di.NetworkModule
+import com.example.colocate.di.PersistenceModule
 import timber.log.Timber
 
 const val BASE_URL = "https://sonar-colocate-services.apps.cp.data.england.nhs.uk"

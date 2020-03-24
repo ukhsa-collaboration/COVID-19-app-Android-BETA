@@ -4,15 +4,19 @@
 
 package com.example.colocate.ble
 
-import android.bluetooth.*
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt.GATT_SUCCESS
+import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_READ
 import android.bluetooth.BluetoothGattCharacteristic.PROPERTY_READ
+import android.bluetooth.BluetoothGattServer
+import android.bluetooth.BluetoothGattServerCallback
+import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY
+import android.bluetooth.BluetoothManager
 import android.content.Context
-import android.util.Log
 import java.nio.ByteBuffer
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 class Gatt @Inject constructor(

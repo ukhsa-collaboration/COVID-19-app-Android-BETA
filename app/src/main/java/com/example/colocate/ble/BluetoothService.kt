@@ -14,15 +14,14 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.colocate.ColocateApplication
+import com.example.colocate.R
 import com.example.colocate.di.AppModule
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import javax.inject.Inject
-import com.example.colocate.R
 import javax.inject.Named
-
 
 class BluetoothService : Service() {
     companion object {
@@ -113,4 +112,3 @@ class BluetoothService : Service() {
             .build()
     }
 }
-

@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.example.colocate.ColocateApplication
 import com.example.colocate.R
-import kotlinx.android.synthetic.main.activity_isolate.*
+import kotlinx.android.synthetic.main.activity_isolate.isolate_notify
 import javax.inject.Inject
 
 class IsolateActivity : AppCompatActivity() {
@@ -31,8 +31,6 @@ class IsolateActivity : AppCompatActivity() {
             viewModel.onNotifyClick()
         }
 
-        viewModel.isolationResult.observe(this, Observer {
-
-        })
+        viewModel.isolationResult.observe(this, Observer {})
     }
 }

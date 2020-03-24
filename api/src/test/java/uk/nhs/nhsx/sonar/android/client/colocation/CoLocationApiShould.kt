@@ -16,7 +16,6 @@ import org.mockito.Mockito.verify
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 
-
 class CoLocationApiShould {
 
     @Test

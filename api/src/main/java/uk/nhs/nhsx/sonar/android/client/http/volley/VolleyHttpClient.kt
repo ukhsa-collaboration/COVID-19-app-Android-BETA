@@ -15,7 +15,6 @@ import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 
-
 open class VolleyHttpClient(
     private val url: String,
     private val queue: RequestQueue

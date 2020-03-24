@@ -4,9 +4,12 @@
 
 package com.example.colocate.ble
 
-
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.le.*
+import android.bluetooth.le.BluetoothLeScanner
+import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanFilter
+import android.bluetooth.le.ScanResult
+import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.ParcelUuid
 import com.example.colocate.di.AppModule
@@ -16,7 +19,6 @@ import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
-
 
 class Scan @Inject constructor(
     private val context: Context,
@@ -60,11 +62,10 @@ class Scan @Inject constructor(
                 0x00, // 13
                 0x00, // 14
                 0x00, // 15
-                0x00  // 16
+                0x00 // 16
             )
         )
         .build()
-
 
     private val filters = listOf(
         coLocateServiceUuidFilter,
@@ -134,7 +135,6 @@ class Scan @Inject constructor(
     }
 }
 
-
 private class ScanningCallback(
     private val onScanResult: (ScanResult) -> Unit,
     private val onScanError: (Int) -> Unit
@@ -156,4 +156,3 @@ private class ScanningCallback(
         onScanError(errorCode)
     }
 }
-

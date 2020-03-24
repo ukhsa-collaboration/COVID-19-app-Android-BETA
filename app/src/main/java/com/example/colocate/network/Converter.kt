@@ -9,7 +9,7 @@ fun convert(contactEvents: Iterable<ContactEvent>): JSONArray {
 }
 
 fun convert(contactEvent: ContactEvent): JSONObject {
-    return JSONObject().apply { 
+    return JSONObject().apply {
         put("remoteContactId", contactEvent.remoteContactId)
         put("rssi", contactEvent.rssi)
         put("timestamp", contactEvent.timestamp)
