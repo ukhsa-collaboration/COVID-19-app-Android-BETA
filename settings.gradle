@@ -2,6 +2,6 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-rootProject.name='sonar-coloate-android'
+rootProject.name='sonar-colocate-android'
 include ':api'
 include ':app'
