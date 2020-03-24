@@ -74,3 +74,8 @@ dependencies {
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
+
+afterEvaluate {
+    tasks["connectedAndroidTest"].dependsOn("uninstallAll")
+    tasks["packageDebugAndroidTest"].mustRunAfter("uninstallAll")
+}
