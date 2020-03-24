@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="io.pivotal.colocate.android.client">
+    package="io.pivotal.colocate.android.client">
 
-    <application android:allowBackup="true" >
-    </application>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application android:allowBackup="true" />
 </manifest>
