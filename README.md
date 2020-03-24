@@ -18,7 +18,7 @@
     In Android Studio make sure to configure `androidTest` tasks to run `uninstallAll`
     from gradle before running.
     
-    [androidTest setup]: docs/uninstall-all-before-android-tests.png
+    ![androidTest setup](raw/master/docs/uninstall-all-before-android-tests.png)
 
 1. Device setup
 
@@ -34,3 +34,19 @@
    ```bash
    ./gradlew
    ```
+
+## Code formatting with KTLint
+
+KTLint has been added to the build and will automatically run when you run the build.
+It is attached to the `check` step of the build.
+
+The official Kotlin style guide recommends slightly different configuration from the default
+Android Studio setup.
+
+1. The continuation indent should be set to 4
+
+    ![Continuation indent](raw/master/docs/kotlin-continuation-indent.png)
+
+1. Imports should *never* use wildcards
+
+    ![No wildcard import](raw/master/docs/kotlin-import-no-wildcards.png)

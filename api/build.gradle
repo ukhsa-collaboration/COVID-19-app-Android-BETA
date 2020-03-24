@@ -5,6 +5,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply from: "$rootDir/ktlint.gradle"
 
 android {
     compileSdkVersion 29
