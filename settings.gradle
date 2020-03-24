@@ -3,4 +3,5 @@
  */
 
 rootProject.name='sonar-coloate-android'
+include ':api'
 include ':app'

@@ -1,0 +1,47 @@
+apply plugin: 'com.android.library'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    defaultConfig {
+        minSdkVersion 24
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.volley:volley:1.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'net.danlew:android.joda:2.10.3'
+    testImplementation('junit:junit:4.13')
+    testImplementation group: 'org.json', name: 'json', version: '20190722'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.15.0'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.4.0")
+    androidTestImplementation group: 'com.squareup.okhttp3', name: 'okhttp-tls', version: '4.4.0'
+    androidTestImplementation('org.awaitility:awaitility-kotlin:3.1.6')
+    androidTestImplementation('androidx.test.ext:junit:1.1.1')
+    androidTestImplementation('androidx.test:runner:1.2.0')
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0')
+}
