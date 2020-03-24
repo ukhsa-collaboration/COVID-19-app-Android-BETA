@@ -1,3 +1,8 @@
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  ~
+  -->
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.pivotal.colocate.android.client">
 

@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ *
+ */
+
 apply plugin: 'com.android.library'
 
 apply plugin: 'kotlin-android'

@@ -1,3 +1,8 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ *
+ */
+
 package uk.nhs.nhsx.sonar.android.client.colocation
 
 import com.nhaarman.mockitokotlin2.any
