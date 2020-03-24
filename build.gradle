@@ -32,3 +32,5 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+defaultTasks("build", "connectedAndroidTest")

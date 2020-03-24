@@ -24,3 +24,13 @@
 
     Make sure all animations are turned off on the device that is running the tests.
     https://developer.android.com/training/testing/espresso/setup#set-up-environment
+
+1. Before pushing code run -
+    ```bash
+    ./gradlew build connectedAndroidTest
+    ```
+
+   They are the default tasks, so you can also just run -
+   ```bash
+   ./gradlew
+   ```
