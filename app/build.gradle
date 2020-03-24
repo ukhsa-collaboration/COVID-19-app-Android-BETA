@@ -13,7 +13,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.example.colocate"
+        applicationId "uk.nhs.nhsx.colocate"
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
@@ -41,6 +41,9 @@ android {
 
 
 def work_version = "2.3.4"
+def room_version = "2.2.5"
+def timber_version = "4.7.1"
+def lifecycle_version = "2.2.0"
 
 dependencies {
     implementation project(":api")
@@ -51,8 +54,21 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "androidx.work:work-runtime-ktx:$work_version"
     implementation 'com.google.firebase:firebase-messaging:20.1.3'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.fragment:fragment-ktx:1.2.3"
+
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+
+    implementation 'com.google.dagger:dagger:2.27'
+    kapt 'com.google.dagger:dagger-compiler:2.27'
+
     implementation "com.squareup.moshi:moshi:1.9.2"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.2"
+
+    implementation "com.jakewharton.timber:timber:$timber_version"
+
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.2.0'

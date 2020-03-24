@@ -5,17 +5,26 @@
 package com.example.colocate.ble
 
 
-import android.bluetooth.BluetoothDevice.TRANSPORT_LE
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.*
 import android.content.Context
 import android.os.ParcelUuid
-import android.util.Log
+import com.example.colocate.di.AppModule
+import com.example.colocate.persistence.ContactEventDao
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import timber.log.Timber
+import javax.inject.Inject
+import javax.inject.Named
 
 
-class Scan(
-    context: Context,
-    private val bluetoothLeScanner: BluetoothLeScanner
+class Scan @Inject constructor(
+    private val context: Context,
+    private val bluetoothLeScanner: BluetoothLeScanner,
+    private val contactEventDao: ContactEventDao,
+    @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher
 ) {
+    private var coroutineScope: CoroutineScope? = null
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
@@ -67,9 +76,10 @@ class Scan(
         .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
         .build()
 
-    private val scanCallBack = ScanningCallback(context)
+    private val scanCallBack = ScanningCallback(::handleScanResult, ::handleScanFailure)
 
-    fun start() {
+    fun start(coroutineScope: CoroutineScope) {
+        this.coroutineScope = coroutineScope
         bluetoothLeScanner.startScan(
             filters,
             settings,
@@ -79,13 +89,56 @@ class Scan(
 
     fun stop() {
         bluetoothLeScanner.stopScan(scanCallBack)
+        coroutineScope = null
+    }
+
+    private val devices = mutableSetOf<String>()
+
+    private fun handleScanResult(result: ScanResult) {
+        Timber.v(
+            "Scanning Received $result"
+        )
+
+        val address = result.device.address
+
+        if (devices.contains(address)) {
+            Timber.v(
+                "Scanning Ignoring the already connected device: $address"
+            )
+            return
+        }
+
+        devices.add(address)
+
+        result.device.connectGatt(
+            context, false,
+            GattClientCallback(devices, ::save), BluetoothDevice.TRANSPORT_LE
+        )
+    }
+
+    private fun handleScanFailure(errorCode: Int) {
+        Timber.e(
+            "Scanning Scan failed $errorCode"
+        )
+    }
+
+    private fun save(rssi: Int, identifier: String) {
+        Timber.d("Scanning Saving: rssi = $rssi id = $identifier")
+        coroutineScope?.let { coroutineScope ->
+            SaveContactWorker(dispatcher, contactEventDao).saveContactEvent(
+                coroutineScope,
+                identifier,
+                rssi
+            )
+        }
     }
 }
 
 
-private class ScanningCallback(private val context: Context) : ScanCallback() {
-
-    private val devices = mutableSetOf<String>()
+private class ScanningCallback(
+    private val onScanResult: (ScanResult) -> Unit,
+    private val onScanError: (Int) -> Unit
+) : ScanCallback() {
 
     override fun onScanResult(callbackType: Int, result: ScanResult) {
         onResult(result)
@@ -96,33 +149,11 @@ private class ScanningCallback(private val context: Context) : ScanCallback() {
     }
 
     private fun onResult(result: ScanResult) {
-        Log.v(
-            "Scanning",
-            "Received $result"
-        )
-
-        val address = result.device.address
-
-        if (devices.contains(address)) {
-            Log.v(
-                "Scanning",
-                "Ignoring the already connected device: $address"
-            )
-            return
-        }
-
-        devices.add(address)
-
-        result.device.connectGatt(context, false,
-            GattClientCallback(context, devices), TRANSPORT_LE
-        )
+        onScanResult(result)
     }
 
     override fun onScanFailed(errorCode: Int) {
-        Log.e(
-            "Scanning",
-            "Scan failed $errorCode"
-        )
+        onScanError(errorCode)
     }
 }
 

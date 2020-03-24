@@ -5,4 +5,12 @@
 
 package uk.nhs.nhsx.sonar.android.client.colocation
 
-data class CoLocationData (val residentId: String)
+import org.json.JSONArray
+import org.json.JSONObject
+
+data class CoLocationData(val residentId: String, val events: JSONArray) {
+    val contactEvents: JSONObject
+        get() = JSONObject().apply {
+            put("contactEvents", events)
+        }
+}

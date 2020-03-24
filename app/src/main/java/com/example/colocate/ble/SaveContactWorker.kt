@@ -4,61 +4,47 @@
 
 package com.example.colocate.ble
 
-import android.content.Context
-import android.util.Log
-import androidx.work.CoroutineWorker
-import androidx.work.WorkerParameters
-import com.squareup.moshi.*
-import kotlinx.coroutines.Dispatchers
+import com.example.colocate.di.AppModule
+import com.example.colocate.persistence.ContactEvent
+import com.example.colocate.persistence.ContactEventDao
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.text.DateFormat
+import timber.log.Timber
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
 import java.util.*
+import javax.inject.Named
 
-class SaveContactWorker(private val context: Context, params: WorkerParameters) :
-    CoroutineWorker(context, params) {
+class SaveContactWorker(
+    @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
+    private val contactEventDao: ContactEventDao
+) {
+    fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int) {
+        scope.launch {
+            withContext(dispatcher) {
+                try {
+                    val timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.UK).let {
+                        it.timeZone = TimeZone.getTimeZone("UTC")
+                        it.format(Date())
+                    }
 
-    override suspend fun doWork(): Result =
-        withContext(Dispatchers.IO) {
-            val id = inputData.getString("identifier")
-                ?: return@withContext Result.failure()
-
-            // 255 is invalid for rssi
-            val rssi = inputData.getInt("rssi", 255)
-            if (rssi == 255) {
-                return@withContext Result.failure()
-            }
-
-            try {
-                val file = File(context.filesDir, EVENT_FILENAME)
-                file.createNewFile()
-                val moshi = Moshi.Builder().build()
-
-                val adapter = moshi.adapter(ContactEvent::class.java)
-
-                val timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.UK).let {
-                    it.timeZone = TimeZone.getTimeZone("UTC")
-                    it.format(Date())
+                    val contactEvent =
+                        ContactEvent(
+                            remoteContactId = id,
+                            rssi = rssi,
+                            timestamp = timestamp
+                        )
+                    contactEventDao.insert(contactEvent)
+                    Timber.i("$TAG event $contactEvent")
+                } catch (e: Exception) {
+                    Timber.e("$TAG Failed to save with exception $e")
                 }
-
-                val event = adapter.toJson(ContactEvent(id, rssi, timestamp))
-                    .replace("\n", "")
-                file.appendText("$event\n")
-
-                Log.i(TAG, "event ${event}")
-
-                Result.success()
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to save with exception $e")
-                Result.failure()
             }
         }
+    }
 
     companion object {
-        const val EVENT_FILENAME = "events.json"
         const val TAG = "SaveWorker"
     }
 }

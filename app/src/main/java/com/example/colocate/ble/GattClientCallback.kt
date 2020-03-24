@@ -5,43 +5,61 @@
 package com.example.colocate.ble
 
 import android.bluetooth.*
-import android.content.Context
-import android.util.Log
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.workDataOf
+import timber.log.Timber
 import java.util.*
 
 class GattClientCallback(
-    private val context: Context,
-    private val devices: MutableSet<String>
+    private val devices: MutableSet<String>,
+    private val onReady: (Int, String) -> Unit
 ) :
     BluetoothGattCallback() {
     private var rssi: Int? = null
     private var identifier: String? = null
 
-    private fun storeIfReady(gatt: BluetoothGatt) {
-        if (this.rssi != null && this.identifier != null) {
-            Log.i(
-                "Storing",
-                "Identifier: $identifier - Rssi: $rssi"
-            )
-            val input = workDataOf(
-                "identifier" to identifier,
-                "rssi" to rssi
-            )
-            val request = OneTimeWorkRequestBuilder<SaveContactWorker>()
-                .setInputData(input)
-                .build()
-            WorkManager.getInstance(context)
-                .enqueue(request)
+    override fun onConnectionStateChange(
+        gatt: BluetoothGatt,
+        status: Int,
+        newState: Int
+    ) {
+        Timber.i(
+            "onConnectionStateChange device: ${gatt.device} status: $status, state: $newState"
+        )
+        if (newState == BluetoothAdapter.STATE_DISCONNECTED) {
+            Timber.i("onConnectionStateChange Disconnecting...")
+            devices.remove(gatt.device.address)
+            gatt.close()
+        }
+
+        if (status != BluetoothGatt.GATT_SUCCESS) {
+            Timber.i("onConnectionState ChangeFailed, disconnecting")
             gatt.disconnect()
+            return
+        }
+
+        if (newState == BluetoothAdapter.STATE_CONNECTED) {
+            val bondState = gatt.device.bondState
+            if (bondState == BluetoothDevice.BOND_BONDING) {
+                Timber.i("onConnectionState ChangeStill bonding")
+                return
+            }
+
+//            val delay = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N && bondState == BluetoothDevice.BOND_BONDED) 1000 else 0
+//            val discoverServicesRunnable = Runnable {
+//                Timber.d("onConnectionStateChange discovering services of '%s' with delay of %d ms")
+//                val result = gatt.discoverServices()
+//                if (!result) {
+//                    Timber.e("onConnectionStateChange discoverServices failed to start")
+//                }
+//            }
+//            bleHandler.postDelayed(discoverServicesRunnable, delay)
+
+            Timber.i("onConnectionStateChange Discovering services")
+            gatt.discoverServices()
         }
     }
 
     override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
-        Log.i("onServicesDiscovered", "status: $status")
+        Timber.i("onServicesDiscovered status: $status")
 
         if (status != BluetoothGatt.GATT_SUCCESS) {
             gatt.disconnect()
@@ -54,16 +72,6 @@ class GattClientCallback(
                 gatt.readCharacteristic(it)
                 gatt.readRemoteRssi()
             }
-    }
-
-    override fun onReadRemoteRssi(gatt: BluetoothGatt, rssi: Int, status: Int) {
-        if (status != BluetoothGatt.GATT_SUCCESS) {
-            gatt.disconnect()
-            return
-        }
-
-        this.rssi = rssi
-        storeIfReady(gatt)
     }
 
     override fun onCharacteristicRead(
@@ -83,46 +91,22 @@ class GattClientCallback(
         }
     }
 
-    override fun onConnectionStateChange(
-        gatt: BluetoothGatt,
-        status: Int,
-        newState: Int
-    ) {
-        Log.i(
-            "onConnectionStateChange",
-            "device: ${gatt.device} status: $status, state: $newState"
-        )
-        if (newState == BluetoothAdapter.STATE_DISCONNECTED) {
-            Log.i("onConnectionStateChange", "Disconnecting...")
-            devices.remove(gatt.device.address)
-            gatt.close()
-        }
-
+    override fun onReadRemoteRssi(gatt: BluetoothGatt, rssi: Int, status: Int) {
         if (status != BluetoothGatt.GATT_SUCCESS) {
-            Log.i("onConnectionStateChange", "Failed, disconnecting")
             gatt.disconnect()
             return
         }
 
-        if (newState == BluetoothAdapter.STATE_CONNECTED) {
-            val bondState = gatt.device.bondState
-            if (bondState == BluetoothDevice.BOND_BONDING) {
-                Log.i("onConnectionStateChange", "Still bonding")
-                return
-            }
+        this.rssi = rssi
+        storeIfReady(gatt)
+    }
 
-//            val delay = if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.N && bondState == BluetoothDevice.BOND_BONDED) 1000 else 0
-//            val discoverServicesRunnable = Runnable {
-//                Log.d("onConnectionStateChange", "discovering services of '%s' with delay of %d ms")
-//                val result = gatt.discoverServices()
-//                if (!result) {
-//                    Log.e("onConnectionStateChange", "discoverServices failed to start")
-//                }
-//            }
-//            bleHandler.postDelayed(discoverServicesRunnable, delay)
-
-            Log.i("onConnectionStateChange", "Discovering services")
-            gatt.discoverServices()
+    private fun storeIfReady(gatt: BluetoothGatt) {
+        val currentRssi = rssi
+        val currentIdentifier = identifier
+        if (currentRssi != null && currentIdentifier != null) {
+            onReady(currentRssi, currentIdentifier)
+            gatt.disconnect()
         }
     }
 }

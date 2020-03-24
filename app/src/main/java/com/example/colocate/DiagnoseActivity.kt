@@ -12,6 +12,7 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.colocate.ble.BluetoothService
+import com.example.colocate.isolate.IsolateActivity
 
 class DiagnoseActivity : AppCompatActivity() {
 

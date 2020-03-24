@@ -13,8 +13,12 @@ import android.content.Context
 import android.util.Log
 import java.nio.ByteBuffer
 import java.util.*
+import javax.inject.Inject
 
-class Gatt(private val context: Context, private val bluetoothManager: BluetoothManager) {
+class Gatt @Inject constructor(
+    private val context: Context,
+    private val bluetoothManager: BluetoothManager
+) {
     private val identifier: ByteArray = UUID.randomUUID().let { uuid ->
         ByteBuffer.wrap(ByteArray(16)).also {
             it.putLong(uuid.mostSignificantBits)

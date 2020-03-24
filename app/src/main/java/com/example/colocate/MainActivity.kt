@@ -12,7 +12,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
-import com.example.colocate.ble.BluetoothService
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,8 +27,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (hasLocationPermission()) {
-            ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
-            startActivity(Intent(this, OkActivity::class.java))
+            //ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
+            startActivity(Intent(this, DiagnoseActivity::class.java))
         }
     }
 

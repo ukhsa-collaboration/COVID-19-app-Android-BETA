@@ -11,8 +11,9 @@ import android.bluetooth.le.AdvertiseSettings
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.os.ParcelUuid
 import android.util.Log
+import javax.inject.Inject
 
-class Advertise(private val bluetoothLeAdvertiser: BluetoothLeAdvertiser) {
+class Advertise @Inject constructor(private val bluetoothLeAdvertiser: BluetoothLeAdvertiser) {
     private val advertiseData: AdvertiseData =
         AdvertiseData.Builder()
             .addServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
