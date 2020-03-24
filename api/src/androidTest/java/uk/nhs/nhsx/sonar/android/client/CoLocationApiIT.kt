@@ -1,6 +1,5 @@
 /*
  * Copyright © 2020 NHSX. All rights reserved.
- *
  */
 
 package uk.nhs.nhsx.sonar.android.client
@@ -10,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.awaitility.kotlin.await
+import org.json.JSONArray
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -18,8 +18,9 @@ import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
 import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
-import java.security.NoSuchAlgorithmException
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.crypto.KeyGenerator
+import kotlin.test.assertFalse
 
 
 @RunWith(AndroidJUnit4::class)
@@ -39,32 +40,30 @@ class CoLocationApiIT {
 
     @Test
     fun shouldSendCoLocationData() {
+        val successResponse = MockResponse().setResponseCode(200)
 
-        server.enqueue(
-            MockResponse().setResponseCode(200)
+        server.enqueue(successResponse)
+
+        var isSuccess = false
+        var isError = false
+
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val httpClient = VolleyHttpClient("http://localhost:8089", context)
+        val coLocationApi = CoLocationApi(generateKey(), httpClient)
+
+        coLocationApi.save(
+            CoLocationData("residentId", JSONArray()),
+            { isSuccess = true },
+            { isError = true }
         )
 
-        var called = false
-        CoLocationApi(
-            generateKey(),
-            VolleyHttpClient(
-                "http://localhost:8089",
-                InstrumentationRegistry.getInstrumentation().targetContext
-            )
-            )
-            .save(CoLocationData("residentId"), {called = true})
+        val request = server.takeRequest(300, MILLISECONDS)
+        assertEquals("/api/residents/residentId", request?.path)
 
-        await.until { called }
-
-        val request1 = server.takeRequest()
-        assertEquals("/api/residents/residentId", request1.path)
+        await.until { isSuccess }
+        assertFalse(isError)
     }
 
-    fun generateKey() : ByteArray {
-        try {
-            return KeyGenerator.getInstance("HMACSHA256").generateKey().getEncoded()
-        } catch (e: NoSuchAlgorithmException) {
-            throw RuntimeException(e)
-        }
-    }
+    private fun generateKey(): ByteArray =
+        KeyGenerator.getInstance("HMACSHA256").generateKey().encoded
 }

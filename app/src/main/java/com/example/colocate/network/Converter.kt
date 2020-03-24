@@ -14,5 +14,4 @@ fun convert(contactEvent: ContactEvent): JSONObject {
         put("rssi", contactEvent.rssi)
         put("timestamp", contactEvent.timestamp)
     }
-    
 }

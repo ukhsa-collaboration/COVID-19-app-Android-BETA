@@ -11,10 +11,11 @@ import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 class CoLocationApi(private val key: ByteArray, private val httpClient: HttpClient) {
 
     fun save(coLocationData: CoLocationData, onSuccess: () -> Unit = {}, onError: (Exception) -> Unit = {}) {
-        httpClient.patch(HttpRequest("/api/residents/" + coLocationData.residentId, coLocationData.contactEvents, key), {
-                onSuccess()
-        }, {
-                error: java.lang.Exception -> onError(error)
-        })
+        val request = HttpRequest(
+            "/api/residents/${coLocationData.residentId}",
+            coLocationData.contactEvents,
+            key
+        )
+        httpClient.patch(request, { onSuccess() }, { exception -> onError(exception) })
     }
 }

@@ -13,7 +13,8 @@ import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
 import kotlin.test.assertEquals
 
 class VolleyHttpClientIT {
-    lateinit var server: MockWebServer
+
+    private lateinit var server: MockWebServer
 
     @Before
     fun setUp() {

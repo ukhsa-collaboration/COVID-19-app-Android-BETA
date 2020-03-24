@@ -21,15 +21,8 @@ open class VolleyHttpClient(
     private val queue: RequestQueue
 ) : HttpClient {
 
-    constructor(
-        url: String,
-        ctx: Context
-    ) : this(
-        url,
-        RequestQueueFactory.createQueue(
-            ctx
-        )
-    )
+    constructor(url: String, ctx: Context) :
+            this(url, RequestQueueFactory.createQueue(ctx))
 
     override fun post(
         request: HttpRequest,
