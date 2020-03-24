@@ -13,12 +13,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.example.colocate.R
 
 
 class BluetoothService : Service() {
     companion object {
         const val COLOCATE_SERVICE_ID = 1235
-        const val COLOCATE_NOTIFICATION_ID = "colocate-locate"
     }
 
     private lateinit var advertise: Advertise
@@ -71,7 +71,7 @@ class BluetoothService : Service() {
     private fun notification(): Notification {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel(
-                COLOCATE_NOTIFICATION_ID,
+                getString(R.string.default_notification_channel_id),
                 "NHS Colocate",
                 NotificationManager.IMPORTANCE_DEFAULT
             ).let {
@@ -80,7 +80,7 @@ class BluetoothService : Service() {
             }
             NotificationCompat.Builder(
                 this,
-                COLOCATE_NOTIFICATION_ID
+                getString(R.string.default_notification_channel_id)
             ).build()
         } else {
             NotificationCompat.Builder(this, "").build()
