@@ -13,7 +13,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "uk.nhs.nhsx.colocate"
+        applicationId "com.example.colocate"
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
