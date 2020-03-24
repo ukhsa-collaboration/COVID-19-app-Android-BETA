@@ -18,7 +18,7 @@
     In Android Studio make sure to configure `androidTest` tasks to run `uninstallAll`
     from gradle before running.
     
-    ![androidTest setup](raw/master/docs/uninstall-all-before-android-tests.png)
+    ![androidTest setup](docs/uninstall-all-before-android-tests.png)
 
 1. Device setup
 
@@ -45,8 +45,8 @@ Android Studio setup.
 
 1. The continuation indent should be set to 4
 
-    ![Continuation indent](raw/master/docs/kotlin-continuation-indent.png)
+    ![Continuation indent](docs/kotlin-continuation-indent.png)
 
 1. Imports should *never* use wildcards
 
-    ![No wildcard import](raw/master/docs/kotlin-import-no-wildcards.png)
+    ![No wildcard import](docs/kotlin-import-no-wildcards.png)
