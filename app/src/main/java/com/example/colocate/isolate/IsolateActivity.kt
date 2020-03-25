@@ -5,12 +5,14 @@
 package com.example.colocate.isolate
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.example.colocate.ColocateApplication
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
+import com.example.colocate.isolate.IsolateViewModel.Result.Success
 import kotlinx.android.synthetic.main.activity_isolate.*
 import javax.inject.Inject
 
@@ -32,7 +34,20 @@ class IsolateActivity : AppCompatActivity() {
             viewModel.onNotifyClick()
         }
 
-        viewModel.isolationResult.observe(this, Observer {
+        viewModel.isolationResult.observe(this, Observer { result ->
+            if (result is Success) {
+                Toast.makeText(
+                    this,
+                    "You have successfully shared you contact data with NHS.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Something went wrong, please try again later.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         })
     }
 }
