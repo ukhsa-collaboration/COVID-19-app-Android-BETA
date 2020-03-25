@@ -11,6 +11,7 @@ import com.example.colocate.persistence.ResidentIdProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import timber.log.Timber.e
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
@@ -28,10 +29,9 @@ class IsolateViewModel @Inject constructor(
     val isolationResult: LiveData<Result> = _isolationResult
 
     fun onNotifyClick() {
-        viewModelScope.launch {
-            val events = withContext(ioDispatcher) {
+        viewModelScope.launch(ioDispatcher) {
+            val events: JSONArray =
                 convert(contactEventDao.getAll())
-            }
             val coLocationData =
                 CoLocationData(
                     residentIdProvider.getResidentId(), events
