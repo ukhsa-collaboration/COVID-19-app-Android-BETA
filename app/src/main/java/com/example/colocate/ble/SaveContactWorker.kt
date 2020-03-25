@@ -4,7 +4,7 @@
 
 package com.example.colocate.ble
 
-import com.example.colocate.di.AppModule
+import com.example.colocate.di.module.AppModule
 import com.example.colocate.persistence.ContactEvent
 import com.example.colocate.persistence.ContactEventDao
 import kotlinx.coroutines.CoroutineDispatcher

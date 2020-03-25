@@ -31,6 +31,8 @@ class IsolateActivity : AppCompatActivity() {
             viewModel.onNotifyClick()
         }
 
-        viewModel.isolationResult.observe(this, Observer {})
+        viewModel.isolationResult.observe(this, Observer {
+
+        })
     }
 }

@@ -4,13 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.colocate.di.AppModule
+import com.example.colocate.di.module.AppModule
 import com.example.colocate.network.convert
 import com.example.colocate.persistence.ContactEventDao
+import com.example.colocate.persistence.KeyProvider
 import com.example.colocate.persistence.ResidentIdProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber.d
+import timber.log.Timber.e
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
@@ -20,7 +23,8 @@ class IsolateViewModel(
     private val httpClient: HttpClient,
     private val contactEventDao: ContactEventDao,
     @Named(AppModule.DISPATCHER_IO) private val ioDispatcher: CoroutineDispatcher,
-    private val residentIdProvider: ResidentIdProvider
+    private val residentIdProvider: ResidentIdProvider,
+    private val keyProvider: KeyProvider
 ) : ViewModel() {
 
     private val _isolationResult = MutableLiveData<Result>()
@@ -32,11 +36,18 @@ class IsolateViewModel(
                 convert(contactEventDao.getAll())
             }
             val coLocationData =
-                CoLocationData(residentIdProvider.getResidentId().toString(), events)
-            CoLocationApi(ByteArray(0), httpClient).save(coLocationData,
+                CoLocationData(
+                    residentIdProvider.getResidentId()
+                    , events
+                )
+            CoLocationApi(
+                keyProvider.getKey(),
+                httpClient
+            ).save(coLocationData,
                 onSuccess = {
                     _isolationResult.value = Result.Success
                 }, onError = {
+                    e(it)
                     _isolationResult.value = Result.Error(it)
                 })
         }

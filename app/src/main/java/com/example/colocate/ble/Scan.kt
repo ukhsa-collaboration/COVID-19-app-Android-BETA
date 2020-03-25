@@ -12,7 +12,7 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.os.ParcelUuid
-import com.example.colocate.di.AppModule
+import com.example.colocate.di.module.AppModule
 import com.example.colocate.persistence.ContactEventDao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope

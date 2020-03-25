@@ -15,7 +15,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.colocate.ColocateApplication
 import com.example.colocate.R
-import com.example.colocate.di.AppModule
+import com.example.colocate.di.module.AppModule
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

@@ -2,8 +2,9 @@ package com.example.colocate.isolate
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.colocate.di.AppModule
+import com.example.colocate.di.module.AppModule
 import com.example.colocate.persistence.ContactEventDao
+import com.example.colocate.persistence.KeyProvider
 import com.example.colocate.persistence.ResidentIdProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
@@ -14,10 +15,21 @@ class IsolateViewModelFactory @Inject constructor(
     private val httpClient: HttpClient,
     private val contactEventDao: ContactEventDao,
     @Named(AppModule.DISPATCHER_IO) private val ioDispatcher: CoroutineDispatcher,
-    private val residentIdProvider: ResidentIdProvider
+    private val residentIdProvider: ResidentIdProvider,
+    private val keyProvider: KeyProvider
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return IsolateViewModel(httpClient, contactEventDao, ioDispatcher, residentIdProvider) as T
+        return if (modelClass.isAssignableFrom(IsolateViewModel::class.java)) {
+            IsolateViewModel(
+                httpClient,
+                contactEventDao,
+                ioDispatcher,
+                residentIdProvider,
+                keyProvider
+            ) as T
+        } else {
+            throw IllegalArgumentException("ViewModel Not Found")
+        }
     }
 }
