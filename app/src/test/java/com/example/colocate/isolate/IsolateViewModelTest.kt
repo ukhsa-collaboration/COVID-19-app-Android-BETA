@@ -14,6 +14,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -34,6 +35,9 @@ class IsolateViewModelTest {
 
     @Mock
     private lateinit var residentIdProvider: ResidentIdProvider
+
+    @Mock
+    private lateinit var jsonObject: JSONObject
 
     companion object {
         private val RESIDENT_ID = "80baf81b-8afd-47e9-9915-50691525c910"
