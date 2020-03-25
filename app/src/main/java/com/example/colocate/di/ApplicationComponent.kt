@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
 package com.example.colocate.di
 
 import com.example.colocate.RegistrationNotificationService
