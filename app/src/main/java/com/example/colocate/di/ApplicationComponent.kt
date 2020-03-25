@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.room.Room
+import com.example.colocate.RegistrationNotificationService
 import com.example.colocate.ble.BluetoothService
 import com.example.colocate.isolate.IsolateActivity
 import com.example.colocate.persistence.AppDatabase
@@ -23,6 +24,7 @@ import javax.inject.Named
 interface ApplicationComponent {
     fun inject(bluetoothService: BluetoothService)
     fun inject(bluetoothService: IsolateActivity)
+    fun inject(registrationNotificationService: RegistrationNotificationService)
 }
 
 @Module
