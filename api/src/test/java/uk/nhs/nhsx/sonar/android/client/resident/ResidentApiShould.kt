@@ -20,7 +20,7 @@ class ResidentApiShould {
 
     private val encryptionKeyStorage = mockk<EncryptionKeyStorage>(relaxed = true)
     private val httpClient = mockk<HttpClient>(relaxed = true)
-    private val residentApi = ResidentApi(encryptionKeyStorage, httpClient)
+    private val residentApi = ResidentApi(encryptionKeyStorage, httpClient, ::encodeBase64)
 
     @Test
     fun postJsonToHttpClientAndMapJsonResponseToRegistration() {
@@ -126,6 +126,9 @@ class ResidentApiShould {
             put("secretKey", "some secret key")
         }
 
+    private fun encodeBase64(value: String): String =
+        Base64.getEncoder().encodeToString(value.toByteArray())
+
     private val base64EncodedSecretKey: String =
-        Base64.getEncoder().encodeToString("some secret key".toByteArray())
+        encodeBase64("some secret key")
 }

@@ -5,6 +5,7 @@
 
 package uk.nhs.nhsx.sonar.android.client.resident
 
+import android.util.Base64
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
@@ -19,7 +20,16 @@ typealias ErrorCallback = (Exception) -> Unit
 // -d '{ "activationCode": "uuid-blabla..." }'
 // -> 200 { "id": "uuid-blabalabla", "secretKey": "base 64 encoded hmac compatible key" }
 
-class ResidentApi @Inject constructor(private val encryptionKeyStorage: EncryptionKeyStorage, private val httpClient: HttpClient) {
+class ResidentApi @Inject constructor(
+    private val encryptionKeyStorage: EncryptionKeyStorage,
+    private val httpClient: HttpClient,
+    private val encodeBase64: (String) -> String = { value ->
+        Base64.encodeToString(
+            value.toByteArray(),
+            Base64.NO_WRAP
+        )
+    }
+) {
 
     fun register(onSuccess: (Registration) -> Unit = {}, onError: ErrorCallback = {}) {
         val request = HttpRequest("/api/residents", JSONObject())
@@ -51,10 +61,12 @@ class ResidentApi @Inject constructor(private val encryptionKeyStorage: Encrypti
     ) {
         val requestJson = JSONObject()
         requestJson.put("activationCode", activationCode)
+
         val request = HttpRequest("/api/devices", requestJson)
         httpClient.post(request,
             { responseJson ->
-                encryptionKeyStorage.putBase64Key(responseJson.getString("secretKey"))
+                val key = responseJson.getString("secretKey")
+                encryptionKeyStorage.putBase64Key(encodeBase64(key))
                 onSuccess(mapResponseToRegistration(responseJson))
             }, onError)
     }
