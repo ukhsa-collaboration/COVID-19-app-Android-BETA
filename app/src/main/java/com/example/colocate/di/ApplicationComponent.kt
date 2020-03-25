@@ -8,8 +8,12 @@ import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.isolate.IsolateActivity
 import dagger.Component
+import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 
-@Component(modules = [PersistenceModule::class, AppModule::class, BluetoothModule::class, NetworkModule::class])
+@Component(
+    modules = [PersistenceModule::class, AppModule::class, BluetoothModule::class, NetworkModule::class,
+        EncryptionKeyStorageModule::class]
+)
 interface ApplicationComponent {
     fun inject(bluetoothService: BluetoothService)
     fun inject(bluetoothService: IsolateActivity)

@@ -10,16 +10,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.example.colocate.ColocateApplication
 import com.example.colocate.R
-import kotlinx.android.synthetic.main.activity_isolate.isolate_notify
+import com.example.colocate.ViewModelFactory
+import kotlinx.android.synthetic.main.activity_isolate.*
 import javax.inject.Inject
 
 class IsolateActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var isolateViewModelFactory: IsolateViewModelFactory
+    protected lateinit var viewModelFactory: ViewModelFactory<IsolateViewModel>
 
     private val viewModel: IsolateViewModel by viewModels {
-        isolateViewModelFactory
+        viewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

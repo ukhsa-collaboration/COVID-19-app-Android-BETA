@@ -7,24 +7,21 @@ import androidx.lifecycle.viewModelScope
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.network.convert
 import com.example.colocate.persistence.ContactEventDao
-import com.example.colocate.persistence.KeyProvider
 import com.example.colocate.persistence.ResidentIdProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber.d
 import timber.log.Timber.e
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
+import javax.inject.Inject
 import javax.inject.Named
 
-class IsolateViewModel(
-    private val httpClient: HttpClient,
+class IsolateViewModel @Inject constructor(
+    private val colocationApi: CoLocationApi,
     private val contactEventDao: ContactEventDao,
     @Named(AppModule.DISPATCHER_IO) private val ioDispatcher: CoroutineDispatcher,
-    private val residentIdProvider: ResidentIdProvider,
-    private val keyProvider: KeyProvider
+    private val residentIdProvider: ResidentIdProvider
 ) : ViewModel() {
 
     private val _isolationResult = MutableLiveData<Result>()
@@ -37,13 +34,9 @@ class IsolateViewModel(
             }
             val coLocationData =
                 CoLocationData(
-                    residentIdProvider.getResidentId()
-                    , events
+                    residentIdProvider.getResidentId(), events
                 )
-            CoLocationApi(
-                keyProvider.getKey(),
-                httpClient
-            ).save(coLocationData,
+            colocationApi.save(coLocationData,
                 onSuccess = {
                     _isolationResult.value = Result.Success
                 }, onError = {
