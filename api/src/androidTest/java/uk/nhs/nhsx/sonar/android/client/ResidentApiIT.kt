@@ -41,7 +41,7 @@ class ResidentApiIT {
         val responseJson = """
             {
                 "id": "$citizenID",
-                "hmacKey": "$secretKey"                
+                "secretKey": "$secretKey"                
             }
         """
 
@@ -66,7 +66,7 @@ class ResidentApiIT {
         await.until { reg !== null }
 
         assertEquals(citizenID, reg?.id)
-        assertEquals(secretKey, reg?.hmacKey)
+        assertEquals(secretKey, reg?.secretKey)
 
         val request1 = server.takeRequest()
         assertEquals("/api/residents", request1.path)

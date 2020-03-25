@@ -71,7 +71,7 @@ class ResidentApiShould {
 
         onSuccessCaptor.firstValue.invoke(createJsonRegistration())
         assertThat(expectedRegistration.id).isEqualTo("00000000-0000-0000-0000-000000000001")
-        assertThat(expectedRegistration.hmacKey).isEqualTo("some secret key")
+        assertThat(expectedRegistration.secretKey).isEqualTo("some secret key")
     }
 
     @Test
@@ -92,10 +92,49 @@ class ResidentApiShould {
         assertThat(expectedError).hasMessage("boom")
     }
 
+    @Test
+    fun callThePostEndpointWithActivationCodeWhenConfirmingADevice() {
+        val httpClient = mock(HttpClient::class.java)
+        val cut =
+            ResidentApi(
+                httpClient
+            )
+
+        cut.confirmDevice("some-activation-code", {}, {})
+
+        val requestCaptor = argumentCaptor<HttpRequest>()
+        verify(httpClient).post(requestCaptor.capture(), any(), any())
+
+        assertThat(requestCaptor.firstValue.urlPath).isEqualTo("/api/devices")
+        assertThat(requestCaptor.firstValue.json["activationCode"]).isEqualTo("some-activation-code")
+    }
+
+    @Test
+    fun returnARegistrationWhenConfirmingADevice() {
+        val httpClient = mock(HttpClient::class.java)
+        val cut =
+            ResidentApi(
+                httpClient
+            )
+        var actualRegistration: Registration? = null
+
+        cut.confirmDevice("some-activation-code", {
+            registration -> actualRegistration = registration
+        }, {})
+
+        val successCaptor = argumentCaptor<(JSONObject) -> Unit>()
+        verify(httpClient).post(any(), successCaptor.capture(), any())
+
+        successCaptor.firstValue.invoke(createJsonRegistration())
+
+        assertThat(actualRegistration!!.id).isEqualTo("00000000-0000-0000-0000-000000000001")
+        assertThat(actualRegistration!!.secretKey).isEqualTo("some secret key")
+    }
+
     private fun createJsonRegistration(): JSONObject {
         val jsonRegistration = JSONObject()
             .put("id", "00000000-0000-0000-0000-000000000001")
-            .put("hmacKey", "some secret key")
+            .put("secretKey", "some secret key")
         return jsonRegistration
     }
 }
