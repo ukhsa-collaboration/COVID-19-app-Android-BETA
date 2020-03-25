@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.client
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.nhaarman.mockitokotlin2.mock
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.awaitility.kotlin.await
@@ -30,7 +29,12 @@ class ResidentApiIT {
     fun setUp() {
         server = MockWebServer()
         server.start(8089)
-        encryptionKeyStorage = mock()
+
+        encryptionKeyStorage = object : EncryptionKeyStorage {
+            override fun provideKey() = ByteArray(0)
+            override fun putKey(key: ByteArray) = Unit
+            override fun putBase64Key(encodedKey: String) = Unit
+        }
     }
 
     @After

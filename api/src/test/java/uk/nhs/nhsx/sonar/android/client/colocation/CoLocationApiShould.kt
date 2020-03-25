@@ -5,65 +5,56 @@
 
 package uk.nhs.nhsx.sonar.android.client.colocation
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.whenever
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 
 class CoLocationApiShould {
 
-    lateinit var encryptionKeyStorage: EncryptionKeyStorage
-
-    @Before
-    fun setUp() {
-        encryptionKeyStorage = mock(EncryptionKeyStorage::class.java)
-        whenever(encryptionKeyStorage.provideKey()).thenReturn(ByteArray(0))
+    private val encryptionKeyStorage = object : EncryptionKeyStorage by mockk() {
+        override fun provideKey() = ByteArray(0)
     }
+    private val httpClient = mockk<HttpClient>(relaxed = true)
 
     @Test
     fun callHttpClientPatchWhenSendingCoLocationData() {
-        val httpClient = mock(HttpClient::class.java)
         val cut = CoLocationApi(encryptionKeyStorage, httpClient)
         val jsonEvents = JSONArray("""[{"eventId": 1}]""")
 
         cut.save(CoLocationData("residentId", jsonEvents))
 
-        val requestCaptor = argumentCaptor<HttpRequest>()
-        verify(httpClient).patch(requestCaptor.capture(), any(), any())
+        val requestSlot = slot<HttpRequest>()
+        verify { httpClient.patch(capture(requestSlot), any(), any()) }
 
-        val request = requestCaptor.firstValue
+        val request = requestSlot.captured
         assertThat(request.urlPath).isEqualTo("/api/residents/residentId")
         assertThat(request.json.toString()).isEqualTo("""{"contactEvents":[{"eventId":1}]}""")
     }
 
     @Test
     fun callTheSuccessCallbackInCaseOfSuccess() {
-        val httpClient = mock(HttpClient::class.java)
         val cut = CoLocationApi(encryptionKeyStorage, httpClient)
         val jsonEvents = JSONArray("""[{"eventId": 1}]""")
 
         var called = false
         cut.save(CoLocationData("residentId", jsonEvents), { called = true }, {})
 
-        val onSuccessCaptor = argumentCaptor<(JSONObject?) -> Unit>()
-        verify(httpClient).patch(any(), onSuccessCaptor.capture(), any())
+        val onSuccessCaptor = slot<(JSONObject?) -> Unit>()
+        verify { httpClient.patch(any(), capture(onSuccessCaptor), any()) }
 
-        onSuccessCaptor.firstValue.invoke(null)
+        onSuccessCaptor.captured.invoke(null)
         assertThat(called).isTrue()
     }
 
     @Test
     fun callTheErrorCallbackInCaseOfException() {
-        val httpClient = mock(HttpClient::class.java)
 
         val cut = CoLocationApi(encryptionKeyStorage, httpClient)
         val jsonEvents = JSONArray("""[{"eventId": 1}]""")
@@ -72,10 +63,10 @@ class CoLocationApiShould {
 
         cut.save(CoLocationData("residentId", jsonEvents), {}, { error -> expectedError = error })
 
-        val onErrorCaptor = argumentCaptor<(Exception) -> Unit>()
-        verify(httpClient).patch(any(), any(), onErrorCaptor.capture())
+        val onErrorCaptor = slot<(Exception) -> Unit>()
+        verify { httpClient.patch(any(), any(), capture(onErrorCaptor)) }
 
-        onErrorCaptor.firstValue.invoke(Exception("boom"))
+        onErrorCaptor.captured.invoke(Exception("boom"))
         assertThat(expectedError).hasMessage("boom")
     }
 }

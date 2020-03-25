@@ -5,14 +5,12 @@
 
 package uk.nhs.nhsx.sonar.android.client.resident
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.mock
+import io.mockk.mockk
+import io.mockk.slot
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
@@ -20,134 +18,114 @@ import java.util.Base64
 
 class ResidentApiShould {
 
-    private val encryptionKeyStorage: EncryptionKeyStorage = mock()
-
-    private val httpClient = mock(HttpClient::class.java)
-
-    private val cut =
-        ResidentApi(
-            encryptionKeyStorage,
-            httpClient
-        )
+    private val encryptionKeyStorage = mockk<EncryptionKeyStorage>(relaxed = true)
+    private val httpClient = mockk<HttpClient>(relaxed = true)
+    private val residentApi = ResidentApi(encryptionKeyStorage, httpClient)
 
     @Test
     fun postJsonToHttpClientAndMapJsonResponseToRegistration() {
+        residentApi.register()
 
-        cut.register()
+        val requestSlot = slot<HttpRequest>()
+        verify { httpClient.post(capture(requestSlot), any(), any()) }
 
-        val requestCaptor = argumentCaptor<HttpRequest>()
-
-        verify(httpClient).post(requestCaptor.capture(), any(), any())
-        assertThat(requestCaptor.firstValue.urlPath).isEqualTo("/api/residents")
-        assertThat(requestCaptor.firstValue.json.toString()).isEqualTo("{}")
+        assertThat(requestSlot.captured.urlPath).isEqualTo("/api/residents")
+        assertThat(requestSlot.captured.json.toString()).isEqualTo("{}")
     }
 
     @Test
     fun postATokenWhenRegistering() {
+        residentApi.register("some-token")
 
-        cut.register("some-token")
+        val requestSlot = slot<HttpRequest>()
+        verify { httpClient.post(capture(requestSlot), any(), any()) }
 
-        val requestCaptor = argumentCaptor<HttpRequest>()
-
-        verify(httpClient).post(requestCaptor.capture(), any(), any())
-        assertThat(requestCaptor.firstValue.urlPath).isEqualTo("/api/devices/registrations")
-        assertThat(requestCaptor.firstValue.json.get("pushToken")).isEqualTo("some-token")
+        assertThat(requestSlot.captured.urlPath).isEqualTo("/api/devices/registrations")
+        assertThat(requestSlot.captured.json.get("pushToken")).isEqualTo("some-token")
     }
 
     @Test
     fun callTheSuccessCallbackInCaseOfSuccess() {
+        var expectedRegistration: Registration? = null
 
-        var expectedRegistration =
-            Registration(
-                "dummy"
-            )
+        residentApi.register({ registration -> expectedRegistration = registration })
 
-        cut.register({ registration -> expectedRegistration = registration })
+        val onSuccessSlot = slot<(JSONObject) -> Unit>()
+        verify { httpClient.post(any(), capture(onSuccessSlot), any()) }
 
-        val onSuccessCaptor = argumentCaptor<(JSONObject) -> Unit>()
-
-        verify(httpClient).post(any(), onSuccessCaptor.capture(), any())
-
-        onSuccessCaptor.firstValue.invoke(createJsonRegistration())
-        assertThat(expectedRegistration.id).isEqualTo("00000000-0000-0000-0000-000000000001")
+        onSuccessSlot.captured.invoke(jsonRegistration)
+        assertThat(expectedRegistration?.id).isEqualTo("00000000-0000-0000-0000-000000000001")
     }
 
     @Test
     fun callTheErrorCallbackInCaseOfException() {
+        var expectedError: Exception? = null
 
-        var expectedError = Exception("something")
+        residentApi.register({}, { error -> expectedError = error })
 
-        cut.register({}, { error -> expectedError = error })
+        val onErrorSlot = slot<(Exception) -> Unit>()
+        verify { httpClient.post(any(), any(), capture(onErrorSlot)) }
 
-        val onErrorCaptor = argumentCaptor<(Exception) -> Unit>()
-        verify(httpClient).post(any(), any(), onErrorCaptor.capture())
-
-        onErrorCaptor.firstValue.invoke(Exception("boom"))
+        onErrorSlot.captured.invoke(Exception("boom"))
         assertThat(expectedError).hasMessage("boom")
     }
 
     @Test
     fun callThePostEndpointWithActivationCodeWhenConfirmingADevice() {
+        residentApi.confirmDevice("some-activation-code", {}, {})
 
-        cut.confirmDevice("some-activation-code", {}, {})
+        val requestSlot = slot<HttpRequest>()
+        verify { httpClient.post(capture(requestSlot), any(), any()) }
 
-        val requestCaptor = argumentCaptor<HttpRequest>()
-        verify(httpClient).post(requestCaptor.capture(), any(), any())
-
-        assertThat(requestCaptor.firstValue.urlPath).isEqualTo("/api/devices")
-        assertThat(requestCaptor.firstValue.json["activationCode"]).isEqualTo("some-activation-code")
+        assertThat(requestSlot.captured.urlPath).isEqualTo("/api/devices")
+        assertThat(requestSlot.captured.json["activationCode"]).isEqualTo("some-activation-code")
     }
 
     @Test
     fun returnARegistrationWhenConfirmingADevice() {
-
         var actualRegistration: Registration? = null
 
-        cut.confirmDevice("some-activation-code", { registration ->
+        residentApi.confirmDevice("some-activation-code", { registration ->
             actualRegistration = registration
         }, {})
 
-        val successCaptor = argumentCaptor<(JSONObject) -> Unit>()
-        verify(httpClient).post(any(), successCaptor.capture(), any())
+        val successSlot = slot<(JSONObject) -> Unit>()
+        verify { httpClient.post(any(), capture(successSlot), any()) }
 
-        successCaptor.firstValue.invoke(createJsonRegistration())
-
-        assertThat(actualRegistration!!.id).isEqualTo("00000000-0000-0000-0000-000000000001")
+        successSlot.captured.invoke(jsonRegistration)
+        assertThat(actualRegistration?.id).isEqualTo("00000000-0000-0000-0000-000000000001")
     }
 
     @Test
     fun callTheErrorCallbackInCaseOfExceptionWhenConfirmingADevice() {
+        var expectedError: Exception? = null
 
-        var expectedError = Exception("something")
+        residentApi.confirmDevice("some-activation-code", {}, { error -> expectedError = error })
 
-        cut.confirmDevice("some-activation-code", {}, { error -> expectedError = error })
+        val onErrorSlot = slot<(Exception) -> Unit>()
+        verify { httpClient.post(any(), any(), capture(onErrorSlot)) }
 
-        val onErrorCaptor = argumentCaptor<(Exception) -> Unit>()
-        verify(httpClient).post(any(), any(), onErrorCaptor.capture())
-
-        onErrorCaptor.firstValue.invoke(Exception("boom"))
+        onErrorSlot.captured.invoke(Exception("boom"))
         assertThat(expectedError).hasMessage("boom")
     }
 
     @Test
     fun callPersistSecretKeyWhenConfirmingADevice() {
+        residentApi.confirmDevice("some-activation-code", {}, {})
 
-        cut.confirmDevice("some-activation-code", {}, {})
+        val successCaptor = slot<(JSONObject) -> Unit>()
+        verify { httpClient.post(any(), capture(successCaptor), any()) }
 
-        val successCaptor = argumentCaptor<(JSONObject) -> Unit>()
-        verify(httpClient).post(any(), successCaptor.capture(), any())
-        successCaptor.firstValue.invoke(createJsonRegistration())
-
-        verify(encryptionKeyStorage).putBase64Key(base64EncodedSecretKey())
+        successCaptor.captured.invoke(jsonRegistration)
+        verify { encryptionKeyStorage.putBase64Key(base64EncodedSecretKey) }
     }
 
-    private fun createJsonRegistration(): JSONObject {
-        val jsonRegistration = JSONObject()
-            .put("id", "00000000-0000-0000-0000-000000000001")
-            .put("secretKey", base64EncodedSecretKey())
-        return jsonRegistration
-    }
+    private val jsonRegistration: JSONObject =
+        JSONObject().apply {
+            put("id", "00000000-0000-0000-0000-000000000001")
+            put("secretKey", "some secret key")
+        }
 
-    private fun base64EncodedSecretKey() =
+    private val base64EncodedSecretKey: String =
         Base64.getEncoder().encodeToString("some secret key".toByteArray())
 }

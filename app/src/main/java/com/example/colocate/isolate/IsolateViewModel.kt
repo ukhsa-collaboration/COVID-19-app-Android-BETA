@@ -23,7 +23,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class IsolateViewModel @Inject constructor(
-    private val colocationApi: CoLocationApi,
+    private val coLocationApi: CoLocationApi,
     private val contactEventDao: ContactEventDao,
     @Named(AppModule.DISPATCHER_IO) private val ioDispatcher: CoroutineDispatcher,
     private val residentIdProvider: ResidentIdProvider
@@ -34,13 +34,10 @@ class IsolateViewModel @Inject constructor(
 
     fun onNotifyClick() {
         viewModelScope.launch(ioDispatcher) {
-            val events: JSONArray =
-                convert(contactEventDao.getAll())
-            val coLocationData =
-                CoLocationData(
-                    residentIdProvider.getResidentId(), events
-                )
-            colocationApi.save(coLocationData,
+            val events: JSONArray = convert(contactEventDao.getAll())
+            val coLocationData = CoLocationData(residentIdProvider.getResidentId(), events)
+
+            coLocationApi.save(coLocationData,
                 onSuccess = {
                     i("Success")
                     _isolationResult.value = Result.Success

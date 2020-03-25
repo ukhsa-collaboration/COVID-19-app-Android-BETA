@@ -49,7 +49,6 @@ def work_version = "2.3.4"
 def room_version = "2.2.5"
 def timber_version = "4.7.1"
 def lifecycle_version = "2.2.0"
-def mockito_version = "3.2.4"
 
 dependencies {
     implementation project(":api")
@@ -81,10 +80,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     testImplementation 'androidx.test:core:1.2.0'
-    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-    testImplementation "org.mockito:mockito-inline:2.22.0"
+    testImplementation "io.mockk:mockk:1.9.3"
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
-
 }
 
 afterEvaluate {
