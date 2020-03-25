@@ -4,37 +4,27 @@
 
 package com.example.colocate.isolate
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.colocate.network.convert
 import com.example.colocate.persistence.ContactEvent
 import com.example.colocate.persistence.ContactEventDao
-import com.example.colocate.persistence.KeyProvider
 import com.example.colocate.persistence.ResidentIdProvider
-import com.nhaarman.mockitokotlin2.*
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.json.JSONArray
+import org.junit.Assert.assertEquals
 import org.junit.Before
-
-import org.junit.Assert.*
-import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
-import javax.security.auth.Subject
 
 class IsolateViewModelTest {
 
-
     private lateinit var testSubject: IsolateViewModel
-
 
     @Mock
     private lateinit var colocationApi: CoLocationApi
@@ -45,11 +35,9 @@ class IsolateViewModelTest {
     @Mock
     private lateinit var residentIdProvider: ResidentIdProvider
 
-
     companion object {
         private val RESIDENT_ID = "80baf81b-8afd-47e9-9915-50691525c910"
     }
-
 
     @Before
     fun setUp() {
@@ -61,7 +49,6 @@ class IsolateViewModelTest {
             Dispatchers.Unconfined,
             residentIdProvider
         )
-
     }
 
     @Test
@@ -77,10 +64,8 @@ class IsolateViewModelTest {
             val argumentCaptor = argumentCaptor<CoLocationData>()
 
             verify(colocationApi).save(
-                argumentCaptor.capture()
-                , any(), any()
+                argumentCaptor.capture(), any(), any()
             )
-
 
             assertEquals(
                 RESIDENT_ID,
@@ -92,10 +77,8 @@ class IsolateViewModelTest {
                 expectedValues.toString(),
                 argumentCaptor.firstValue.events.toString()
             )
-
         }
     }
-
 
     private fun getContentEvents() = listOf(
         ContactEvent(
@@ -111,5 +94,4 @@ class IsolateViewModelTest {
             timestamp = "124325432"
         )
     )
-
 }

@@ -21,14 +21,15 @@ open class VolleyHttpClient(
 ) : HttpClient {
 
     constructor(url: String, ctx: Context) :
-               this(url, RequestQueueFactory.createQueue(ctx))
+        this(url, RequestQueueFactory.createQueue(ctx))
 
     override fun post(
         request: HttpRequest,
         onSuccess: (JSONObject) -> Unit,
         onError: (Exception) -> Unit
     ) {
-        val jsonObjectRequest = createRequest(Request.Method.POST, request.urlPath, request.json, onSuccess, onError)
+        val jsonObjectRequest =
+            createRequest(Request.Method.POST, request.urlPath, request.json, onSuccess, onError)
         defineRetryPolicy(jsonObjectRequest)
         queue.add(jsonObjectRequest)
     }
@@ -38,7 +39,14 @@ open class VolleyHttpClient(
         onSuccess: (JSONObject?) -> Unit,
         onError: (java.lang.Exception) -> Unit
     ) {
-        val jsonObjectRequest = createSignedRequest(request.key!!, Request.Method.PATCH, request.urlPath, request.json, onSuccess, onError)
+        val jsonObjectRequest = createSignedRequest(
+            request.key!!,
+            Request.Method.PATCH,
+            request.urlPath,
+            request.json,
+            onSuccess,
+            onError
+        )
         defineRetryPolicy(jsonObjectRequest)
         queue.add(jsonObjectRequest)
     }

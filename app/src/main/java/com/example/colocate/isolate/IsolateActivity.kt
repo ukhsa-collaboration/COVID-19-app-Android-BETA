@@ -33,7 +33,6 @@ class IsolateActivity : AppCompatActivity() {
         }
 
         viewModel.isolationResult.observe(this, Observer {
-
         })
     }
 }

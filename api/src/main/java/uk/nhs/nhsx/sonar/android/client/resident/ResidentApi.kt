@@ -44,12 +44,12 @@ class ResidentApi(private val httpClient: HttpClient) {
         onSuccess: (Registration) -> Unit,
         onError: (Exception) -> Unit
     ) {
-        val json = JSONObject()
-        json.put("activationCode", activationCode)
-        val request = HttpRequest("/api/devices", json)
-        httpClient.post(request, {
-            json -> onSuccess(mapResponseToRegistration(json))
-        }, {})
+        val requestBody = JSONObject()
+        requestBody.put("activationCode", activationCode)
+        val request = HttpRequest("/api/devices", requestBody)
+        httpClient.post(request, { json ->
+            onSuccess(mapResponseToRegistration(json))
+        }, onError)
     }
 
     private fun mapResponseToRegistration(jsonObject: JSONObject): Registration {

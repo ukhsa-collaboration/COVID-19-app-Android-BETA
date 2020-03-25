@@ -37,14 +37,12 @@ class PersistenceModule(private val applicationContext: Context) {
         }
     }
 
-
     @Provides
     fun provideKeyProvider(): KeyProvider {
         return object : KeyProvider {
             override fun getKey(): ByteArray {
                 return "JXRezte6OJ8MUavY28hsia6XiF92geOf82TKB5Qp+QQ=".toByteArray()
             }
-
         }
     }
 }

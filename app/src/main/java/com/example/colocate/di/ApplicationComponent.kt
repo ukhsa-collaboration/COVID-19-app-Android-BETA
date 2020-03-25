@@ -23,7 +23,3 @@ interface ApplicationComponent {
     fun inject(bluetoothService: IsolateActivity)
     fun inject(registrationNotificationService: RegistrationNotificationService)
 }
-
-
-
-

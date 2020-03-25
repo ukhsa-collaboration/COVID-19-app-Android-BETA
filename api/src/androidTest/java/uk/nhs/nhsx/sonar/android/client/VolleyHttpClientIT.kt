@@ -30,7 +30,10 @@ class VolleyHttpClientIT {
     @Test
     fun shouldParseCorrectlyJsonResponseWithNoContent() {
         var expectedJson: JSONObject? = null
-        val client = VolleyHttpClient("http://localhost:8089", InstrumentationRegistry.getInstrumentation().targetContext)
+        val client = VolleyHttpClient(
+            "http://localhost:8089",
+            InstrumentationRegistry.getInstrumentation().targetContext
+        )
         val request = HttpRequest("/", JSONObject())
 
         server.enqueue(

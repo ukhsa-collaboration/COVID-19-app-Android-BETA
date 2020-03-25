@@ -16,7 +16,6 @@ import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 
 const val BASE_URL = "https://sonar-colocate-services.apps.cp.data.england.nhs.uk"
 
-
 class ColocateApplication : Application() {
     lateinit var applicationComponent: ApplicationComponent
     override fun onCreate() {

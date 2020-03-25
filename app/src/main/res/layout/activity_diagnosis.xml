@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
@@ -29,16 +28,14 @@
             android:lineSpacingMultiplier="1.18"
             android:text="@string/diagnosed"
             android:fontFamily="@font/frutiger_bold"
-            android:textSize="32sp"
-             />
+            android:textSize="32sp" />
 
         <RadioGroup
             android:id="@+id/diagnosis_answer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="36dp"
-            android:layout_below="@id/diagnosis"
-            >
+            android:layout_below="@id/diagnosis">
 
             <RadioButton
                 android:id="@+id/yes"
@@ -46,8 +43,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/frutiger"
                 android:text="@string/yes"
-                android:textSize="36sp"
-                />
+                android:textSize="36sp" />
 
             <RadioButton
                 android:id="@+id/no"
@@ -56,8 +52,7 @@
                 android:layout_marginTop="48dp"
                 android:fontFamily="@font/frutiger"
                 android:text="@string/no"
-                android:textSize="36sp"
-                />
+                android:textSize="36sp" />
 
         </RadioGroup>
 

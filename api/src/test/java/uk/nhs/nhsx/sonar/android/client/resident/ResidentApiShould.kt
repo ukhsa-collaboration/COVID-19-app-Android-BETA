@@ -118,8 +118,8 @@ class ResidentApiShould {
             )
         var actualRegistration: Registration? = null
 
-        cut.confirmDevice("some-activation-code", {
-            registration -> actualRegistration = registration
+        cut.confirmDevice("some-activation-code", { registration ->
+            actualRegistration = registration
         }, {})
 
         val successCaptor = argumentCaptor<(JSONObject) -> Unit>()

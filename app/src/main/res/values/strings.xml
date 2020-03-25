@@ -27,7 +27,7 @@
     <string name="ok_disclaimer_title">You\'re okay right now</string>
     <string name="ok_disclaimer_body">This is a real-time status based on people you’ve been in contact with.\n\nYou’ll get an alert if your status changes.\n\n <b>It’s important that you tell us if you develop any new symptoms.</b></string>
     <string name="ok_symptom_title">If you develop symptoms</string>
-    <string name="ok_info_content" >You can stay safe by washing your hands more regularly and avoiding large gatherings of people.\n\nVisit NHS 111 for more advice on protecting yourself and people you care about.\n\nThank you for helping us slow the spread of coronavirus.</string>
+    <string name="ok_info_content">You can stay safe by washing your hands more regularly and avoiding large gatherings of people.\n\nVisit NHS 111 for more advice on protecting yourself and people you care about.\n\nThank you for helping us slow the spread of coronavirus.</string>
     <string name="ok_symptom_content">Use our online tool to check your symptoms.</string>
     <string name="check_my_symptoms">Check my symptoms</string>
     <string name="default_notification_channel_id">colocate-locate</string>

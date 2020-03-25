@@ -58,7 +58,7 @@ class ResidentApiIT {
                 "http://localhost:8089",
                 appContext
             )
-            )
+        )
             .register({ registration ->
                 reg = registration
             })

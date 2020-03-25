@@ -9,7 +9,7 @@ import android.bluetooth.le.AdvertiseData
 import android.bluetooth.le.AdvertiseSettings
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.os.ParcelUuid
-import android.util.Log
+import timber.log.Timber
 import javax.inject.Inject
 
 class Advertise @Inject constructor(private val bluetoothLeAdvertiser: BluetoothLeAdvertiser) {
@@ -45,15 +45,13 @@ class Advertise @Inject constructor(private val bluetoothLeAdvertiser: Bluetooth
 
 private class AdvertisingCallback : AdvertiseCallback() {
     override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
-        Log.i(
-            "Advertising",
+        Timber.i(
             "Started advertising with settings $settingsInEffect"
         )
     }
 
     override fun onStartFailure(errorCode: Int) {
-        Log.e(
-            "Advertising",
+        Timber.e(
             "Failed to start with error code $errorCode"
         )
     }
