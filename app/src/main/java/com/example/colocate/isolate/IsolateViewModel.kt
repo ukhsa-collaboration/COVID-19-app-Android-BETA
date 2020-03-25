@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.network.convert
 import com.example.colocate.persistence.ContactEventDao
-import com.example.colocate.persistence.Resident    IdProvider
+import com.example.colocate.persistence.ResidentIdProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.json.JSONArray
