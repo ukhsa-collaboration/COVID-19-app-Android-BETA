@@ -8,6 +8,8 @@ package uk.nhs.nhsx.sonar.android.client.resident
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
+import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
+import javax.inject.Inject
 
 typealias ErrorCallback = (Exception) -> Unit
 
@@ -17,20 +19,23 @@ typealias ErrorCallback = (Exception) -> Unit
 // -d '{ "activationCode": "uuid-blabla..." }'
 // -> 200 { "id": "uuid-blabalabla", "secretKey": "base 64 encoded hmac compatible key" }
 
-class ResidentApi(private val httpClient: HttpClient) {
+class ResidentApi @Inject constructor(private val encryptionKeyStorage: EncryptionKeyStorage, private val httpClient: HttpClient) {
 
     fun register(onSuccess: (Registration) -> Unit = {}, onError: ErrorCallback = {}) {
         val request = HttpRequest("/api/residents", JSONObject())
 
         httpClient.post(
             request,
-            { json -> onSuccess(mapResponseToRegistration(json)) },
+            { responseJson -> onSuccess(mapResponseToRegistration(responseJson)) },
             { exception -> onError(exception) }
         )
     }
 
     fun register(token: String, onSuccess: () -> Unit = {}, onError: ErrorCallback = {}) {
-        val request = HttpRequest("/api/devices/$token", JSONObject())
+        val requestJson = JSONObject().apply {
+            put("pushToken", token)
+        }
+        val request = HttpRequest("/api/devices/registrations", requestJson)
 
         httpClient.post(
             request,
@@ -44,18 +49,18 @@ class ResidentApi(private val httpClient: HttpClient) {
         onSuccess: (Registration) -> Unit,
         onError: (Exception) -> Unit
     ) {
-        val requestBody = JSONObject()
-        requestBody.put("activationCode", activationCode)
-        val request = HttpRequest("/api/devices", requestBody)
-        httpClient.post(request, { json ->
-            onSuccess(mapResponseToRegistration(json))
-        }, onError)
+        val requestJson = JSONObject()
+        requestJson.put("activationCode", activationCode)
+        val request = HttpRequest("/api/devices", requestJson)
+        httpClient.post(request,
+            { responseJson ->
+                encryptionKeyStorage.putBase64Key(responseJson.getString("secretKey"))
+                onSuccess(mapResponseToRegistration(responseJson))
+            }, onError)
     }
 
     private fun mapResponseToRegistration(jsonObject: JSONObject): Registration {
         val residentId = jsonObject.getString("id")
-        val hmacKey = jsonObject.getString("secretKey")
-
-        return Registration(residentId, hmacKey)
+        return Registration(residentId)
     }
 }

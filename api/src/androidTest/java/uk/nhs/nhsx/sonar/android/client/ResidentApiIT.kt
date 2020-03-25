@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.client
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.nhaarman.mockitokotlin2.mock
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.awaitility.kotlin.await
@@ -18,15 +19,18 @@ import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
 import uk.nhs.nhsx.sonar.android.client.resident.Registration
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
+import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 
 @RunWith(AndroidJUnit4::class)
 class ResidentApiIT {
     lateinit var server: MockWebServer
+    lateinit var encryptionKeyStorage: EncryptionKeyStorage
 
     @Before
     fun setUp() {
         server = MockWebServer()
         server.start(8089)
+        encryptionKeyStorage = mock()
     }
 
     @After
@@ -54,6 +58,7 @@ class ResidentApiIT {
         var reg: Registration? = null
 
         ResidentApi(
+            encryptionKeyStorage,
             VolleyHttpClient(
                 "http://localhost:8089",
                 appContext
@@ -66,7 +71,6 @@ class ResidentApiIT {
         await.until { reg !== null }
 
         assertEquals(citizenID, reg?.id)
-        assertEquals(secretKey, reg?.secretKey)
 
         val request1 = server.takeRequest()
         assertEquals("/api/residents", request1.path)

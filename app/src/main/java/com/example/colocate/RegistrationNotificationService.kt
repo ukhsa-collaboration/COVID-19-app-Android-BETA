@@ -7,20 +7,17 @@ package com.example.colocate
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
 import javax.inject.Inject
 
 class RegistrationNotificationService : FirebaseMessagingService() {
 
     @Inject
-    lateinit var httpClient: HttpClient
+    lateinit var residentApi: ResidentApi
 
     override fun onCreate() {
         (applicationContext as ColocateApplication).applicationComponent.inject(this)
     }
-
-    private val residentApi = ResidentApi(httpClient)
 
     override fun onNewToken(token: String) {
         Timber.d("Received new token: $token")

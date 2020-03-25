@@ -7,12 +7,12 @@ package uk.nhs.nhsx.sonar.android.client.colocation
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argumentCaptor
+import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
@@ -26,7 +26,7 @@ class CoLocationApiShould {
     @Before
     fun setUp() {
         encryptionKeyStorage = mock(EncryptionKeyStorage::class.java)
-        `when`(encryptionKeyStorage.provideKey()).thenReturn(ByteArray(0))
+        whenever(encryptionKeyStorage.provideKey()).thenReturn(ByteArray(0))
     }
 
     @Test
