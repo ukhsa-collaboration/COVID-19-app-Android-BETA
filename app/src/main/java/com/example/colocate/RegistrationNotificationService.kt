@@ -4,18 +4,23 @@
 
 package com.example.colocate
 
-import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
-import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
+import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
+import javax.inject.Inject
 
 class RegistrationNotificationService : FirebaseMessagingService() {
-    companion object {
-        const val TAG = "RegistrationNotificationService"
+
+    @Inject
+    lateinit var httpClient: HttpClient
+
+    override fun onCreate() {
+        (applicationContext as ColocateApplication).applicationComponent.inject(this)
     }
 
     override fun onNewToken(token: String) {
-        Log.i(TAG, "Received new token...")
-        ResidentApi(VolleyHttpClient("http://foo", this)).register(token)
+        Timber.i("Received new token... $httpClient")
+        ResidentApi(httpClient).register(token)
     }
 }

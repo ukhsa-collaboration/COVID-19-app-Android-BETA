@@ -1,5 +1,6 @@
 package com.example.colocate.di
 
+import com.example.colocate.RegistrationNotificationService
 import com.example.colocate.ble.BluetoothService
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.BluetoothModule
@@ -12,6 +13,7 @@ import dagger.Component
 interface ApplicationComponent {
     fun inject(bluetoothService: BluetoothService)
     fun inject(bluetoothService: IsolateActivity)
+    fun inject(registrationNotificationService: RegistrationNotificationService)
 }
 
 
