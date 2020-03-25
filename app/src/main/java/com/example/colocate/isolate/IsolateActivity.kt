@@ -13,7 +13,7 @@ import com.example.colocate.ColocateApplication
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
 import com.example.colocate.isolate.IsolateViewModel.Result.Success
-import kotlinx.android.synthetic.main.activity_isolate.*
+import kotlinx.android.synthetic.main.activity_isolate.isolate_notify
 import javax.inject.Inject
 
 class IsolateActivity : AppCompatActivity() {

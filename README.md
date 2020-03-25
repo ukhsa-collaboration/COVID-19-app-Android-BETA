@@ -50,3 +50,7 @@ Android Studio setup.
 1. Imports should *never* use wildcards
 
     ![No wildcard import](docs/kotlin-import-no-wildcards.png)
+
+1. Files should end with a new line character.
+    
+    ![Ensure line feed on save](docs/kotlin-newline-character.png)
