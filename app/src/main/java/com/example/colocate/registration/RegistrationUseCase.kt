@@ -15,14 +15,11 @@ typealias Token = String
 
 @Singleton
 class RegistrationUseCase @Inject constructor(
-    private val firebaseTokenRetriever: TokenRetriever,
+    private val tokenRetriever: TokenRetriever,
     private val residentApi: ResidentApi,
     private val activationCodeObserver: ActivationCodeObserver,
     private val residentIdProvider: ResidentIdProvider
 ) {
-    enum class RegistrationResult {
-        SUCCESS, FAILURE, ALREADY_REGISTERED
-    }
 
     suspend fun register(): RegistrationResult {
         try {
@@ -42,13 +39,13 @@ class RegistrationUseCase @Inject constructor(
             Timber.d("RegistrationUseCase residentId stored")
             return RegistrationResult.SUCCESS
         } catch (e: Exception) {
-            Timber.e("RegistrationUseCase exception")
+            Timber.e(e, "RegistrationUseCase exception")
             return RegistrationResult.FAILURE
         }
     }
 
     private suspend fun getFirebaseToken(): Token {
-        when (val result = firebaseTokenRetriever.retrieveToken()) {
+        when (val result = tokenRetriever.retrieveToken()) {
             is TokenRetriever.Result.Success -> {
                 return result.token
             }
@@ -75,8 +72,7 @@ class RegistrationUseCase @Inject constructor(
 
     private suspend fun waitForActivationCode(timeout: Long): String {
         return suspendCoroutineWithTimeout(timeout) { continuation ->
-            activationCodeObserver.addListener { activationCode ->
-                activationCodeObserver.removeListener()
+            activationCodeObserver.setListener { activationCode ->
                 continuation.resume(activationCode)
             }
         }

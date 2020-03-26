@@ -7,12 +7,8 @@ import javax.inject.Singleton
 class ActivationCodeObserver @Inject constructor() {
     private var listener: ((String) -> Unit)? = null
 
-    fun addListener(listener: (String) -> Unit) {
+    fun setListener(listener: (String) -> Unit) {
         this.listener = listener
-    }
-
-    fun removeListener() {
-        listener = null
     }
 
     fun onGetActivationCode(activationCode: String) {
