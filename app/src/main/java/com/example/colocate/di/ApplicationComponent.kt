@@ -5,6 +5,7 @@
 package com.example.colocate.di
 
 import com.example.colocate.DiagnoseActivity
+import com.example.colocate.FlowTestStartActivity
 import com.example.colocate.MainActivity
 import com.example.colocate.RegistrationNotificationService
 import com.example.colocate.ble.BluetoothService
@@ -33,4 +34,5 @@ interface ApplicationComponent {
     fun inject(diagnoseActivity: DiagnoseActivity)
     fun inject(mainActivity: MainActivity)
     fun inject(registrationNotificationService: RegistrationNotificationService)
+    fun inject(flowTestStartActivity: FlowTestStartActivity)
 }

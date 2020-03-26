@@ -34,7 +34,7 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
 
-        <activity android:name="com.example.colocate.MainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,6 +45,7 @@
         <activity android:name=".AtRiskActivity" />
         <activity android:name=".OkActivity" />
         <activity android:name=".isolate.IsolateActivity" />
+        <activity android:name=".FlowTestStartActivity" />
 
         <service
             android:name=".ble.BluetoothService"

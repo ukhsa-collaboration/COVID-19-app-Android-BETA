@@ -5,21 +5,33 @@
 package com.example.colocate.status
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 
 class SharedPreferencesStatusStorage(private val context: Context) : StatusStorage {
     override fun update(status: CovidStatus) {
-        context.getSharedPreferences(PREFERENCE_FILENAME, Context.MODE_PRIVATE)
+        getPreferences()
             .edit()
             .putString(PREF_STATUS, status.name)
             .apply()
     }
 
-    override fun get(): CovidStatus {
-        val status = context.getSharedPreferences(PREFERENCE_FILENAME, Context.MODE_PRIVATE)
+    override fun get(): CovidStatus =
+        getPreferences()
             .getString(PREF_STATUS, "OK")
-            ?: return CovidStatus.OK
-        return CovidStatus.valueOf(status)
+            ?.let { CovidStatus.valueOf(it) }
+            ?: CovidStatus.OK
+
+    // Used in tests, not available on the interface
+    fun reset() {
+        getPreferences()
+            .edit()
+            .clear()
+            .apply()
     }
+
+    private fun getPreferences(): SharedPreferences =
+        context.getSharedPreferences(PREFERENCE_FILENAME, MODE_PRIVATE)
 
     companion object {
         const val PREFERENCE_FILENAME = "status"

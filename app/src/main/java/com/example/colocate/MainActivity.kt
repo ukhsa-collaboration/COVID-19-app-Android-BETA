@@ -19,6 +19,7 @@ import com.example.colocate.status.StatusStorage
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
+
     @Inject
     protected lateinit var statusStorage: StatusStorage
 

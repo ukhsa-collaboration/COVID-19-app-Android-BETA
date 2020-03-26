@@ -29,10 +29,12 @@ class DiagnoseActivity : AppCompatActivity() {
         (application as ColocateApplication).applicationComponent.inject(this)
 
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        bluetoothAdapter?.takeIf { it.isDisabled }?.apply {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-        }
+        bluetoothAdapter
+            ?.takeIf { it.isDisabled }
+            ?.apply {
+                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+            }
         if (bluetoothAdapter == null || !bluetoothAdapter.isMultipleAdvertisementSupported) {
             setContentView(R.layout.activity_activate_bluetooth)
             return
