@@ -22,7 +22,7 @@
 
 1. Device setup
 
-    Make sure all animations are turned off on the device that is running the tests.
+    Make sure all animations are turned off on the device (not an emulator) that is running the tests.
     https://developer.android.com/training/testing/espresso/setup#set-up-environment
 
 1. Before pushing code run -
@@ -34,6 +34,11 @@
    ```bash
    ./gradlew
    ```
+
+**NOTE**
+ * DO NOT UNDER ANY CIRCUMSTANCE skip running the tests before pushing.
+ * DO NOT UNDER ANY CIRCUMSTANCE disable tests.
+ * DO NOT UNDER ANY CIRCUMSTANCE push code to master that knowingly breaks the test suite.
 
 ## Code formatting with KTLint
 
