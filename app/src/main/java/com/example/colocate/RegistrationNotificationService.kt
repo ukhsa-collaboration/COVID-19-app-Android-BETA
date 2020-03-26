@@ -4,7 +4,7 @@
 
 package com.example.colocate
 
-import com.example.colocate.registration.RegistrationFlowStore
+import com.example.colocate.registration.ActivationCodeObserver
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import timber.log.Timber
@@ -17,7 +17,7 @@ class RegistrationNotificationService : FirebaseMessagingService() {
     lateinit var residentApi: ResidentApi
 
     @Inject
-    lateinit var registrationFlowStore: RegistrationFlowStore
+    lateinit var activationCodeObserver: ActivationCodeObserver
 
     override fun onCreate() {
         (applicationContext as ColocateApplication).applicationComponent.inject(this)
@@ -28,7 +28,8 @@ class RegistrationNotificationService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
+        Timber.d("onMessageReceived $message")
         val activationCode = message.data["activationCode"] ?: return
-        registrationFlowStore.setActivationCode(activationCode)
+        activationCodeObserver.onGetActivationCode(activationCode)
     }
 }

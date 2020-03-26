@@ -7,7 +7,13 @@ package com.example.colocate
 import android.app.Application
 import com.example.colocate.di.ApplicationComponent
 import com.example.colocate.di.DaggerApplicationComponent
-import com.example.colocate.di.module.*
+import com.example.colocate.di.module.AppModule
+import com.example.colocate.di.module.BluetoothModule
+import com.example.colocate.di.module.NetworkModule
+import com.example.colocate.di.module.PersistenceModule
+import com.example.colocate.di.module.RegistrationModule
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 
@@ -29,8 +35,10 @@ class ColocateApplication : Application() {
             .registrationModule(RegistrationModule())
             .build()
 
-
-        applicationComponent.provideRegistrationFlowStore().start()
+        GlobalScope.launch {
+            val result = applicationComponent.registrationUseCase().register()
+            Timber.d("Registration result: $result")
+        }
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

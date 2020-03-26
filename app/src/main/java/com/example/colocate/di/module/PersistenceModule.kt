@@ -6,10 +6,12 @@ package com.example.colocate.di.module
 
 import android.content.Context
 import androidx.room.Room
-import com.example.colocate.persistence.*
+import com.example.colocate.persistence.AppDatabase
+import com.example.colocate.persistence.ContactEventDao
+import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.persistence.SharedPreferencesResidentIdProvider
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Module
 class PersistenceModule(private val applicationContext: Context) {
@@ -28,20 +30,6 @@ class PersistenceModule(private val applicationContext: Context) {
 
     @Provides
     fun provideResidentIdProvider(): ResidentIdProvider {
-        return object : ResidentIdProvider {
-            override fun getResidentId(): String {
-                return "80baf81b-8afd-47e9-9915-50691525c910"
-            }
-
-            override fun setResidentId(residentId: String) {
-
-            }
-        }
+        return SharedPreferencesResidentIdProvider(applicationContext)
     }
-
-    @Singleton
-    @Provides
-    fun provideFCMTokenProvider(): FCMPushTokenProvider =
-        FCMPushTokenPreferences(applicationContext)
-
 }

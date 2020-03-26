@@ -6,9 +6,13 @@ package com.example.colocate.di
 
 import com.example.colocate.RegistrationNotificationService
 import com.example.colocate.ble.BluetoothService
-import com.example.colocate.di.module.*
+import com.example.colocate.di.module.AppModule
+import com.example.colocate.di.module.BluetoothModule
+import com.example.colocate.di.module.NetworkModule
+import com.example.colocate.di.module.PersistenceModule
+import com.example.colocate.di.module.RegistrationModule
 import com.example.colocate.isolate.IsolateActivity
-import com.example.colocate.registration.RegistrationFlowStore
+import com.example.colocate.registration.RegistrationUseCase
 import dagger.Component
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import javax.inject.Singleton
@@ -29,5 +33,5 @@ interface ApplicationComponent {
     fun inject(bluetoothService: IsolateActivity)
     fun inject(registrationNotificationService: RegistrationNotificationService)
 
-    fun provideRegistrationFlowStore() : RegistrationFlowStore
+    fun registrationUseCase(): RegistrationUseCase
 }

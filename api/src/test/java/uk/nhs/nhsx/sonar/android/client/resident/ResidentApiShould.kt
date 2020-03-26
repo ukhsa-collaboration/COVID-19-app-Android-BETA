@@ -72,7 +72,7 @@ class ResidentApiShould {
 
     @Test
     fun callThePostEndpointWithActivationCodeWhenConfirmingADevice() {
-        residentApi.confirmDevice("some-activation-code", {}, {})
+        residentApi.confirmDevice("some-activation-code", "firebase-token", {}, {})
 
         val requestSlot = slot<HttpRequest>()
         verify { httpClient.post(capture(requestSlot), any(), any()) }
@@ -85,7 +85,7 @@ class ResidentApiShould {
     fun returnARegistrationWhenConfirmingADevice() {
         var actualRegistration: Registration? = null
 
-        residentApi.confirmDevice("some-activation-code", { registration ->
+        residentApi.confirmDevice("some-activation-code", "firebase-token", { registration ->
             actualRegistration = registration
         }, {})
 
@@ -100,7 +100,11 @@ class ResidentApiShould {
     fun callTheErrorCallbackInCaseOfExceptionWhenConfirmingADevice() {
         var expectedError: Exception? = null
 
-        residentApi.confirmDevice("some-activation-code", {}, { error -> expectedError = error })
+        residentApi.confirmDevice(
+            "some-activation-code",
+            "firebase-token",
+            {},
+            { error -> expectedError = error })
 
         val onErrorSlot = slot<(Exception) -> Unit>()
         verify { httpClient.post(any(), any(), capture(onErrorSlot)) }
@@ -111,7 +115,7 @@ class ResidentApiShould {
 
     @Test
     fun callPersistSecretKeyWhenConfirmingADevice() {
-        residentApi.confirmDevice("some-activation-code", {}, {})
+        residentApi.confirmDevice("some-activation-code", "firebase-token", {}, {})
 
         val successCaptor = slot<(JSONObject) -> Unit>()
         verify { httpClient.post(any(), capture(successCaptor), any()) }
