@@ -42,6 +42,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".DiagnoseActivity" />
+        <activity android:name=".AtRiskActivity" />
         <activity android:name=".OkActivity" />
         <activity android:name=".isolate.IsolateActivity" />
 

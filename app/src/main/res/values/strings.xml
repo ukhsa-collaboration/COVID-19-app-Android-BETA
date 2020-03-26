@@ -31,4 +31,5 @@
     <string name="ok_symptom_content">Use our online tool to check your symptoms.</string>
     <string name="check_my_symptoms">Check my symptoms</string>
     <string name="default_notification_channel_id">colocate-locate</string>
+    <string name="please_isolate">Please isolate</string>
 </resources>

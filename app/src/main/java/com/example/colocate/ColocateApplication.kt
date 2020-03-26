@@ -11,6 +11,7 @@ import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.BluetoothModule
 import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.PersistenceModule
+import com.example.colocate.di.module.StatusModule
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 
@@ -29,6 +30,7 @@ class ColocateApplication : Application() {
             .appModule(AppModule(this))
             .networkModule(NetworkModule(BASE_URL))
             .encryptionKeyStorageModule(EncryptionKeyStorageModule(this))
+            .statusModule(StatusModule(this))
             .build()
 
         if (BuildConfig.DEBUG) {
