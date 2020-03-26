@@ -6,4 +6,5 @@ package com.example.colocate.persistence
 
 interface ResidentIdProvider {
     fun getResidentId(): String
+    fun setResidentId(residentId: String)
 }

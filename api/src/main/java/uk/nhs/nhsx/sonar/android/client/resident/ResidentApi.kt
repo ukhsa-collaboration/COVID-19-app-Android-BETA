@@ -56,11 +56,13 @@ class ResidentApi @Inject constructor(
 
     fun confirmDevice(
         activationCode: String,
+        firebaseToken: String,
         onSuccess: (Registration) -> Unit,
         onError: (Exception) -> Unit
     ) {
         val requestJson = JSONObject()
         requestJson.put("activationCode", activationCode)
+        requestJson.put("pushToken", firebaseToken)
 
         val request = HttpRequest("/api/devices", requestJson)
         httpClient.post(request,
@@ -68,7 +70,8 @@ class ResidentApi @Inject constructor(
                 val key = responseJson.getString("secretKey")
                 encryptionKeyStorage.putBase64Key(encodeBase64(key))
                 onSuccess(mapResponseToRegistration(responseJson))
-            }, onError)
+            }, onError
+        )
     }
 
     private fun mapResponseToRegistration(jsonObject: JSONObject): Registration {
