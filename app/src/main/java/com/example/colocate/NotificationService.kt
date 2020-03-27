@@ -4,6 +4,7 @@
 
 package com.example.colocate
 
+import android.app.PendingIntent
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -43,24 +44,34 @@ class NotificationService : FirebaseMessagingService() {
             activationCodeObserver.onGetActivationCode(activationCode)
         } else if (isStatusMessage(message)) {
             statusStorage.update(CovidStatus.POTENTIAL)
-            startActivity(Intent(this, AtRiskActivity::class.java))
             showNotification()
         }
     }
 
     private fun showNotification() {
-        val notification = NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setContentTitle(getString(R.string.notification_title))
-            .setStyle(NotificationCompat.BigTextStyle()
-                .bigText(getString(R.string.notification_text)))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .build()
+        val intent = Intent(this, AtRiskActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+
+        val notification =
+            NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(getString(R.string.notification_title))
+                .setStyle(
+                    NotificationCompat.BigTextStyle()
+                        .bigText(getString(R.string.notification_text))
+                )
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .build()
 
         with(NotificationManagerCompat.from(this)) {
             notify(NOTIFICATION_SERVICE_ID, notification)
         }
     }
+
     private fun isStatusMessage(message: RemoteMessage) =
         message.data.containsKey(STATUS_KEY)
 
