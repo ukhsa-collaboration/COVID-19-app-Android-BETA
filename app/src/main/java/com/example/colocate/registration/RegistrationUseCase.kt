@@ -1,6 +1,5 @@
 package com.example.colocate.registration
 
-import com.example.colocate.persistence.ID_NOT_REGISTERED
 import com.example.colocate.persistence.ResidentIdProvider
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
@@ -24,8 +23,7 @@ class RegistrationUseCase @Inject constructor(
 
     suspend fun register(): RegistrationResult {
         try {
-            val currentResidentId = residentIdProvider.getResidentId()
-            if (currentResidentId.isNotEmpty() && currentResidentId != ID_NOT_REGISTERED) {
+            if (residentIdProvider.hasProperResidentId()) {
                 Timber.d("Already registered")
                 return RegistrationResult.ALREADY_REGISTERED
             }

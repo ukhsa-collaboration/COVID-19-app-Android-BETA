@@ -1,5 +1,6 @@
 package com.example.colocate.registration
 
+import com.example.colocate.persistence.ID_NOT_REGISTERED
 import com.example.colocate.persistence.ResidentIdProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -38,7 +39,8 @@ class RegistrationUseCaseTest {
     fun setUp() {
         Timber.plant(Timber.DebugTree())
 
-        every { residentIdProvider.getResidentId() } returns ""
+        every { residentIdProvider.getResidentId() } returns ID_NOT_REGISTERED
+        every { residentIdProvider.hasProperResidentId() } returns false
         every { residentIdProvider.setResidentId(any()) } returns Unit
         coEvery { tokenRetriever.retrieveToken() } returns TokenRetriever.Result.Success(
             FIREBASE_TOKEN
@@ -66,7 +68,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun shouldReturnIfAlreadyRegistered() = runBlockingTest {
-        every { residentIdProvider.getResidentId() } returns "ID"
+        every { residentIdProvider.hasProperResidentId() } returns true
 
         val result = sut.register()
 
