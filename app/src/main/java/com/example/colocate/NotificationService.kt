@@ -15,7 +15,7 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
 import javax.inject.Inject
 
-class RegistrationNotificationService : FirebaseMessagingService() {
+class NotificationService : FirebaseMessagingService() {
 
     @Inject
     protected lateinit var residentApi: ResidentApi
