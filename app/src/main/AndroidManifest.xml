@@ -52,7 +52,7 @@
             android:enabled="true" />
 
         <service
-            android:name=".RegistrationNotificationService"
+            android:name=".NotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

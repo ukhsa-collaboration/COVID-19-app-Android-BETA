@@ -5,6 +5,8 @@
 package com.example.colocate
 
 import android.content.Intent
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
 import com.example.colocate.registration.ActivationCodeObserver
@@ -14,7 +16,7 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
 import javax.inject.Inject
 
-class RegistrationNotificationService : FirebaseMessagingService() {
+class NotificationService : FirebaseMessagingService() {
 
     @Inject
     protected lateinit var residentApi: ResidentApi
@@ -42,9 +44,23 @@ class RegistrationNotificationService : FirebaseMessagingService() {
         } else if (isStatusMessage(message)) {
             statusStorage.update(CovidStatus.POTENTIAL)
             startActivity(Intent(this, AtRiskActivity::class.java))
+            showNotification()
         }
     }
 
+    private fun showNotification() {
+        val notification = NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle(getString(R.string.notification_title))
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText(getString(R.string.notification_text)))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
+
+        with(NotificationManagerCompat.from(this)) {
+            notify(NOTIFICATION_SERVICE_ID, notification)
+        }
+    }
     private fun isStatusMessage(message: RemoteMessage) =
         message.data.containsKey(STATUS_KEY)
 
@@ -54,5 +70,6 @@ class RegistrationNotificationService : FirebaseMessagingService() {
     companion object {
         private const val STATUS_KEY = "status"
         private const val ACTIVATION_CODE_KEY = "activationCode"
+        private const val NOTIFICATION_SERVICE_ID = 10001
     }
 }
