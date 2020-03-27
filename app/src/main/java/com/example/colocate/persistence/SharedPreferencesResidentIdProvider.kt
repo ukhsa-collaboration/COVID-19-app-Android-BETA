@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 
+const val ID_NOT_REGISTERED = "00000000-0000-0000-0000-000000000000"
+
 class SharedPreferencesResidentIdProvider(context: Context) : ResidentIdProvider {
 
     companion object {
@@ -15,7 +17,7 @@ class SharedPreferencesResidentIdProvider(context: Context) : ResidentIdProvider
     }
 
     override fun getResidentId(): String {
-        return sharedPreferences.getString(KEY, "")!!
+        return sharedPreferences.getString(KEY, ID_NOT_REGISTERED)!!
     }
 
     override fun setResidentId(residentId: String) {

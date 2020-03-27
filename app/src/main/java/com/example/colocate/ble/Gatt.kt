@@ -15,15 +15,18 @@ import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import com.example.colocate.persistence.ResidentIdProvider
 import java.nio.ByteBuffer
 import java.util.UUID
 import javax.inject.Inject
 
 class Gatt @Inject constructor(
     private val context: Context,
-    private val bluetoothManager: BluetoothManager
+    private val bluetoothManager: BluetoothManager,
+    private val residentIdProvider: ResidentIdProvider
 ) {
-    private val identifier: ByteArray = UUID.randomUUID().let { uuid ->
+    private val identifier: ByteArray
+        get() = UUID.fromString(residentIdProvider.getResidentId()).let { uuid ->
         ByteBuffer.wrap(ByteArray(16)).also {
             it.putLong(uuid.mostSignificantBits)
             it.putLong(uuid.leastSignificantBits)
