@@ -33,4 +33,6 @@
     <string name="default_notification_channel_id">colocate-locate</string>
     <string name="please_isolate">Please isolate</string>
     <string name="start_main_activity">Start main activity</string>
+    <string name="notification_title">NHS Coronavirus</string>
+    <string name="notification_text">"Someone you've been nearby recently was just diagnosed with coronavirus.\n\nYou should isolate yourself and get tested."</string>
 </resources>
