@@ -40,6 +40,6 @@ class SignedJsonObjectRequestShould {
             Response.ErrorListener {}
         )
 
-        assertThat(cut.headers).containsKey("Sonar-Request-Signature")
+        assertThat(cut.headers).containsKey("Sonar-Message-Signature")
     }
 }
