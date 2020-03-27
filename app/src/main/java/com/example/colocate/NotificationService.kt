@@ -49,10 +49,11 @@ class NotificationService : FirebaseMessagingService() {
     }
 
     private fun showNotification() {
-        val intent = Intent(this, AtRiskActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+            this, 0,
+            Intent(this, AtRiskActivity::class.java),
+            0
+        )
 
         val notification =
             NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
