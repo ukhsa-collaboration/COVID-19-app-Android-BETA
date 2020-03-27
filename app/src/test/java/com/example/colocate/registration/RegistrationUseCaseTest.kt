@@ -117,7 +117,7 @@ class RegistrationUseCaseTest {
     @Test
     fun onActivationCodeTimeoutReturnsFailure() = runBlockingTest {
         every { activationCodeObserver.setListener(any()) } coAnswers {
-            //NOTHING
+            // NOTHING
         }
 
         val result = sut.register()

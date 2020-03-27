@@ -5,13 +5,11 @@ import com.example.colocate.registration.TokenRetriever
 import dagger.Module
 import dagger.Provides
 
-
 @Module
-class RegistrationModule{
+class RegistrationModule {
 
     @Provides
-    fun provideTokenRetriever() : TokenRetriever{
+    fun provideTokenRetriever(): TokenRetriever {
         return FirebaseTokenRetriever()
     }
-
 }

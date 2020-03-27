@@ -2,7 +2,6 @@ package com.example.colocate.registration
 
 import com.google.firebase.iid.FirebaseInstanceId
 import timber.log.Timber
-import java.lang.Exception
 import kotlin.coroutines.suspendCoroutine
 
 interface TokenRetriever {

@@ -21,7 +21,4 @@ class SharedPreferencesResidentIdProvider(context: Context) : ResidentIdProvider
     override fun setResidentId(residentId: String) {
         sharedPreferences.edit { putString(KEY, residentId) }
     }
-
-
 }
-
