@@ -19,6 +19,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="notify">Notify</string>
+    <string name="potential_disclaimer_title">You need to stay at home and help us keep others safe</string>
     <string name="isolate_disclaimer_title">You need to isolate yourself and stay at home</string>
     <string name="isolate_title">Help us keep others safe</string>
     <string name="isolate_message">This app has recorded all contact you’ve had with other people using this app over the past 14 days.</string>
