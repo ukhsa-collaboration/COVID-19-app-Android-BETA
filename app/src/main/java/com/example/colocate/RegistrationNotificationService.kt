@@ -4,6 +4,9 @@
 
 package com.example.colocate
 
+import android.content.Intent
+import com.example.colocate.status.CovidStatus
+import com.example.colocate.status.StatusStorage
 import com.example.colocate.registration.ActivationCodeObserver
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -14,7 +17,10 @@ import javax.inject.Inject
 class RegistrationNotificationService : FirebaseMessagingService() {
 
     @Inject
-    lateinit var residentApi: ResidentApi
+    protected lateinit var residentApi: ResidentApi
+
+    @Inject
+    protected lateinit var statusStorage: StatusStorage
 
     @Inject
     lateinit var activationCodeObserver: ActivationCodeObserver
@@ -28,8 +34,25 @@ class RegistrationNotificationService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        Timber.d("onMessageReceived $message")
-        val activationCode = message.data["activationCode"] ?: return
-        activationCodeObserver.onGetActivationCode(activationCode)
+        Timber.i("New Message: ${message.messageId}")
+
+        if (isActivationMessage(message)) {
+            val activationCode = message.data[ACTIVATION_CODE_KEY]!!
+            activationCodeObserver.onGetActivationCode(activationCode)
+        } else if (isStatusMessage(message)) {
+            statusStorage.update(CovidStatus.POTENTIAL)
+            startActivity(Intent(this, AtRiskActivity::class.java))
+        }
+    }
+
+    private fun isStatusMessage(message: RemoteMessage) =
+        message.data.containsKey(STATUS_KEY)
+
+    private fun isActivationMessage(message: RemoteMessage) =
+        message.data.containsKey(ACTIVATION_CODE_KEY)
+
+    companion object {
+        private const val STATUS_KEY = "status"
+        private const val ACTIVATION_CODE_KEY = "activationCode"
     }
 }

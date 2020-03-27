@@ -11,6 +11,7 @@ import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.BluetoothModule
 import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.PersistenceModule
+import com.example.colocate.di.module.StatusModule
 import com.example.colocate.di.module.RegistrationModule
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -32,6 +33,7 @@ class ColocateApplication : Application() {
             .appModule(AppModule(this))
             .networkModule(NetworkModule(BASE_URL))
             .encryptionKeyStorageModule(EncryptionKeyStorageModule(this))
+            .statusModule(StatusModule(this))
             .registrationModule(RegistrationModule())
             .build()
 
