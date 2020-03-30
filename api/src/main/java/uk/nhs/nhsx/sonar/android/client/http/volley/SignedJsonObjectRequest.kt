@@ -31,7 +31,7 @@ class SignedJsonObjectRequest(
             DateTimeZone.UTC
         ).toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
         headers["Sonar-Request-Timestamp"] = timestampAsString
-        headers["Sonar-Request-Signature"] = generateSignature(
+        headers["Sonar-Message-Signature"] = generateSignature(
             key,
             timestampAsString + bodyAsString
         )
