@@ -8,7 +8,7 @@ class SharedPreferencesEncryptionKeyStorage(private val context: Context) : Encr
     override fun provideKey(): ByteArray? {
         val keyAsString = context
             .getSharedPreferences(PREFERENCE_FILENAME, Context.MODE_PRIVATE)
-            .getString(PREF_KEY, "JXRezte6OJ8MUavY28hsia6XiF92geOf82TKB5Qp+QQ=")
+            .getString(PREF_KEY, null)
             ?: return null
 
         return Base64.decode(keyAsString, Base64.DEFAULT)

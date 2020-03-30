@@ -14,13 +14,12 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
-import java.util.Base64
 
 class ResidentApiShould {
 
     private val encryptionKeyStorage = mockk<EncryptionKeyStorage>(relaxed = true)
     private val httpClient = mockk<HttpClient>(relaxed = true)
-    private val residentApi = ResidentApi(encryptionKeyStorage, httpClient, ::encodeBase64)
+    private val residentApi = ResidentApi(encryptionKeyStorage, httpClient)
 
     @Test
     fun postJsonToHttpClientAndMapJsonResponseToRegistration() {
@@ -121,18 +120,12 @@ class ResidentApiShould {
         verify { httpClient.post(any(), capture(successCaptor), any()) }
 
         successCaptor.captured.invoke(jsonRegistration)
-        verify { encryptionKeyStorage.putBase64Key(base64EncodedSecretKey) }
+        verify { encryptionKeyStorage.putBase64Key("some-secret-key-base64-encoded") }
     }
 
     private val jsonRegistration: JSONObject =
         JSONObject().apply {
             put("id", "00000000-0000-0000-0000-000000000001")
-            put("secretKey", "some secret key")
+            put("secretKey", "some-secret-key-base64-encoded")
         }
-
-    private fun encodeBase64(value: String): String =
-        Base64.getEncoder().encodeToString(value.toByteArray())
-
-    private val base64EncodedSecretKey: String =
-        encodeBase64("some secret key")
 }

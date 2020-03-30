@@ -5,7 +5,6 @@
 
 package uk.nhs.nhsx.sonar.android.client.resident
 
-import android.util.Base64
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
@@ -22,13 +21,7 @@ typealias ErrorCallback = (Exception) -> Unit
 
 class ResidentApi @Inject constructor(
     private val encryptionKeyStorage: EncryptionKeyStorage,
-    private val httpClient: HttpClient,
-    private val encodeBase64: (String) -> String = { value ->
-        Base64.encodeToString(
-            value.toByteArray(),
-            Base64.NO_WRAP
-        )
-    }
+    private val httpClient: HttpClient
 ) {
 
     fun register(onSuccess: (Registration) -> Unit = {}, onError: ErrorCallback = {}) {
@@ -65,10 +58,11 @@ class ResidentApi @Inject constructor(
         requestJson.put("pushToken", firebaseToken)
 
         val request = HttpRequest("/api/devices", requestJson)
-        httpClient.post(request,
+        httpClient.post(
+            request,
             { responseJson ->
                 val key = responseJson.getString("secretKey")
-                encryptionKeyStorage.putBase64Key(encodeBase64(key))
+                encryptionKeyStorage.putBase64Key(key)
                 onSuccess(mapResponseToRegistration(responseJson))
             }, onError
         )

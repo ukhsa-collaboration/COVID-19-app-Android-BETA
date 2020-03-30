@@ -23,26 +23,30 @@ class SignedJsonObjectRequest(
     errorListener: Response.ErrorListener
 ) : UnsignedJsonObjectRequest(method, url, request, listener, errorListener) {
 
-    private val bodyAsString: String = request.toString()
-
     override fun getHeaders(): Map<String?, String?> {
-        val headers = super.getHeaders().toMutableMap()
         val timestampAsString = LocalDateTime.now(
             DateTimeZone.UTC
         ).toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
-        headers["Sonar-Request-Timestamp"] = timestampAsString
-        headers["Sonar-Message-Signature"] = generateSignature(
+
+        val signature: String? = generateSignature(
             key,
-            timestampAsString + bodyAsString
+            timestampAsString,
+            body
         )
-        return headers
+
+        return super.getHeaders() + mapOf(
+            "Sonar-Request-Timestamp" to timestampAsString,
+            "Sonar-Message-Signature" to signature
+        )
     }
 
-    private fun generateSignature(key: ByteArray, data: String): String? {
+    private fun generateSignature(key: ByteArray, timestamp: String, body: ByteArray): String? {
         val secretKey: SecretKey = SecretKeySpec(key, "HMACSHA256")
         val mac: Mac = Mac.getInstance("HMACSHA256")
         mac.init(secretKey)
-        mac.update(data.toByteArray())
-        return Base64.encodeToString(mac.doFinal(), Base64.DEFAULT)
+        mac.update(timestamp.toByteArray(Charsets.UTF_8))
+        val signature = mac.doFinal(body)
+
+        return Base64.encodeToString(signature, Base64.DEFAULT)
     }
 }
