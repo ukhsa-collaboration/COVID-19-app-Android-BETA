@@ -19,7 +19,6 @@ import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
 import javax.inject.Inject
 
-
 class MainActivity : AppCompatActivity() {
 
     @Inject
@@ -62,5 +61,4 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, DiagnoseActivity::class.java))
         }
     }
-
 }
