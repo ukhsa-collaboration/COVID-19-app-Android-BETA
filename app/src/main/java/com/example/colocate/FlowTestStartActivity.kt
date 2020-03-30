@@ -9,8 +9,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.example.colocate.status.StatusStorage
+import org.jetbrains.annotations.TestOnly
 import javax.inject.Inject
 
+@TestOnly
 class FlowTestStartActivity : AppCompatActivity() {
 
     @Inject

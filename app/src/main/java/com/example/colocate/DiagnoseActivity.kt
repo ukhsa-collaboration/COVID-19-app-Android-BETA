@@ -38,15 +38,13 @@ class DiagnoseActivity : AppCompatActivity() {
             if (selected == -1)
                 return@setOnClickListener
 
-            val intent = if (selected == R.id.yes) {
+            if (selected == R.id.yes) {
                 statusStorage.update(CovidStatus.RED)
-                Intent(this, IsolateActivity::class.java)
+                IsolateActivity.start(this)
             } else {
                 statusStorage.update(CovidStatus.OK)
-                Intent(this, OkActivity::class.java)
+                OkActivity.start(this)
             }
-
-            startActivity(intent)
         }
     }
 
@@ -98,5 +96,15 @@ class DiagnoseActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    companion object {
+
+        fun start(context: Context) {
+            context.startActivity(getIntent(context))
+        }
+
+        private fun getIntent(context: Context) =
+            Intent(context, DiagnoseActivity::class.java)
     }
 }

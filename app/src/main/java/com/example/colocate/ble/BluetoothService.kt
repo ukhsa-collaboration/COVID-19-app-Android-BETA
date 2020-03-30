@@ -5,17 +5,14 @@
 package com.example.colocate.ble
 
 import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.bluetooth.BluetoothManager
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.colocate.ColocateApplication
-import com.example.colocate.R
 import com.example.colocate.di.module.AppModule
+import com.example.colocate.getChannel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -93,22 +90,8 @@ class BluetoothService : Service() {
     private fun isPermissionGranted() = true
 
     private fun notification(): Notification {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel(
-                getString(R.string.default_notification_channel_id),
-                "NHS Colocate",
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).let {
-                (getSystemService(NOTIFICATION_SERVICE) as NotificationManager)
-                    .createNotificationChannel(it)
-            }
-            NotificationCompat.Builder(
-                this,
-                getString(R.string.default_notification_channel_id)
-            ).build()
-        }
 
-        return NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
+        return NotificationCompat.Builder(this, getChannel(applicationContext))
             .build()
     }
 }
