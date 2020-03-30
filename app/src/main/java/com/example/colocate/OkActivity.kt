@@ -15,7 +15,7 @@ class OkActivity : AppCompatActivity() {
         setContentView(R.layout.activity_ok)
 
         findViewById<AppCompatButton>(R.id.re_diagnose_button).setOnClickListener {
-            startActivity(Intent(this, DiagnoseActivity::class.java))
+            DiagnoseActivity.start(this)
         }
     }
 }

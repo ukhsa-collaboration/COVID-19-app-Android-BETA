@@ -5,7 +5,6 @@
 package com.example.colocate
 
 import android.app.PendingIntent
-import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.colocate.status.CovidStatus
@@ -43,6 +42,7 @@ class NotificationService : FirebaseMessagingService() {
             val activationCode = message.data[ACTIVATION_CODE_KEY]!!
             activationCodeObserver.onGetActivationCode(activationCode)
         } else if (isStatusMessage(message)) {
+            // TODO unwrap message
             statusStorage.update(CovidStatus.POTENTIAL)
             showNotification()
         }
@@ -51,12 +51,12 @@ class NotificationService : FirebaseMessagingService() {
     private fun showNotification() {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             this, 0,
-            Intent(this, AtRiskActivity::class.java),
+            AtRiskActivity.getIntent(this),
             0
         )
 
         val notification =
-            NotificationCompat.Builder(this, getString(R.string.default_notification_channel_id))
+            NotificationCompat.Builder(this, getChannel(applicationContext))
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(getString(R.string.notification_title))
                 .setStyle(

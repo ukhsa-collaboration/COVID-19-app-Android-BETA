@@ -58,7 +58,10 @@ class MainActivity : AppCompatActivity() {
             grantResults.first() == PERMISSION_GRANTED &&
             grantResults.last() == PERMISSION_GRANTED
         ) {
-            startActivity(Intent(this, DiagnoseActivity::class.java))
+            OkActivity.start(this)
+            finish()
+        } else {
+            // TODO see with Design team what we can do current requirement is to stay in this screen
         }
     }
 }

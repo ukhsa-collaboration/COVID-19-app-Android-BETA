@@ -4,6 +4,8 @@
 
 package com.example.colocate.isolate
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -38,16 +40,29 @@ class IsolateActivity : AppCompatActivity() {
             if (result is Success) {
                 Toast.makeText(
                     this,
-                    "You have successfully shared you contact data with NHS.",
+                    getString(R.string.successfull_data_upload),
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
                 Toast.makeText(
                     this,
-                    "Something went wrong, please try again later.",
+                    getString(R.string.erro_data_submission),
                     Toast.LENGTH_SHORT
                 ).show()
             }
         })
+    }
+
+    companion object {
+
+        fun start(context: Context) {
+            context.startActivity(getIntent(context))
+        }
+
+        private fun getIntent(context: Context) =
+            Intent(context, IsolateActivity::class.java)
+                .apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
     }
 }
