@@ -35,7 +35,6 @@ class CoLocationApiIT {
 
         encryptionKeyStorage = object : EncryptionKeyStorage {
             override fun provideKey() = generateKey()
-            override fun putKey(key: ByteArray) = Unit
             override fun putBase64Key(encodedKey: String) = Unit
         }
     }
