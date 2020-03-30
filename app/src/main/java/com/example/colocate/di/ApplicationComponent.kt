@@ -16,6 +16,7 @@ import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.RegistrationModule
 import com.example.colocate.di.module.StatusModule
 import com.example.colocate.isolate.IsolateActivity
+import com.example.colocate.registration.RegistrationActivity
 import com.example.colocate.registration.RegistrationUseCase
 import dagger.Component
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
@@ -42,4 +43,5 @@ interface ApplicationComponent {
     fun inject(flowTestStartActivity: FlowTestStartActivity)
 
     fun registrationUseCase(): RegistrationUseCase
+    fun inject(registrationActivity: RegistrationActivity)
 }

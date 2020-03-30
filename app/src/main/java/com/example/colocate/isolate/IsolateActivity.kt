@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer
 import com.example.colocate.ColocateApplication
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
-import com.example.colocate.isolate.IsolateViewModel.Result.Success
+import com.example.colocate.common.ViewState
 import kotlinx.android.synthetic.main.activity_isolate.isolate_notify
 import javax.inject.Inject
 
@@ -37,7 +37,7 @@ class IsolateActivity : AppCompatActivity() {
         }
 
         viewModel.isolationResult.observe(this, Observer { result ->
-            if (result is Success) {
+            if (result is ViewState.Success) {
                 Toast.makeText(
                     this,
                     getString(R.string.successfull_data_upload),

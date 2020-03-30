@@ -15,9 +15,9 @@ class RegistrationWorker(val context: Context, params: WorkerParameters) :
         val result = applicationComponent.registrationUseCase().register()
         Timber.d("Registration result: $result")
         when (result) {
-            RegistrationResult.SUCCESS -> Result.success()
-            RegistrationResult.FAILURE -> Result.retry()
-            RegistrationResult.ALREADY_REGISTERED -> Result.success()
+            RegistrationResult.Success -> Result.success()
+            is RegistrationResult.Failure -> Result.retry()
+            RegistrationResult.AlreadyRegistered -> Result.success()
         }
     }
 }

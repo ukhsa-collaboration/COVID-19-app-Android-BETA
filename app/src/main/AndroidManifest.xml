@@ -46,6 +46,7 @@
         <activity android:name=".OkActivity" />
         <activity android:name=".isolate.IsolateActivity" />
         <activity android:name=".FlowTestStartActivity" />
+        <activity android:name=".registration.RegistrationActivity" />
 
         <service
             android:name=".ble.BluetoothService"

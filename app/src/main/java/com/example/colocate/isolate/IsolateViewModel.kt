@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.colocate.common.ViewState
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.network.convert
 import com.example.colocate.persistence.ContactEventDao
@@ -29,8 +30,8 @@ class IsolateViewModel @Inject constructor(
     private val residentIdProvider: ResidentIdProvider
 ) : ViewModel() {
 
-    private val _isolationResult = MutableLiveData<Result>()
-    val isolationResult: LiveData<Result> = _isolationResult
+    private val _isolationResult = MutableLiveData<ViewState>()
+    val isolationResult: LiveData<ViewState> = _isolationResult
 
     fun onNotifyClick() {
         viewModelScope.launch(ioDispatcher) {
@@ -40,16 +41,11 @@ class IsolateViewModel @Inject constructor(
             coLocationApi.save(coLocationData,
                 onSuccess = {
                     i("Success")
-                    _isolationResult.value = Result.Success
+                    _isolationResult.value = ViewState.Success
                 }, onError = {
                     e("Error: $it")
-                    _isolationResult.value = Result.Error(it)
+                    _isolationResult.value = ViewState.Error(it)
                 })
         }
-    }
-
-    sealed class Result {
-        object Success : Result()
-        data class Error(val e: Exception) : Result()
     }
 }

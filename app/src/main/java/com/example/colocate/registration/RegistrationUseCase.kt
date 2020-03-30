@@ -25,7 +25,7 @@ class RegistrationUseCase @Inject constructor(
         try {
             if (residentIdProvider.hasProperResidentId()) {
                 Timber.d("Already registered")
-                return RegistrationResult.ALREADY_REGISTERED
+                return RegistrationResult.AlreadyRegistered
             }
             val firebaseToken = getFirebaseToken()
             Timber.d("RegistrationUseCase firebaseToken = $firebaseToken")
@@ -37,10 +37,10 @@ class RegistrationUseCase @Inject constructor(
             Timber.d("RegistrationUseCase residentId = $residentId")
             storeResidentId(residentId)
             Timber.d("RegistrationUseCase residentId stored")
-            return RegistrationResult.SUCCESS
+            return RegistrationResult.Success
         } catch (e: Exception) {
             Timber.e(e, "RegistrationUseCase exception")
-            return RegistrationResult.FAILURE
+            return RegistrationResult.Failure(e)
         }
     }
 

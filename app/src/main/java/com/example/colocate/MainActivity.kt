@@ -15,9 +15,9 @@ import androidx.core.content.ContextCompat
 import com.example.colocate.ble.BluetoothService
 import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.isolate.IsolateActivity
+import com.example.colocate.registration.RegistrationActivity
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
-import kotlinx.coroutines.NonCancellable.start
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
             grantResults.first() == PERMISSION_GRANTED &&
             grantResults.last() == PERMISSION_GRANTED
         ) {
-            OkActivity.start(this)
+            RegistrationActivity.start(this)
             finish()
         } else {
             // TODO see with Design team what we can do current requirement is to stay in this screen
