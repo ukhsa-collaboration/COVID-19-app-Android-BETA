@@ -10,6 +10,8 @@ apply from: "$rootDir/ktlint.gradle"
 
 android {
     compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 29
