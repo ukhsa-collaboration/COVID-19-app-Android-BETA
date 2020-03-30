@@ -17,6 +17,7 @@ import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.isolate.IsolateActivity
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
+import kotlinx.coroutines.NonCancellable.start
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -41,10 +42,10 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
 
             when (statusStorage.get()) {
-                CovidStatus.POTENTIAL -> startActivity(Intent(this, AtRiskActivity::class.java))
-                CovidStatus.RED -> startActivity(Intent(this, IsolateActivity::class.java))
-                else -> startActivity(Intent(this, OkActivity::class.java))
-            }
+                CovidStatus.POTENTIAL -> AtRiskActivity.start(this)
+                CovidStatus.RED -> IsolateActivity.start(this)
+                CovidStatus.OK -> OkActivity.start(this)
+            }.also { finish() }
         }
     }
 
