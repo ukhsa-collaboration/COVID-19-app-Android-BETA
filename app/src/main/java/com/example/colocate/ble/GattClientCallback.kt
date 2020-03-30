@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import timber.log.Timber
+import java.nio.ByteBuffer
 import java.util.UUID
 
 class GattClientCallback(
@@ -89,8 +90,10 @@ class GattClientCallback(
         }
 
         if (characteristic.isDeviceIdentifier() && characteristic.value != null) {
-            this.identifier = UUID.nameUUIDFromBytes(characteristic.value)
-                .toString()
+            val buffer = ByteBuffer.wrap(characteristic.value)
+            val high = buffer.long
+            val low = buffer.long
+            this.identifier = UUID(high, low).toString()
             storeIfReady(gatt)
         }
     }

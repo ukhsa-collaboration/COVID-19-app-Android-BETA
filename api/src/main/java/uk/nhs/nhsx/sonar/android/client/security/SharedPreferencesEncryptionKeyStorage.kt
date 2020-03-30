@@ -14,11 +14,6 @@ class SharedPreferencesEncryptionKeyStorage(private val context: Context) : Encr
         return Base64.decode(keyAsString, Base64.DEFAULT)
     }
 
-    override fun putKey(key: ByteArray) {
-        val encodedKey = Base64.encodeToString(key, Base64.NO_WRAP)
-        putBase64Key(encodedKey)
-    }
-
     override fun putBase64Key(encodedKey: String) {
         context.getSharedPreferences(PREFERENCE_FILENAME, Context.MODE_PRIVATE)
             .edit()

@@ -25,12 +25,13 @@ class Gatt @Inject constructor(
     private val bluetoothManager: BluetoothManager,
     private val residentIdProvider: ResidentIdProvider
 ) {
-    private val identifier: ByteArray
-        get() = UUID.fromString(residentIdProvider.getResidentId()).let { uuid ->
-        ByteBuffer.wrap(ByteArray(16)).also {
-            it.putLong(uuid.mostSignificantBits)
-            it.putLong(uuid.leastSignificantBits)
-        }.array()
+    private val identifier: ByteArray by lazy {
+        UUID.fromString(residentIdProvider.getResidentId()).let { uuid ->
+            ByteBuffer.wrap(ByteArray(16)).also {
+                it.putLong(uuid.mostSignificantBits)
+                it.putLong(uuid.leastSignificantBits)
+            }.array()
+        }
     }
 
     private val service: BluetoothGattService = BluetoothGattService(
