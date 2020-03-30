@@ -13,10 +13,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import com.example.colocate.ble.BluetoothService
+import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.isolate.IsolateActivity
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        if (hasLocationPermission()) {
+        if (hasLocationPermission(this) && isBluetoothEnabled()) {
             ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
 
             when (statusStorage.get()) {
@@ -61,7 +63,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun hasLocationPermission() =
-        ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PERMISSION_GRANTED
 }
