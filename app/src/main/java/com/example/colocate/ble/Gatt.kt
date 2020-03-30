@@ -16,8 +16,6 @@ import android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import com.example.colocate.persistence.ResidentIdProvider
-import java.nio.ByteBuffer
-import java.util.UUID
 import javax.inject.Inject
 
 class Gatt @Inject constructor(
@@ -25,13 +23,8 @@ class Gatt @Inject constructor(
     private val bluetoothManager: BluetoothManager,
     private val residentIdProvider: ResidentIdProvider
 ) {
-    private val identifier: ByteArray by lazy {
-        UUID.fromString(residentIdProvider.getResidentId()).let { uuid ->
-            ByteBuffer.wrap(ByteArray(16)).also {
-                it.putLong(uuid.mostSignificantBits)
-                it.putLong(uuid.leastSignificantBits)
-            }.array()
-        }
+    private val identifier: Identifier by lazy {
+        Identifier.fromString(residentIdProvider.getResidentId())
     }
 
     private val service: BluetoothGattService = BluetoothGattService(
@@ -64,7 +57,7 @@ class Gatt @Inject constructor(
                         requestId,
                         GATT_SUCCESS,
                         0,
-                        identifier
+                        identifier.asBytes
                     )
                 }
             }

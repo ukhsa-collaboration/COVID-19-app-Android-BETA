@@ -10,8 +10,6 @@ import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import timber.log.Timber
-import java.nio.ByteBuffer
-import java.util.UUID
 
 class GattClientCallback(
     private val devices: MutableSet<String>,
@@ -19,7 +17,7 @@ class GattClientCallback(
 ) :
     BluetoothGattCallback() {
     private var rssi: Int? = null
-    private var identifier: String? = null
+    private var identifier: Identifier? = null
 
     override fun onConnectionStateChange(
         gatt: BluetoothGatt,
@@ -90,10 +88,7 @@ class GattClientCallback(
         }
 
         if (characteristic.isDeviceIdentifier() && characteristic.value != null) {
-            val buffer = ByteBuffer.wrap(characteristic.value)
-            val high = buffer.long
-            val low = buffer.long
-            this.identifier = UUID(high, low).toString()
+            this.identifier = Identifier.fromBytes(characteristic.value)
             storeIfReady(gatt)
         }
     }
@@ -112,7 +107,7 @@ class GattClientCallback(
         val currentRssi = rssi
         val currentIdentifier = identifier
         if (currentRssi != null && currentIdentifier != null) {
-            onReady(currentRssi, currentIdentifier)
+            onReady(currentRssi, currentIdentifier.asString)
             gatt.disconnect()
         }
     }
