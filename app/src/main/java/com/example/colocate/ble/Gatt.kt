@@ -23,9 +23,9 @@ class Gatt @Inject constructor(
     private val bluetoothManager: BluetoothManager,
     private val residentIdProvider: ResidentIdProvider
 ) {
-    private val identifier: Identifier by lazy {
-        Identifier.fromString(residentIdProvider.getResidentId())
-    }
+    private val identifier: Identifier
+        get() = Identifier.fromString(residentIdProvider.getResidentId())
+
 
     private val service: BluetoothGattService = BluetoothGattService(
         COLOCATE_SERVICE_UUID,
