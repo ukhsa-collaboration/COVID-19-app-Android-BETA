@@ -5,12 +5,16 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.colocate.ColocateApplication
 import com.example.colocate.OkActivity
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
+import com.example.colocate.ble.BluetoothService
+import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.common.ViewState
+import com.example.colocate.hasLocationPermission
 import kotlinx.android.synthetic.main.activity_register.confirm_registration
 import javax.inject.Inject
 
@@ -34,7 +38,10 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_register) {
         viewModel.viewState().observe(this, Observer { result ->
             when (result) {
                 ViewState.Success -> {
-                    OkActivity.start(this)
+                    if (isBluetoothEnabled() and hasLocationPermission(this)) {
+                        ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
+                        OkActivity.start(this)
+                    }
                 }
                 ViewState.Progress -> {
                     confirm_registration.isEnabled = false

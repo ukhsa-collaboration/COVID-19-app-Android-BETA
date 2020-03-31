@@ -11,8 +11,10 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.colocate.ColocateApplication
+import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.getChannel
+import com.example.colocate.hasLocationPermission
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -61,7 +63,7 @@ class BluetoothService : Service() {
         }
 
         synchronized(Lock) {
-            if (!isStarted) {
+            if (!isStarted and isBluetoothEnabled() and hasLocationPermission(applicationContext)) {
                 gatt.start()
                 advertise.start()
                 scan.start(coroutineScope)
