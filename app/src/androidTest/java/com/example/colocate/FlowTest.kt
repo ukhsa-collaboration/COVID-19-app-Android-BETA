@@ -15,6 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
+import com.example.colocate.persistence.SharedPreferencesResidentIdProvider
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.SharedPreferencesStatusStorage
 import org.junit.Assert.fail
@@ -37,6 +38,7 @@ class FlowTest {
     @Test
     fun testShouldShowRegistrationPageIfNotRegistered() {
         ensureBluetoothEnabled()
+        unsetResidentId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -96,6 +98,11 @@ class FlowTest {
     private fun setStatus(covidStatus: CovidStatus) {
         val storage = activityRule.activity.statusStorage as SharedPreferencesStatusStorage
         storage.update(covidStatus)
+    }
+
+    private fun unsetResidentId() {
+        val residentIdProvider = activityRule.activity.residentIdProvider as SharedPreferencesResidentIdProvider
+        residentIdProvider.clear()
     }
 
     private fun setValidResidentId() {

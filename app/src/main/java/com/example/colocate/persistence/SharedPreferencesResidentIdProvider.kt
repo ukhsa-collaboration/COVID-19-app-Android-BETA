@@ -23,6 +23,10 @@ class SharedPreferencesResidentIdProvider(context: Context) : ResidentIdProvider
         sharedPreferences.edit { putString(KEY, residentId) }
     }
 
+    fun clear() {
+        sharedPreferences.edit { clear() }
+    }
+
     companion object {
         private const val KEY = "RESIDENT_ID"
     }
