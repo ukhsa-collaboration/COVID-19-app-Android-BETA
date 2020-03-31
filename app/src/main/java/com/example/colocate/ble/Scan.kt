@@ -4,16 +4,16 @@
 
 package com.example.colocate.ble
 
-import android.bluetooth.BluetoothDevice
-import android.bluetooth.le.BluetoothLeScanner
-import android.bluetooth.le.ScanCallback
-import android.bluetooth.le.ScanFilter
-import android.bluetooth.le.ScanResult
-import android.bluetooth.le.ScanSettings
-import android.content.Context
 import android.os.ParcelUuid
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.persistence.ContactEventDao
+import com.polidea.rxandroidble2.RxBleClient
+import com.polidea.rxandroidble2.RxBleConnection
+import com.polidea.rxandroidble2.scan.ScanFilter
+import com.polidea.rxandroidble2.scan.ScanSettings
+import io.reactivex.Single
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
@@ -21,15 +21,15 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class Scan @Inject constructor(
-    private val context: Context,
-    private val bluetoothLeScanner: BluetoothLeScanner,
+    private val rxBleClient: RxBleClient,
     private val contactEventDao: ContactEventDao,
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher
 ) {
-    private var coroutineScope: CoroutineScope? = null
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
+
+    var connectionDisposable: Disposable? = null
 
     /*
      When the iPhone app goes into the background iOS changes how services are advertised:
@@ -67,92 +67,62 @@ class Scan @Inject constructor(
         )
         .build()
 
-    private val filters = listOf(
-        coLocateServiceUuidFilter,
-        coLocateBackgroundedIPhoneFilter
-    )
-
     private val settings = ScanSettings.Builder()
-        .setReportDelay(0)
         .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
         .build()
 
-    private val scanCallBack = ScanningCallback(::handleScanResult, ::handleScanFailure)
-
     fun start(coroutineScope: CoroutineScope) {
-        this.coroutineScope = coroutineScope
-        bluetoothLeScanner.startScan(
-            filters,
+        connectionDisposable = rxBleClient.scanBleDevices(
             settings,
-            scanCallBack
+            coLocateBackgroundedIPhoneFilter,
+            coLocateServiceUuidFilter
+        ).distinct { it.bleDevice.macAddress }.subscribe(
+            { result ->
+                result.bleDevice.establishConnection(false)
+                    .flatMapSingle { read(it, coroutineScope) }
+                    .subscribe(::onReadSuccess, ::onReadError)
+            },
+            ::onConnectionError
         )
     }
 
     fun stop() {
-        bluetoothLeScanner.stopScan(scanCallBack)
-        coroutineScope = null
+        connectionDisposable?.dispose()
     }
 
-    private val devices = mutableSetOf<String>()
-
-    private fun handleScanResult(result: ScanResult) {
-        Timber.v(
-            "Scanning Received $result"
-        )
-
-        val address = result.device.address
-
-        if (devices.contains(address)) {
-            Timber.v(
-                "Scanning Ignoring the already connected device: $address"
-            )
-            return
-        }
-
-        devices.add(address)
-
-        result.device.connectGatt(
-            context, false,
-            GattClientCallback(devices, ::save), BluetoothDevice.TRANSPORT_LE
+    private fun read(connection: RxBleConnection, scope: CoroutineScope): Single<Event> {
+        return Single.zip(
+            connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID),
+            connection.readRssi(),
+            BiFunction<ByteArray, Int, Event> { bytes, rssi ->
+                Event(
+                    Identifier.fromBytes(bytes),
+                    rssi,
+                    scope
+                )
+            }
         )
     }
 
-    private fun handleScanFailure(errorCode: Int) {
-        Timber.e(
-            "Scanning Scan failed $errorCode"
+    private fun onConnectionError(e: Throwable) = Timber.e("Connection failed with: $e")
+
+    private fun onReadError(e: Throwable) = Timber.e("Failed to read from remote device: $e")
+
+    private fun onReadSuccess(event: Event) {
+        Timber.d("Scanning Saving: $event")
+
+        SaveContactWorker(dispatcher, contactEventDao).saveContactEvent(
+            event.scope,
+            event.identifier.asString,
+            event.rssi
         )
     }
 
-    private fun save(rssi: Int, identifier: String) {
-        Timber.d("Scanning Saving: rssi = $rssi id = $identifier")
-        coroutineScope?.let { coroutineScope ->
-            SaveContactWorker(dispatcher, contactEventDao).saveContactEvent(
-                coroutineScope,
-                identifier,
-                rssi
-            )
-        }
-    }
-}
-
-private class ScanningCallback(
-    private val onScanResult: (ScanResult) -> Unit,
-    private val onScanError: (Int) -> Unit
-) : ScanCallback() {
-
-    override fun onScanResult(callbackType: Int, result: ScanResult) {
-        onResult(result)
-    }
-
-    override fun onBatchScanResults(results: List<ScanResult>) {
-        results.distinctBy { it.device.address }.forEach { onResult(it) }
-    }
-
-    private fun onResult(result: ScanResult) {
-        onScanResult(result)
-    }
-
-    override fun onScanFailed(errorCode: Int) {
-        onScanError(errorCode)
+    private data class Event(
+        val identifier: Identifier,
+        val rssi: Int,
+        val scope: CoroutineScope
+    ) {
+        override fun toString() = "Event[identifier: ${identifier.asString}, rssi: $rssi]"
     }
 }

@@ -5,6 +5,7 @@
 package com.example.colocate.ble
 
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt.GATT_FAILURE
 import android.bluetooth.BluetoothGatt.GATT_SUCCESS
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_READ
@@ -40,7 +41,7 @@ class Gatt @Inject constructor(
             )
         }
 
-    private lateinit var server: BluetoothGattServer
+    private var server: BluetoothGattServer? = null
 
     fun start() {
         val callback = object : BluetoothGattServerCallback() {
@@ -51,12 +52,20 @@ class Gatt @Inject constructor(
                 characteristic: BluetoothGattCharacteristic
             ) {
                 if (characteristic.isDeviceIdentifier()) {
-                    server.sendResponse(
+                    server?.sendResponse(
                         device,
                         requestId,
                         GATT_SUCCESS,
                         0,
                         identifier.asBytes
+                    )
+                } else {
+                    server?.sendResponse(
+                        device,
+                        requestId,
+                        GATT_FAILURE,
+                        0,
+                        byteArrayOf()
                     )
                 }
             }
@@ -68,6 +77,6 @@ class Gatt @Inject constructor(
     }
 
     fun stop() {
-        server.close()
+        server?.close()
     }
 }
