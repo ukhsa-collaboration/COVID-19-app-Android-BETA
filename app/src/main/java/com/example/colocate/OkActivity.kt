@@ -9,15 +9,29 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import com.example.colocate.status.StatusStorage
+import javax.inject.Inject
 
 class OkActivity : AppCompatActivity() {
+
+    @Inject
+    protected lateinit var statusStorage: StatusStorage
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as ColocateApplication).applicationComponent.inject(this)
+
         setContentView(R.layout.activity_ok)
 
         findViewById<AppCompatButton>(R.id.re_diagnose_button).setOnClickListener {
             DiagnoseActivity.start(this)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        navigateTo(statusStorage.get())
     }
 
     companion object {

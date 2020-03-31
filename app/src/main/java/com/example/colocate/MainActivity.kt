@@ -14,10 +14,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import com.example.colocate.ble.BluetoothService
 import com.example.colocate.ble.util.isBluetoothEnabled
-import com.example.colocate.isolate.IsolateActivity
-import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
-import kotlinx.coroutines.NonCancellable.start
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -41,11 +38,7 @@ class MainActivity : AppCompatActivity() {
         if (hasLocationPermission(this) && isBluetoothEnabled()) {
             ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
 
-            when (statusStorage.get()) {
-                CovidStatus.POTENTIAL -> AtRiskActivity.start(this)
-                CovidStatus.RED -> IsolateActivity.start(this)
-                CovidStatus.OK -> OkActivity.start(this)
-            }.also { finish() }
+            navigateTo(statusStorage.get())
         }
     }
 

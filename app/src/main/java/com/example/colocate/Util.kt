@@ -5,6 +5,7 @@
 package com.example.colocate
 
 import android.Manifest
+import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -13,7 +14,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
+import com.example.colocate.isolate.IsolateActivity
+import com.example.colocate.status.CovidStatus
 
 const val REQUEST_ENABLE_BT: Int = 47
 const val REQUEST_LOCATION: Int = 75
@@ -49,4 +51,21 @@ fun getChannel(context: Context): String {
         ).build()
     }
     return context.getString(R.string.default_notification_channel_id)
+}
+
+fun Activity.navigateTo(status: CovidStatus) {
+    if (status == CovidStatus.OK && this !is OkActivity) {
+        OkActivity.start(this)
+        finish()
+    }
+
+    if (status == CovidStatus.POTENTIAL && this !is AtRiskActivity) {
+        AtRiskActivity.start(this)
+        finish()
+    }
+
+    if (status == CovidStatus.RED && this !is IsolateActivity) {
+        IsolateActivity.start(this)
+        finish()
+    }
 }
