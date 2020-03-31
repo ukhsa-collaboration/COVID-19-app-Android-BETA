@@ -22,17 +22,6 @@ class ResidentApiShould {
     private val residentApi = ResidentApi(encryptionKeyStorage, httpClient)
 
     @Test
-    fun postJsonToHttpClientAndMapJsonResponseToRegistration() {
-        residentApi.register()
-
-        val requestSlot = slot<HttpRequest>()
-        verify { httpClient.post(capture(requestSlot), any(), any()) }
-
-        assertThat(requestSlot.captured.urlPath).isEqualTo("/api/residents")
-        assertThat(requestSlot.captured.json.toString()).isEqualTo("{}")
-    }
-
-    @Test
     fun postATokenWhenRegistering() {
         residentApi.register("some-token")
 
@@ -41,32 +30,6 @@ class ResidentApiShould {
 
         assertThat(requestSlot.captured.urlPath).isEqualTo("/api/devices/registrations")
         assertThat(requestSlot.captured.json.get("pushToken")).isEqualTo("some-token")
-    }
-
-    @Test
-    fun callTheSuccessCallbackInCaseOfSuccess() {
-        var expectedRegistration: Registration? = null
-
-        residentApi.register({ registration -> expectedRegistration = registration })
-
-        val onSuccessSlot = slot<(JSONObject) -> Unit>()
-        verify { httpClient.post(any(), capture(onSuccessSlot), any()) }
-
-        onSuccessSlot.captured.invoke(jsonRegistration)
-        assertThat(expectedRegistration?.id).isEqualTo("00000000-0000-0000-0000-000000000001")
-    }
-
-    @Test
-    fun callTheErrorCallbackInCaseOfException() {
-        var expectedError: Exception? = null
-
-        residentApi.register({}, { error -> expectedError = error })
-
-        val onErrorSlot = slot<(Exception) -> Unit>()
-        verify { httpClient.post(any(), any(), capture(onErrorSlot)) }
-
-        onErrorSlot.captured.invoke(Exception("boom"))
-        assertThat(expectedError).hasMessage("boom")
     }
 
     @Test

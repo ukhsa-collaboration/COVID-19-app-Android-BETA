@@ -24,16 +24,6 @@ class ResidentApi @Inject constructor(
     private val httpClient: HttpClient
 ) {
 
-    fun register(onSuccess: (Registration) -> Unit = {}, onError: ErrorCallback = {}) {
-        val request = HttpRequest("/api/residents", JSONObject())
-
-        httpClient.post(
-            request,
-            { responseJson -> onSuccess(mapResponseToRegistration(responseJson)) },
-            { exception -> onError(exception) }
-        )
-    }
-
     fun register(token: String, onSuccess: () -> Unit = {}, onError: ErrorCallback = {}) {
         val requestJson = JSONObject().apply {
             put("pushToken", token)
