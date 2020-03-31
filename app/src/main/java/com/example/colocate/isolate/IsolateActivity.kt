@@ -14,6 +14,8 @@ import androidx.lifecycle.Observer
 import com.example.colocate.ColocateApplication
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
+import com.example.colocate.navigateTo
+import com.example.colocate.status.StatusStorage
 import com.example.colocate.common.ViewState
 import kotlinx.android.synthetic.main.activity_isolate.isolate_notify
 import javax.inject.Inject
@@ -22,6 +24,9 @@ class IsolateActivity : AppCompatActivity() {
 
     @Inject
     protected lateinit var viewModelFactory: ViewModelFactory<IsolateViewModel>
+
+    @Inject
+    protected lateinit var statusStorage: StatusStorage
 
     private val viewModel: IsolateViewModel by viewModels {
         viewModelFactory
@@ -51,6 +56,12 @@ class IsolateActivity : AppCompatActivity() {
                 ).show()
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        navigateTo(statusStorage.get())
     }
 
     companion object {

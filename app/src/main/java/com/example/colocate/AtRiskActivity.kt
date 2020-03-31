@@ -8,12 +8,25 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.colocate.status.StatusStorage
+import javax.inject.Inject
 
 class AtRiskActivity : AppCompatActivity() {
 
+    @Inject
+    protected lateinit var statusStorage: StatusStorage
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as ColocateApplication).applicationComponent.inject(this)
+
         setContentView(R.layout.activity_at_risk)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        navigateTo(statusStorage.get())
     }
 
     companion object {
