@@ -11,9 +11,7 @@ import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import net.lachlanmckee.timberjunit.TimberTestRule
-import org.hamcrest.CoreMatchers.instanceOf
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThat
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -68,7 +66,7 @@ class RegistrationUseCaseTest {
     fun onSuccessReturnsSuccess() = runBlockingTest {
         val result = sut.register()
 
-        assertEquals(RegistrationResult.Success, result)
+        assertThat(RegistrationResult.Success).isEqualTo(result)
     }
 
     @Test
@@ -77,7 +75,7 @@ class RegistrationUseCaseTest {
 
         val result = sut.register()
 
-        assertEquals(RegistrationResult.AlreadyRegistered, result)
+        assertThat(RegistrationResult.AlreadyRegistered).isEqualTo(result)
     }
 
     @Test
@@ -93,7 +91,7 @@ class RegistrationUseCaseTest {
 
         val result = sut.register()
 
-        assertThat(result, instanceOf(RegistrationResult.Failure::class.java))
+        assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
     }
 
     @Test
@@ -111,7 +109,7 @@ class RegistrationUseCaseTest {
 
         val result = sut.register()
 
-        assertThat(result, instanceOf(RegistrationResult.Failure::class.java))
+        assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
     }
 
     @Test
@@ -130,7 +128,7 @@ class RegistrationUseCaseTest {
         val result = sut.register()
         advanceTimeBy(15_000)
 
-        assertThat(result, instanceOf(RegistrationResult.Failure::class.java))
+        assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
     }
 
     @Test
@@ -148,7 +146,7 @@ class RegistrationUseCaseTest {
 
         val result = sut.register()
 
-        assertThat(result, instanceOf(RegistrationResult.Failure::class.java))
+        assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
     }
 
     @Test

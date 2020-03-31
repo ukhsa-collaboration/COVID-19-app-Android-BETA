@@ -15,7 +15,7 @@ import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
@@ -51,8 +51,8 @@ class IsolateViewModelTest {
 
             val coLocationData = dataSlot.captured
             val expectedEvents = convert(contentEvents)
-            assertEquals(RESIDENT_ID, coLocationData.residentId)
-            assertEquals(expectedEvents.toString(), coLocationData.events.toString())
+            assertThat(RESIDENT_ID).isEqualTo(coLocationData.residentId)
+            assertThat(expectedEvents.toString()).isEqualTo(coLocationData.events.toString())
         }
     }
 
