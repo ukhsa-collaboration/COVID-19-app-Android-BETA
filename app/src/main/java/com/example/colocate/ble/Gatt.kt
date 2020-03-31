@@ -40,7 +40,7 @@ class Gatt @Inject constructor(
             )
         }
 
-    private lateinit var server: BluetoothGattServer
+    private var server: BluetoothGattServer? = null
 
     fun start() {
         val callback = object : BluetoothGattServerCallback() {
@@ -51,7 +51,7 @@ class Gatt @Inject constructor(
                 characteristic: BluetoothGattCharacteristic
             ) {
                 if (characteristic.isDeviceIdentifier()) {
-                    server.sendResponse(
+                    server?.sendResponse(
                         device,
                         requestId,
                         GATT_SUCCESS,
@@ -68,6 +68,6 @@ class Gatt @Inject constructor(
     }
 
     fun stop() {
-        server.close()
+        server?.close()
     }
 }

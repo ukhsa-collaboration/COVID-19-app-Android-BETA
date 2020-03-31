@@ -69,6 +69,8 @@ dependencies {
     implementation 'com.google.dagger:dagger:2.27'
     kapt 'com.google.dagger:dagger-compiler:2.27'
 
+    implementation "com.polidea.rxandroidble2:rxandroidble:1.11.0"
+
     implementation "com.squareup.moshi:moshi:1.9.2"
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.2"
 
