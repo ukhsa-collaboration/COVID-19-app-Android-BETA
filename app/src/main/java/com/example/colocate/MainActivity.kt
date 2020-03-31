@@ -14,9 +14,8 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import com.example.colocate.ble.BluetoothService
 import com.example.colocate.ble.util.isBluetoothEnabled
-import com.example.colocate.isolate.IsolateActivity
+import com.example.colocate.persistence.ResidentIdProvider
 import com.example.colocate.registration.RegistrationActivity
-import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
 import javax.inject.Inject
 
@@ -24,6 +23,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     protected lateinit var statusStorage: StatusStorage
+
+    @Inject
+    protected lateinit var residentIdProvider: ResidentIdProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +40,13 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        if (hasLocationPermission(this) && isBluetoothEnabled()) {
-            ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
-
+        if (hasLocationPermission(this) && residentIdProvider.hasProperResidentId()) {
+            if (isBluetoothEnabled()) {
+                ContextCompat.startForegroundService(
+                    this,
+                    Intent(this, BluetoothService::class.java)
+                )
+            }
             navigateTo(statusStorage.get())
         }
     }
@@ -55,10 +61,14 @@ class MainActivity : AppCompatActivity() {
             grantResults.first() == PERMISSION_GRANTED &&
             grantResults.last() == PERMISSION_GRANTED
         ) {
-            RegistrationActivity.start(this)
-            finish()
+            startRegistrationActivity()
         } else {
             // TODO see with Design team what we can do current requirement is to stay in this screen
         }
+    }
+
+    private fun startRegistrationActivity() {
+        RegistrationActivity.start(this)
+        finish()
     }
 }

@@ -15,11 +15,13 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
+import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.SharedPreferencesStatusStorage
 import org.junit.Assert.fail
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.UUID
 
 @RunWith(AndroidJUnit4::class)
 class FlowTest {
@@ -33,22 +35,72 @@ class FlowTest {
         GrantPermissionRule.grant(ACCESS_FINE_LOCATION)
 
     @Test
-    fun test() {
+    fun testShouldShowRegistrationPageIfNotRegistered() {
         ensureBluetoothEnabled()
-        resetStatusStorage()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
-        onView(withId(R.id.ok_title)).check(matches(isDisplayed()))
-
-        shouldShowOkStatusPageIfNotDiagnosed()
-
-        shouldShowIsolationPageIfDiagnosed()
+        onView(withId(R.id.confirm_onboarding)).perform(click())
+        checkRegistrationActivityIsShown()
     }
 
-    private fun resetStatusStorage() {
+    @Test
+    fun testShouldShowOkActivityOnOkState() {
+        ensureBluetoothEnabled()
+        setStatus(CovidStatus.OK)
+        setValidResidentId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkOkActivityIsShown()
+    }
+
+    @Test
+    fun testShouldShowRiskActivityOnAtRiskState() {
+        ensureBluetoothEnabled()
+        setStatus(CovidStatus.POTENTIAL)
+        setValidResidentId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkAtRiskActivityIsShown()
+    }
+
+    @Test
+    fun testShouldShowIsolateActivityOnRedState() {
+        ensureBluetoothEnabled()
+        setStatus(CovidStatus.RED)
+        setValidResidentId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkIsolateActivityIsShown()
+    }
+
+    private fun checkRegistrationActivityIsShown() {
+        onView(withId(R.id.confirm_registration)).check(matches(isDisplayed()))
+    }
+
+    private fun checkOkActivityIsShown() {
+        onView(withId(R.id.ok_title)).check(matches(isDisplayed()))
+    }
+
+    private fun checkAtRiskActivityIsShown() {
+        onView(withId(R.id.potential_disclaimer_title)).check(matches(isDisplayed()))
+    }
+
+    private fun checkIsolateActivityIsShown() {
+        onView(withId(R.id.isolate_disclaimer_title)).check(matches(isDisplayed()))
+    }
+
+    private fun setStatus(covidStatus: CovidStatus) {
         val storage = activityRule.activity.statusStorage as SharedPreferencesStatusStorage
-        storage.reset()
+        storage.update(covidStatus)
+    }
+
+    private fun setValidResidentId() {
+        val residentIdProvider = activityRule.activity.residentIdProvider
+        residentIdProvider.setResidentId(UUID.randomUUID().toString())
     }
 
     private fun ensureBluetoothEnabled() {

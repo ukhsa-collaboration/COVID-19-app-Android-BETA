@@ -55,6 +55,9 @@ class RegistrationUseCaseTest {
         every { activationCodeObserver.setListener(capture(slot)) } answers {
             slot.captured(ACTIVATION_CODE)
         }
+        every { activationCodeObserver.removeListener() } answers {
+            nothing
+        }
 
         every { residentApi.confirmDevice(ACTIVATION_CODE, FIREBASE_TOKEN, any(), any()) } answers {
             thirdArg<(Registration) -> Unit>().invoke(Registration(RESIDENT_ID))

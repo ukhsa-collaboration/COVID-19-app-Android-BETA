@@ -8,7 +8,7 @@ class ActivationCodeObserver @Inject constructor() {
     private var savedActivationCode: String? = null
     private var listener: ((String) -> Unit)? = null
 
-    fun setListener(listener: (String) -> Unit) {
+    fun setListener(listener: ((String) -> Unit)?) {
         this.listener = listener
         tryNotifyListener()
     }
@@ -24,5 +24,9 @@ class ActivationCodeObserver @Inject constructor() {
             listener?.invoke(activationCode)
             savedActivationCode = null
         }
+    }
+
+    fun removeListener() {
+        this.listener = null
     }
 }

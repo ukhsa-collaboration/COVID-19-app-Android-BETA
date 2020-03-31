@@ -73,6 +73,7 @@ class RegistrationUseCase @Inject constructor(
     private suspend fun waitForActivationCode(timeout: Long): String {
         return suspendCoroutineWithTimeout(timeout) { continuation ->
             activationCodeObserver.setListener { activationCode ->
+                activationCodeObserver.removeListener()
                 continuation.resume(activationCode)
             }
         }
