@@ -5,6 +5,7 @@
 package com.example.colocate.ble
 
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt.GATT_FAILURE
 import android.bluetooth.BluetoothGatt.GATT_SUCCESS
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_READ
@@ -57,6 +58,14 @@ class Gatt @Inject constructor(
                         GATT_SUCCESS,
                         0,
                         identifier.asBytes
+                    )
+                } else {
+                    server?.sendResponse(
+                        device,
+                        requestId,
+                        GATT_FAILURE,
+                        0,
+                        byteArrayOf()
                     )
                 }
             }
