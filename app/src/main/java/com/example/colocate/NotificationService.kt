@@ -7,9 +7,9 @@ package com.example.colocate
 import android.app.PendingIntent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.colocate.registration.ActivationCodeObserver
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
-import com.example.colocate.registration.ActivationCodeObserver
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import timber.log.Timber
@@ -36,7 +36,7 @@ class NotificationService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        Timber.i("New Message: ${message.messageId}")
+        Timber.i("New Message: ${message.messageId} ${message.data}")
 
         if (isActivationMessage(message)) {
             val activationCode = message.data[ACTIVATION_CODE_KEY]!!
