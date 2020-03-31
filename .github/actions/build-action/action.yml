@@ -1,0 +1,5 @@
+name: 'Setup build environment'
+description: 'Setup Java, Android SDK and GCloud CLI'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
