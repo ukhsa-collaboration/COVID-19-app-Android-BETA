@@ -43,4 +43,5 @@
     <string name="register_rationale">Keep Bluetooth and push notifications enabled for the duration of the outbreak, to help protect yourself from coronavirus.\n\nOnce the outbreak ends, you can turn off these permissions, or delete the app.</string>
     <string name="start_using_the_app">Start using the app</string>
     <string name="retry">Retry</string>
+    <string name="permissions_required">This app cannot function without permissions</string>
 </resources>

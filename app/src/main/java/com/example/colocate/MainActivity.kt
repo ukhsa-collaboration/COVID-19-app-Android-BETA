@@ -9,6 +9,8 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
@@ -42,10 +44,7 @@ class MainActivity : AppCompatActivity() {
 
         if (hasLocationPermission(this) && residentIdProvider.hasProperResidentId()) {
             if (isBluetoothEnabled()) {
-                ContextCompat.startForegroundService(
-                    this,
-                    Intent(this, BluetoothService::class.java)
-                )
+                ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
             }
             navigateTo(statusStorage.get())
         }
@@ -56,19 +55,18 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == REQUEST_LOCATION &&
+        if (
+            requestCode == REQUEST_LOCATION &&
             grantResults.size == 2 &&
             grantResults.first() == PERMISSION_GRANTED &&
             grantResults.last() == PERMISSION_GRANTED
         ) {
-            startRegistrationActivity()
+            RegistrationActivity.start(this)
+            finish()
         } else {
-            // TODO see with Design team what we can do current requirement is to stay in this screen
+            Toast
+                .makeText(this, R.string.permissions_required, LENGTH_LONG)
+                .show()
         }
-    }
-
-    private fun startRegistrationActivity() {
-        RegistrationActivity.start(this)
-        finish()
     }
 }

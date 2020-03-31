@@ -36,18 +36,19 @@ class FlowTest {
         GrantPermissionRule.grant(ACCESS_FINE_LOCATION)
 
     @Test
-    fun testShouldShowRegistrationPageIfNotRegistered() {
+    fun testFirstLaunch() {
         ensureBluetoothEnabled()
         unsetResidentId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
+
         checkRegistrationActivityIsShown()
     }
 
     @Test
-    fun testShouldShowOkActivityOnOkState() {
+    fun testLaunchWhenStateIsOk() {
         ensureBluetoothEnabled()
         setStatus(CovidStatus.OK)
         setValidResidentId()
@@ -55,10 +56,11 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkOkActivityIsShown()
+        checkCanTransitionToIsolateActivity()
     }
 
     @Test
-    fun testShouldShowRiskActivityOnAtRiskState() {
+    fun testLaunchWhenStateIsPotential() {
         ensureBluetoothEnabled()
         setStatus(CovidStatus.POTENTIAL)
         setValidResidentId()
@@ -69,7 +71,7 @@ class FlowTest {
     }
 
     @Test
-    fun testShouldShowIsolateActivityOnRedState() {
+    fun testLaunchWhenStateIsRed() {
         ensureBluetoothEnabled()
         setStatus(CovidStatus.RED)
         setValidResidentId()
@@ -129,18 +131,7 @@ class FlowTest {
         }
     }
 
-    private fun shouldShowOkStatusPageIfNotDiagnosed() {
-        onView(withId(R.id.re_diagnose_button)).perform(click())
-
-        onView(withId(R.id.diagnosis)).check(matches(isDisplayed()))
-        onView(withId(R.id.no)).perform(click())
-        onView(withId(R.id.no)).check(matches(isChecked()))
-        onView(withId(R.id.confirm_diagnosis)).perform(click())
-
-        onView(withId(R.id.ok_title)).check(matches(isDisplayed()))
-    }
-
-    private fun shouldShowIsolationPageIfDiagnosed() {
+    private fun checkCanTransitionToIsolateActivity() {
         onView(withId(R.id.re_diagnose_button)).perform(click())
 
         onView(withId(R.id.diagnosis)).check(matches(isDisplayed()))
