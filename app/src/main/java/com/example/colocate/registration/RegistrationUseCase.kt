@@ -63,9 +63,7 @@ class RegistrationUseCase @Inject constructor(
         return suspendCoroutine { continuation ->
             residentApi.register(firebaseToken,
                 onSuccess = { continuation.resumeWith(Result.success(Unit)) },
-                onError = {
-                    continuation.resumeWith(Result.failure(it))
-                }
+                onError = { continuation.resumeWith(Result.failure(it)) }
             )
         }
     }

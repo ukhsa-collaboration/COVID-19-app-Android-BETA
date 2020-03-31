@@ -11,6 +11,7 @@ import androidx.appcompat.widget.AppCompatButton
 import com.example.colocate.persistence.ResidentIdProvider
 import com.example.colocate.status.StatusStorage
 import org.jetbrains.annotations.TestOnly
+import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 import javax.inject.Inject
 
 @TestOnly
@@ -18,6 +19,9 @@ class FlowTestStartActivity : AppCompatActivity() {
 
     @Inject
     lateinit var statusStorage: StatusStorage
+
+    @Inject
+    lateinit var encryptionKeyStorage: EncryptionKeyStorage
 
     @Inject
     lateinit var residentIdProvider: ResidentIdProvider

@@ -18,7 +18,9 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.colocate.persistence.SharedPreferencesResidentIdProvider
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.SharedPreferencesStatusStorage
+import org.junit.After
 import org.junit.Assert.fail
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -35,9 +37,21 @@ class FlowTest {
     val permissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(ACCESS_FINE_LOCATION)
 
-    @Test
-    fun testFirstLaunch() {
+    private var testAppContext: TestApplicationContext? = null
+
+    @Before
+    fun setup() {
+        testAppContext = TestApplicationContext(activityRule)
         ensureBluetoothEnabled()
+    }
+
+    @After
+    fun teardown() {
+        testAppContext?.shutdownMockServer()
+    }
+
+    @Test
+    fun testRegistration() {
         unsetResidentId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -45,11 +59,21 @@ class FlowTest {
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
         checkRegistrationActivityIsShown()
+
+        onView(withId(R.id.confirm_registration)).perform(click())
+
+        testAppContext!!.apply {
+            verifyReceivedRegistrationRequest()
+            simulateActivationCodeReceived()
+            verifyReceivedActivationRequest()
+            verifyResidentIdAndSecretKey()
+        }
+
+        checkOkActivityIsShown()
     }
 
     @Test
     fun testLaunchWhenStateIsOk() {
-        ensureBluetoothEnabled()
         setStatus(CovidStatus.OK)
         setValidResidentId()
 
@@ -61,7 +85,6 @@ class FlowTest {
 
     @Test
     fun testLaunchWhenStateIsPotential() {
-        ensureBluetoothEnabled()
         setStatus(CovidStatus.POTENTIAL)
         setValidResidentId()
 
@@ -72,7 +95,6 @@ class FlowTest {
 
     @Test
     fun testLaunchWhenStateIsRed() {
-        ensureBluetoothEnabled()
         setStatus(CovidStatus.RED)
         setValidResidentId()
 
