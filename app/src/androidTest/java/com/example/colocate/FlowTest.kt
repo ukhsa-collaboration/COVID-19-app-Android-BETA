@@ -77,6 +77,21 @@ class FlowTest {
     }
 
     @Test
+    fun testExplanation() {
+        unsetResidentId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        onView(withId(R.id.explanation_link)).perform(click())
+
+        checkExplanationActivityIsShown()
+
+        onView(withId(R.id.explanation_back)).perform(click())
+
+        checkMainActivityIsShown()
+    }
+
+    @Test
     fun testLaunchWhenStateIsOk() {
         setStatus(CovidStatus.OK)
         setValidResidentId()
@@ -107,8 +122,16 @@ class FlowTest {
         checkIsolateActivityIsShown()
     }
 
+    private fun checkMainActivityIsShown() {
+        onView(withId(R.id.confirm_onboarding)).check(matches(isDisplayed()))
+    }
+
     private fun checkPermissionActivityIsShown() {
         onView(withId(R.id.permission_continue)).check(matches(isDisplayed()))
+    }
+
+    private fun checkExplanationActivityIsShown() {
+        onView(withId(R.id.explanation_back)).check(matches(isDisplayed()))
     }
 
     private fun checkRegistrationActivityIsShown() {

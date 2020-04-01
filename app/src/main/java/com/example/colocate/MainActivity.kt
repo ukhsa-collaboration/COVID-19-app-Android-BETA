@@ -13,6 +13,7 @@ import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.persistence.ResidentIdProvider
 import com.example.colocate.status.StatusStorage
 import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
+import kotlinx.android.synthetic.main.activity_main.explanation_link
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         confirm_onboarding.setOnClickListener {
             PermissionActivity.start(this)
+        }
+
+        explanation_link.setOnClickListener {
+            ExplanationActivity.start(this)
         }
 
         if (hasLocationPermission(this) && residentIdProvider.hasProperResidentId()) {

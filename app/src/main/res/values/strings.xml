@@ -50,4 +50,11 @@
     <string name="continue_button">Continue</string>
     <string name="registration_message">Thank you for playing your part in helping the NHS to stop the spread of coronavirus.</string>
     <string name="start_app">Start using the app</string>
+    <string name="explanation_title">How the app works</string>
+    <string name="explanation_how">The app uses your phone’s low energy Bluetooth to detect if you’ve been near someone else with this app.</string>
+    <string name="go_back">Go back</string>
+    <string name="explanation_privacy">If you have coronavirus symptoms, the NHS will ask for the proximity information collected on your phone so that we can alert others that they may be at risk.\n\nThis information will be encrypted, and is only shared with the NHS. Your location history and personal identity will remain protected.</string>
+    <string name="policy_terms">"Read our privacy policy and terms and conditions. "</string>
+    <string name="bluetooth_battery_title">Will Bluetooth affect my phone’s battery life?</string>
+    <string name="bluetooth_battery_body">This app uses low energy Bluetooth which will have minimal effect on your battery life.</string>
 </resources>
