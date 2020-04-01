@@ -109,7 +109,12 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.method).isEqualTo("PATCH")
         assertThat(lastRequest?.path).isEqualTo("/api/residents/${TestCoLocateServiceDispatcher.RESIDENT_ID}")
-        assertThat(lastRequest?.body?.readUtf8()).isEqualTo("""{"contactEvents":[{"remoteContactId":"04330a56-ad45-4b0f-81ee-dd414910e1f5","rssi":10,"timestamp":"2020-04-01T14:33:13Z"},{"remoteContactId":"984c61e2-0d66-44eb-beea-fbd8f2991de3","rssi":20,"timestamp":"2020-04-01T14:33:13Z"}]}""")
+
+        val body = lastRequest?.body?.readUtf8() ?: ""
+        assertThat(body).startsWith("""{"contactEvents":[""")
+        assertThat(body).contains("""{"remoteContactId":"04330a56-ad45-4b0f-81ee-dd414910e1f5","rssi":10,"timestamp":"2020-04-01T14:33:13Z"}""")
+        assertThat(body).contains("""{"remoteContactId":"984c61e2-0d66-44eb-beea-fbd8f2991de3","rssi":20,"timestamp":"2020-04-01T14:33:13Z"}""")
+        assertThat(body.countOccurrences("""{"remoteContactId":""")).isEqualTo(2)
     }
 }
 
@@ -131,3 +136,10 @@ private fun waitUntil(predicate: () -> Boolean) {
         fail<String>("Failed waiting for predicate")
     }
 }
+
+private fun String.countOccurrences(substring: String): Int =
+    if (!contains(substring)) {
+        0
+    } else {
+        1 + replaceFirst(substring, "").countOccurrences(substring)
+    }

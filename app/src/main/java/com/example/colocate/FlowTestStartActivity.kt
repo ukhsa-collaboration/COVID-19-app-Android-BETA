@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
+import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ResidentIdProvider
 import com.example.colocate.status.StatusStorage
 import org.jetbrains.annotations.TestOnly
@@ -25,6 +26,9 @@ class FlowTestStartActivity : AppCompatActivity() {
 
     @Inject
     lateinit var residentIdProvider: ResidentIdProvider
+
+    @Inject
+    lateinit var appDatabase: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

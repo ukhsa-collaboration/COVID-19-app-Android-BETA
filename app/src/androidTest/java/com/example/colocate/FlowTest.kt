@@ -78,6 +78,7 @@ class FlowTest {
 
     @Test
     fun testBluetoothInteractions() {
+        clearDatabase()
         setStatus(CovidStatus.RED)
         setValidResidentIdAndSecretKey()
 
@@ -188,6 +189,11 @@ class FlowTest {
 
         val keyStorage = activityRule.activity.encryptionKeyStorage
         keyStorage.putBase64Key(TestCoLocateServiceDispatcher.encodedKey)
+    }
+
+    private fun clearDatabase() {
+        val appDb = activityRule.activity.appDatabase
+        appDb.clearAllTables()
     }
 
     private fun ensureBluetoothEnabled() {
