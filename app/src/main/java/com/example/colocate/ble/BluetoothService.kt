@@ -31,7 +31,7 @@ class BluetoothService : Service() {
     lateinit var advertise: Advertise
 
     @Inject
-    lateinit var scan: Scan
+    lateinit var scan: Scanner
 
     @Inject
     lateinit var gatt: Gatt

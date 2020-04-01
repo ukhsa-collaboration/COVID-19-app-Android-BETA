@@ -11,7 +11,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.colocate.common.ViewState
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.network.convert
+import com.example.colocate.network.convertV2
 import com.example.colocate.persistence.ContactEventDao
+import com.example.colocate.persistence.ContactEventV2Dao
 import com.example.colocate.persistence.ResidentIdProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -26,6 +28,7 @@ import javax.inject.Named
 class IsolateViewModel @Inject constructor(
     private val coLocationApi: CoLocationApi,
     private val contactEventDao: ContactEventDao,
+    private val contactEventV2Dao: ContactEventV2Dao,
     @Named(AppModule.DISPATCHER_IO) private val ioDispatcher: CoroutineDispatcher,
     private val residentIdProvider: ResidentIdProvider
 ) : ViewModel() {
@@ -35,8 +38,14 @@ class IsolateViewModel @Inject constructor(
 
     fun onNotifyClick() {
         viewModelScope.launch(ioDispatcher) {
-            val events: JSONArray = convert(contactEventDao.getAll())
-            val coLocationData = CoLocationData(residentIdProvider.getResidentId(), events)
+            val longLiveConnection = true
+            val coLocationData = if (longLiveConnection) {
+                val events: JSONArray = convertV2(contactEventV2Dao.getAll())
+                CoLocationData(residentIdProvider.getResidentId(), events)
+            } else {
+                val events: JSONArray = convert(contactEventDao.getAll())
+                CoLocationData(residentIdProvider.getResidentId(), events)
+            }
 
             coLocationApi.save(coLocationData,
                 onSuccess = {

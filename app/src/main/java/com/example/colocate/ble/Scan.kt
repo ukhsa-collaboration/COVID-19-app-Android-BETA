@@ -7,6 +7,7 @@ package com.example.colocate.ble
 import android.os.ParcelUuid
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.persistence.ContactEventDao
+import com.example.colocate.persistence.ContactEventV2Dao
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.scan.ScanFilter
@@ -23,8 +24,9 @@ import javax.inject.Named
 class Scan @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val contactEventDao: ContactEventDao,
+    private val contactEventV2Dao: ContactEventV2Dao,
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher
-) {
+) : Scanner {
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
@@ -71,7 +73,7 @@ class Scan @Inject constructor(
         .setScanMode(ScanSettings.SCAN_MODE_LOW_POWER)
         .build()
 
-    fun start(coroutineScope: CoroutineScope) {
+    override fun start(coroutineScope: CoroutineScope) {
         connectionDisposable = rxBleClient.scanBleDevices(
             settings,
             coLocateBackgroundedIPhoneFilter,
@@ -86,7 +88,7 @@ class Scan @Inject constructor(
         )
     }
 
-    fun stop() {
+    override fun stop() {
         connectionDisposable?.dispose()
     }
 
@@ -111,7 +113,7 @@ class Scan @Inject constructor(
     private fun onReadSuccess(event: Event) {
         Timber.d("Scanning Saving: $event")
 
-        SaveContactWorker(dispatcher, contactEventDao).saveContactEvent(
+        SaveContactWorker(dispatcher, contactEventDao, contactEventV2Dao).saveContactEvent(
             event.scope,
             event.identifier.asString,
             event.rssi

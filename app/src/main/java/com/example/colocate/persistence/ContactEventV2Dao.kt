@@ -9,10 +9,10 @@ import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
-interface ContactEventDao {
+interface ContactEventV2Dao {
     @Insert
-    fun insert(contactEvent: ContactEvent)
+    fun insert(contactEvent: ContactEventV2)
 
-    @Query("SELECT * FROM ${ContactEvent.TABLE_NAME}")
-    suspend fun getAll(): List<ContactEvent>
+    @Query("SELECT * FROM ${ContactEventV2.TABLE_NAME}")
+    suspend fun getAll(): List<ContactEventV2>
 }
