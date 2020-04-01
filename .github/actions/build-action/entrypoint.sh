@@ -28,4 +28,5 @@ gcloud firebase test android run \
   --app app/build/outputs/apk/debug/app-debug.apk \
   --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
   --device model=aljeter_n,version=26,locale=en,orientation=portrait \
-  --use-orchestrator
+  --use-orchestrator \
+  --environment-variables clearPackageData=true
