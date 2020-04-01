@@ -38,7 +38,7 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_register) {
         viewModel.viewState().observe(this, Observer { result ->
             when (result) {
                 ViewState.Success -> {
-                    if (isBluetoothEnabled() and hasLocationPermission(this)) {
+                    if (hasLocationPermission(this)) {
                         ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
                         OkActivity.start(this)
                     }
