@@ -20,7 +20,8 @@ import javax.inject.Named
 
 class SaveContactWorker(
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
-    private val contactEventDao: ContactEventDao
+    private val contactEventDao: ContactEventDao,
+    private val dateProvider: () -> Date = { Date() }
 ) {
     fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int) {
         scope.launch {
@@ -28,7 +29,7 @@ class SaveContactWorker(
                 try {
                     val timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.UK).let {
                         it.timeZone = TimeZone.getTimeZone("UTC")
-                        it.format(Date())
+                        it.format(dateProvider())
                     }
 
                     val contactEvent =

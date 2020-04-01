@@ -5,8 +5,6 @@
 package com.example.colocate.ble
 
 import android.os.ParcelUuid
-import com.example.colocate.di.module.AppModule
-import com.example.colocate.persistence.ContactEventDao
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.scan.ScanFilter
@@ -14,17 +12,15 @@ import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Named
 
 class Scan @Inject constructor(
     private val rxBleClient: RxBleClient,
-    private val contactEventDao: ContactEventDao,
-    @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher
+    private val saveContactWorker: SaveContactWorker
 ) {
+
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
@@ -72,18 +68,23 @@ class Scan @Inject constructor(
         .build()
 
     fun start(coroutineScope: CoroutineScope) {
-        connectionDisposable = rxBleClient.scanBleDevices(
-            settings,
-            coLocateBackgroundedIPhoneFilter,
-            coLocateServiceUuidFilter
-        ).distinct { it.bleDevice.macAddress }.subscribe(
-            { result ->
-                result.bleDevice.establishConnection(false)
-                    .flatMapSingle { read(it, coroutineScope) }
-                    .subscribe(::onReadSuccess, ::onReadError)
-            },
-            ::onConnectionError
-        )
+        connectionDisposable = rxBleClient
+            .scanBleDevices(
+                settings,
+                coLocateBackgroundedIPhoneFilter,
+                coLocateServiceUuidFilter
+            )
+            .distinct { it.bleDevice.macAddress }
+            .subscribe(
+                { result ->
+                    result
+                        .bleDevice
+                        .establishConnection(false)
+                        .flatMapSingle { read(it, coroutineScope) }
+                        .subscribe(::onReadSuccess, ::onReadError)
+                },
+                ::onConnectionError
+            )
     }
 
     fun stop() {
@@ -111,7 +112,7 @@ class Scan @Inject constructor(
     private fun onReadSuccess(event: Event) {
         Timber.d("Scanning Saving: $event")
 
-        SaveContactWorker(dispatcher, contactEventDao).saveContactEvent(
+        saveContactWorker.saveContactEvent(
             event.scope,
             event.identifier.asString,
             event.rssi

@@ -50,6 +50,7 @@ android {
 def room_version = "2.2.5"
 def timber_version = "4.7.1"
 def lifecycle_version = "2.2.0"
+def rx_android_ble_version = "1.11.0"
 
 dependencies {
     implementation project(":api")
@@ -70,7 +71,7 @@ dependencies {
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.27'
     implementation 'com.google.dagger:dagger:2.27'
 
-    implementation "com.polidea.rxandroidble2:rxandroidble:1.11.0"
+    implementation "com.polidea.rxandroidble2:rxandroidble:$rx_android_ble_version"
 
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.2"
     implementation "com.squareup.moshi:moshi:1.9.2"
@@ -84,6 +85,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.4.0'
     androidTestImplementation 'org.assertj:assertj-core:3.15.0'
+    androidTestImplementation "com.polidea.rxandroidble2:mockclient:$rx_android_ble_version"
 
     testImplementation 'androidx.test:core:1.2.0'
     testImplementation 'io.mockk:mockk:1.9.3'
