@@ -28,7 +28,7 @@ class NotificationService : FirebaseMessagingService() {
     lateinit var activationCodeObserver: ActivationCodeObserver
 
     override fun onCreate() {
-        (applicationContext as ColocateApplication).applicationComponent.inject(this)
+        appComponent.inject(this)
     }
 
     override fun onNewToken(token: String) {

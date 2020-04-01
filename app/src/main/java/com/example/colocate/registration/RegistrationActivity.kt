@@ -7,10 +7,10 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import com.example.colocate.ColocateApplication
 import com.example.colocate.OkActivity
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
+import com.example.colocate.appComponent
 import com.example.colocate.ble.BluetoothService
 import com.example.colocate.common.ViewState
 import com.example.colocate.hasLocationPermission
@@ -27,7 +27,7 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_register) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        (application as ColocateApplication).applicationComponent.inject(this)
+        appComponent.inject(this)
         super.onCreate(savedInstanceState)
 
         confirm_registration.setOnClickListener {

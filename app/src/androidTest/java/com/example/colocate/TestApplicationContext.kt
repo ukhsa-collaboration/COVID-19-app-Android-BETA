@@ -34,7 +34,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
         val mockServerUrl = mockServer.url("").toString().removeSuffix("/")
 
-        app.applicationComponent =
+        app.appComponent =
             DaggerTestAppComponent.builder()
                 .persistenceModule(PersistenceModule(app))
                 .bluetoothModule(BluetoothModule(app))
@@ -46,7 +46,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 .testModule(testModule)
                 .build()
 
-        app.applicationComponent.inject(notificationService)
+        app.appComponent.inject(notificationService)
     }
 
     fun shutdownMockServer() {

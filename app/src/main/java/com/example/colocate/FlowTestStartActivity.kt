@@ -28,7 +28,7 @@ class FlowTestStartActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as ColocateApplication).applicationComponent.inject(this)
+        appComponent.inject(this)
         setContentView(R.layout.activity_flow_test_start)
 
         findViewById<AppCompatButton>(R.id.start_main_activity).setOnClickListener {

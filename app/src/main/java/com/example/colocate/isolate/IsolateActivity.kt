@@ -11,12 +11,12 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.example.colocate.ColocateApplication
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
+import com.example.colocate.appComponent
+import com.example.colocate.common.ViewState
 import com.example.colocate.navigateTo
 import com.example.colocate.status.StatusStorage
-import com.example.colocate.common.ViewState
 import kotlinx.android.synthetic.main.activity_isolate.isolate_notify
 import javax.inject.Inject
 
@@ -35,7 +35,7 @@ class IsolateActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_isolate)
-        (application as ColocateApplication).applicationComponent.inject(this)
+        appComponent.inject(this)
 
         isolate_notify.setOnClickListener {
             viewModel.onNotifyClick()
