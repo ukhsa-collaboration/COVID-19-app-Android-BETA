@@ -40,6 +40,7 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_register) {
                     if (hasLocationPermission(this)) {
                         ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
                         OkActivity.start(this)
+                        finish()
                     }
                 }
                 ViewState.Progress -> {
@@ -54,7 +55,6 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_register) {
     }
 
     companion object {
-
         fun start(context: Context) {
             context.startActivity(getIntent(context))
         }

@@ -58,6 +58,10 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
+        checkPermissionActivityIsShown()
+
+        onView(withId(R.id.permission_continue)).perform(click())
+
         checkRegistrationActivityIsShown()
 
         onView(withId(R.id.confirm_registration)).perform(click())
@@ -101,6 +105,10 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkIsolateActivityIsShown()
+    }
+
+    private fun checkPermissionActivityIsShown() {
+        onView(withId(R.id.permission_continue)).check(matches(isDisplayed()))
     }
 
     private fun checkRegistrationActivityIsShown() {

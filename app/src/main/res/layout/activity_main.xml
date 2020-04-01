@@ -8,103 +8,59 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:paddingHorizontal="16dp"
     tools:context=".MainActivity">
 
-    <include layout="@layout/banner" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/nhs_logo" />
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/onboarding_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="24dp"
+        android:text="@string/onboarding_title"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/app_rationale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/onboarding_title"
+        android:layout_marginBottom="32sp"
+        android:lineSpacingMultiplier="1.2"
+        android:text="@string/bluetooth_rationale" />
+
+    <TextView
+        android:id="@+id/explanation_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_rationale"
+        android:clickable="true"
+        android:focusable="true"
+        android:linksClickable="true"
+        android:text="@string/explanation_link"
+        android:textColor="@color/colorAccent" />
+
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirm_onboarding"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/logo"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="16dp"
-        android:orientation="vertical"
-        tools:context=".MainActivity">
-
-        <TextView
-            android:id="@+id/onboarding_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_marginBottom="24dp"
-            android:fontFamily="@font/frutiger_bold"
-            android:text="@string/onboarding_title"
-            android:textSize="32sp" />
-
-        <TextView
-            android:id="@+id/app_rationale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/onboarding_title"
-            android:layout_marginBottom="16dp"
-            android:text="@string/app_rationale"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/location_permission"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/app_rationale"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/location_permission" />
-
-        <TextView
-            android:id="@+id/bluetooth_permission"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/location_permission"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/bluetooth_permission" />
-
-        <TextView
-            android:id="@+id/permission_rationale"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/bluetooth_permission"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/permission_rationale"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/explanation_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/permission_rationale"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:linksClickable="true"
-            android:text="@string/explanation_link"
-            android:textColor="@color/colorAccent"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/next_steps"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/explanation_link"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/next_steps"
-            android:textSize="16sp" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/confirm_onboarding"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="16dp"
-            android:background="#007F3B"
-            android:fontFamily="@font/frutiger_bold"
-            android:text="@string/understand"
-            android:textColor="@color/white" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
+        android:background="#007F3B"
+        android:text="@string/start_now"
+        android:textColor="@color/white" />
 
 </RelativeLayout>
