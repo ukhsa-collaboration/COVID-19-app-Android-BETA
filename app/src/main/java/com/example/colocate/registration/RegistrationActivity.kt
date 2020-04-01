@@ -12,7 +12,6 @@ import com.example.colocate.OkActivity
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
 import com.example.colocate.ble.BluetoothService
-import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.common.ViewState
 import com.example.colocate.hasLocationPermission
 import kotlinx.android.synthetic.main.activity_register.confirm_registration
