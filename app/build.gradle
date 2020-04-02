@@ -18,7 +18,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 5
-        versionName "1.3"
+        versionName "0.1 (build #${versionCode})"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments clearPackageData: 'true'
