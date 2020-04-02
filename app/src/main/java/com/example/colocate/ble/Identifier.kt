@@ -7,7 +7,7 @@ package com.example.colocate.ble
 import java.nio.ByteBuffer
 import java.util.UUID
 
-class Identifier private constructor(private val uuid: UUID) {
+data class Identifier(private val uuid: UUID) {
 
     val asBytes: ByteArray by lazy {
         ByteBuffer.wrap(ByteArray(16)).also {

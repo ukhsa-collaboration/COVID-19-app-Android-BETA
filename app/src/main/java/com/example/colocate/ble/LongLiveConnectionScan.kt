@@ -21,7 +21,9 @@ import javax.inject.Inject
 
 class LongLiveConnectionScan @Inject constructor(
     private val rxBleClient: RxBleClient,
-    private val saveContactWorker: SaveContactWorker
+    private val saveContactWorker: SaveContactWorker,
+    private val dateProvider: () -> Date = { Date() },
+    private val period: Long = 10_000
 ) : Scanner {
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
@@ -122,7 +124,7 @@ class LongLiveConnectionScan @Inject constructor(
     ) {
         val record = macAddressToRecord.remove(macAddress)
         if (record != null) {
-            val duration = (Date().time - record.timestamp.time) / 1000
+            val duration = (dateProvider().time - record.timestamp.time) / 1000
             val finalRecord = record.copy(duration = duration)
             Timber.d("Save record: $finalRecord")
             saveContactWorker.saveContactEventV2(
@@ -145,7 +147,8 @@ class LongLiveConnectionScan @Inject constructor(
     }
 
     private fun readRssiPeriodically(connection: RxBleConnection) =
-        Observable.interval(0, 10, TimeUnit.SECONDS).flatMapSingle { connection.readRssi() }
+        Observable.interval(0, period, TimeUnit.MILLISECONDS)
+            .flatMapSingle { connection.readRssi() }
 
     private fun readIdentifierAndCreateRecord(connection: RxBleConnection, macAddress: String) =
         connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID)
@@ -153,7 +156,7 @@ class LongLiveConnectionScan @Inject constructor(
             .doOnNext { identifier ->
                 macAddressToRecord[macAddress] =
                     SaveContactWorker.Record(
-                        timestamp = Date(),
+                        timestamp = dateProvider(),
                         sonarId = identifier
                     )
             }
