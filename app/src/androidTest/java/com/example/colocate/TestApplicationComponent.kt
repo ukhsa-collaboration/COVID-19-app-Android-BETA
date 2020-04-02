@@ -4,6 +4,8 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.Context
 import com.example.colocate.ble.SaveContactWorker
+import com.example.colocate.ble.Scan
+import com.example.colocate.ble.Scanner
 import com.example.colocate.di.ApplicationComponent
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.BluetoothModule
@@ -12,6 +14,7 @@ import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.StatusModule
 import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ContactEventDao
+import com.example.colocate.persistence.ContactEventV2Dao
 import com.example.colocate.persistence.ResidentIdProvider
 import com.example.colocate.registration.TokenRetriever
 import com.polidea.rxandroidble2.RxBleClient
@@ -70,9 +73,26 @@ class TestModule(appContext: Context, private val rxBleClient: RxBleClient, priv
         persistenceModule.provideResidentIdProvider()
 
     @Provides
+    fun provideContactEventV2Dao(database: AppDatabase): ContactEventV2Dao {
+        return database.contactEventV2Dao()
+    }
+
+    @Provides
     fun provideSaveContactWorker(
         contactEventDao: ContactEventDao,
+        contactEventV2Dao: ContactEventV2Dao,
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
-        SaveContactWorker(ioDispatcher, contactEventDao, dateProvider)
+        SaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao, dateProvider)
+
+    @Provides
+    fun provideScanner(
+        rxBleClient: RxBleClient,
+        contactEventDao: ContactEventDao,
+        contactEventV2Dao: ContactEventV2Dao,
+        saveContactWorker: SaveContactWorker,
+        @Named(AppModule.DISPATCHER_IO) dispatcher: CoroutineDispatcher
+    ): Scanner {
+        return Scan(rxBleClient, contactEventDao, contactEventV2Dao, saveContactWorker, dispatcher)
+    }
 }

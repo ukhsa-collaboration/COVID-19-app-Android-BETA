@@ -23,7 +23,7 @@ import javax.inject.Named
 class SaveContactWorker(
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
     private val contactEventDao: ContactEventDao,
-    private val contactEventV2Dao: ContactEventV2Dao
+    private val contactEventV2Dao: ContactEventV2Dao,
     private val dateProvider: () -> Date = { Date() }
 ) {
     fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int) {

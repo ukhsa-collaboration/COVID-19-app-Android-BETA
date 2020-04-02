@@ -38,7 +38,7 @@ class IsolateViewModel @Inject constructor(
 
     fun onNotifyClick() {
         viewModelScope.launch(ioDispatcher) {
-            val longLiveConnection = true
+            val longLiveConnection = false
             val coLocationData = if (longLiveConnection) {
                 val events: JSONArray = convertV2(contactEventV2Dao.getAll())
                 CoLocationData(residentIdProvider.getResidentId(), events)

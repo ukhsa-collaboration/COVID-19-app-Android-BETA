@@ -7,8 +7,8 @@ package com.example.colocate.di.module
 import android.content.Context
 import androidx.room.Room
 import com.example.colocate.ble.LongLiveConnectionScan
-import com.example.colocate.ble.Scanner
 import com.example.colocate.ble.SaveContactWorker
+import com.example.colocate.ble.Scanner
 import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ContactEventDao
 import com.example.colocate.persistence.ContactEventV2Dao
@@ -48,9 +48,10 @@ class PersistenceModule(private val applicationContext: Context) {
     @Provides
     fun provideSaveContactWorker(
         contactEventDao: ContactEventDao,
+        contactEventV2Dao: ContactEventV2Dao,
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
-        SaveContactWorker(ioDispatcher, contactEventDao)
+        SaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao)
 
     @Provides
     fun provideScanner(
@@ -60,6 +61,6 @@ class PersistenceModule(private val applicationContext: Context) {
         @Named(AppModule.DISPATCHER_IO) dispatcher: CoroutineDispatcher
     ): Scanner {
         return LongLiveConnectionScan(rxBleClient, contactEventDao, contactEventV2Dao, dispatcher)
-        //return Scan(rxBleClient, contactEventDao, contactEventV2Dao, dispatcher)
+        // return Scan(rxBleClient, contactEventDao, contactEventV2Dao, dispatcher)
     }
 }

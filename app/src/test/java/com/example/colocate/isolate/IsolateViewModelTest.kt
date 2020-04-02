@@ -7,6 +7,7 @@ package com.example.colocate.isolate
 import com.example.colocate.network.convert
 import com.example.colocate.persistence.ContactEvent
 import com.example.colocate.persistence.ContactEventDao
+import com.example.colocate.persistence.ContactEventV2Dao
 import com.example.colocate.persistence.ResidentIdProvider
 import io.mockk.coEvery
 import io.mockk.every
@@ -24,10 +25,12 @@ class IsolateViewModelTest {
 
     private val coLocationApi = mockk<CoLocationApi>(relaxed = true)
     private val contactEventDao = mockk<ContactEventDao>()
+    private val contactEventV2Dao = mockk<ContactEventV2Dao>()
     private val residentIdProvider = mockk<ResidentIdProvider>()
     private val testSubject = IsolateViewModel(
         coLocationApi,
         contactEventDao,
+        contactEventV2Dao,
         Dispatchers.Unconfined,
         residentIdProvider
     )
