@@ -25,8 +25,8 @@ gcloud auth activate-service-account --key-file=$SERVICE_ACCOUNT_FILE
 gcloud config set project sonar-colocate
 gcloud firebase test android run \
   --type instrumentation \
-  --app app/build/outputs/apk/debug/app-debug.apk \
-  --test app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+  --app app/build/outputs/apk/prod/debug/app-prod-debug.apk \
+  --test app/build/outputs/apk/androidTest/prod/debug/app-prod-debug-androidTest.apk \
   --device model=aljeter_n,version=26,locale=en,orientation=portrait \
   --use-orchestrator \
   --environment-variables clearPackageData=true

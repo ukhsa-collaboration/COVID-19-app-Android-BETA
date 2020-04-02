@@ -15,4 +15,7 @@ interface ContactEventDao {
 
     @Query("SELECT * FROM ${ContactEvent.TABLE_NAME}")
     suspend fun getAll(): List<ContactEvent>
+
+    @Query("DELETE FROM ${ContactEvent.TABLE_NAME}")
+    suspend fun clearEvents()
 }

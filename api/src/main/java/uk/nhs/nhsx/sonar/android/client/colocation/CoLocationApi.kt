@@ -5,6 +5,7 @@
 
 package uk.nhs.nhsx.sonar.android.client.colocation
 
+import android.util.Log
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
@@ -25,6 +26,7 @@ class CoLocationApi @Inject constructor(
             coLocationData.contactEvents,
             keyStorage.provideKey()
         )
+        Log.i("Sending", "Sending $coLocationData")
         httpClient.patch(request, { onSuccess() }, { exception -> onError(exception) })
     }
 }

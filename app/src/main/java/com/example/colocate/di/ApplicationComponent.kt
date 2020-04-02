@@ -18,6 +18,7 @@ import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.RegistrationModule
 import com.example.colocate.di.module.StatusModule
 import com.example.colocate.isolate.IsolateActivity
+import com.example.colocate.persistence.ContactEventV2Dao
 import com.example.colocate.registration.RegistrationActivity
 import com.example.colocate.registration.RegistrationUseCase
 import dagger.Component
@@ -48,4 +49,6 @@ interface ApplicationComponent {
 
     fun registrationUseCase(): RegistrationUseCase
     fun inject(registrationActivity: RegistrationActivity)
+
+    fun provideEventsV2Dao(): ContactEventV2Dao
 }

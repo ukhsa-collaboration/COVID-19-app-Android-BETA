@@ -44,7 +44,6 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 .appModule(AppModule(app))
                 .encryptionKeyStorageModule(EncryptionKeyStorageModule(app))
                 .statusModule(StatusModule(app))
-
                 .networkModule(NetworkModule(mockServerUrl))
                 .testModule(testModule)
                 .build()
