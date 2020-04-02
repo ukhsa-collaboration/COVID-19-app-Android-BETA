@@ -4,6 +4,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.awaitility.kotlin.await
+import org.awaitility.kotlin.untilNotNull
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
@@ -42,7 +43,7 @@ class VolleyHttpClientIT {
 
         client.post(request, { json -> expectedJson = json }, {})
 
-        await.until { expectedJson !== null }
+        await untilNotNull { expectedJson }
         assertEquals("{}", expectedJson.toString())
     }
 }

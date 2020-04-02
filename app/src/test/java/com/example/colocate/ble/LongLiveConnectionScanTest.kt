@@ -12,7 +12,8 @@ import io.reactivex.Single
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.fail
+import org.awaitility.kotlin.await
+import org.awaitility.kotlin.untilNotNull
 import org.junit.Before
 import org.junit.Test
 import java.util.Date
@@ -72,16 +73,15 @@ class LongLiveConnectionScanTest {
             )
             sut.start(this)
 
-            waitUntil {
-                saveContactWorker.saveScope == this &&
-                    saveContactWorker.savedRecord != null
-            }
+            await untilNotNull { saveContactWorker.savedRecord }
 
             val record = saveContactWorker.savedRecord!!
             assertThat(record.sonarId).isEqualTo(identifier)
             assertThat(record.duration).isEqualTo(duration)
             assertThat(record.timestamp).isEqualTo(timestamp)
             assertThat(record.rssiValues).containsAll(rssiValues)
+
+            assertThat(saveContactWorker.saveScope).isEqualTo(this)
         }
     }
 }
@@ -95,19 +95,5 @@ private class FakeSaveContactWorker : SaveContactWorker by mockk() {
     override fun saveContactEventV2(scope: CoroutineScope, record: SaveContactWorker.Record) {
         saveScope = scope
         savedRecord = record
-    }
-}
-
-private fun waitUntil(predicate: () -> Boolean) {
-    val maxAttempts = 20
-    var attempts = 1
-
-    while (!predicate() && attempts <= maxAttempts) {
-        Thread.sleep(20)
-        attempts++
-    }
-
-    if (!predicate()) {
-        fail<String>("Failed waiting for predicate")
     }
 }

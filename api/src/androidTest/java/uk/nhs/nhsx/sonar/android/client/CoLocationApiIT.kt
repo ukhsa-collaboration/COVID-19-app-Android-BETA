@@ -9,6 +9,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.awaitility.kotlin.await
+import org.awaitility.kotlin.until
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -65,7 +66,7 @@ class CoLocationApiIT {
         val request = server.takeRequest(300, MILLISECONDS)
         assertEquals("/api/residents/residentId", request?.path)
 
-        await.until { isSuccess }
+        await until { isSuccess }
         assertFalse(isError)
     }
 

@@ -11,7 +11,9 @@ import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.fail
+import org.awaitility.kotlin.await
+import org.awaitility.kotlin.until
+import org.awaitility.kotlin.untilNotNull
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import java.nio.charset.Charset
@@ -85,13 +87,13 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val idProvider = testActivity.residentIdProvider
         val keyStorage = testActivity.encryptionKeyStorage
 
-        waitUntil {
+        await until {
             idProvider.getResidentId() != ID_NOT_REGISTERED
         }
         assertThat(idProvider.getResidentId()).isEqualTo(TestCoLocateServiceDispatcher.RESIDENT_ID)
 
-        waitUntil {
-            keyStorage.provideKey() != null
+        await untilNotNull {
+            keyStorage.provideKey()
         }
         val decodedKey = keyStorage.provideKey()?.toString(Charset.defaultCharset())
         assertThat(decodedKey).isEqualTo(TestCoLocateServiceDispatcher.SECRET_KEY)
@@ -108,7 +110,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         )
 
         val dao = testActivity.appDatabase.contactEventV2Dao()
-        waitUntil {
+        await until {
             runBlocking { dao.getAll().size } == 2
         }
     }
@@ -149,20 +151,6 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 class TestTokenRetriever : TokenRetriever {
     override suspend fun retrieveToken() =
         TokenRetriever.Result.Success("test firebase token #010")
-}
-
-private fun waitUntil(predicate: () -> Boolean) {
-    val maxAttempts = 40
-    var attempts = 1
-
-    while (!predicate() && attempts <= maxAttempts) {
-        Thread.sleep(50)
-        attempts++
-    }
-
-    if (!predicate()) {
-        fail<String>("Failed waiting for predicate")
-    }
 }
 
 private fun String.countOccurrences(substring: String): Int =
