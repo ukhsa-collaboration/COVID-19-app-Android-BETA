@@ -7,11 +7,13 @@ import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import java.util.Date
@@ -31,11 +33,6 @@ class LongLiveConnectionScanTest {
     private val rssiValues = listOf(-50, -49)
     private val duration = 5L
     private val period = 50L
-
-    private val record = SaveContactWorker.Record(
-        timestamp = timestamp, sonarId = identifier,
-        rssiValues = rssiValues.toMutableList(), duration = duration
-    )
 
     @Before
     fun setUp() {
@@ -76,7 +73,15 @@ class LongLiveConnectionScanTest {
 
             val scope = this
             delay(period + 5)
-            verify { saveContactWorker.saveContactEventV2(scope, record) }
+
+            val recordSlot = slot<SaveContactWorker.Record>()
+            verify { saveContactWorker.saveContactEventV2(scope, capture(recordSlot)) }
+
+            val record = recordSlot.captured
+            assertThat(record.sonarId).isEqualTo(identifier)
+            assertThat(record.duration).isEqualTo(duration)
+            assertThat(record.timestamp).isEqualTo(timestamp)
+            assertThat(record.rssiValues).containsAll(rssiValues)
         }
     }
 }
