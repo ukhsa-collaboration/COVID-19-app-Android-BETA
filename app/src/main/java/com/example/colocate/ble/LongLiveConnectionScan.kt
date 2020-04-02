@@ -8,6 +8,7 @@ import android.os.ParcelUuid
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.scan.ScanFilter
+import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -78,62 +79,67 @@ class LongLiveConnectionScan @Inject constructor(
         )
             .filter { it.bleDevice.connectionState == RxBleConnection.RxBleConnectionState.DISCONNECTED }
             .subscribe(
-                { result ->
-                    val connectionDisposable = result.bleDevice.establishConnection(false)
-                        .flatMap { connection ->
-                            Observable.combineLatest(
-                                readIdentifier(connection).doOnNext { identifier ->
-                                    macAddressToRecord[result.bleDevice.macAddress] =
-                                        SaveContactWorker.Record(
-                                            timestamp = Date(),
-                                            sonarId = identifier
-                                        )
-                                },
-                                readRssiPeriodically(connection),
-                                createEvent(result.bleDevice.macAddress, coroutineScope)
-                            )
-                        }
-                        .subscribe(
-                            ::onReadSuccess,
-                            { e ->
-                                Timber.e(
-                                    e,
-                                    "Failed to read from remote device with mac-address: ${result.bleDevice.macAddress}"
-                                )
-                                val record = macAddressToRecord.remove(result.bleDevice.macAddress)
-                                if (record != null) {
-                                    val duration = (Date().time - record.timestamp.time) / 1000
-                                    val finalRecord = record.copy(duration = duration)
-                                    Timber.d("Save record: $finalRecord")
-                                    saveContactWorker.saveContactEventV2(
-                                        coroutineScope,
-                                        finalRecord
-                                    )
-                                }
-                            },
-                            ::onDisconnect
-                        )
-                    compositeDisposable.add(connectionDisposable)
-                },
+                { result -> connectAndCaptureEvents(result, coroutineScope) },
                 ::onScanError
             )
         compositeDisposable.add(scanDisposable)
     }
 
-    private fun onDisconnect() {
-        Timber.d("Scanning Disconnected")
+    private fun connectAndCaptureEvents(
+        result: ScanResult,
+        coroutineScope: CoroutineScope
+    ) {
+        val macAddress = result.bleDevice.macAddress
+        val connectionDisposable = result.bleDevice.establishConnection(false)
+            .flatMap { connection -> captureContactEvents(connection, macAddress) }
+            .subscribe(::onReadSuccess) { e -> onDisconnect(e, macAddress, coroutineScope) }
+        compositeDisposable.add(connectionDisposable)
+    }
+
+    private fun captureContactEvents(
+        connection: RxBleConnection,
+        macAddress: String
+    ): Observable<Event> {
+        return Observable.combineLatest(
+            readIdentifierAndCreateRecord(connection, macAddress),
+            readRssiPeriodically(connection),
+            createEvent(macAddress)
+        )
+    }
+
+    private fun onDisconnect(
+        e: Throwable?,
+        macAddress: String,
+        coroutineScope: CoroutineScope
+    ) {
+        Timber.e(e, "Failed to read from remote device with mac-address: $macAddress")
+        saveRecord(macAddress, coroutineScope)
+    }
+
+    private fun saveRecord(
+        macAddress: String,
+        coroutineScope: CoroutineScope
+    ) {
+        val record = macAddressToRecord.remove(macAddress)
+        if (record != null) {
+            val duration = (Date().time - record.timestamp.time) / 1000
+            val finalRecord = record.copy(duration = duration)
+            Timber.d("Save record: $finalRecord")
+            saveContactWorker.saveContactEventV2(
+                coroutineScope,
+                finalRecord
+            )
+        }
     }
 
     private fun createEvent(
-        macAddress: String,
-        coroutineScope: CoroutineScope
+        macAddress: String
     ): BiFunction<Identifier, Int, Event> {
         return BiFunction<Identifier, Int, Event> { identifier, rssi ->
             Event(
                 macAddress,
                 identifier,
-                rssi,
-                coroutineScope
+                rssi
             )
         }
     }
@@ -141,9 +147,16 @@ class LongLiveConnectionScan @Inject constructor(
     private fun readRssiPeriodically(connection: RxBleConnection) =
         Observable.interval(0, 10, TimeUnit.SECONDS).flatMapSingle { connection.readRssi() }
 
-    private fun readIdentifier(connection: RxBleConnection) =
+    private fun readIdentifierAndCreateRecord(connection: RxBleConnection, macAddress: String) =
         connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID)
             .map { bytes -> Identifier.fromBytes(bytes) }.toObservable()
+            .doOnNext { identifier ->
+                macAddressToRecord[macAddress] =
+                    SaveContactWorker.Record(
+                        timestamp = Date(),
+                        sonarId = identifier
+                    )
+            }
 
     override fun stop() {
         compositeDisposable.clear()
@@ -160,8 +173,7 @@ class LongLiveConnectionScan @Inject constructor(
     private data class Event(
         val macAddress: String,
         val identifier: Identifier,
-        val rssi: Int,
-        val scope: CoroutineScope
+        val rssi: Int
     ) {
         override fun toString() = "Event[identifier: ${identifier.asString}, rssi: $rssi]"
     }

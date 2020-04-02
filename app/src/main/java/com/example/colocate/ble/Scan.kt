@@ -73,7 +73,7 @@ class Scan @Inject constructor(
                 coLocateBackgroundedIPhoneFilter,
                 coLocateServiceUuidFilter
             )
-            .distinct { it.bleDevice.macAddress }
+            .filter { it.bleDevice.connectionState == RxBleConnection.RxBleConnectionState.DISCONNECTED }
             .subscribe(
                 { result ->
                     result
