@@ -45,7 +45,8 @@ interface TestAppComponent : ApplicationComponent
 class TestModule(
     appContext: Context,
     private val rxBleClient: RxBleClient,
-    private val dateProvider: () -> Date,
+    private val startTimestampProvider: () -> Date,
+    private val endTimestampProvider: () -> Date,
     private val connectionV2: Boolean = true
 ) {
 
@@ -90,12 +91,18 @@ class TestModule(
         contactEventV2Dao: ContactEventV2Dao,
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
-        SaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao, dateProvider)
+        SaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao, startTimestampProvider)
 
     @Provides
     fun provideScanner(rxBleClient: RxBleClient, saveContactWorker: SaveContactWorker): Scanner =
         if (connectionV2)
-            LongLiveConnectionScan(rxBleClient, saveContactWorker, dateProvider, periodInMilliseconds = 50)
+            LongLiveConnectionScan(
+                rxBleClient,
+                saveContactWorker,
+                startTimestampProvider,
+                endTimestampProvider,
+                periodInMilliseconds = 50
+            )
         else
             Scan(rxBleClient, saveContactWorker)
 

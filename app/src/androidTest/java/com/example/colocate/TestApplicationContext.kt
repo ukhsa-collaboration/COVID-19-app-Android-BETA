@@ -27,9 +27,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     private val notificationService = NotificationService()
     private val testDispatcher = TestCoLocateServiceDispatcher()
     private val testRxBleClient = TestRxBleClient(app)
-    private val testDateProvider = { Date.from(Instant.parse("2020-04-01T14:33:13Z")) }
+    private val startTimestampProvider = { Date.from(Instant.parse("2020-04-01T14:33:13Z")) }
+    private val endTimestampProvider = { Date.from(Instant.parse("2020-04-01T14:43:13Z")) }
 
-    private val testModule = TestModule(app, testRxBleClient, testDateProvider)
+    private val testModule = TestModule(app, testRxBleClient, startTimestampProvider, endTimestampProvider)
     private val mockServer = MockWebServer()
 
     init {
@@ -120,8 +121,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
         val body = lastRequest?.body?.readUtf8() ?: ""
         assertThat(body).startsWith("""{"contactEvents":[""")
-        assertThat(body).contains("""{"sonarId":"04330a56-ad45-4b0f-81ee-dd414910e1f5","rssiValues":[10,20,15],"timestamp":"2020-04-01T14:33:13Z","duration":0}""")
-        assertThat(body).contains("""{"sonarId":"984c61e2-0d66-44eb-beea-fbd8f2991de3","rssiValues":[10],"timestamp":"2020-04-01T14:33:13Z","duration":0}""")
+        assertThat(body).contains("""{"sonarId":"04330a56-ad45-4b0f-81ee-dd414910e1f5","rssiValues":[10,20,15],"timestamp":"2020-04-01T14:33:13Z","duration":600}""")
+        assertThat(body).contains("""{"sonarId":"984c61e2-0d66-44eb-beea-fbd8f2991de3","rssiValues":[10],"timestamp":"2020-04-01T14:33:13Z","duration":600}""")
         assertThat(body.countOccurrences("""{"sonarId":""")).isEqualTo(2)
     }
 }

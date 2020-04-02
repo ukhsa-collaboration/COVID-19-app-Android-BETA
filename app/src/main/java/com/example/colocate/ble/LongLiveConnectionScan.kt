@@ -22,7 +22,8 @@ import javax.inject.Inject
 class LongLiveConnectionScan @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val saveContactWorker: SaveContactWorker,
-    private val dateProvider: () -> Date = { Date() },
+    private val startTimestampProvider: () -> Date = { Date() },
+    private val endTimestampProvider: () -> Date = startTimestampProvider,
     private val periodInMilliseconds: Long = 10_000
 ) : Scanner {
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
@@ -128,7 +129,7 @@ class LongLiveConnectionScan @Inject constructor(
         val record = macAddressToRecord.remove(macAddress)
 
         if (record != null) {
-            val duration = (dateProvider().time - record.timestamp.time) / 1000
+            val duration = (endTimestampProvider().time - record.timestamp.time) / 1000
             val finalRecord = record.copy(duration = duration)
             Timber.d("Save record: $finalRecord")
             saveContactWorker.saveContactEventV2(
@@ -159,7 +160,7 @@ class LongLiveConnectionScan @Inject constructor(
             .doOnNext { identifier ->
                 macAddressToRecord[macAddress] =
                     SaveContactWorker.Record(
-                        timestamp = dateProvider(),
+                        timestamp = startTimestampProvider(),
                         sonarId = identifier
                     )
             }
