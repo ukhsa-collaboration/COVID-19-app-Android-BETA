@@ -5,9 +5,6 @@
 package com.example.colocate.ble
 
 import android.os.ParcelUuid
-import com.example.colocate.di.module.AppModule
-import com.example.colocate.persistence.ContactEventDao
-import com.example.colocate.persistence.ContactEventV2Dao
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.scan.ScanFilter
@@ -15,19 +12,15 @@ import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class LongLiveConnectionScan @Inject constructor(
     private val rxBleClient: RxBleClient,
-    private val contactEventDao: ContactEventDao,
-    private val contactEventV2Dao: ContactEventV2Dao,
-    @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher
+    private val saveContactWorker: SaveContactWorker
 ) : Scanner {
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
@@ -112,11 +105,10 @@ class LongLiveConnectionScan @Inject constructor(
                                     val duration = (Date().time - record.timestamp.time) / 1000
                                     val finalRecord = record.copy(duration = duration)
                                     Timber.d("Save record: $finalRecord")
-                                    SaveContactWorker(
-                                        dispatcher,
-                                        contactEventDao,
-                                        contactEventV2Dao
-                                    ).saveContactEventV2(coroutineScope, finalRecord)
+                                    saveContactWorker.saveContactEventV2(
+                                        coroutineScope,
+                                        finalRecord
+                                    )
                                 }
                             },
                             ::onDisconnect

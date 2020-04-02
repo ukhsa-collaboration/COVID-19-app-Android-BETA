@@ -4,19 +4,15 @@
 
 package com.example.colocate.isolate
 
-import com.example.colocate.network.convert
-import com.example.colocate.persistence.ContactEvent
-import com.example.colocate.persistence.ContactEventDao
-import com.example.colocate.persistence.ContactEventV2Dao
+import com.example.colocate.persistence.CoLocationDataProvider
 import com.example.colocate.persistence.ResidentIdProvider
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions.assertThat
+import org.json.JSONArray
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
@@ -24,16 +20,12 @@ import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
 class IsolateViewModelTest {
 
     private val coLocationApi = mockk<CoLocationApi>(relaxed = true)
-    private val contactEventDao = mockk<ContactEventDao>()
-    private val contactEventV2Dao = mockk<ContactEventV2Dao>()
+    private val coLocationDataProvider = mockk<CoLocationDataProvider>()
     private val residentIdProvider = mockk<ResidentIdProvider>()
     private val testSubject = IsolateViewModel(
         coLocationApi,
-        contactEventDao,
-        contactEventV2Dao,
         Dispatchers.Unconfined,
-        residentIdProvider,
-        useConnectionV2 = false
+        coLocationDataProvider
     )
 
     companion object {
@@ -43,35 +35,19 @@ class IsolateViewModelTest {
     @Test
     fun onNotifyCallsCoLocationApi() {
         runBlocking {
-            coEvery { contactEventDao.getAll() } returns contentEvents
+            val events = JSONArray().apply {
+                put(0, "foo")
+                put(1, "bar")
+            }
+            val coLocationData = CoLocationData(RESIDENT_ID, events)
+            coEvery { coLocationDataProvider.getData() } returns coLocationData
             every { residentIdProvider.getResidentId() } returns RESIDENT_ID
 
             testSubject.onNotifyClick()
 
-            val dataSlot = slot<CoLocationData>()
             verify {
-                coLocationApi.save(capture(dataSlot), any(), any())
+                coLocationApi.save(eq(coLocationData), any(), any())
             }
-
-            val coLocationData = dataSlot.captured
-            val expectedEvents = convert(contentEvents)
-            assertThat(RESIDENT_ID).isEqualTo(coLocationData.residentId)
-            assertThat(expectedEvents.toString()).isEqualTo(coLocationData.events.toString())
         }
     }
-
-    private val contentEvents = listOf(
-        ContactEvent(
-            id = 1L,
-            remoteContactId = "remote",
-            rssi = 1,
-            timestamp = "124325432"
-        ),
-        ContactEvent(
-            id = 2L,
-            remoteContactId = "remote",
-            rssi = 1,
-            timestamp = "124325432"
-        )
-    )
 }

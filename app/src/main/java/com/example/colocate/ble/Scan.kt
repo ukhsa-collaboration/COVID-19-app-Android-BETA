@@ -5,9 +5,6 @@
 package com.example.colocate.ble
 
 import android.os.ParcelUuid
-import com.example.colocate.di.module.AppModule
-import com.example.colocate.persistence.ContactEventDao
-import com.example.colocate.persistence.ContactEventV2Dao
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.scan.ScanFilter
@@ -15,18 +12,13 @@ import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import timber.log.Timber
 import javax.inject.Inject
-import javax.inject.Named
 
 class Scan @Inject constructor(
     private val rxBleClient: RxBleClient,
-    private val contactEventDao: ContactEventDao,
-    private val contactEventV2Dao: ContactEventV2Dao,
-    private val saveContactWorker: SaveContactWorker,
-    @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher
+    private val saveContactWorker: SaveContactWorker
 ) : Scanner {
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))

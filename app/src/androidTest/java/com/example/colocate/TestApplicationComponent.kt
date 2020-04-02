@@ -93,12 +93,9 @@ class TestModule(
     @Provides
     fun provideScanner(
         rxBleClient: RxBleClient,
-        contactEventDao: ContactEventDao,
-        contactEventV2Dao: ContactEventV2Dao,
-        saveContactWorker: SaveContactWorker,
-        @Named(AppModule.DISPATCHER_IO) dispatcher: CoroutineDispatcher
+        saveContactWorker: SaveContactWorker
     ): Scanner {
-        return Scan(rxBleClient, contactEventDao, contactEventV2Dao, saveContactWorker, dispatcher)
+        return Scan(rxBleClient, saveContactWorker)
     }
 
     @Provides

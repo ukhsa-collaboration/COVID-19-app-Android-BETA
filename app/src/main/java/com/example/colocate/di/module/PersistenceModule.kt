@@ -60,15 +60,12 @@ class PersistenceModule(
     @Provides
     fun provideScanner(
         rxBleClient: RxBleClient,
-        contactEventDao: ContactEventDao,
-        contactEventV2Dao: ContactEventV2Dao,
-        saveContactWorker: SaveContactWorker,
-        @Named(AppModule.DISPATCHER_IO) dispatcher: CoroutineDispatcher
+        saveContactWorker: SaveContactWorker
     ): Scanner {
         return if (connectionV2) {
-            LongLiveConnectionScan(rxBleClient, contactEventDao, contactEventV2Dao, dispatcher)
+            LongLiveConnectionScan(rxBleClient, saveContactWorker)
         } else {
-            Scan(rxBleClient, contactEventDao, contactEventV2Dao, saveContactWorker, dispatcher)
+            Scan(rxBleClient, saveContactWorker)
         }
     }
 
