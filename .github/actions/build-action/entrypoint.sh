@@ -19,7 +19,7 @@ mkdir build
 echo "$GOOGLE_SERVICES" > $GOOGLE_SERVICES_FILE
 echo "$SERVICE_ACCOUNT" > $SERVICE_ACCOUNT_FILE
 
-./gradlew build packageDebugAndroidTest
+./gradlew build packageProdDebugAndroidTest
 
 gcloud auth activate-service-account --key-file=$SERVICE_ACCOUNT_FILE
 gcloud config set project sonar-colocate
