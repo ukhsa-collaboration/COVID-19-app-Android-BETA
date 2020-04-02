@@ -32,7 +32,8 @@ class IsolateViewModelTest {
         contactEventDao,
         contactEventV2Dao,
         Dispatchers.Unconfined,
-        residentIdProvider
+        residentIdProvider,
+        useConnectionV2 = false
     )
 
     companion object {

@@ -40,10 +40,15 @@ import javax.inject.Singleton
 interface TestAppComponent : ApplicationComponent
 
 @Module
-class TestModule(appContext: Context, private val rxBleClient: RxBleClient, private val dateProvider: () -> Date) {
+class TestModule(
+    appContext: Context,
+    private val rxBleClient: RxBleClient,
+    private val dateProvider: () -> Date,
+    private val connectionV2: Boolean = false
+) {
 
     private val bluetoothModule = BluetoothModule(appContext)
-    private val persistenceModule = PersistenceModule(appContext)
+    private val persistenceModule = PersistenceModule(appContext, connectionV2 = connectionV2)
 
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
@@ -95,4 +100,8 @@ class TestModule(appContext: Context, private val rxBleClient: RxBleClient, priv
     ): Scanner {
         return Scan(rxBleClient, contactEventDao, contactEventV2Dao, saveContactWorker, dispatcher)
     }
+
+    @Provides
+    @Named(PersistenceModule.USE_CONNECTION_V2)
+    fun provideUseConnectionV2() = connectionV2
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.colocate.common.ViewState
 import com.example.colocate.di.module.AppModule
+import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.network.convert
 import com.example.colocate.network.convertV2
 import com.example.colocate.persistence.ContactEventDao
@@ -30,7 +31,8 @@ class IsolateViewModel @Inject constructor(
     private val contactEventDao: ContactEventDao,
     private val contactEventV2Dao: ContactEventV2Dao,
     @Named(AppModule.DISPATCHER_IO) private val ioDispatcher: CoroutineDispatcher,
-    private val residentIdProvider: ResidentIdProvider
+    private val residentIdProvider: ResidentIdProvider,
+    @Named(PersistenceModule.USE_CONNECTION_V2) private val useConnectionV2: Boolean
 ) : ViewModel() {
 
     private val _isolationResult = MutableLiveData<ViewState>()
@@ -38,8 +40,7 @@ class IsolateViewModel @Inject constructor(
 
     fun onNotifyClick() {
         viewModelScope.launch(ioDispatcher) {
-            val longLiveConnection = false
-            val coLocationData = if (longLiveConnection) {
+            val coLocationData = if (useConnectionV2) {
                 val events: JSONArray = convertV2(contactEventV2Dao.getAll())
                 CoLocationData(residentIdProvider.getResidentId(), events)
             } else {

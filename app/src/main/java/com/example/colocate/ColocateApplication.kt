@@ -26,9 +26,9 @@ class ColocateApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
+        val useConnectionV2 = true
         appComponent = DaggerApplicationComponent.builder()
-            .persistenceModule(PersistenceModule(this))
+            .persistenceModule(PersistenceModule(this, useConnectionV2))
             .bluetoothModule(BluetoothModule(this))
             .appModule(AppModule(this))
             .networkModule(NetworkModule(BASE_URL))

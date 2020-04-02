@@ -8,6 +8,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.colocate.ble.LongLiveConnectionScan
 import com.example.colocate.ble.SaveContactWorker
+import com.example.colocate.ble.Scan
 import com.example.colocate.ble.Scanner
 import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ContactEventDao
@@ -21,7 +22,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Named
 
 @Module
-class PersistenceModule(private val applicationContext: Context) {
+class PersistenceModule(
+    private val applicationContext: Context,
+    private val connectionV2: Boolean
+) {
 
     @Provides
     fun provideDatabase() =
@@ -58,9 +62,21 @@ class PersistenceModule(private val applicationContext: Context) {
         rxBleClient: RxBleClient,
         contactEventDao: ContactEventDao,
         contactEventV2Dao: ContactEventV2Dao,
+        saveContactWorker: SaveContactWorker,
         @Named(AppModule.DISPATCHER_IO) dispatcher: CoroutineDispatcher
     ): Scanner {
-        return LongLiveConnectionScan(rxBleClient, contactEventDao, contactEventV2Dao, dispatcher)
-        // return Scan(rxBleClient, contactEventDao, contactEventV2Dao, dispatcher)
+        return if (connectionV2) {
+            LongLiveConnectionScan(rxBleClient, contactEventDao, contactEventV2Dao, dispatcher)
+        } else {
+            Scan(rxBleClient, contactEventDao, contactEventV2Dao, saveContactWorker, dispatcher)
+        }
+    }
+
+    @Provides
+    @Named(USE_CONNECTION_V2)
+    fun provideUseConnectionV2() = connectionV2
+
+    companion object {
+        const val USE_CONNECTION_V2 = "USE_CONNECTION_V2"
     }
 }
