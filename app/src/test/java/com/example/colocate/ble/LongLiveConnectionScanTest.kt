@@ -72,7 +72,7 @@ class LongLiveConnectionScanTest {
             sut.start(this)
 
             val scope = this
-            delay(period + 5)
+            delay(2 * period)
 
             val recordSlot = slot<SaveContactWorker.Record>()
             verify { saveContactWorker.saveContactEventV2(scope, capture(recordSlot)) }

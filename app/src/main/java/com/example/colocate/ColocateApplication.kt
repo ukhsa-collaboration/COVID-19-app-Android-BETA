@@ -18,7 +18,7 @@ import com.example.colocate.di.module.StatusModule
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 
-const val BASE_URL = "https://sonar-colocate-services-test.apps.cp.data.england.nhs.uk/"
+const val BASE_URL = "https://sonar-colocate-services-test.apps.cp.data.england.nhs.uk"
 
 class ColocateApplication : Application() {
 
