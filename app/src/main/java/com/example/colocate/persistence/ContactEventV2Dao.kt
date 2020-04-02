@@ -16,6 +16,6 @@ interface ContactEventV2Dao {
     @Query("SELECT * FROM ${ContactEventV2.TABLE_NAME}")
     suspend fun getAll(): List<ContactEventV2>
 
-    @Query("DELETE FROM ${ContactEvent.TABLE_NAME}")
+    @Query("DELETE FROM ${ContactEventV2.TABLE_NAME}")
     suspend fun clearEvents()
 }

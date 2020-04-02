@@ -7,8 +7,8 @@ package com.example.colocate.ble
 import android.os.ParcelUuid
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
+import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.scan.ScanFilter
-import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -23,7 +23,7 @@ class LongLiveConnectionScan @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val saveContactWorker: SaveContactWorker,
     private val dateProvider: () -> Date = { Date() },
-    private val period: Long = 10_000
+    private val periodInMilliseconds: Long = 10_000
 ) : Scanner {
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
@@ -74,27 +74,30 @@ class LongLiveConnectionScan @Inject constructor(
     private val macAddressToRecord = mutableMapOf<String, SaveContactWorker.Record>()
 
     override fun start(coroutineScope: CoroutineScope) {
-        val scanDisposable = rxBleClient.scanBleDevices(
-            settings,
-            coLocateBackgroundedIPhoneFilter,
-            coLocateServiceUuidFilter
-        )
+        val scanDisposable = rxBleClient
+            .scanBleDevices(
+                settings,
+                coLocateBackgroundedIPhoneFilter,
+                coLocateServiceUuidFilter
+            )
             .filter { it.bleDevice.connectionState == RxBleConnection.RxBleConnectionState.DISCONNECTED }
             .subscribe(
-                { result -> connectAndCaptureEvents(result, coroutineScope) },
+                { result -> connectAndCaptureEvents(result.bleDevice, coroutineScope) },
                 ::onScanError
             )
         compositeDisposable.add(scanDisposable)
     }
 
     private fun connectAndCaptureEvents(
-        result: ScanResult,
+        device: RxBleDevice,
         coroutineScope: CoroutineScope
     ) {
-        val macAddress = result.bleDevice.macAddress
-        val connectionDisposable = result.bleDevice.establishConnection(false)
+        val macAddress = device.macAddress
+        val connectionDisposable = device
+            .establishConnection(false)
             .flatMap { connection -> captureContactEvents(connection, macAddress) }
-            .subscribe(::onReadSuccess) { e -> onDisconnect(e, macAddress, coroutineScope) }
+            .subscribe(::onReadSuccess) { exception -> onDisconnect(exception, macAddress, coroutineScope) }
+
         compositeDisposable.add(connectionDisposable)
     }
 
@@ -110,11 +113,11 @@ class LongLiveConnectionScan @Inject constructor(
     }
 
     private fun onDisconnect(
-        e: Throwable?,
+        exception: Throwable?,
         macAddress: String,
         coroutineScope: CoroutineScope
     ) {
-        Timber.e(e, "Failed to read from remote device with mac-address: $macAddress")
+        Timber.e(exception, "Failed to read from remote device with mac-address: $macAddress")
         saveRecord(macAddress, coroutineScope)
     }
 
@@ -123,6 +126,7 @@ class LongLiveConnectionScan @Inject constructor(
         coroutineScope: CoroutineScope
     ) {
         val record = macAddressToRecord.remove(macAddress)
+
         if (record != null) {
             val duration = (dateProvider().time - record.timestamp.time) / 1000
             val finalRecord = record.copy(duration = duration)
@@ -134,9 +138,7 @@ class LongLiveConnectionScan @Inject constructor(
         }
     }
 
-    private fun createEvent(
-        macAddress: String
-    ): BiFunction<Identifier, Int, Event> {
+    private fun createEvent(macAddress: String): BiFunction<Identifier, Int, Event> {
         return BiFunction<Identifier, Int, Event> { identifier, rssi ->
             Event(
                 macAddress,
@@ -147,11 +149,12 @@ class LongLiveConnectionScan @Inject constructor(
     }
 
     private fun readRssiPeriodically(connection: RxBleConnection) =
-        Observable.interval(0, period, TimeUnit.MILLISECONDS)
+        Observable.interval(0, periodInMilliseconds, TimeUnit.MILLISECONDS)
             .flatMapSingle { connection.readRssi() }
 
     private fun readIdentifierAndCreateRecord(connection: RxBleConnection, macAddress: String) =
-        connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID)
+        connection
+            .readCharacteristic(DEVICE_CHARACTERISTIC_UUID)
             .map { bytes -> Identifier.fromBytes(bytes) }.toObservable()
             .doOnNext { identifier ->
                 macAddressToRecord[macAddress] =

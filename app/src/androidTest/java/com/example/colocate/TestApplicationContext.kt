@@ -8,6 +8,7 @@ import com.example.colocate.di.module.StatusModule
 import com.example.colocate.persistence.ID_NOT_REGISTERED
 import com.example.colocate.registration.TokenRetriever
 import com.google.firebase.messaging.RemoteMessage
+import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
@@ -96,10 +97,18 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
     fun simulateDeviceInProximity() {
         testRxBleClient.emitScanResults(
-            TestBluetoothDevice(UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"), "06-00-00-00-00-00", 10),
-            TestBluetoothDevice(UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"), "06-00-00-00-00-00", 12),
-            TestBluetoothDevice(UUID.fromString("984c61e2-0d66-44eb-beea-fbd8f2991de3"), "07-00-00-00-00-00", 20)
+            ScanResultArgs(
+                UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
+                "06-00-00-00-00-00",
+                listOf(10, 20, 15)
+            ),
+            ScanResultArgs(UUID.fromString("984c61e2-0d66-44eb-beea-fbd8f2991de3"), "07-00-00-00-00-00", listOf(10))
         )
+
+        val dao = testActivity.appDatabase.contactEventV2Dao()
+        waitUntil {
+            runBlocking { dao.getAll().size } == 2
+        }
     }
 
     fun verifyReceivedProximityRequest() {
@@ -111,9 +120,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
         val body = lastRequest?.body?.readUtf8() ?: ""
         assertThat(body).startsWith("""{"contactEvents":[""")
-        assertThat(body).contains("""{"remoteContactId":"04330a56-ad45-4b0f-81ee-dd414910e1f5","rssi":10,"timestamp":"2020-04-01T14:33:13Z"}""")
-        assertThat(body).contains("""{"remoteContactId":"984c61e2-0d66-44eb-beea-fbd8f2991de3","rssi":20,"timestamp":"2020-04-01T14:33:13Z"}""")
-        assertThat(body.countOccurrences("""{"remoteContactId":""")).isEqualTo(2)
+        assertThat(body).contains("""{"sonarId":"04330a56-ad45-4b0f-81ee-dd414910e1f5","rssiValues":[10,20,15],"timestamp":"2020-04-01T14:33:13Z","duration":0}""")
+        assertThat(body).contains("""{"sonarId":"984c61e2-0d66-44eb-beea-fbd8f2991de3","rssiValues":[10],"timestamp":"2020-04-01T14:33:13Z","duration":0}""")
+        assertThat(body.countOccurrences("""{"sonarId":""")).isEqualTo(2)
     }
 }
 
@@ -123,11 +132,11 @@ class TestTokenRetriever : TokenRetriever {
 }
 
 private fun waitUntil(predicate: () -> Boolean) {
-    val maxAttempts = 20
+    val maxAttempts = 40
     var attempts = 1
 
     while (!predicate() && attempts <= maxAttempts) {
-        Thread.sleep(100)
+        Thread.sleep(50)
         attempts++
     }
 

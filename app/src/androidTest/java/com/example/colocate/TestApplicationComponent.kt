@@ -3,6 +3,7 @@ package com.example.colocate
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.Context
+import com.example.colocate.ble.LongLiveConnectionScan
 import com.example.colocate.ble.SaveContactWorker
 import com.example.colocate.ble.Scan
 import com.example.colocate.ble.Scanner
@@ -45,7 +46,7 @@ class TestModule(
     appContext: Context,
     private val rxBleClient: RxBleClient,
     private val dateProvider: () -> Date,
-    private val connectionV2: Boolean = false
+    private val connectionV2: Boolean = true
 ) {
 
     private val bluetoothModule = BluetoothModule(appContext, connectionV2)
@@ -92,12 +93,11 @@ class TestModule(
         SaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao, dateProvider)
 
     @Provides
-    fun provideScanner(
-        rxBleClient: RxBleClient,
-        saveContactWorker: SaveContactWorker
-    ): Scanner {
-        return Scan(rxBleClient, saveContactWorker)
-    }
+    fun provideScanner(rxBleClient: RxBleClient, saveContactWorker: SaveContactWorker): Scanner =
+        if (connectionV2)
+            LongLiveConnectionScan(rxBleClient, saveContactWorker, dateProvider, periodInMilliseconds = 50)
+        else
+            Scan(rxBleClient, saveContactWorker)
 
     @Provides
     @Named(USE_CONNECTION_V2)

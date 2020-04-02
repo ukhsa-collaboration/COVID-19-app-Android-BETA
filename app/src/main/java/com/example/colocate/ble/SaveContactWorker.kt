@@ -81,7 +81,7 @@ class SaveContactWorker(
         const val TAG = "SaveWorker"
     }
 
-    public data class Record(
+    data class Record(
         val timestamp: Date,
         val sonarId: Identifier,
         val rssiValues: MutableList<Int> = mutableListOf(),

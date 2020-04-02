@@ -51,10 +51,9 @@ class LongLiveConnectionScanTest {
 
         every { bleDevice.establishConnection(false) } returns Observable.merge(
             Observable.just(connection),
-            Observable.timer(period + 1, TimeUnit.MILLISECONDS)
-                .flatMap {
-                    Observable.error<RxBleConnection>(RuntimeException())
-                }
+            Observable
+                .timer(period + 1, TimeUnit.MILLISECONDS)
+                .flatMap { Observable.error(RuntimeException()) }
         )
         every { connection.readRssi() } returnsMany rssiValues.map { Single.just(it) }
         every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(
@@ -66,9 +65,11 @@ class LongLiveConnectionScanTest {
     fun connectionWithSingularDevice() {
         runBlocking {
             val dates = mutableListOf(timestamp, Date(timestamp.time + duration * 1_000))
-            val sut = LongLiveConnectionScan(bleClient, saveContactWorker, dateProvider = {
-                dates.removeAt(0)
-            }, period = period)
+            val sut = LongLiveConnectionScan(
+                bleClient, saveContactWorker,
+                dateProvider = { dates.removeAt(0) },
+                periodInMilliseconds = period
+            )
             sut.start(this)
 
             val scope = this

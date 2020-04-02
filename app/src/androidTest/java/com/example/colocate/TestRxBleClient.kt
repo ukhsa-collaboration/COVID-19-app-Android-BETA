@@ -3,14 +3,15 @@ package com.example.colocate
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_READ
 import android.bluetooth.BluetoothGattCharacteristic.PROPERTY_READ
+import android.bluetooth.BluetoothGattService
 import android.content.Context
 import com.example.colocate.ble.DEVICE_CHARACTERISTIC_UUID
 import com.example.colocate.ble.Identifier
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleDevice
+import com.polidea.rxandroidble2.RxBleDeviceServices
 import com.polidea.rxandroidble2.RxBleScanResult
 import com.polidea.rxandroidble2.internal.scan.ScanRecordImplCompat
-import com.polidea.rxandroidble2.mockrxandroidble.RxBleClientMock
 import com.polidea.rxandroidble2.scan.BackgroundScanner
 import com.polidea.rxandroidble2.scan.ScanCallbackType.CALLBACK_TYPE_ALL_MATCHES
 import com.polidea.rxandroidble2.scan.ScanFilter
@@ -40,30 +41,31 @@ class TestRxBleClient(context: Context) : RxBleClient() {
     override fun scanBleDevices(scanSettings: ScanSettings, vararg scanFilters: ScanFilter): Observable<ScanResult> =
         Observable.create { e -> emitter = e }
 
-    fun emitScanResults(vararg devices: TestBluetoothDevice) {
-        devices.map {
+    fun emitScanResults(vararg args: ScanResultArgs) {
+        args.map {
             val scanResult = createScanResult(it)
             emitter!!.onNext(scanResult)
         }
     }
 
-    private fun createScanResult(device: TestBluetoothDevice): ScanResult {
+    private fun createScanResult(args: ScanResultArgs): ScanResult {
         val scanRecord = ScanRecordImplCompat(null, null, null, -1, Int.MIN_VALUE, null, ByteArray(0))
         val characteristicUuid = DEVICE_CHARACTERISTIC_UUID
+
         val characteristic = BluetoothGattCharacteristic(characteristicUuid, PROPERTY_READ, PERMISSION_READ)
-        characteristic.value = Identifier.fromString(device.eventUUID.toString()).asBytes
+        characteristic.value = Identifier.fromString(args.sonarId.toString()).asBytes
 
-        val rxBleDevice = RxBleClientMock.DeviceBuilder()
-            .deviceMacAddress(device.macAddress)
-            .rssi(device.rssi)
-            .scanRecord(ByteArray(0))
-            .addService(characteristicUuid, listOf(characteristic))
-            .build()
+        val service = BluetoothGattService(characteristicUuid, 0)
+        service.addCharacteristic(characteristic)
 
+        val services = RxBleDeviceServices(mutableListOf<BluetoothGattService>())
+        services.bluetoothGattServices.add(service)
+
+        val rxBleDevice = TestBluetoothDevice(args.macAddress, services, args.rssiList)
         val timestamp = Instant.now().toEpochMilli() * 1000
 
-        return ScanResult(rxBleDevice, device.rssi, timestamp, CALLBACK_TYPE_ALL_MATCHES, scanRecord)
+        return ScanResult(rxBleDevice, -1, timestamp, CALLBACK_TYPE_ALL_MATCHES, scanRecord)
     }
 }
 
-data class TestBluetoothDevice(val eventUUID: UUID, val macAddress: String, val rssi: Int)
+data class ScanResultArgs(val sonarId: UUID, val macAddress: String, val rssiList: List<Int>)

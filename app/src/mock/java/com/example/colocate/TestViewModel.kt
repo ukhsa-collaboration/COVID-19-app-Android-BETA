@@ -9,7 +9,7 @@ import com.example.colocate.persistence.ContactEventV2
 import com.example.colocate.persistence.ContactEventV2Dao
 import kotlinx.coroutines.launch
 
-class TestViewModel(private val contractEventDao: ContactEventV2Dao) : ViewModel() {
+class TestViewModel(private val contactEventDao: ContactEventV2Dao) : ViewModel() {
 
     private val eventsLiveData = MutableLiveData<List<ContactEventV2>>()
 
@@ -17,13 +17,13 @@ class TestViewModel(private val contractEventDao: ContactEventV2Dao) : ViewModel
 
     fun clear() {
         viewModelScope.launch {
-            contractEventDao.clearEvents()
+            contactEventDao.clearEvents()
         }
     }
 
     fun getEvents() {
         viewModelScope.launch {
-            contractEventDao.getAll().apply {
+            contactEventDao.getAll().apply {
                 eventsLiveData.value = this
             }
         }

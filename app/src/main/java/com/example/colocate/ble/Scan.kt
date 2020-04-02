@@ -20,11 +20,12 @@ class Scan @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val saveContactWorker: SaveContactWorker
 ) : Scanner {
+
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
 
-    var connectionDisposable: Disposable? = null
+    private var connectionDisposable: Disposable? = null
 
     /*
      When the iPhone app goes into the background iOS changes how services are advertised:
