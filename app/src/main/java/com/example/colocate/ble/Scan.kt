@@ -25,6 +25,7 @@ class Scan @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val contactEventDao: ContactEventDao,
     private val contactEventV2Dao: ContactEventV2Dao,
+    private val saveContactWorker: SaveContactWorker,
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher
 ) : Scanner {
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
@@ -74,18 +75,23 @@ class Scan @Inject constructor(
         .build()
 
     override fun start(coroutineScope: CoroutineScope) {
-        connectionDisposable = rxBleClient.scanBleDevices(
-            settings,
-            coLocateBackgroundedIPhoneFilter,
-            coLocateServiceUuidFilter
-        ).distinct { it.bleDevice.macAddress }.subscribe(
-            { result ->
-                result.bleDevice.establishConnection(false)
-                    .flatMapSingle { read(it, coroutineScope) }
-                    .subscribe(::onReadSuccess, ::onReadError)
-            },
-            ::onConnectionError
-        )
+        connectionDisposable = rxBleClient
+            .scanBleDevices(
+                settings,
+                coLocateBackgroundedIPhoneFilter,
+                coLocateServiceUuidFilter
+            )
+            .distinct { it.bleDevice.macAddress }
+            .subscribe(
+                { result ->
+                    result
+                        .bleDevice
+                        .establishConnection(false)
+                        .flatMapSingle { read(it, coroutineScope) }
+                        .subscribe(::onReadSuccess, ::onReadError)
+                },
+                ::onConnectionError
+            )
     }
 
     override fun stop() {
@@ -113,7 +119,7 @@ class Scan @Inject constructor(
     private fun onReadSuccess(event: Event) {
         Timber.d("Scanning Saving: $event")
 
-        SaveContactWorker(dispatcher, contactEventDao, contactEventV2Dao).saveContactEvent(
+        saveContactWorker.saveContactEvent(
             event.scope,
             event.identifier.asString,
             event.rssi

@@ -17,7 +17,7 @@ android {
         applicationId "uk.nhs.nhsx.colocate"
         minSdkVersion 24
         targetSdkVersion 29
-        versionCode 4
+        versionCode 5
         versionName "1.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -47,10 +47,10 @@ android {
 }
 
 
-def work_version = "2.3.4"
 def room_version = "2.2.5"
 def timber_version = "4.7.1"
 def lifecycle_version = "2.2.0"
+def rx_android_ble_version = "1.11.0"
 
 dependencies {
     implementation project(":api")
@@ -59,7 +59,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation "androidx.work:work-runtime-ktx:$work_version"
     implementation 'com.google.firebase:firebase-messaging:20.1.3'
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.fragment:fragment-ktx:1.2.3"
@@ -72,7 +71,7 @@ dependencies {
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.27'
     implementation 'com.google.dagger:dagger:2.27'
 
-    implementation "com.polidea.rxandroidble2:rxandroidble:1.11.0"
+    implementation "com.polidea.rxandroidble2:rxandroidble:$rx_android_ble_version"
 
     kapt "com.squareup.moshi:moshi-kotlin-codegen:1.9.2"
     implementation "com.squareup.moshi:moshi:1.9.2"
@@ -86,6 +85,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.4.0'
     androidTestImplementation 'org.assertj:assertj-core:3.15.0'
+    androidTestImplementation "com.polidea.rxandroidble2:mockclient:$rx_android_ble_version"
 
     testImplementation 'androidx.test:core:1.2.0'
     testImplementation 'io.mockk:mockk:1.9.3'

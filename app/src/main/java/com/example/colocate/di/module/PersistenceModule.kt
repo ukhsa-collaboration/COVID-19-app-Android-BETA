@@ -8,6 +8,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.colocate.ble.LongLiveConnectionScan
 import com.example.colocate.ble.Scanner
+import com.example.colocate.ble.SaveContactWorker
 import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ContactEventDao
 import com.example.colocate.persistence.ContactEventV2Dao
@@ -21,6 +22,7 @@ import javax.inject.Named
 
 @Module
 class PersistenceModule(private val applicationContext: Context) {
+
     @Provides
     fun provideDatabase() =
         Room.databaseBuilder(
@@ -31,9 +33,8 @@ class PersistenceModule(private val applicationContext: Context) {
             .build()
 
     @Provides
-    fun provideContactEventDao(database: AppDatabase): ContactEventDao {
-        return database.contactEventDao()
-    }
+    fun provideContactEventDao(database: AppDatabase): ContactEventDao =
+        database.contactEventDao()
 
     @Provides
     fun provideContactEventV2Dao(database: AppDatabase): ContactEventV2Dao {
@@ -41,9 +42,15 @@ class PersistenceModule(private val applicationContext: Context) {
     }
 
     @Provides
-    fun provideResidentIdProvider(): ResidentIdProvider {
-        return SharedPreferencesResidentIdProvider(applicationContext)
-    }
+    fun provideResidentIdProvider(): ResidentIdProvider =
+        SharedPreferencesResidentIdProvider(applicationContext)
+
+    @Provides
+    fun provideSaveContactWorker(
+        contactEventDao: ContactEventDao,
+        @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
+    ): SaveContactWorker =
+        SaveContactWorker(ioDispatcher, contactEventDao)
 
     @Provides
     fun provideScanner(

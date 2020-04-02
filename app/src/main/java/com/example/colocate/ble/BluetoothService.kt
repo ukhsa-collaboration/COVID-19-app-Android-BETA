@@ -10,7 +10,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import com.example.colocate.ColocateApplication
+import com.example.colocate.appComponent
 import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.getChannel
@@ -48,7 +48,7 @@ class BluetoothService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        (applicationContext as ColocateApplication).applicationComponent.inject(this)
+        appComponent.inject(this)
         coroutineScope = CoroutineScope(coroutineDispatcher + Job())
         startForeground(COLOCATE_SERVICE_ID, notification())
     }

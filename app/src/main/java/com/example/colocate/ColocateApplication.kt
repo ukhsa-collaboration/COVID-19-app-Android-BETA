@@ -5,6 +5,8 @@
 package com.example.colocate
 
 import android.app.Application
+import android.app.Service
+import androidx.appcompat.app.AppCompatActivity
 import com.example.colocate.di.ApplicationComponent
 import com.example.colocate.di.DaggerApplicationComponent
 import com.example.colocate.di.module.AppModule
@@ -20,12 +22,12 @@ const val BASE_URL = "https://sonar-colocate-services.apps.cp.data.england.nhs.u
 
 class ColocateApplication : Application() {
 
-    lateinit var applicationComponent: ApplicationComponent
+    lateinit var appComponent: ApplicationComponent
 
     override fun onCreate() {
         super.onCreate()
 
-        applicationComponent = DaggerApplicationComponent.builder()
+        appComponent = DaggerApplicationComponent.builder()
             .persistenceModule(PersistenceModule(this))
             .bluetoothModule(BluetoothModule(this))
             .appModule(AppModule(this))
@@ -40,3 +42,9 @@ class ColocateApplication : Application() {
         }
     }
 }
+
+val AppCompatActivity.appComponent: ApplicationComponent
+    get() = (application as ColocateApplication).appComponent
+
+val Service.appComponent: ApplicationComponent
+    get() = (application as ColocateApplication).appComponent

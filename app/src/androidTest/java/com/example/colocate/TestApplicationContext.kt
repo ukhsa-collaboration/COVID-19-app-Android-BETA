@@ -3,9 +3,7 @@ package com.example.colocate
 import androidx.core.os.bundleOf
 import androidx.test.rule.ActivityTestRule
 import com.example.colocate.di.module.AppModule
-import com.example.colocate.di.module.BluetoothModule
 import com.example.colocate.di.module.NetworkModule
-import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.StatusModule
 import com.example.colocate.persistence.ID_NOT_REGISTERED
 import com.example.colocate.registration.TokenRetriever
@@ -15,15 +13,22 @@ import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.fail
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import java.nio.charset.Charset
+import java.time.Instant
+import java.util.Date
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
-    private val notificationService = NotificationService()
-    private val testModule = TestModule()
-    private val testDispatcher = TestCoLocateServiceDispatcher()
     private val testActivity = rule.activity
     private val app = rule.activity.application as ColocateApplication
+
+    private val notificationService = NotificationService()
+    private val testDispatcher = TestCoLocateServiceDispatcher()
+    private val testRxBleClient = TestRxBleClient(app)
+    private val testDateProvider = { Date.from(Instant.parse("2020-04-01T14:33:13Z")) }
+
+    private val testModule = TestModule(app, testRxBleClient, testDateProvider)
     private val mockServer = MockWebServer()
 
     init {
@@ -34,10 +39,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
         val mockServerUrl = mockServer.url("").toString().removeSuffix("/")
 
-        app.applicationComponent =
+        app.appComponent =
             DaggerTestAppComponent.builder()
-                .persistenceModule(PersistenceModule(app))
-                .bluetoothModule(BluetoothModule(app))
                 .appModule(AppModule(app))
                 .encryptionKeyStorageModule(EncryptionKeyStorageModule(app))
                 .statusModule(StatusModule(app))
@@ -46,7 +49,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 .testModule(testModule)
                 .build()
 
-        app.applicationComponent.inject(notificationService)
+        app.appComponent.inject(notificationService)
     }
 
     fun shutdownMockServer() {
@@ -91,6 +94,28 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val decodedKey = keyStorage.provideKey()?.toString(Charset.defaultCharset())
         assertThat(decodedKey).isEqualTo(TestCoLocateServiceDispatcher.SECRET_KEY)
     }
+
+    fun simulateDeviceInProximity() {
+        testRxBleClient.emitScanResults(
+            TestBluetoothDevice(UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"), "06-00-00-00-00-00", 10),
+            TestBluetoothDevice(UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"), "06-00-00-00-00-00", 12),
+            TestBluetoothDevice(UUID.fromString("984c61e2-0d66-44eb-beea-fbd8f2991de3"), "07-00-00-00-00-00", 20)
+        )
+    }
+
+    fun verifyReceivedProximityRequest() {
+        val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
+
+        assertThat(lastRequest).isNotNull()
+        assertThat(lastRequest?.method).isEqualTo("PATCH")
+        assertThat(lastRequest?.path).isEqualTo("/api/residents/${TestCoLocateServiceDispatcher.RESIDENT_ID}")
+
+        val body = lastRequest?.body?.readUtf8() ?: ""
+        assertThat(body).startsWith("""{"contactEvents":[""")
+        assertThat(body).contains("""{"remoteContactId":"04330a56-ad45-4b0f-81ee-dd414910e1f5","rssi":10,"timestamp":"2020-04-01T14:33:13Z"}""")
+        assertThat(body).contains("""{"remoteContactId":"984c61e2-0d66-44eb-beea-fbd8f2991de3","rssi":20,"timestamp":"2020-04-01T14:33:13Z"}""")
+        assertThat(body.countOccurrences("""{"remoteContactId":""")).isEqualTo(2)
+    }
 }
 
 class TestTokenRetriever : TokenRetriever {
@@ -111,3 +136,10 @@ private fun waitUntil(predicate: () -> Boolean) {
         fail<String>("Failed waiting for predicate")
     }
 }
+
+private fun String.countOccurrences(substring: String): Int =
+    if (!contains(substring)) {
+        0
+    } else {
+        1 + replaceFirst(substring, "").countOccurrences(substring)
+    }

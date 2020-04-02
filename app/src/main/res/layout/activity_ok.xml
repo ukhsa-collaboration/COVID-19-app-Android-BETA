@@ -70,7 +70,6 @@
                     android:id="@+id/ok_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/frutiger_bold"
                     android:lineSpacingMultiplier="1.18"
                     android:text="@string/ok_title"
                     android:textSize="32sp" />
@@ -100,7 +99,6 @@
                     android:id="@+id/ok_symptom_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/frutiger_bold"
                     android:lineSpacingMultiplier="1.18"
                     android:text="@string/ok_symptom_title"
                     android:textSize="32sp" />
@@ -127,7 +125,6 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
         android:background="#007F3B"
-        android:fontFamily="@font/frutiger_bold"
         android:text="@string/check_my_symptoms"
         android:textColor="@color/white" />
 

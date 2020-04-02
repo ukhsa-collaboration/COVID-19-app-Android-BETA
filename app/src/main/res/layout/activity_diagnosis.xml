@@ -27,7 +27,6 @@
             android:layout_height="wrap_content"
             android:lineSpacingMultiplier="1.18"
             android:text="@string/diagnosed"
-            android:fontFamily="@font/frutiger_bold"
             android:textSize="32sp" />
 
         <RadioGroup
@@ -41,7 +40,6 @@
                 android:id="@+id/yes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/frutiger"
                 android:text="@string/yes"
                 android:textSize="36sp" />
 
@@ -50,7 +48,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="48dp"
-                android:fontFamily="@font/frutiger"
                 android:text="@string/no"
                 android:textSize="36sp" />
 
@@ -64,7 +61,6 @@
             android:layout_marginBottom="14dp"
             android:background="#007F3B"
             android:text="@string/next"
-            android:fontFamily="@font/frutiger_bold"
             android:textColor="#FFFFFF" />
     </RelativeLayout>
 

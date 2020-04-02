@@ -12,6 +12,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
@@ -24,7 +25,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.UUID
 
 @RunWith(AndroidJUnit4::class)
 class FlowTest {
@@ -58,6 +58,10 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
+        checkPermissionActivityIsShown()
+
+        onView(withId(R.id.permission_continue)).perform(click())
+
         checkRegistrationActivityIsShown()
 
         onView(withId(R.id.confirm_registration)).perform(click())
@@ -70,6 +74,40 @@ class FlowTest {
         }
 
         checkOkActivityIsShown()
+    }
+
+    @Test
+    fun testBluetoothInteractions() {
+        clearDatabase()
+        setStatus(CovidStatus.RED)
+        setValidResidentIdAndSecretKey()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        testAppContext!!.simulateDeviceInProximity()
+
+        onView(withId(R.id.isolate_notify)).perform(click())
+
+        testAppContext!!.verifyReceivedProximityRequest()
+
+        onView(withText(R.string.successfull_data_upload))
+            .inRoot(isToast())
+            .check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testExplanation() {
+        unsetResidentId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        onView(withId(R.id.explanation_link)).perform(click())
+
+        checkExplanationActivityIsShown()
+
+        onView(withId(R.id.explanation_back)).perform(click())
+
+        checkMainActivityIsShown()
     }
 
     @Test
@@ -103,6 +141,18 @@ class FlowTest {
         checkIsolateActivityIsShown()
     }
 
+    private fun checkMainActivityIsShown() {
+        onView(withId(R.id.confirm_onboarding)).check(matches(isDisplayed()))
+    }
+
+    private fun checkPermissionActivityIsShown() {
+        onView(withId(R.id.permission_continue)).check(matches(isDisplayed()))
+    }
+
+    private fun checkExplanationActivityIsShown() {
+        onView(withId(R.id.explanation_back)).check(matches(isDisplayed()))
+    }
+
     private fun checkRegistrationActivityIsShown() {
         onView(withId(R.id.confirm_registration)).check(matches(isDisplayed()))
     }
@@ -131,7 +181,19 @@ class FlowTest {
 
     private fun setValidResidentId() {
         val residentIdProvider = activityRule.activity.residentIdProvider
-        residentIdProvider.setResidentId(UUID.randomUUID().toString())
+        residentIdProvider.setResidentId(TestCoLocateServiceDispatcher.RESIDENT_ID)
+    }
+
+    private fun setValidResidentIdAndSecretKey() {
+        setValidResidentId()
+
+        val keyStorage = activityRule.activity.encryptionKeyStorage
+        keyStorage.putBase64Key(TestCoLocateServiceDispatcher.encodedKey)
+    }
+
+    private fun clearDatabase() {
+        val appDb = activityRule.activity.appDatabase
+        appDb.clearAllTables()
     }
 
     private fun ensureBluetoothEnabled() {

@@ -27,7 +27,7 @@ class DiagnoseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as ColocateApplication).applicationComponent.inject(this)
+        appComponent.inject(this)
 
         setContentView(R.layout.activity_diagnosis)
 
