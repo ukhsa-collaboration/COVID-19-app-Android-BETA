@@ -1,6 +1,6 @@
 package com.example.colocate.persistence
 
-import com.example.colocate.di.module.PersistenceModule
+import com.example.colocate.di.module.BluetoothModule.Companion.USE_CONNECTION_V2
 import org.json.JSONArray
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class CoLocationDataProvider @Inject constructor(
-    @Named(PersistenceModule.USE_CONNECTION_V2) private val useConnectionV2: Boolean,
+    @Named(USE_CONNECTION_V2) private val useConnectionV2: Boolean,
     private val contactEventDao: ContactEventDao,
     private val contactEventV2Dao: ContactEventV2Dao,
     private val residentIdProvider: ResidentIdProvider

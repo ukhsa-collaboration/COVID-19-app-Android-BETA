@@ -9,6 +9,7 @@ import com.example.colocate.ble.Scanner
 import com.example.colocate.di.ApplicationComponent
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.BluetoothModule
+import com.example.colocate.di.module.BluetoothModule.Companion.USE_CONNECTION_V2
 import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.StatusModule
@@ -47,8 +48,8 @@ class TestModule(
     private val connectionV2: Boolean = false
 ) {
 
-    private val bluetoothModule = BluetoothModule(appContext)
-    private val persistenceModule = PersistenceModule(appContext, connectionV2 = connectionV2)
+    private val bluetoothModule = BluetoothModule(appContext, connectionV2)
+    private val persistenceModule = PersistenceModule(appContext)
 
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
@@ -99,6 +100,6 @@ class TestModule(
     }
 
     @Provides
-    @Named(PersistenceModule.USE_CONNECTION_V2)
+    @Named(USE_CONNECTION_V2)
     fun provideUseConnectionV2() = connectionV2
 }
