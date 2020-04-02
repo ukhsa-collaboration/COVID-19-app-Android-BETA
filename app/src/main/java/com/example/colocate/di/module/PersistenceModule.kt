@@ -6,6 +6,7 @@ package com.example.colocate.di.module
 
 import android.content.Context
 import androidx.room.Room
+import com.example.colocate.ble.DefaultSaveContactWorker
 import com.example.colocate.ble.SaveContactWorker
 import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ContactEventDao
@@ -51,5 +52,5 @@ class PersistenceModule(
         contactEventV2Dao: ContactEventV2Dao,
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
-        SaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao)
+        DefaultSaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao)
 }

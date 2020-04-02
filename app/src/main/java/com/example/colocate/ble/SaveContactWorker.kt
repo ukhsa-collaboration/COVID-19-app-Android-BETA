@@ -20,13 +20,26 @@ import java.util.Locale
 import java.util.TimeZone
 import javax.inject.Named
 
-class SaveContactWorker(
+interface SaveContactWorker {
+    fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int)
+    fun saveContactEventV2(scope: CoroutineScope, record: Record)
+
+    data class Record(
+        val timestamp: Date,
+        val sonarId: Identifier,
+        val rssiValues: MutableList<Int> = mutableListOf(),
+        val duration: Long = 0
+    )
+}
+
+class DefaultSaveContactWorker(
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
     private val contactEventDao: ContactEventDao,
     private val contactEventV2Dao: ContactEventV2Dao,
     private val dateProvider: () -> Date = { Date() }
-) {
-    fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int) {
+) : SaveContactWorker {
+
+    override fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int) {
         scope.launch {
             withContext(dispatcher) {
                 try {
@@ -47,7 +60,7 @@ class SaveContactWorker(
         }
     }
 
-    fun saveContactEventV2(scope: CoroutineScope, record: Record) {
+    override fun saveContactEventV2(scope: CoroutineScope, record: SaveContactWorker.Record) {
         scope.launch {
             withContext(dispatcher) {
                 try {
@@ -69,22 +82,13 @@ class SaveContactWorker(
         }
     }
 
-    private fun formatTimestamp(date: Date): String {
-        val timestamp = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.UK).let {
+    private fun formatTimestamp(date: Date): String =
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.UK).let {
             it.timeZone = TimeZone.getTimeZone("UTC")
             it.format(date)
         }
-        return timestamp
-    }
 
     companion object {
         const val TAG = "SaveWorker"
     }
-
-    data class Record(
-        val timestamp: Date,
-        val sonarId: Identifier,
-        val rssiValues: MutableList<Int> = mutableListOf(),
-        val duration: Long = 0
-    )
 }

@@ -3,6 +3,7 @@ package com.example.colocate
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.Context
+import com.example.colocate.ble.DefaultSaveContactWorker
 import com.example.colocate.ble.LongLiveConnectionScan
 import com.example.colocate.ble.SaveContactWorker
 import com.example.colocate.ble.Scan
@@ -91,7 +92,7 @@ class TestModule(
         contactEventV2Dao: ContactEventV2Dao,
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
-        SaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao, startTimestampProvider)
+        DefaultSaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao, startTimestampProvider)
 
     @Provides
     fun provideScanner(rxBleClient: RxBleClient, saveContactWorker: SaveContactWorker): Scanner =

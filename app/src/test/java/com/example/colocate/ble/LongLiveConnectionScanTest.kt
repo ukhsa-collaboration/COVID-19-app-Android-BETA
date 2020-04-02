@@ -7,13 +7,12 @@ import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
 import io.reactivex.Observable
 import io.reactivex.Single
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.fail
 import org.junit.Before
 import org.junit.Test
 import java.util.Date
@@ -26,7 +25,7 @@ class LongLiveConnectionScanTest {
     private val scanResult = mockk<ScanResult>()
     private val bleDevice = mockk<RxBleDevice>()
     private val connection = mockk<RxBleConnection>()
-    private val saveContactWorker = mockk<SaveContactWorker>(relaxed = true)
+    private val saveContactWorker = FakeSaveContactWorker()
 
     private val identifier = Identifier(UUID.randomUUID())
     private val timestamp = Date()
@@ -65,24 +64,50 @@ class LongLiveConnectionScanTest {
     fun connectionWithSingularDevice() {
         runBlocking {
             val sut = LongLiveConnectionScan(
-                bleClient, saveContactWorker,
+                bleClient,
+                saveContactWorker,
                 startTimestampProvider = { timestamp },
                 endTimestampProvider = { Date(timestamp.time + duration * 1_000) },
                 periodInMilliseconds = period
             )
             sut.start(this)
 
-            val scope = this
-            delay(2 * period)
+            waitUntil {
+                saveContactWorker.saveScope == this &&
+                    saveContactWorker.savedRecord != null
+            }
 
-            val recordSlot = slot<SaveContactWorker.Record>()
-            verify { saveContactWorker.saveContactEventV2(scope, capture(recordSlot)) }
-
-            val record = recordSlot.captured
+            val record = saveContactWorker.savedRecord!!
             assertThat(record.sonarId).isEqualTo(identifier)
             assertThat(record.duration).isEqualTo(duration)
             assertThat(record.timestamp).isEqualTo(timestamp)
             assertThat(record.rssiValues).containsAll(rssiValues)
         }
+    }
+}
+
+private class FakeSaveContactWorker : SaveContactWorker by mockk() {
+    var saveScope: CoroutineScope? = null
+        private set
+    var savedRecord: SaveContactWorker.Record? = null
+        private set
+
+    override fun saveContactEventV2(scope: CoroutineScope, record: SaveContactWorker.Record) {
+        saveScope = scope
+        savedRecord = record
+    }
+}
+
+private fun waitUntil(predicate: () -> Boolean) {
+    val maxAttempts = 20
+    var attempts = 1
+
+    while (!predicate() && attempts <= maxAttempts) {
+        Thread.sleep(20)
+        attempts++
+    }
+
+    if (!predicate()) {
+        fail<String>("Failed waiting for predicate")
     }
 }
