@@ -12,10 +12,10 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.json.JSONArray
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
+import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationEvent
 
 class IsolateViewModelTest {
 
@@ -35,10 +35,10 @@ class IsolateViewModelTest {
     @Test
     fun onNotifyCallsCoLocationApi() {
         runBlocking {
-            val events = JSONArray().apply {
-                put(0, "foo")
-                put(1, "bar")
-            }
+            val events = listOf(
+                CoLocationEvent("001", listOf(-10, 0), "2s ago", 10),
+                CoLocationEvent("002", listOf(-10, -10, 10), "yesterday", 120)
+            )
             val coLocationData = CoLocationData(RESIDENT_ID, events)
             coEvery { coLocationDataProvider.getData() } returns coLocationData
             every { residentIdProvider.getResidentId() } returns RESIDENT_ID

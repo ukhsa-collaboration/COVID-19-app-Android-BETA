@@ -9,7 +9,6 @@ import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.awaitility.kotlin.await
-import org.json.JSONArray
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -58,7 +57,7 @@ class CoLocationApiIT {
         val coLocationApi = CoLocationApi(encryptionKeyStorage, httpClient)
 
         coLocationApi.save(
-            CoLocationData("residentId", JSONArray()),
+            CoLocationData("residentId", emptyList()),
             { isSuccess = true },
             { isError = true }
         )

@@ -1,9 +1,8 @@
 package com.example.colocate.persistence
 
 import com.example.colocate.di.module.BluetoothModule.Companion.USE_CONNECTION_V2
-import org.json.JSONArray
-import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
+import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationEvent
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -13,38 +12,29 @@ class CoLocationDataProvider @Inject constructor(
     private val contactEventV2Dao: ContactEventV2Dao,
     private val residentIdProvider: ResidentIdProvider
 ) {
-    suspend fun getData(): CoLocationData {
-        return if (useConnectionV2) {
-            val events: JSONArray = convertV2(contactEventV2Dao.getAll())
+
+    suspend fun getData(): CoLocationData =
+        if (useConnectionV2) {
+            val events = contactEventV2Dao.getAll().map(::convert)
             CoLocationData(residentIdProvider.getResidentId(), events)
         } else {
-            val events: JSONArray = convert(contactEventDao.getAll())
+            val events = contactEventDao.getAll().map(::convert)
             CoLocationData(residentIdProvider.getResidentId(), events)
         }
-    }
 
-    private fun convert(contactEvents: Iterable<ContactEvent>): JSONArray {
-        return JSONArray(contactEvents.map(::convert))
-    }
+    private fun convert(contactEvent: ContactEvent): CoLocationEvent =
+        CoLocationEvent(
+            sonarId = contactEvent.remoteContactId,
+            rssiValues = listOf(contactEvent.rssi),
+            timestamp = contactEvent.timestamp,
+            duration = -1
+        )
 
-    private fun convertV2(contactEvents: Iterable<ContactEventV2>): JSONArray {
-        return JSONArray(contactEvents.map(::convert))
-    }
-
-    private fun convert(contactEvent: ContactEvent): JSONObject {
-        return JSONObject().apply {
-            put("remoteContactId", contactEvent.remoteContactId)
-            put("rssi", contactEvent.rssi)
-            put("timestamp", contactEvent.timestamp)
-        }
-    }
-
-    private fun convert(contactEvent: ContactEventV2): JSONObject {
-        return JSONObject().apply {
-            put("sonarId", contactEvent.sonarId)
-            put("rssiValues", JSONArray(contactEvent.rssiValues.toTypedArray()))
-            put("timestamp", contactEvent.timestamp)
-            put("duration", contactEvent.duration)
-        }
-    }
+    private fun convert(contactEvent: ContactEventV2): CoLocationEvent =
+        CoLocationEvent(
+            sonarId = contactEvent.sonarId,
+            rssiValues = contactEvent.rssiValues,
+            timestamp = contactEvent.timestamp,
+            duration = contactEvent.duration
+        )
 }
