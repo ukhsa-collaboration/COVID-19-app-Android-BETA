@@ -53,9 +53,8 @@ class LongLiveConnectionScanTest {
                 any(),
                 any()
             )
-        } returns Observable.just(
-            scanResult
-        )
+        } returns Observable.just(scanResult)
+
         every { scanResult.bleDevice } returns bleDevice
         every { bleDevice.connectionState } returns RxBleConnection.RxBleConnectionState.DISCONNECTED
         every { bleDevice.macAddress } returns "00:1B:44:11:3A:B7"
@@ -63,19 +62,14 @@ class LongLiveConnectionScanTest {
         every { bleDevice.establishConnection(false) } returns Observable.merge(
             Observable.just(connection),
             Observable
-                .timer(period + 1, TimeUnit.MILLISECONDS)
+                .timer(period + 25, TimeUnit.MILLISECONDS)
                 .flatMap {
-                    Observable.error<RxBleConnection>(
-                        BleDisconnectedException.adapterDisabled(
-                            ""
-                        )
-                    )
+                    val disconnectException = BleDisconnectedException.adapterDisabled("")
+                    Observable.error<RxBleConnection>(disconnectException)
                 }
         )
         every { connection.readRssi() } returnsMany rssiValues.map { Single.just(it) }
-        every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(
-            identifier.asBytes
-        )
+        every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(identifier.asBytes)
     }
 
     @Test
