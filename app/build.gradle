@@ -107,7 +107,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.4.0'
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.14.7' // have to use 3.x.x version since Firebase crashlytics doesn't work with 4.x.x
     androidTestImplementation 'org.assertj:assertj-core:3.15.0'
     androidTestImplementation "com.polidea.rxandroidble2:mockclient:$rx_android_ble_version"
     androidTestImplementation 'org.awaitility:awaitility-kotlin:3.1.6'

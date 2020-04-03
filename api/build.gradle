@@ -32,6 +32,15 @@ android {
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -52,8 +61,11 @@ dependencies {
     testRuntimeOnly 'net.bytebuddy:byte-buddy:1.10.8' // https://github.com/mockk/mockk/issues/397
 
     androidTestImplementation 'com.linkedin.dexmaker:dexmaker-mockito:2.25.1'
-    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.4.0'
-    androidTestImplementation 'com.squareup.okhttp3:okhttp-tls:4.4.0'
+
+    // have to use 3.x.x version since Firebase crashlytics doesn't work with 4.x.x
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.14.7'
+    androidTestImplementation 'com.squareup.okhttp3:okhttp-tls:3.14.7'
+
     androidTestImplementation 'org.awaitility:awaitility-kotlin:3.1.6'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:runner:1.2.0'
