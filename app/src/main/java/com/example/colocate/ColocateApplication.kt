@@ -15,6 +15,7 @@ import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.RegistrationModule
 import com.example.colocate.di.module.StatusModule
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 
@@ -39,6 +40,7 @@ class ColocateApplication : Application() {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
+            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
         }
     }
 }
