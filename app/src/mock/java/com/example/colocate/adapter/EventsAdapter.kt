@@ -13,14 +13,17 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.colocate.R
 import com.example.colocate.ble.ConnectedDevice
-import kotlinx.android.synthetic.main.event_error_view_item.view.error_event
 import kotlinx.android.synthetic.main.event_view.view.remote_contact_id
 import kotlinx.android.synthetic.main.event_view.view.rssi
+import kotlinx.android.synthetic.main.event_view.view.time
 
 class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bindTo(event: ConnectedDevice) {
         itemView.remote_contact_id.text = event.id
-        itemView.rssi.text = event.rssi.toString()
+        itemView.rssi.text = event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
+        val startTime = event.timestamp.split("T").last().replace("Z", "")
+        itemView.time.text =
+            "Started $startTime - lasted ${event.duration}s"
     }
 }
 

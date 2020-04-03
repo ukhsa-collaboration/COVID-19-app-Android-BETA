@@ -118,7 +118,7 @@ class Scan @Inject constructor(
 
     private fun onReadSuccess(event: Event) {
         Timber.d("Scanning Saving: $event")
-        bleEvents.connectedDeviceEvent(event.identifier.asString, event.rssi)
+        bleEvents.connectedDeviceEvent(event.identifier.asString, 0, listOf(event.rssi))
 
         saveContactWorker.saveContactEvent(
             event.scope,
