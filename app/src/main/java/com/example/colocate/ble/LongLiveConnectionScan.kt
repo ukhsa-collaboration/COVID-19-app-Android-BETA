@@ -213,7 +213,10 @@ class LongLiveConnectionScan @Inject constructor(
         val record = macAddressToRecord[event.macAddress]
         record?.rssiValues?.add(event.rssi)
         if (record != null) {
-            bleEvents.connectedDeviceEvent(id = record.sonarId.asString, duration = record.duration, rssiValues = record.rssiValues)
+            bleEvents.connectedDeviceEvent(
+                id = record.sonarId.asString,
+                rssiValues = record.rssiValues
+            )
         }
     }
 

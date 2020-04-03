@@ -16,13 +16,12 @@ class BleEventTracker : BleEvents {
     override fun observeConnectionEvents(): LiveData<List<ConnectedDevice>> =
         connectionEvents
 
-    override fun connectedDeviceEvent(id: String, duration: Long, rssiValues: List<Int>) {
+    override fun connectedDeviceEvent(id: String, rssiValues: List<Int>) {
         eventsList.add(
             ConnectedDevice(
                 id = id,
                 timestamp = getCurrentTimeStamp(),
-                rssiValues = rssiValues,
-                duration = duration
+                rssiValues = rssiValues
             )
         )
         connectionEvents.postValue(eventsList)
@@ -48,7 +47,7 @@ interface BleEvents {
 
     fun observeConnectionEvents(): LiveData<List<ConnectedDevice>>
 
-    fun connectedDeviceEvent(id: String, duration: Long, rssiValues: List<Int>)
+    fun connectedDeviceEvent(id: String, rssiValues: List<Int>)
 
     fun disconnectDeviceEvent(id: String? = null)
 
@@ -69,7 +68,6 @@ data class ConnectedDevice(
     val id: String? = null,
     val timestamp: String = "",
     val rssiValues: List<Int> = emptyList(),
-    val duration: Long = 0,
     val isConnectionError: Boolean = false,
     val isReadFailure: Boolean = false,
     val disconnectedDevice: String? = null

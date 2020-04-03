@@ -22,8 +22,7 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         itemView.remote_contact_id.text = event.id
         itemView.rssi.text = event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
         val startTime = event.timestamp.split("T").last().replace("Z", "")
-        itemView.time.text =
-            "Started $startTime - lasted ${event.duration}s"
+        itemView.time.text = "Started $startTime"
     }
 }
 

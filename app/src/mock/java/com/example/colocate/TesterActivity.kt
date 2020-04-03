@@ -69,7 +69,9 @@ class TesterActivity : AppCompatActivity() {
             if (it.isEmpty()) no_events.visibility = View.VISIBLE
             else {
                 no_events.visibility = View.GONE
-                adapter.submitList(it)
+                val ids = it.map { event -> event.id }.distinct()
+                val unique = ids.map { id -> it.findLast { event -> event.id == id } }
+                adapter.submitList(unique)
             }
         })
 
