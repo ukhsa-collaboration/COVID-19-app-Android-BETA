@@ -3,6 +3,7 @@ package uk.nhs.nhsx.sonar.android.client.http.volley
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.VolleyError
+import com.android.volley.toolbox.JsonRequest
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.fail
 import org.json.JSONObject
@@ -22,7 +23,14 @@ class TestQueue : RequestQueue(mockk(), mockk()) {
 
     fun returnSuccess(json: JSONObject) =
         when (val request = requests.last()) {
-            is UnsignedJsonObjectRequest -> request.testOnResponse(json)
+            is UnsignedJsonObjectRequest -> {
+                // Ideally we would have access to this function without having to rely on reflection.
+                // Please don't do this in production code.
+                val requestClass = JsonRequest::class.java
+                val method = requestClass.getDeclaredMethod("deliverResponse", Object::class.java)
+                method.isAccessible = true
+                method.invoke(request, json)
+            }
             else -> fail("Cannot return success on request $request")
         }
 
