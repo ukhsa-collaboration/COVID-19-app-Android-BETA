@@ -1,4 +1,4 @@
-package com.example.colocate.common
+package com.example.colocate
 
 sealed class ViewState {
     object Progress : ViewState()

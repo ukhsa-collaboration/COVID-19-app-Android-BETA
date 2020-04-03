@@ -5,8 +5,6 @@
 package com.example.colocate
 
 import android.Manifest
-import android.app.Activity
-import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -14,7 +12,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
-import com.example.colocate.ble.util.isBluetoothEnabled
+import com.example.colocate.ble.BluetoothResult.Enabled
+import com.example.colocate.ble.BluetoothResult.NotApplicable
+import com.example.colocate.ble.BluetoothResult.Rejected
+import com.example.colocate.ble.checkBluetoothResult
+import com.example.colocate.ble.isBluetoothEnabled
+import com.example.colocate.ble.requestEnablingBluetooth
 import com.example.colocate.registration.RegistrationActivity
 
 class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
@@ -54,19 +57,11 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_ENABLE_BT) {
-            if (resultCode == Activity.RESULT_OK) {
-                RegistrationActivity.start(this)
-            } else {
-                showToast()
-            }
+        when (checkBluetoothResult(requestCode, resultCode)) {
+            Enabled -> RegistrationActivity.start(this)
+            Rejected -> showToast()
+            NotApplicable -> super.onActivityResult(requestCode, resultCode, data)
         }
-    }
-
-    private fun requestEnablingBluetooth() {
-        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
     }
 
     private fun showToast() {

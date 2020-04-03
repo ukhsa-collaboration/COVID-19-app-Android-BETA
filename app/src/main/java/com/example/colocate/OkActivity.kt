@@ -11,6 +11,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import com.example.colocate.ble.BluetoothService
 import com.example.colocate.status.StatusStorage
+import com.example.colocate.status.navigateTo
 import javax.inject.Inject
 
 class OkActivity : BaseActivity() {

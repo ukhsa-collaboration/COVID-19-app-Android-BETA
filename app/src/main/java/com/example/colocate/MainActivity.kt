@@ -8,10 +8,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import com.example.colocate.ble.BluetoothService
+import com.example.colocate.ble.startBluetoothService
 import com.example.colocate.persistence.ResidentIdProvider
 import com.example.colocate.status.StatusStorage
+import com.example.colocate.status.navigateTo
 import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
 import kotlinx.android.synthetic.main.activity_main.explanation_link
 import javax.inject.Inject
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (residentIdProvider.hasProperResidentId()) {
-            ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
+            startBluetoothService()
             navigateTo(statusStorage.get())
         }
     }

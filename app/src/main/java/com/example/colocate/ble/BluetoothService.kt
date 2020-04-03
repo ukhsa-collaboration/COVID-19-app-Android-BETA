@@ -4,18 +4,16 @@
 
 package com.example.colocate.ble
 
-import android.app.Notification
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.location.LocationManager
 import android.os.IBinder
-import androidx.core.app.NotificationCompat
 import androidx.core.location.LocationManagerCompat
 import com.example.colocate.appComponent
 import com.example.colocate.di.module.AppModule
-import com.example.colocate.getChannel
+import com.example.colocate.notificationBuilder
 import com.example.colocate.util.hideBluetoothIsDisabledNotification
 import com.example.colocate.util.hideLocationIsDisabledNotification
 import com.example.colocate.util.showBluetoothIsDisabledNotification
@@ -58,7 +56,7 @@ class BluetoothService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(FOREGROUND_NOTIFICATION_ID, notification())
+        startForeground(FOREGROUND_NOTIFICATION_ID, notificationBuilder().build())
 
         val bleClient = appComponent.provideRxBleClient()
         stateChangeDisposable = bleClient
@@ -159,11 +157,5 @@ class BluetoothService : Service() {
             coroutineScope.cancel()
             scan.stop()
         }
-    }
-
-    private fun notification(): Notification {
-
-        return NotificationCompat.Builder(this, getChannel(applicationContext))
-            .build()
     }
 }

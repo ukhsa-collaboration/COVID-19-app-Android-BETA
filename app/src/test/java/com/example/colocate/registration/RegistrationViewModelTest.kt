@@ -2,7 +2,7 @@ package com.example.colocate.registration
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.example.colocate.common.ViewState
+import com.example.colocate.ViewState
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verifyOrder
