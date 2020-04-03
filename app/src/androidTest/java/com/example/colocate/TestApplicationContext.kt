@@ -14,8 +14,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.awaitility.kotlin.untilNotNull
-import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
+import uk.nhs.nhsx.sonar.android.client.http.jsonOf
 import java.nio.charset.Charset
 import java.time.Instant
 import java.util.Date
@@ -125,24 +125,20 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val body = lastRequest?.body?.readUtf8() ?: ""
         assertThat(body).startsWith("""{"contactEvents":[""")
         assertThat(body).contains(
-            JSONObject(
-                mapOf(
-                    "sonarId" to "04330a56-ad45-4b0f-81ee-dd414910e1f5",
-                    "rssiValues" to listOf(10, 20, 15),
-                    "timestamp" to "2020-04-01T14:33:13Z",
-                    "duration" to 600
-                )
-            ).toString()
+            jsonOf(
+                "sonarId" to "04330a56-ad45-4b0f-81ee-dd414910e1f5",
+                "rssiValues" to listOf(10, 20, 15),
+                "timestamp" to "2020-04-01T14:33:13Z",
+                "duration" to 600
+            )
         )
         assertThat(body).contains(
-            JSONObject(
-                mapOf(
-                    "sonarId" to "984c61e2-0d66-44eb-beea-fbd8f2991de3",
-                    "rssiValues" to listOf(10),
-                    "timestamp" to "2020-04-01T14:33:13Z",
-                    "duration" to 600
-                )
-            ).toString()
+            jsonOf(
+                "sonarId" to "984c61e2-0d66-44eb-beea-fbd8f2991de3",
+                "rssiValues" to listOf(10),
+                "timestamp" to "2020-04-01T14:33:13Z",
+                "duration" to 600
+            )
         )
         assertThat(body.countOccurrences("""{"sonarId":""")).isEqualTo(2)
     }

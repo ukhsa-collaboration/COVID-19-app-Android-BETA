@@ -6,8 +6,6 @@
 package uk.nhs.nhsx.sonar.android.client.http.volley
 
 import com.android.volley.Request
-import com.android.volley.RequestQueue
-import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
@@ -50,16 +48,5 @@ class VolleyHttpClientShould {
         assertThat(request.body).isEqualTo("{}".toByteArray())
         assertThat(request.bodyContentType).contains("application/json")
         assertThat(request.headers).containsEntry("Accept", "application/json")
-    }
-}
-
-class TestQueue : RequestQueue(mockk(), mockk()) {
-
-    private val _requests = mutableListOf<Request<*>>()
-    val requests: List<Request<*>> = _requests
-
-    override fun <T : Any> add(request: Request<T>): Request<T> {
-        _requests.add(request as Request<*>)
-        return request
     }
 }

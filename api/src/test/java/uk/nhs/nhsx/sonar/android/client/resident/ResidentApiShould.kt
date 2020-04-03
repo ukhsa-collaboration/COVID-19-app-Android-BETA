@@ -5,90 +5,101 @@
 
 package uk.nhs.nhsx.sonar.android.client.resident
 
+import com.android.volley.VolleyError
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
-import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
+import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
+import uk.nhs.nhsx.sonar.android.client.http.volley.TestQueue
+import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
+import uk.nhs.nhsx.sonar.android.client.test.assertBodyHasJson
 
 class ResidentApiShould {
 
     private val encryptionKeyStorage = mockk<EncryptionKeyStorage>(relaxed = true)
-    private val httpClient = mockk<HttpClient>(relaxed = true)
+    private val requestQueue = TestQueue()
+    private val baseUrl = "http://api.example.com"
+    private val httpClient = VolleyHttpClient(baseUrl, requestQueue)
     private val residentApi = ResidentApi(encryptionKeyStorage, httpClient)
 
     @Test
-    fun postATokenWhenRegistering() {
-        residentApi.register("some-token")
+    fun testRegister_Request() {
+        residentApi.register("some-token", {}, {})
 
-        val requestSlot = slot<HttpRequest>()
-        verify { httpClient.post(capture(requestSlot), any(), any()) }
-
-        assertThat(requestSlot.captured.urlPath).isEqualTo("/api/devices/registrations")
-        assertThat(requestSlot.captured.json.get("pushToken")).isEqualTo("some-token")
+        val request = requestQueue.lastRequest
+        assertThat(request.url).isEqualTo("$baseUrl/api/devices/registrations")
+        request.assertBodyHasJson(mapOf("pushToken" to "some-token"))
     }
 
     @Test
-    fun callThePostEndpointWithActivationCodeWhenConfirmingADevice() {
-        residentApi.confirmDevice("some-activation-code", "firebase-token", {}, {})
+    fun testRegister_OnSuccess() {
+        var success = false
+        var error: Exception? = null
 
-        val requestSlot = slot<HttpRequest>()
-        verify { httpClient.post(capture(requestSlot), any(), any()) }
+        residentApi.register("some-token", { success = true }, { error = it })
+        requestQueue.returnSuccess(JSONObject())
 
-        assertThat(requestSlot.captured.urlPath).isEqualTo("/api/devices")
-        assertThat(requestSlot.captured.json["activationCode"]).isEqualTo("some-activation-code")
+        assertThat(success).isTrue()
+        assertThat(error).isNull()
     }
 
     @Test
-    fun returnARegistrationWhenConfirmingADevice() {
-        var actualRegistration: Registration? = null
+    fun testRegister_OnError() {
+        var success = false
+        var error: Exception? = null
 
-        residentApi.confirmDevice("some-activation-code", "firebase-token", { registration ->
-            actualRegistration = registration
-        }, {})
+        residentApi.register("some-token", { success = true }, { error = it })
+        requestQueue.returnError(VolleyError("boom"))
 
-        val successSlot = slot<(JSONObject) -> Unit>()
-        verify { httpClient.post(any(), capture(successSlot), any()) }
-
-        successSlot.captured.invoke(jsonRegistration)
-        assertThat(actualRegistration?.id).isEqualTo("00000000-0000-0000-0000-000000000001")
+        assertThat(success).isFalse()
+        assertThat(error).isInstanceOf(VolleyError::class.java)
+        assertThat(error).hasMessage("boom")
     }
 
     @Test
-    fun callTheErrorCallbackInCaseOfExceptionWhenConfirmingADevice() {
-        var expectedError: Exception? = null
+    fun testConfirmDevice_Request() {
+        residentApi.confirmDevice("some-activation-code", "firebase-token-001", {}, {})
 
-        residentApi.confirmDevice(
-            "some-activation-code",
-            "firebase-token",
-            {},
-            { error -> expectedError = error })
-
-        val onErrorSlot = slot<(Exception) -> Unit>()
-        verify { httpClient.post(any(), any(), capture(onErrorSlot)) }
-
-        onErrorSlot.captured.invoke(Exception("boom"))
-        assertThat(expectedError).hasMessage("boom")
+        val request = requestQueue.lastRequest
+        assertThat(request.url).isEqualTo("$baseUrl/api/devices")
+        request.assertBodyHasJson(
+            mapOf(
+                "activationCode" to "some-activation-code",
+                "pushToken" to "firebase-token-001"
+            )
+        )
     }
 
     @Test
-    fun callPersistSecretKeyWhenConfirmingADevice() {
-        residentApi.confirmDevice("some-activation-code", "firebase-token", {}, {})
+    fun testConfirmDevice_OnSuccess() {
+        var registration: Registration? = null
+        var error: Exception? = null
 
-        val successCaptor = slot<(JSONObject) -> Unit>()
-        verify { httpClient.post(any(), capture(successCaptor), any()) }
+        val jsonResponse = jsonObjectOf(
+            "id" to "00000000-0000-0000-0000-000000000001",
+            "secretKey" to "some-secret-key-base64-encoded"
+        )
+        residentApi.confirmDevice("some-activation-code", "firebase-token", { registration = it }, { error = it })
+        requestQueue.returnSuccess(jsonResponse)
 
-        successCaptor.captured.invoke(jsonRegistration)
+        assertThat(registration).isEqualTo(Registration("00000000-0000-0000-0000-000000000001"))
+        assertThat(error).isNull()
         verify { encryptionKeyStorage.putBase64Key("some-secret-key-base64-encoded") }
     }
 
-    private val jsonRegistration: JSONObject =
-        JSONObject().apply {
-            put("id", "00000000-0000-0000-0000-000000000001")
-            put("secretKey", "some-secret-key-base64-encoded")
-        }
+    @Test
+    fun testConfirmDevice_OnError() {
+        var registration: Registration? = null
+        var error: Exception? = null
+
+        residentApi.confirmDevice("some-activation-code", "firebase-token", { registration = it }, { error = it })
+        requestQueue.returnError(VolleyError("boom"))
+
+        assertThat(registration).isNull()
+        assertThat(error).isInstanceOf(VolleyError::class.java)
+        assertThat(error).hasMessage("boom")
+    }
 }

@@ -12,6 +12,8 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import org.json.JSONObject
+import uk.nhs.nhsx.sonar.android.client.http.Callback
+import uk.nhs.nhsx.sonar.android.client.http.ErrorCallback
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 
@@ -25,19 +27,18 @@ open class VolleyHttpClient(
 
     override fun post(
         request: HttpRequest,
-        onSuccess: (JSONObject) -> Unit,
-        onError: (Exception) -> Unit
+        onSuccess: Callback<JSONObject>,
+        onError: ErrorCallback
     ) {
-        val jsonObjectRequest =
-            createRequest(Request.Method.POST, request.urlPath, request.json, onSuccess, onError)
+        val jsonObjectRequest = createRequest(Request.Method.POST, request.urlPath, request.json, onSuccess, onError)
         defineRetryPolicy(jsonObjectRequest)
         queue.add(jsonObjectRequest)
     }
 
     override fun patch(
         request: HttpRequest,
-        onSuccess: (JSONObject?) -> Unit,
-        onError: (java.lang.Exception) -> Unit
+        onSuccess: Callback<JSONObject?>,
+        onError: ErrorCallback
     ) {
         val jsonObjectRequest = createSignedRequest(
             request.key!!,
@@ -55,34 +56,32 @@ open class VolleyHttpClient(
         method: Int,
         urlPath: String,
         payload: JSONObject,
-        onSuccess: (JSONObject) -> Unit,
-        onError: (Exception) -> Unit
-    ): JsonObjectRequest {
-        return UnsignedJsonObjectRequest(method, url + urlPath, payload,
-            Response.Listener { response ->
-                onSuccess(response)
-            },
-            Response.ErrorListener { error ->
-                onError(error)
-            })
-    }
+        onSuccess: Callback<JSONObject>,
+        onError: ErrorCallback
+    ): JsonObjectRequest =
+        UnsignedJsonObjectRequest(
+            method,
+            url + urlPath,
+            payload,
+            Response.Listener { onSuccess(it) },
+            Response.ErrorListener { onError(it) }
+        )
 
     private fun createSignedRequest(
         key: ByteArray,
         method: Int,
         urlPath: String,
         payload: JSONObject,
-        onSuccess: (JSONObject) -> Unit,
-        onError: (Exception) -> Unit
-    ): JsonObjectRequest {
-        return SignedJsonObjectRequest(key, method, url + urlPath, payload,
-            Response.Listener { response ->
-                onSuccess(response)
-            },
-            Response.ErrorListener { error ->
-                onError(error)
-            })
-    }
+        onSuccess: Callback<JSONObject>,
+        onError: ErrorCallback
+    ): JsonObjectRequest =
+        SignedJsonObjectRequest(
+            key,
+            method, url + urlPath,
+            payload,
+            Response.Listener { onSuccess(it) },
+            Response.ErrorListener { onError(it) }
+        )
 
     private fun defineRetryPolicy(request: JsonObjectRequest) {
         request.retryPolicy = DefaultRetryPolicy(

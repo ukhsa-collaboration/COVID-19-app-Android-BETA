@@ -30,4 +30,7 @@ open class UnsignedJsonObjectRequest(
     override fun getHeaders(): Map<String?, String?> {
         return mapOf("Accept" to "application/json")
     }
+
+    // For testing purposes only. I'd love a solution that does not need this function in the production code.
+    fun testOnResponse(json: JSONObject) = deliverResponse(json)
 }

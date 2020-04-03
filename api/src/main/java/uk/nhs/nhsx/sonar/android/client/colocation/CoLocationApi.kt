@@ -7,8 +7,11 @@ package uk.nhs.nhsx.sonar.android.client.colocation
 
 import android.util.Log
 import org.json.JSONObject
+import uk.nhs.nhsx.sonar.android.client.http.ErrorCallback
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
+import uk.nhs.nhsx.sonar.android.client.http.SimpleCallback
+import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 import javax.inject.Inject
 
@@ -19,8 +22,8 @@ class CoLocationApi @Inject constructor(
 
     fun save(
         coLocationData: CoLocationData,
-        onSuccess: () -> Unit = {},
-        onError: (Exception) -> Unit = {}
+        onSuccess: SimpleCallback,
+        onError: ErrorCallback
     ) {
         val request = HttpRequest(
             "/api/residents/${coLocationData.residentId}",
@@ -28,7 +31,7 @@ class CoLocationApi @Inject constructor(
             keyStorage.provideKey()
         )
         Log.i("Sending", "Sending $coLocationData")
-        httpClient.patch(request, { onSuccess() }, { exception -> onError(exception) })
+        httpClient.patch(request, { onSuccess() }, onError)
     }
 }
 
@@ -47,7 +50,7 @@ data class CoLocationEvent(
 )
 
 private fun CoLocationData.toJson(): JSONObject =
-    JSONObject(mapOf(
+    jsonObjectOf(
         "contactEvents" to contactEvents.map {
             mapOf(
                 "sonarId" to it.sonarId,
@@ -56,4 +59,4 @@ private fun CoLocationData.toJson(): JSONObject =
                 "duration" to it.duration
             )
         }
-    ))
+    )
