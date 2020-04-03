@@ -86,7 +86,8 @@ class LongLiveConnectionScanTest {
                 saveContactWorker,
                 startTimestampProvider = { timestamp },
                 endTimestampProvider = { Date(timestamp.time + duration * 1_000) },
-                periodInMilliseconds = period
+                periodInMilliseconds = period,
+                bleEvents = BleEventTracker()
             )
             sut.start(this)
 

@@ -27,7 +27,8 @@ class LongLiveConnectionScan @Inject constructor(
     private val saveContactWorker: SaveContactWorker,
     private val startTimestampProvider: () -> Date = { Date() },
     private val endTimestampProvider: () -> Date = startTimestampProvider,
-    private val periodInMilliseconds: Long = 10_000
+    private val periodInMilliseconds: Long = 10_000,
+    private val bleEvents: BleEvents
 ) : Scanner {
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
@@ -164,7 +165,9 @@ class LongLiveConnectionScan @Inject constructor(
                 coroutineScope,
                 finalRecord
             )
+            bleEvents.disconnectDeviceEvent(record.sonarId.asString)
         } else {
+            bleEvents.scanFailureEvent()
             Timber.e("Trying to save record but macAddressToRecord is null for $macAddress")
         }
     }
@@ -200,12 +203,18 @@ class LongLiveConnectionScan @Inject constructor(
         compositeDisposable.clear()
     }
 
-    private fun onScanError(e: Throwable) = Timber.e("Scan failed with: $e")
+    private fun onScanError(e: Throwable) {
+        Timber.e("Scan failed with: $e")
+        bleEvents.scanFailureEvent()
+    }
 
     private fun onReadSuccess(event: Event) {
         Timber.d("Scanning Saving: $event")
         val record = macAddressToRecord[event.macAddress]
         record?.rssiValues?.add(event.rssi)
+        if (record != null) {
+            bleEvents.connectedDeviceEvent(record.sonarId.asString, record.rssiValues.last())
+        }
     }
 
     private data class Event(

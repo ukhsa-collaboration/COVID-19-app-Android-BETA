@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.Context
 import androidx.core.content.ContextCompat.getSystemService
+import com.example.colocate.ble.BleEvents
 import com.example.colocate.ble.LongLiveConnectionScan
 import com.example.colocate.ble.SaveContactWorker
 import com.example.colocate.ble.Scan
@@ -35,9 +36,17 @@ class BluetoothModule(
         RxBleClient.create(applicationContext)
 
     @Provides
-    fun provideScanner(rxBleClient: RxBleClient, saveContactWorker: SaveContactWorker): Scanner =
-        if (connectionV2) LongLiveConnectionScan(rxBleClient, saveContactWorker)
-        else Scan(rxBleClient, saveContactWorker)
+    fun provideScanner(
+        rxBleClient: RxBleClient,
+        saveContactWorker: SaveContactWorker,
+        bleEvents: BleEvents
+    ): Scanner =
+        if (connectionV2) LongLiveConnectionScan(
+            rxBleClient,
+            saveContactWorker,
+            bleEvents = bleEvents
+        )
+        else Scan(rxBleClient, saveContactWorker, bleEvents)
 
     @Provides
     @Named(USE_CONNECTION_V2)

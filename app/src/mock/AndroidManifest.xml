@@ -5,7 +5,7 @@
     <application
         tools:ignore="AllowBackup">
 
-        <activity android:name="com.example.colocate.TestActivity"
+        <activity android:name="com.example.colocate.TesterActivity"
             android:label="Debug">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

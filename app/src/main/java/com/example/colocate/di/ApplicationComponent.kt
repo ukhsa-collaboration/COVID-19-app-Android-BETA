@@ -10,6 +10,7 @@ import com.example.colocate.FlowTestStartActivity
 import com.example.colocate.MainActivity
 import com.example.colocate.NotificationService
 import com.example.colocate.OkActivity
+import com.example.colocate.ble.BleEvents
 import com.example.colocate.ble.BluetoothService
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.BluetoothModule
@@ -51,4 +52,5 @@ interface ApplicationComponent {
     fun inject(registrationActivity: RegistrationActivity)
 
     fun provideEventsV2Dao(): ContactEventV2Dao
+    fun provideBleEvents(): BleEvents
 }

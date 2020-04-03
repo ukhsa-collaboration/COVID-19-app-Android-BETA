@@ -3,6 +3,8 @@ package com.example.colocate
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeAdvertiser
 import android.content.Context
+import com.example.colocate.ble.BleEventTracker
+import com.example.colocate.ble.BleEvents
 import com.example.colocate.ble.DefaultSaveContactWorker
 import com.example.colocate.ble.LongLiveConnectionScan
 import com.example.colocate.ble.SaveContactWorker
@@ -87,25 +89,39 @@ class TestModule(
     }
 
     @Provides
+    fun provideBleEventTracker(): BleEvents =
+        BleEventTracker()
+
+    @Provides
     fun provideSaveContactWorker(
         contactEventDao: ContactEventDao,
         contactEventV2Dao: ContactEventV2Dao,
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
-        DefaultSaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao, startTimestampProvider)
+        DefaultSaveContactWorker(
+            ioDispatcher,
+            contactEventDao,
+            contactEventV2Dao,
+            startTimestampProvider
+        )
 
     @Provides
-    fun provideScanner(rxBleClient: RxBleClient, saveContactWorker: SaveContactWorker): Scanner =
+    fun provideScanner(
+        rxBleClient: RxBleClient,
+        saveContactWorker: SaveContactWorker,
+        bleEvents: BleEvents
+    ): Scanner =
         if (connectionV2)
             LongLiveConnectionScan(
                 rxBleClient,
                 saveContactWorker,
                 startTimestampProvider,
                 endTimestampProvider,
-                periodInMilliseconds = 50
+                periodInMilliseconds = 50,
+                bleEvents = bleEvents
             )
         else
-            Scan(rxBleClient, saveContactWorker)
+            Scan(rxBleClient, saveContactWorker, bleEvents)
 
     @Provides
     @Named(USE_CONNECTION_V2)

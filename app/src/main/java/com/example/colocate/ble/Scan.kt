@@ -18,7 +18,8 @@ import javax.inject.Inject
 
 class Scan @Inject constructor(
     private val rxBleClient: RxBleClient,
-    private val saveContactWorker: SaveContactWorker
+    private val saveContactWorker: SaveContactWorker,
+    private val bleEvents: BleEvents
 ) : Scanner {
 
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
@@ -105,12 +106,19 @@ class Scan @Inject constructor(
         )
     }
 
-    private fun onConnectionError(e: Throwable) = Timber.e("Connection failed with: $e")
+    private fun onConnectionError(e: Throwable) {
+        bleEvents.scanFailureEvent()
+        Timber.e("Connection failed with: $e")
+    }
 
-    private fun onReadError(e: Throwable) = Timber.e("Failed to read from remote device: $e")
+    private fun onReadError(e: Throwable) {
+        bleEvents.disconnectDeviceEvent()
+        Timber.e("Failed to read from remote device: $e")
+    }
 
     private fun onReadSuccess(event: Event) {
         Timber.d("Scanning Saving: $event")
+        bleEvents.connectedDeviceEvent(event.identifier.asString, event.rssi)
 
         saveContactWorker.saveContactEvent(
             event.scope,

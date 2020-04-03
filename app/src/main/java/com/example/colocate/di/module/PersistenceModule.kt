@@ -6,7 +6,9 @@ package com.example.colocate.di.module
 
 import android.content.Context
 import androidx.room.Room
+import com.example.colocate.ble.BleEvents
 import com.example.colocate.ble.DefaultSaveContactWorker
+import com.example.colocate.ble.BleEventTracker
 import com.example.colocate.ble.SaveContactWorker
 import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ContactEventDao
@@ -17,6 +19,7 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
 class PersistenceModule(
@@ -24,14 +27,12 @@ class PersistenceModule(
 ) {
 
     @Provides
-    fun provideDatabase(): AppDatabase =
-        Room
-            .databaseBuilder(
+    fun provideDatabase() =
+        Room.databaseBuilder(
                 applicationContext,
                 AppDatabase::class.java,
                 "event-database"
-            )
-            .fallbackToDestructiveMigration()
+            ).fallbackToDestructiveMigration()
             .build()
 
     @Provides
@@ -41,6 +42,10 @@ class PersistenceModule(
     @Provides
     fun provideContactEventV2Dao(database: AppDatabase): ContactEventV2Dao =
         database.contactEventV2Dao()
+
+    @Provides
+    @Singleton
+    fun providesBleEvents(): BleEvents = BleEventTracker()
 
     @Provides
     fun provideResidentIdProvider(): ResidentIdProvider =

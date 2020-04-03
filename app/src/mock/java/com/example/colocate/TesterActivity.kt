@@ -7,6 +7,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.colocate.adapter.EventsAdapter
+import com.example.colocate.ble.BleEvents
 import com.example.colocate.persistence.SharedPreferencesResidentIdProvider
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.SharedPreferencesStatusStorage
@@ -17,7 +19,7 @@ import kotlinx.android.synthetic.mock.activity_test.no_events
 import kotlinx.android.synthetic.mock.activity_test.reset_button
 import timber.log.Timber
 
-class TestActivity : AppCompatActivity() {
+class TesterActivity : AppCompatActivity() {
 
     private val statusStorage: StatusStorage by lazy {
         SharedPreferencesStatusStorage(this)
@@ -31,6 +33,10 @@ class TestActivity : AppCompatActivity() {
 
     private val viewModel: TestViewModel by viewModels { viewModelFactory }
 
+    private val bleEvents: BleEvents by lazy {
+        appComponent.provideBleEvents()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_test)
@@ -40,7 +46,8 @@ class TestActivity : AppCompatActivity() {
         events.layoutManager = LinearLayoutManager(this)
 
         viewModelFactory = TestViewModelFactory(
-            (applicationContext as ColocateApplication).appComponent.provideEventsV2Dao()
+            appComponent.provideEventsV2Dao(),
+            bleEvents
         )
 
         continue_button.setOnClickListener {
@@ -57,17 +64,17 @@ class TestActivity : AppCompatActivity() {
             navigateToMain()
         }
 
-        viewModel.observeEvents().observe(this, Observer {
-            Timber.d("<<<< events are $it")
-            if (it.isEmpty()) {
-                no_events.visibility = View.VISIBLE
-            } else {
+        viewModel.observeConnectionEvents().observe(this, Observer {
+            Timber.d("<<<< devices are $it")
+            if (it.isEmpty()) no_events.visibility = View.VISIBLE
+            else {
                 no_events.visibility = View.GONE
                 adapter.submitList(it)
             }
         })
 
         viewModel.getEvents()
+        viewModel.observeConnectionEvents()
     }
 
     private fun navigateToMain() {

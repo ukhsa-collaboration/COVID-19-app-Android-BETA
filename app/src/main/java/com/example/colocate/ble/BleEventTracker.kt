@@ -1,0 +1,68 @@
+package com.example.colocate.ble
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+
+class BleEventTracker : BleEvents {
+
+    private val eventsList = mutableListOf<ConnectedDevice>()
+
+    private val connectionEvents = MutableLiveData<List<ConnectedDevice>>()
+
+    override fun observeConnectionEvents(): LiveData<List<ConnectedDevice>> =
+        connectionEvents
+
+    override fun connectedDeviceEvent(id: String, rssi: Int) {
+        eventsList.add(ConnectedDevice(id, getCurrentTimeStamp(), rssi))
+        connectionEvents.postValue(eventsList)
+    }
+
+    override fun disconnectDeviceEvent(id: String?) {
+        eventsList.add(ConnectedDevice(isConnectionError = true, disconnectedDevice = id))
+        connectionEvents.postValue(eventsList)
+    }
+
+    override fun scanFailureEvent() {
+        eventsList.add(ConnectedDevice(isReadFailure = true))
+        connectionEvents.postValue(eventsList)
+    }
+
+    override fun clear() {
+        eventsList.clear()
+        connectionEvents.postValue(eventsList)
+    }
+}
+
+interface BleEvents {
+
+    fun observeConnectionEvents(): LiveData<List<ConnectedDevice>>
+
+    fun connectedDeviceEvent(id: String, rssi: Int)
+
+    fun disconnectDeviceEvent(id: String? = null)
+
+    fun scanFailureEvent()
+
+    fun clear()
+}
+
+fun getCurrentTimeStamp() = Date().toTimestamp()
+
+fun Date.toTimestamp(): String =
+    SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.UK).run {
+        timeZone = TimeZone.getTimeZone("UTC")
+        format(this@toTimestamp)
+    }
+
+data class ConnectedDevice(
+    val id: String? = null,
+    val timestamp: String? = null,
+    val rssi: Int? = null,
+    val isConnectionError: Boolean = false,
+    val isReadFailure: Boolean = false,
+    val disconnectedDevice: String? = null
+)
