@@ -119,11 +119,13 @@ class BluetoothService : Service() {
 
     private fun stop() {
         Timber.d("BluetoothService stop all sub-services")
-        isStarted = false
-        gatt.stop()
-        scan.stop()
-        advertise.stop()
-        coroutineScope.cancel()
+        if (isStarted) {
+            isStarted = false
+            gatt.stop()
+            scan.stop()
+            advertise.stop()
+            coroutineScope.cancel()
+        }
     }
 
     private fun isPermissionGranted() = true

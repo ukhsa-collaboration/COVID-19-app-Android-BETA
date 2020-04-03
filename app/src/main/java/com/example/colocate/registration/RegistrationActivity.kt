@@ -41,6 +41,7 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_register) {
                         ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
                         OkActivity.start(this)
                         finish()
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                     }
                 }
                 ViewState.Progress -> {
