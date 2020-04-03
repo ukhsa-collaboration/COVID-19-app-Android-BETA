@@ -8,6 +8,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.junit.After
@@ -21,7 +22,6 @@ import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.crypto.KeyGenerator
-import kotlin.test.assertFalse
 
 @RunWith(AndroidJUnit4::class)
 class CoLocationApiIT {
@@ -67,7 +67,7 @@ class CoLocationApiIT {
         assertEquals("/api/residents/residentId", request?.path)
 
         await until { isSuccess }
-        assertFalse(isError)
+        assertThat(isError).isFalse()
     }
 
     private fun generateKey(): ByteArray =

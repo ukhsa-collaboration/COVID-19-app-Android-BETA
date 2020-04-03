@@ -10,9 +10,6 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.Volley
 
 object RequestQueueFactory {
-    fun createQueue(
-        context: Context
-    ): RequestQueue {
-        return Volley.newRequestQueue(context)
-    }
+    fun createQueue(context: Context): RequestQueue =
+        Volley.newRequestQueue(context)
 }
