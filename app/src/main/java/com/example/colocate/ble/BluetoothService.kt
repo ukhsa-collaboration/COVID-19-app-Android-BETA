@@ -6,19 +6,23 @@ package com.example.colocate.ble
 
 import android.app.Notification
 import android.app.Service
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.example.colocate.appComponent
 import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.getChannel
-import com.example.colocate.hasLocationPermission
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -44,13 +48,37 @@ class BluetoothService : Service() {
 
     private var isStarted = false
 
-    object Lock
-
     override fun onCreate() {
         super.onCreate()
-        appComponent.inject(this)
-        coroutineScope = CoroutineScope(coroutineDispatcher + Job())
         startForeground(COLOCATE_SERVICE_ID, notification())
+
+        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
+        registerReceiver(bluetoothReceiver, filter)
+    }
+
+    private val bluetoothReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Timber.d("bluetoothReceiver onReceive")
+            if (!isStarted) {
+                Timber.d("bluetoothReceiver service is not started")
+                return
+            }
+
+            val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
+            Timber.d("bluetoothReceiver bluetooth adapter state: $state")
+            when (state) {
+                BluetoothAdapter.STATE_ON -> {
+                    Timber.d("bluetoothReceiver starting gatt and advertising")
+                    gatt.start()
+                    advertise.start()
+                }
+                BluetoothAdapter.STATE_TURNING_OFF, BluetoothAdapter.STATE_OFF -> {
+                    Timber.d("bluetoothReceiver stop gatt and advertising")
+                    gatt.stop()
+                    advertise.stop()
+                }
+            }
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -58,22 +86,30 @@ class BluetoothService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?
 
-        if (bluetoothManager?.adapter == null || !isPermissionGranted()) {
+        Timber.d("BluetoothService onStartCommand ${bluetoothManager?.adapter}")
+        if (bluetoothManager?.adapter == null) {
             return START_NOT_STICKY
         }
 
-        synchronized(Lock) {
-            if (!isStarted and isBluetoothEnabled() and hasLocationPermission(applicationContext)) {
-                gatt.start()
-                advertise.start()
-                scan.start(coroutineScope)
-                isStarted = true
-            }
+        Timber.d("BluetoothService isStarted $isStarted")
+
+        if (!isStarted && isBluetoothEnabled()) {
+            isStarted = true
+            Timber.d("BluetoothService started")
+            appComponent.inject(this)
+            coroutineScope = CoroutineScope(coroutineDispatcher + Job())
+            Timber.d("BluetoothService start all sub-services")
+            gatt.start()
+            advertise.start()
+            scan.start(coroutineScope)
         }
+
         return START_STICKY
     }
 
     override fun onDestroy() {
+        isStarted = false
+        unregisterReceiver(bluetoothReceiver)
         stop()
     }
 
@@ -82,6 +118,7 @@ class BluetoothService : Service() {
     }
 
     private fun stop() {
+        Timber.d("BluetoothService stop all sub-services")
         isStarted = false
         gatt.stop()
         scan.stop()

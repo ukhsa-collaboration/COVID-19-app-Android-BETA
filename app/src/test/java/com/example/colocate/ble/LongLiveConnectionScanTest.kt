@@ -3,6 +3,7 @@ package com.example.colocate.ble
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
+import com.polidea.rxandroidble2.exceptions.BleDisconnectedException
 import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.mockk.every
@@ -11,11 +12,14 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.runBlocking
+import net.lachlanmckee.timberjunit.TimberTestRule
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.untilNotNull
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import timber.log.Timber
 import java.util.Date
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -34,8 +38,15 @@ class LongLiveConnectionScanTest {
     private val duration = 5L
     private val period = 50L
 
+    @Rule
+    @JvmField
+    val logAllOnFailuresRule: TimberTestRule = TimberTestRule.logAllWhenTestFails()
+
     @Before
     fun setUp() {
+        Timber.plant(Timber.DebugTree())
+        every { bleClient.observeStateChanges() } returns Observable.empty()
+        every { bleClient.state } returns RxBleClient.State.READY
         every {
             bleClient.scanBleDevices(
                 any<ScanSettings>(),
@@ -53,7 +64,13 @@ class LongLiveConnectionScanTest {
             Observable.just(connection),
             Observable
                 .timer(period + 1, TimeUnit.MILLISECONDS)
-                .flatMap { Observable.error<RxBleConnection>(RuntimeException()) }
+                .flatMap {
+                    Observable.error<RxBleConnection>(
+                        BleDisconnectedException.adapterDisabled(
+                            ""
+                        )
+                    )
+                }
         )
         every { connection.readRssi() } returnsMany rssiValues.map { Single.just(it) }
         every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(

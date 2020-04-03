@@ -11,7 +11,9 @@ import android.bluetooth.le.BluetoothLeAdvertiser
 import android.os.ParcelUuid
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class Advertise @Inject constructor(private val bluetoothLeAdvertiser: BluetoothLeAdvertiser) {
     private val advertiseData: AdvertiseData =
         AdvertiseData.Builder()
@@ -31,6 +33,7 @@ class Advertise @Inject constructor(private val bluetoothLeAdvertiser: Bluetooth
     private val advertisingCallback = AdvertisingCallback()
 
     fun start() {
+        Timber.d("BluetoothLeAdvertiser startAdvertising")
         bluetoothLeAdvertiser.startAdvertising(
             advertiseSettings,
             advertiseData,
@@ -39,6 +42,7 @@ class Advertise @Inject constructor(private val bluetoothLeAdvertiser: Bluetooth
     }
 
     fun stop() {
+        Timber.d("BluetoothLeAdvertiser stopAdvertising")
         bluetoothLeAdvertiser.stopAdvertising(advertisingCallback)
     }
 }
@@ -46,13 +50,13 @@ class Advertise @Inject constructor(private val bluetoothLeAdvertiser: Bluetooth
 private class AdvertisingCallback : AdvertiseCallback() {
     override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
         Timber.i(
-            "Started advertising with settings $settingsInEffect"
+            "BluetoothLeAdvertiser Started advertising with settings $settingsInEffect"
         )
     }
 
     override fun onStartFailure(errorCode: Int) {
         Timber.e(
-            "Failed to start with error code $errorCode"
+            "BluetoothLeAdvertiser Failed to start with error code $errorCode"
         )
     }
 }

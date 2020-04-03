@@ -36,7 +36,7 @@ class TestRxBleClient(context: Context) : RxBleClient() {
     override fun getBondedDevices(): MutableSet<RxBleDevice> = realClient.bondedDevices
 
     override fun scanBleDevices(vararg filterServiceUUIDs: UUID): Observable<RxBleScanResult> = fail("Not available")
-    override fun observeStateChanges(): Observable<State> = fail("Not available")
+    override fun observeStateChanges(): Observable<State> = realClient.observeStateChanges()
 
     override fun scanBleDevices(scanSettings: ScanSettings, vararg scanFilters: ScanFilter): Observable<ScanResult> =
         Observable.create { e -> emitter = e }

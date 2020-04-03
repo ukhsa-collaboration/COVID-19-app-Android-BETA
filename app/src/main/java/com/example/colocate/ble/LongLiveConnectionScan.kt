@@ -8,7 +8,10 @@ import android.os.ParcelUuid
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
+import com.polidea.rxandroidble2.exceptions.BleAlreadyConnectedException
+import com.polidea.rxandroidble2.exceptions.BleException
 import com.polidea.rxandroidble2.scan.ScanFilter
+import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -75,18 +78,34 @@ class LongLiveConnectionScan @Inject constructor(
     private val macAddressToRecord = mutableMapOf<String, SaveContactWorker.Record>()
 
     override fun start(coroutineScope: CoroutineScope) {
-        val scanDisposable = rxBleClient
-            .scanBleDevices(
-                settings,
-                coLocateBackgroundedIPhoneFilter,
-                coLocateServiceUuidFilter
-            )
-            .filter { it.bleDevice.connectionState == RxBleConnection.RxBleConnectionState.DISCONNECTED }
+        Timber.d("LongLiveConnectionScan start")
+
+        val flowDisposable = rxBleClient.observeStateChanges()
+            .startWith(rxBleClient.state)
+            .switchMap { state ->
+                Timber.d("LongLiveConnectionScan state = $state")
+                when (state) {
+                    RxBleClient.State.READY ->
+                        return@switchMap rxBleClient.scanBleDevices(
+                            settings,
+                            coLocateBackgroundedIPhoneFilter,
+                            coLocateServiceUuidFilter
+                        ).onErrorResumeNext { throwable: Throwable ->
+                            Timber.e(throwable, "LongLiveConnectionScan scan failure")
+                            Observable.empty()
+                        }
+                    else -> return@switchMap Observable.empty<ScanResult>()
+                }
+            }
+            .filter {
+                Timber.d("Scan result ${it.bleDevice.connectionState}")
+                it.bleDevice.connectionState == RxBleConnection.RxBleConnectionState.DISCONNECTED
+            }
             .subscribe(
                 { result -> connectAndCaptureEvents(result.bleDevice, coroutineScope) },
                 ::onScanError
             )
-        compositeDisposable.add(scanDisposable)
+        compositeDisposable.add(flowDisposable)
     }
 
     private fun connectAndCaptureEvents(
@@ -97,7 +116,13 @@ class LongLiveConnectionScan @Inject constructor(
         val connectionDisposable = device
             .establishConnection(false)
             .flatMap { connection -> captureContactEvents(connection, macAddress) }
-            .subscribe(::onReadSuccess) { exception -> onDisconnect(exception, macAddress, coroutineScope) }
+            .subscribe(::onReadSuccess) { exception ->
+                onDisconnect(
+                    exception,
+                    macAddress,
+                    coroutineScope
+                )
+            }
 
         compositeDisposable.add(connectionDisposable)
     }
@@ -118,8 +143,11 @@ class LongLiveConnectionScan @Inject constructor(
         macAddress: String,
         coroutineScope: CoroutineScope
     ) {
-        Timber.e(exception, "Failed to read from remote device with mac-address: $macAddress")
-        saveRecord(macAddress, coroutineScope)
+        when (exception) {
+            is BleAlreadyConnectedException -> Timber.d(exception, "Already connected $macAddress")
+            is BleException -> saveRecord(macAddress, coroutineScope)
+            else -> Timber.d(exception, "Failed to connect to the device $macAddress")
+        }
     }
 
     private fun saveRecord(
@@ -136,6 +164,8 @@ class LongLiveConnectionScan @Inject constructor(
                 coroutineScope,
                 finalRecord
             )
+        } else {
+            Timber.e("Trying to save record but macAddressToRecord is null for $macAddress")
         }
     }
 
@@ -166,6 +196,7 @@ class LongLiveConnectionScan @Inject constructor(
             }
 
     override fun stop() {
+        Timber.d("LongLiveConnectionScan stop")
         compositeDisposable.clear()
     }
 

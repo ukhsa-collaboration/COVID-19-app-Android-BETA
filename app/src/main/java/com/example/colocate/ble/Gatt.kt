@@ -17,6 +17,7 @@ import android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import com.example.colocate.persistence.ResidentIdProvider
+import timber.log.Timber
 import javax.inject.Inject
 
 class Gatt @Inject constructor(
@@ -44,6 +45,7 @@ class Gatt @Inject constructor(
     private var server: BluetoothGattServer? = null
 
     fun start() {
+        Timber.d("Bluetooth Gatt start")
         val callback = object : BluetoothGattServerCallback() {
             override fun onCharacteristicReadRequest(
                 device: BluetoothDevice,
@@ -51,6 +53,7 @@ class Gatt @Inject constructor(
                 offset: Int,
                 characteristic: BluetoothGattCharacteristic
             ) {
+                Timber.d("Bluetooth onCharacteristicReadRequest")
                 if (characteristic.isDeviceIdentifier()) {
                     server?.sendResponse(
                         device,
@@ -77,6 +80,7 @@ class Gatt @Inject constructor(
     }
 
     fun stop() {
+        Timber.d("Bluetooth Gatt stop")
         server?.close()
     }
 }
