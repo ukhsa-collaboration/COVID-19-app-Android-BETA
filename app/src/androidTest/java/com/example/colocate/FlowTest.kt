@@ -52,6 +52,7 @@ class FlowTest {
 
     @Test
     fun testRegistration() {
+        resetStatusStorage()
         unsetResidentId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -172,6 +173,11 @@ class FlowTest {
     private fun setStatus(covidStatus: CovidStatus) {
         val storage = activityRule.activity.statusStorage as SharedPreferencesStatusStorage
         storage.update(covidStatus)
+    }
+
+    private fun resetStatusStorage() {
+        val storage = activityRule.activity.statusStorage as SharedPreferencesStatusStorage
+        storage.reset()
     }
 
     private fun unsetResidentId() {
