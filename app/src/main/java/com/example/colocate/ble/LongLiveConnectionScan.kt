@@ -81,13 +81,15 @@ class LongLiveConnectionScan @Inject constructor(
     override fun start(coroutineScope: CoroutineScope) {
         Timber.d("LongLiveConnectionScan start")
 
-        val flowDisposable = rxBleClient.observeStateChanges()
+        val flowDisposable = rxBleClient
+            .observeStateChanges()
             .startWith(rxBleClient.state)
             .switchMap { state ->
                 Timber.d("LongLiveConnectionScan state = $state")
+
                 when (state) {
                     RxBleClient.State.READY ->
-                        return@switchMap rxBleClient.scanBleDevices(
+                        rxBleClient.scanBleDevices(
                             settings,
                             coLocateBackgroundedIPhoneFilter,
                             coLocateServiceUuidFilter
@@ -95,7 +97,7 @@ class LongLiveConnectionScan @Inject constructor(
                             Timber.e(throwable, "LongLiveConnectionScan scan failure")
                             Observable.empty()
                         }
-                    else -> return@switchMap Observable.empty<ScanResult>()
+                    else -> Observable.empty<ScanResult>()
                 }
             }
             .filter {
@@ -210,13 +212,9 @@ class LongLiveConnectionScan @Inject constructor(
 
     private fun onReadSuccess(event: Event) {
         Timber.d("Scanning Saving: $event")
-        val record = macAddressToRecord[event.macAddress]
-        record?.rssiValues?.add(event.rssi)
-        if (record != null) {
-            bleEvents.connectedDeviceEvent(
-                id = record.sonarId.asString,
-                rssiValues = record.rssiValues
-            )
+        macAddressToRecord[event.macAddress]?.let { record ->
+            record.rssiValues.add(event.rssi)
+            bleEvents.connectedDeviceEvent(record.sonarId.asString, record.rssiValues)
         }
     }
 

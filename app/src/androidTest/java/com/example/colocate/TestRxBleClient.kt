@@ -29,14 +29,26 @@ class TestRxBleClient(context: Context) : RxBleClient() {
     private var emitter: Emitter<ScanResult>? = null
 
     override fun getBleDevice(macAddress: String): RxBleDevice = realClient.getBleDevice(macAddress)
-    override fun getState(): State = realClient.state
     override fun isScanRuntimePermissionGranted() = realClient.isScanRuntimePermissionGranted
     override fun getRecommendedScanRuntimePermissions(): Array<String> = realClient.recommendedScanRuntimePermissions
     override fun getBackgroundScanner(): BackgroundScanner = realClient.backgroundScanner
     override fun getBondedDevices(): MutableSet<RxBleDevice> = realClient.bondedDevices
 
     override fun scanBleDevices(vararg filterServiceUUIDs: UUID): Observable<RxBleScanResult> = fail("Not available")
-    override fun observeStateChanges(): Observable<State> = realClient.observeStateChanges()
+
+    override fun getState(): State =
+        stateIgnoringLocationServicesNotEnabled(realClient.state)
+
+    override fun observeStateChanges(): Observable<State> =
+        realClient
+            .observeStateChanges()
+            .map(::stateIgnoringLocationServicesNotEnabled)
+
+    private fun stateIgnoringLocationServicesNotEnabled(state: State): State =
+        when (state) {
+            State.LOCATION_SERVICES_NOT_ENABLED -> State.READY
+            else -> state
+        }
 
     override fun scanBleDevices(scanSettings: ScanSettings, vararg scanFilters: ScanFilter): Observable<ScanResult> =
         Observable.create { e -> emitter = e }
