@@ -13,11 +13,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.colocate.persistence.ContactEventV2
 import kotlinx.android.synthetic.main.event_view.view.remote_contact_id
 import kotlinx.android.synthetic.main.event_view.view.rssi
+import kotlinx.android.synthetic.main.event_view.view.time
 
 class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bindTo(event: ContactEventV2) {
         itemView.remote_contact_id.text = event.sonarId
         itemView.rssi.text = event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
+        itemView.time.text = "${event.timestamp.split("T").last().replace("Z", "")} - Duration ${event.duration}s"
     }
 }
 
