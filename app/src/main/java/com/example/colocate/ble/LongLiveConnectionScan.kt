@@ -169,8 +169,7 @@ class LongLiveConnectionScan @Inject constructor(
             )
             bleEvents.disconnectDeviceEvent(record.sonarId.asString)
         } else {
-            bleEvents.scanFailureEvent()
-            Timber.e("Trying to save record but macAddressToRecord is null for $macAddress")
+            Timber.e("Disconnecting from $macAddress without having read sonarID")
         }
     }
 

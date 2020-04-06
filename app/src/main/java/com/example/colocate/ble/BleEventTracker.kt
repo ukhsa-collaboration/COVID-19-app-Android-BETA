@@ -17,6 +17,7 @@ class BleEventTracker : BleEvents {
         connectionEvents
 
     override fun connectedDeviceEvent(id: String, rssiValues: List<Int>) {
+        eventsList.removeIf { it.id == id }
         eventsList.add(
             ConnectedDevice(
                 id = id,
@@ -28,7 +29,8 @@ class BleEventTracker : BleEvents {
     }
 
     override fun disconnectDeviceEvent(id: String?) {
-        eventsList.add(ConnectedDevice(isConnectionError = true, disconnectedDevice = id))
+        eventsList.removeIf { it.id == id }
+        eventsList.add(ConnectedDevice(id = id, isConnectionError = true))
         connectionEvents.postValue(eventsList)
     }
 
@@ -69,6 +71,5 @@ data class ConnectedDevice(
     val timestamp: String = "",
     val rssiValues: List<Int> = emptyList(),
     val isConnectionError: Boolean = false,
-    val isReadFailure: Boolean = false,
-    val disconnectedDevice: String? = null
+    val isReadFailure: Boolean = false
 )
