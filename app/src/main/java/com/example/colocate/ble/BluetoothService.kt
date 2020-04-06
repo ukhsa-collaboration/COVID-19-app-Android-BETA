@@ -63,7 +63,7 @@ class BluetoothService : Service() {
             .observeStateChanges()
             .startWith(bleClient.state)
             .subscribe { state ->
-                when (state) {
+                when (state!!) {
                     RxBleClient.State.BLUETOOTH_NOT_AVAILABLE -> {
                     }
                     RxBleClient.State.LOCATION_PERMISSION_NOT_GRANTED -> {
@@ -82,8 +82,8 @@ class BluetoothService : Service() {
                         showLocationIsDisabledNotification(this)
                         val defaultAdapter = BluetoothAdapter.getDefaultAdapter()
                         if (defaultAdapter != null) {
-                            val state = defaultAdapter.state
-                            if (state == BluetoothAdapter.STATE_TURNING_ON || state == BluetoothAdapter.STATE_ON) {
+                            val bluetoothState = defaultAdapter.state
+                            if (bluetoothState == BluetoothAdapter.STATE_TURNING_ON || bluetoothState == BluetoothAdapter.STATE_ON) {
                                 hideBluetoothIsDisabledNotification(this)
                             }
                         }
