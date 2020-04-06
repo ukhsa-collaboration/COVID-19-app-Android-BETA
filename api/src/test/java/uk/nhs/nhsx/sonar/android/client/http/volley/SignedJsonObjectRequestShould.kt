@@ -10,14 +10,13 @@ import com.android.volley.Response
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.test.SignatureUtils
 
 class SignedJsonObjectRequestShould {
 
     @Test
     fun containTimestampHeader() {
         val cut = SignedJsonObjectRequest(
-            SignatureUtils.generateKey(),
+            generateSignatureKey(),
             Request.Method.POST,
             "http://somehere.com",
             JSONObject(),
@@ -32,7 +31,7 @@ class SignedJsonObjectRequestShould {
     @Test
     fun containSignatureHeader() {
         val cut = SignedJsonObjectRequest(
-            SignatureUtils.generateKey(),
+            generateSignatureKey(),
             Request.Method.POST,
             "http://somehere.com",
             JSONObject(),

@@ -10,7 +10,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.client.test.SignatureUtils
 
 class VolleyHttpClientShould {
 
@@ -36,7 +35,7 @@ class VolleyHttpClientShould {
 
     @Test
     fun addJsonRequestToQueueWhenPatch() {
-        val inputRequest = HttpRequest("/api", JSONObject(), SignatureUtils.generateKey())
+        val inputRequest = HttpRequest("/api", JSONObject(), generateSignatureKey())
 
         httpClient.patch(inputRequest, {}, {})
 
