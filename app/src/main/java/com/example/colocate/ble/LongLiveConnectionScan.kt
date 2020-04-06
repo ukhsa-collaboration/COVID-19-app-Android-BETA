@@ -211,7 +211,6 @@ class LongLiveConnectionScan @Inject constructor(
     }
 
     private fun onReadSuccess(event: Event) {
-        Timber.d("Scanning Saving: $event")
         macAddressToRecord[event.macAddress]?.let { record ->
             record.rssiValues.add(event.rssi)
             bleEvents.connectedDeviceEvent(record.sonarId.asString, record.rssiValues)
