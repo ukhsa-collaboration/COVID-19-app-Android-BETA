@@ -49,6 +49,7 @@
         <activity android:name=".registration.RegistrationActivity" />
         <activity android:name=".PermissionActivity" />
         <activity android:name=".ExplanationActivity" />
+        <activity android:name=".debug.TesterActivity" />
 
         <service
             android:name=".ble.BluetoothService"

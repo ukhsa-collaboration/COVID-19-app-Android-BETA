@@ -7,6 +7,7 @@ package com.example.colocate
 import android.content.Context
 import android.hardware.SensorManager
 import androidx.appcompat.app.AppCompatActivity
+import com.example.colocate.debug.TesterActivity
 import com.squareup.seismic.ShakeDetector
 
 abstract class BaseActivity : AppCompatActivity() {

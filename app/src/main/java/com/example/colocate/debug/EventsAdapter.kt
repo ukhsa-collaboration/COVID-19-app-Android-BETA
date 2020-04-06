@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package com.example.colocate.adapter
+package com.example.colocate.debug
 
 import android.view.LayoutInflater
 import android.view.View

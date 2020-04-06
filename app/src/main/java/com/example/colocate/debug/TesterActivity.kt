@@ -1,4 +1,4 @@
-package com.example.colocate
+package com.example.colocate.debug
 
 import android.content.Context
 import android.content.Intent
@@ -8,16 +8,18 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.colocate.adapter.EventsAdapter
+import com.example.colocate.MainActivity
+import com.example.colocate.R
+import com.example.colocate.appComponent
 import com.example.colocate.ble.BleEvents
 import com.example.colocate.persistence.SharedPreferencesResidentIdProvider
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.SharedPreferencesStatusStorage
 import com.example.colocate.status.StatusStorage
-import kotlinx.android.synthetic.mock.activity_test.continue_button
-import kotlinx.android.synthetic.mock.activity_test.events
-import kotlinx.android.synthetic.mock.activity_test.no_events
-import kotlinx.android.synthetic.mock.activity_test.reset_button
+import kotlinx.android.synthetic.main.activity_test.continue_button
+import kotlinx.android.synthetic.main.activity_test.events
+import kotlinx.android.synthetic.main.activity_test.no_events
+import kotlinx.android.synthetic.main.activity_test.reset_button
 import timber.log.Timber
 
 class TesterActivity : AppCompatActivity() {
@@ -87,7 +89,11 @@ class TesterActivity : AppCompatActivity() {
     companion object {
 
         fun start(context: Context) {
-            context.startActivity(getIntent(context))
+            context.startActivity(
+                getIntent(
+                    context
+                )
+            )
         }
 
         private fun getIntent(context: Context) =

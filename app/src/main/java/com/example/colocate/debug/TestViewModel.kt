@@ -1,6 +1,5 @@
-package com.example.colocate
+package com.example.colocate.debug
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -16,8 +15,6 @@ class TestViewModel(
 ) : ViewModel() {
 
     private val eventsLiveData = MutableLiveData<List<ContactEventV2>>()
-
-    fun observeEvents(): LiveData<List<ContactEventV2>> = eventsLiveData
 
     fun clear() {
         viewModelScope.launch {
@@ -45,6 +42,9 @@ class TestViewModelFactory(
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
-        return TestViewModel(contractEventDao, eventTracker) as T
+        return TestViewModel(
+            contractEventDao,
+            eventTracker
+        ) as T
     }
 }

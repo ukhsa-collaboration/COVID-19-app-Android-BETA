@@ -11,7 +11,6 @@ import androidx.appcompat.widget.AppCompatButton
 import com.example.colocate.status.StatusStorage
 import javax.inject.Inject
 
-
 class OkActivity : BaseActivity() {
 
     @Inject
