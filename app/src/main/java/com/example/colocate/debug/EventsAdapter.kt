@@ -16,10 +16,6 @@ import com.example.colocate.ble.ConnectedDevice
 import kotlinx.android.synthetic.main.event_view.view.remote_contact_id
 import kotlinx.android.synthetic.main.event_view.view.rssi
 import kotlinx.android.synthetic.main.event_view.view.time
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.util.Date
 
 class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bindTo(event: ConnectedDevice) {
