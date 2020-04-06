@@ -4,28 +4,29 @@
 
 package com.example.colocate
 
-import android.content.Context
-import android.hardware.SensorManager
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.colocate.debug.TesterActivity
-import com.squareup.seismic.ShakeDetector
+import com.example.colocate.util.ShakeListener
 
 abstract class BaseActivity : AppCompatActivity() {
 
-    private val shakeDetector =
-        ShakeDetector(ShakeDetector.Listener { TesterActivity.start(this@BaseActivity) })
+    private lateinit var shakeListener: ShakeListener
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        shakeListener = ShakeListener(this) {
+            TesterActivity.start(this@BaseActivity)
+        }
+    }
 
     override fun onResume() {
         super.onResume()
-
-        (getSystemService(Context.SENSOR_SERVICE) as SensorManager).also {
-            shakeDetector.start(it)
-        }
+        shakeListener.start()
     }
 
     override fun onPause() {
         super.onPause()
-
-        shakeDetector.stop()
+        shakeListener.stop()
     }
 }
