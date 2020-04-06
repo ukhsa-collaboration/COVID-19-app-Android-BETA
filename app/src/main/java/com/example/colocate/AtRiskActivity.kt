@@ -7,11 +7,10 @@ package com.example.colocate
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.colocate.status.StatusStorage
 import javax.inject.Inject
 
-class AtRiskActivity : AppCompatActivity() {
+class AtRiskActivity : BaseActivity() {
 
     @Inject
     protected lateinit var statusStorage: StatusStorage

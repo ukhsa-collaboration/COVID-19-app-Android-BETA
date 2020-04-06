@@ -1,5 +1,6 @@
 package com.example.colocate
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -51,7 +52,7 @@ class TesterActivity : AppCompatActivity() {
         )
 
         continue_button.setOnClickListener {
-            navigateToMain()
+            finish()
         }
 
         reset_button.setOnClickListener {
@@ -80,7 +81,16 @@ class TesterActivity : AppCompatActivity() {
     }
 
     private fun navigateToMain() {
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
+        MainActivity.start(this)
+    }
+
+    companion object {
+
+        fun start(context: Context) {
+            context.startActivity(getIntent(context))
+        }
+
+        private fun getIntent(context: Context) =
+            Intent(context, TesterActivity::class.java)
     }
 }

@@ -9,8 +9,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.example.colocate.BaseActivity
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
 import com.example.colocate.appComponent
@@ -20,7 +20,7 @@ import com.example.colocate.status.StatusStorage
 import kotlinx.android.synthetic.main.activity_isolate.isolate_notify
 import javax.inject.Inject
 
-class IsolateActivity : AppCompatActivity() {
+class IsolateActivity : BaseActivity() {
 
     @Inject
     protected lateinit var viewModelFactory: ViewModelFactory<IsolateViewModel>

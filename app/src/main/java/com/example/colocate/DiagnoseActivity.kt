@@ -21,7 +21,7 @@ import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
 import javax.inject.Inject
 
-class DiagnoseActivity : AppCompatActivity() {
+class DiagnoseActivity : BaseActivity() {
     @Inject
     protected lateinit var statusStorage: StatusStorage
 
