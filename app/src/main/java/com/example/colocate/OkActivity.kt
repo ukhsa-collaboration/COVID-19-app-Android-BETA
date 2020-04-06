@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
+import com.example.colocate.ble.BluetoothService
 import com.example.colocate.status.StatusStorage
 import javax.inject.Inject
 
@@ -19,6 +21,7 @@ class OkActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
+        ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
 
         setContentView(R.layout.activity_ok)
 

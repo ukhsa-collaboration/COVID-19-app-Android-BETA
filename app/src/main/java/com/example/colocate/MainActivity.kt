@@ -10,7 +10,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.colocate.ble.BluetoothService
-import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.persistence.ResidentIdProvider
 import com.example.colocate.status.StatusStorage
 import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
@@ -39,13 +38,8 @@ class MainActivity : AppCompatActivity() {
             ExplanationActivity.start(this)
         }
 
-        if (hasLocationPermission(this) && residentIdProvider.hasProperResidentId()) {
-            if (isBluetoothEnabled()) {
-                ContextCompat.startForegroundService(
-                    this,
-                    Intent(this, BluetoothService::class.java)
-                )
-            }
+        if (residentIdProvider.hasProperResidentId()) {
+            ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
             navigateTo(statusStorage.get())
         }
     }
@@ -56,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             context.startActivity(getIntent(context))
         }
 
-        private fun getIntent(context: Context) =
+        fun getIntent(context: Context) =
             Intent(context, MainActivity::class.java)
                 .apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

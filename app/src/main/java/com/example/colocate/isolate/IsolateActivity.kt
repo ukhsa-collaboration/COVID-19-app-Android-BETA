@@ -9,11 +9,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.example.colocate.BaseActivity
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
 import com.example.colocate.appComponent
+import com.example.colocate.ble.BluetoothService
 import com.example.colocate.common.ViewState
 import com.example.colocate.navigateTo
 import com.example.colocate.status.StatusStorage
@@ -36,6 +38,7 @@ class IsolateActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_isolate)
         appComponent.inject(this)
+        ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
 
         isolate_notify.setOnClickListener {
             viewModel.onNotifyClick()

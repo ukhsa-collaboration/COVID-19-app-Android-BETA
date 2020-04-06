@@ -8,16 +8,20 @@ import android.app.Notification
 import android.app.Service
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+import android.location.LocationManager
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.location.LocationManagerCompat
 import com.example.colocate.appComponent
-import com.example.colocate.ble.util.isBluetoothEnabled
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.getChannel
+import com.example.colocate.util.hideBluetoothIsDisabledNotification
+import com.example.colocate.util.hideLocationIsDisabledNotification
+import com.example.colocate.util.showBluetoothIsDisabledNotification
+import com.example.colocate.util.showLocationIsDisabledNotification
+import com.polidea.rxandroidble2.RxBleClient
+import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -28,8 +32,10 @@ import javax.inject.Named
 
 class BluetoothService : Service() {
     companion object {
-        const val COLOCATE_SERVICE_ID = 1235
+        const val FOREGROUND_NOTIFICATION_ID = 1235
     }
+
+    private var stateChangeDisposable: Disposable? = null
 
     @Inject
     lateinit var advertise: Advertise
@@ -46,89 +52,114 @@ class BluetoothService : Service() {
 
     private lateinit var coroutineScope: CoroutineScope
 
-    private var isStarted = false
+    private var isInjected = false
+    private var areGattAndAdvertiseRunning = false
+    private var isScanRunning = false
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(COLOCATE_SERVICE_ID, notification())
+        startForeground(FOREGROUND_NOTIFICATION_ID, notification())
 
-        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
-        registerReceiver(bluetoothReceiver, filter)
-    }
+        val bleClient = appComponent.provideRxBleClient()
+        stateChangeDisposable = bleClient
+            .observeStateChanges()
+            .startWith(bleClient.state)
+            .subscribe { state ->
+                when (state) {
+                    RxBleClient.State.BLUETOOTH_NOT_AVAILABLE -> {
+                    }
+                    RxBleClient.State.LOCATION_PERMISSION_NOT_GRANTED -> {
+                    }
+                    RxBleClient.State.BLUETOOTH_NOT_ENABLED -> {
+                        Timber.d("bluetoothReceiver stop gatt and advertising")
+                        stopGattAndAdvertise()
+                        showBluetoothIsDisabledNotification(this)
 
-    private val bluetoothReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            Timber.d("bluetoothReceiver onReceive")
-            if (!isStarted) {
-                Timber.d("bluetoothReceiver service is not started")
-                return
-            }
-
-            val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
-            Timber.d("bluetoothReceiver bluetooth adapter state: $state")
-            when (state) {
-                BluetoothAdapter.STATE_ON -> {
-                    Timber.d("bluetoothReceiver starting gatt and advertising")
-                    gatt.start()
-                    advertise.start()
+                        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+                        if (LocationManagerCompat.isLocationEnabled(locationManager)) {
+                            hideLocationIsDisabledNotification(this)
+                        }
+                    }
+                    RxBleClient.State.LOCATION_SERVICES_NOT_ENABLED -> {
+                        showLocationIsDisabledNotification(this)
+                        val defaultAdapter = BluetoothAdapter.getDefaultAdapter()
+                        if (defaultAdapter != null) {
+                            val state = defaultAdapter.state
+                            if (state == BluetoothAdapter.STATE_TURNING_ON || state == BluetoothAdapter.STATE_ON) {
+                                hideBluetoothIsDisabledNotification(this)
+                            }
+                        }
+                    }
+                    RxBleClient.State.READY -> {
+                        if (!isInjected) {
+                            appComponent.inject(this)
+                            isInjected = true
+                        }
+                        startGattAndAdvertise()
+                        startScan()
+                        hideBluetoothIsDisabledNotification(this)
+                        hideLocationIsDisabledNotification(this)
+                    }
                 }
-                BluetoothAdapter.STATE_TURNING_OFF, BluetoothAdapter.STATE_OFF -> {
-                    Timber.d("bluetoothReceiver stop gatt and advertising")
-                    gatt.stop()
-                    advertise.stop()
-                }
             }
-        }
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val bluetoothManager = getSystemService(BLUETOOTH_SERVICE) as BluetoothManager?
-
         Timber.d("BluetoothService onStartCommand ${bluetoothManager?.adapter}")
-        if (bluetoothManager?.adapter == null) {
-            return START_NOT_STICKY
-        }
-
-        Timber.d("BluetoothService isStarted $isStarted")
-
-        if (!isStarted && isBluetoothEnabled()) {
-            isStarted = true
-            Timber.d("BluetoothService started")
-            appComponent.inject(this)
-            coroutineScope = CoroutineScope(coroutineDispatcher + Job())
-            Timber.d("BluetoothService start all sub-services")
-            gatt.start()
-            advertise.start()
-            scan.start(coroutineScope)
-        }
-
         return START_STICKY
     }
 
     override fun onDestroy() {
-        isStarted = false
-        unregisterReceiver(bluetoothReceiver)
-        stop()
+        Timber.d("BluetoothService onDestroy")
+        stopSubServices()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
-        stop()
+        stopSubServices()
     }
 
-    private fun stop() {
-        Timber.d("BluetoothService stop all sub-services")
-        if (isStarted) {
-            isStarted = false
-            gatt.stop()
-            scan.stop()
-            advertise.stop()
-            coroutineScope.cancel()
+    private fun startScan() {
+        if (!isScanRunning) {
+            isScanRunning = true
+            coroutineScope = CoroutineScope(coroutineDispatcher + Job())
+            scan.start(coroutineScope)
         }
     }
 
-    private fun isPermissionGranted() = true
+    private fun stopSubServices() {
+        Timber.d("BluetoothService stop all sub-services")
+        stopGattAndAdvertise()
+        stopScan()
+        stateChangeDisposable?.dispose()
+    }
+
+    private fun startGattAndAdvertise() {
+        if (!areGattAndAdvertiseRunning) {
+            areGattAndAdvertiseRunning = true
+            Timber.d("BluetoothService startGattAndAdvertise")
+            gatt.start()
+            advertise.start()
+        }
+    }
+
+    private fun stopGattAndAdvertise() {
+        if (areGattAndAdvertiseRunning) {
+            areGattAndAdvertiseRunning = false
+            gatt.stop()
+            advertise.stop()
+        }
+    }
+
+    private fun stopScan() {
+        if (isScanRunning) {
+            isScanRunning = false
+            coroutineScope.cancel()
+            scan.stop()
+        }
+    }
 
     private fun notification(): Notification {
 

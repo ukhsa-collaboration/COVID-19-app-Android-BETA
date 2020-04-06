@@ -59,4 +59,10 @@
     <string name="bluetooth_battery_body">This app uses low energy Bluetooth which will have minimal effect on your battery life.</string>
     <string name="mock_app_name">Debug NHS</string>
     <string name="for_debug_purposes_only">For debug purposes only.\n\nReset will clear out the registration, status, and all contact events.</string>
+    <string name="notification_bluetooth_disabled_title">Bluetooth is off</string>
+    <string name="notification_bluetooth_disabled_text">Bluetooth should be turned on for context application to work properly</string>
+    <string name="notification_bluetooth_disabled_action">Turn Bluetooth On</string>
+    <string name="notification_location_disabled_title">Location is off</string>
+    <string name="notification_location_disabled_text">Location should be turned on for context application to work properly</string>
+    <string name="notification_location_disabled_action">Turn Location On</string>
 </resources>
