@@ -1,5 +1,6 @@
 package com.example.colocate.debug
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +15,8 @@ class TestViewModel(
     private val eventTracker: BleEvents
 ) : ViewModel() {
 
-    private val eventsLiveData = MutableLiveData<List<ContactEventV2>>()
+    private val _eventsLiveData = MutableLiveData<List<ContactEventV2>>()
+    val eventsLiveData: LiveData<List<ContactEventV2>> = _eventsLiveData
 
     fun clear() {
         viewModelScope.launch {
@@ -26,7 +28,7 @@ class TestViewModel(
     fun getEvents() {
         viewModelScope.launch {
             contactEventDao.getAll().apply {
-                eventsLiveData.value = this
+                _eventsLiveData.value = this
             }
         }
     }
