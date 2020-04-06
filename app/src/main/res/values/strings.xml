@@ -65,4 +65,5 @@
     <string name="notification_location_disabled_title">Location is off</string>
     <string name="notification_location_disabled_text">Location should be turned on for context application to work properly</string>
     <string name="notification_location_disabled_action">Turn Location On</string>
+    <string name="started">Started %s</string>
 </resources>

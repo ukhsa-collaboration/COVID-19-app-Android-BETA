@@ -4,6 +4,7 @@
 
 package com.example.colocate.debug
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +19,14 @@ import kotlinx.android.synthetic.main.event_view.view.rssi
 import kotlinx.android.synthetic.main.event_view.view.time
 
 class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+    private val context: Context = view.context
+
     fun bindTo(event: ConnectedDevice) {
         itemView.remote_contact_id.text = event.id
         itemView.rssi.text = event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
         val startTime = event.timestamp.split("T").last().replace("Z", "")
-        itemView.time.text = "Started $startTime"
+        itemView.time.text = context.getString(R.string.started, startTime)
     }
 }
 
