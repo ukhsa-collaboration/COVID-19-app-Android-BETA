@@ -78,6 +78,7 @@ class EventsAdapter :
     }
 
     override fun getItemViewType(position: Int): Int {
+        // TODO: Seems to be able to return null
         val item = getItem(position)
         return if (item.isConnectionError or item.isReadFailure) ERROR_TYPE
         else CONNECTION_TYPE

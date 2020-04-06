@@ -11,6 +11,13 @@
         android:text="@string/for_debug_purposes_only" />
 
     <TextView
+        android:id="@+id/sonar_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="" />
+
+    <TextView
         android:id="@+id/no_events"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

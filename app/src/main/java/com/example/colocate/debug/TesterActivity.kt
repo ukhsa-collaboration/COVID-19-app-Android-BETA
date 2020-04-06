@@ -20,9 +20,10 @@ import kotlinx.android.synthetic.main.activity_test.continue_button
 import kotlinx.android.synthetic.main.activity_test.events
 import kotlinx.android.synthetic.main.activity_test.no_events
 import kotlinx.android.synthetic.main.activity_test.reset_button
+import kotlinx.android.synthetic.main.activity_test.sonar_id
 import timber.log.Timber
 
-class TesterActivity : AppCompatActivity() {
+class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     private val statusStorage: StatusStorage by lazy {
         SharedPreferencesStatusStorage(this)
@@ -42,8 +43,7 @@ class TesterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_test)
-
+        sonar_id.text = "This is ${residentIdProvider.getResidentId()}"
         val adapter = EventsAdapter()
         events.adapter = adapter
         events.layoutManager = LinearLayoutManager(this)
