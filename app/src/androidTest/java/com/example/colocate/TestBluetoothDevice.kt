@@ -16,7 +16,7 @@ import io.reactivex.subjects.BehaviorSubject
 import java.util.concurrent.atomic.AtomicBoolean
 
 class TestBluetoothDevice(macAddress: String, services: RxBleDeviceServices, rssiList: List<Int>) :
-    RxBleDeviceMock("Fake device", macAddress, ByteArray(0), -1, services, mutableMapOf()) {
+    RxBleDeviceMock("Fake device", macAddress, ByteArray(0), -1, services, mutableMapOf(), null) {
 
     private val isConnected = AtomicBoolean(false)
     private val connection = TestBluetoothConnection(services, rssiList)
