@@ -10,6 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.colocate.registration.ActivationCodeObserver
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
+import com.example.colocate.util.notificationBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import timber.log.Timber

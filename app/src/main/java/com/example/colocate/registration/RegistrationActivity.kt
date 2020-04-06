@@ -12,7 +12,7 @@ import com.example.colocate.ViewModelFactory
 import com.example.colocate.ViewState
 import com.example.colocate.appComponent
 import com.example.colocate.ble.startBluetoothService
-import com.example.colocate.hasLocationPermission
+import com.example.colocate.util.hasLocationPermission
 import kotlinx.android.synthetic.main.activity_register.confirm_registration
 import javax.inject.Inject
 

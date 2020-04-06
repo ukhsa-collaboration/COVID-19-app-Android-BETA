@@ -1,4 +1,4 @@
-package com.example.colocate
+package com.example.colocate.util
 
 import android.Manifest
 import android.content.Context

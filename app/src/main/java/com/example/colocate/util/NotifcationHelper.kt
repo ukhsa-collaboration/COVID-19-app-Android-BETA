@@ -1,35 +1,34 @@
 package com.example.colocate.util
 
-import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.provider.Settings
-import androidx.annotation.ColorInt
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.colocate.MainActivity
 import com.example.colocate.R
 import com.example.colocate.TurnBluetoothOnReceiver
-import com.example.colocate.getChannel
 
 const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
 const val NOTIFICATION_ID_LOCATION_IS_DISABLED = 1338
 
-public fun hideBluetoothIsDisabledNotification(context: Context) {
-    with(NotificationManagerCompat.from(context)) {
-        cancel(NOTIFICATION_ID_BLUETOOTH_IS_DISABLED)
-    }
+fun hideBluetoothIsDisabledNotification(context: Context) {
+    NotificationManagerCompat
+        .from(context)
+        .cancel(NOTIFICATION_ID_BLUETOOTH_IS_DISABLED)
 }
 
-public fun hideLocationIsDisabledNotification(context: Context) {
-    val notificationId = NOTIFICATION_ID_LOCATION_IS_DISABLED
-    with(NotificationManagerCompat.from(context)) {
-        cancel(notificationId)
-    }
+fun hideLocationIsDisabledNotification(context: Context) {
+    NotificationManagerCompat
+        .from(context)
+        .cancel(NOTIFICATION_ID_LOCATION_IS_DISABLED)
 }
 
-public fun showBluetoothIsDisabledNotification(context: Context) {
+fun showBluetoothIsDisabledNotification(context: Context) {
     val notificationId = NOTIFICATION_ID_BLUETOOTH_IS_DISABLED
     val turnBluetoothOnIntent = Intent(context, TurnBluetoothOnReceiver::class.java).apply {
         action = TurnBluetoothOnReceiver.ACTION_TURN_BLUETOOTH_ON
@@ -44,7 +43,7 @@ public fun showBluetoothIsDisabledNotification(context: Context) {
     )
 }
 
-public fun showLocationIsDisabledNotification(context: Context) {
+fun showLocationIsDisabledNotification(context: Context) {
     val notificationId = NOTIFICATION_ID_LOCATION_IS_DISABLED
     val turnLocationOnIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
     showNotification(
@@ -76,7 +75,8 @@ private fun showNotification(
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-    val builder = NotificationCompat.Builder(context, getChannel(context))
+    val builder = context
+        .notificationBuilder()
         .setSmallIcon(R.drawable.ic_launcher_foreground)
         .setContentTitle(contentTitle)
         .setContentText(contentText)
@@ -86,16 +86,26 @@ private fun showNotification(
         .setOngoing(true)
         .setColor(context.getColor(R.color.colorAccent))
         .addAction(0, actionTitle, actionPendingIntent)
-    with(NotificationManagerCompat.from(context)) {
-        notify(notificationId, builder.build())
+
+    NotificationManagerCompat
+        .from(context)
+        .notify(notificationId, builder.build())
+}
+
+private fun Context.createNotificationChannelReturningId(): String {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val notificationChannel = NotificationChannel(
+            getString(R.string.default_notification_channel_id),
+            getString(R.string.main_notification_channel_name),
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(notificationChannel)
     }
+
+    return getString(R.string.default_notification_channel_id)
 }
 
-public fun notificationWithColor(context: Context, @ColorInt color: Int): Notification {
-
-    return NotificationCompat.Builder(context, getChannel(context))
-        .setColorized(true)
-        .setColor(color)
-        .setSmallIcon(R.drawable.ic_launcher_foreground)
-        .build()
-}
+fun Context.notificationBuilder(): NotificationCompat.Builder =
+    NotificationCompat.Builder(this, createNotificationChannelReturningId())

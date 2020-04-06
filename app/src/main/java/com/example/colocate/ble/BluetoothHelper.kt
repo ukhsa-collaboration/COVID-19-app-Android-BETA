@@ -6,19 +6,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.colocate.REQUEST_ENABLE_BT
-import com.example.colocate.hasLocationPermission
 
 fun isBluetoothEnabled() = BluetoothAdapter.getDefaultAdapter().isEnabled
-
-fun AppCompatActivity.tryStartBluetoothService() {
-    val bluetoothEnabled = isBluetoothEnabled()
-
-    if (hasLocationPermission(this) && bluetoothEnabled) {
-        startBluetoothService()
-    } else if (!bluetoothEnabled) {
-        requestEnablingBluetooth()
-    }
-}
 
 fun AppCompatActivity.startBluetoothService() {
     ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))

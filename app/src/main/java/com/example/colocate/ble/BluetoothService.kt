@@ -13,9 +13,9 @@ import android.os.IBinder
 import androidx.core.location.LocationManagerCompat
 import com.example.colocate.appComponent
 import com.example.colocate.di.module.AppModule
-import com.example.colocate.notificationBuilder
 import com.example.colocate.util.hideBluetoothIsDisabledNotification
 import com.example.colocate.util.hideLocationIsDisabledNotification
+import com.example.colocate.util.notificationBuilder
 import com.example.colocate.util.showBluetoothIsDisabledNotification
 import com.example.colocate.util.showLocationIsDisabledNotification
 import com.polidea.rxandroidble2.RxBleClient
