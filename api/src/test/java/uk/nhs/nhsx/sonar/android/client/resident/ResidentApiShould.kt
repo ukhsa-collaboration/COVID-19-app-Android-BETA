@@ -11,11 +11,11 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.client.assertBodyHasJson
 import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
 import uk.nhs.nhsx.sonar.android.client.http.volley.TestQueue
 import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
-import uk.nhs.nhsx.sonar.android.client.test.assertBodyHasJson
 
 class ResidentApiShould {
 
@@ -31,7 +31,7 @@ class ResidentApiShould {
 
         val request = requestQueue.lastRequest
         assertThat(request.url).isEqualTo("$baseUrl/api/devices/registrations")
-        request.assertBodyHasJson(mapOf("pushToken" to "some-token"))
+        request.assertBodyHasJson("pushToken" to "some-token")
     }
 
     @Test
@@ -72,12 +72,10 @@ class ResidentApiShould {
         val request = requestQueue.lastRequest
         assertThat(request.url).isEqualTo("$baseUrl/api/devices")
         request.assertBodyHasJson(
-            mapOf(
-                "activationCode" to "::activation code::",
-                "pushToken" to "::push token::",
-                "deviceModel" to "::device model::",
-                "deviceOSVersion" to "::device os version::"
-            )
+            "activationCode" to "::activation code::",
+            "pushToken" to "::push token::",
+            "deviceModel" to "::device model::",
+            "deviceOSVersion" to "::device os version::"
         )
     }
 

@@ -11,10 +11,10 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.client.assertBodyHasJson
 import uk.nhs.nhsx.sonar.android.client.http.volley.TestQueue
 import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
-import uk.nhs.nhsx.sonar.android.client.test.assertBodyHasJson
 
 class CoLocationApiShould {
 
@@ -39,20 +39,18 @@ class CoLocationApiShould {
         assertThat(request.method).isEqualTo(PATCH)
         assertThat(request.url).isEqualTo("$baseUrl/api/residents/residentId")
         request.assertBodyHasJson(
-            mapOf(
-                "contactEvents" to listOf(
-                    mapOf(
-                        "sonarId" to "001",
-                        "rssiValues" to listOf(-10, 0),
-                        "timestamp" to "2s ago",
-                        "duration" to 10
-                    ),
-                    mapOf(
-                        "sonarId" to "002",
-                        "rssiValues" to listOf(-10, -10, 10),
-                        "timestamp" to "yesterday",
-                        "duration" to 120
-                    )
+            "contactEvents" to listOf(
+                mapOf(
+                    "sonarId" to "001",
+                    "rssiValues" to listOf(-10, 0),
+                    "timestamp" to "2s ago",
+                    "duration" to 10
+                ),
+                mapOf(
+                    "sonarId" to "002",
+                    "rssiValues" to listOf(-10, -10, 10),
+                    "timestamp" to "yesterday",
+                    "duration" to 120
                 )
             )
         )
