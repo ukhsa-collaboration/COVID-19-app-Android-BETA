@@ -1,11 +1,14 @@
 package com.example.colocate.registration
 
+import com.example.colocate.di.module.AppModule
 import com.example.colocate.persistence.ResidentIdProvider
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -18,7 +21,9 @@ class RegistrationUseCase @Inject constructor(
     private val tokenRetriever: TokenRetriever,
     private val residentApi: ResidentApi,
     private val activationCodeObserver: ActivationCodeObserver,
-    private val residentIdProvider: ResidentIdProvider
+    private val residentIdProvider: ResidentIdProvider,
+    @Named(AppModule.DEVICE_MODEL) private val deviceModel: String,
+    @Named(AppModule.DEVICE_OS_VERSION) private val deviceOsVersion: String
 ) {
 
     suspend fun register(): RegistrationResult {
@@ -78,10 +83,16 @@ class RegistrationUseCase @Inject constructor(
     }
 
     private suspend fun registerResident(activationCode: String, firebaseToken: String): String {
+        val confirmation = DeviceConfirmation(
+            activationCode = activationCode,
+            pushToken = firebaseToken,
+            deviceModel = deviceModel,
+            deviceOsVersion = deviceOsVersion
+        )
+
         return suspendCoroutine { continuation ->
             residentApi.confirmDevice(
-                activationCode,
-                firebaseToken,
+                confirmation,
                 onSuccess = { continuation.resumeWith(Result.success(it.id)) },
                 onError = { continuation.resumeWith(Result.failure(it)) }
             )

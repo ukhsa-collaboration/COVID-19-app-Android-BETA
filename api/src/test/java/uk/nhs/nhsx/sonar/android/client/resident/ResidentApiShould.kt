@@ -61,14 +61,22 @@ class ResidentApiShould {
 
     @Test
     fun testConfirmDevice_Request() {
-        residentApi.confirmDevice("some-activation-code", "firebase-token-001", {}, {})
+        val confirmation = DeviceConfirmation(
+            activationCode = "::activation code::",
+            pushToken = "::push token::",
+            deviceModel = "::device model::",
+            deviceOsVersion = "::device os version::"
+        )
+        residentApi.confirmDevice(confirmation, {}, {})
 
         val request = requestQueue.lastRequest
         assertThat(request.url).isEqualTo("$baseUrl/api/devices")
         request.assertBodyHasJson(
             mapOf(
-                "activationCode" to "some-activation-code",
-                "pushToken" to "firebase-token-001"
+                "activationCode" to "::activation code::",
+                "pushToken" to "::push token::",
+                "deviceModel" to "::device model::",
+                "deviceOSVersion" to "::device os version::"
             )
         )
     }
@@ -78,11 +86,21 @@ class ResidentApiShould {
         var registration: Registration? = null
         var error: Exception? = null
 
+        val confirmation = DeviceConfirmation(
+            activationCode = "::activation code::",
+            pushToken = "::push token::",
+            deviceModel = "::device model::",
+            deviceOsVersion = "::device os version::"
+        )
+
         val jsonResponse = jsonObjectOf(
             "id" to "00000000-0000-0000-0000-000000000001",
             "secretKey" to "some-secret-key-base64-encoded"
         )
-        residentApi.confirmDevice("some-activation-code", "firebase-token", { registration = it }, { error = it })
+        residentApi.confirmDevice(
+            confirmation,
+            { registration = it },
+            { error = it })
         requestQueue.returnSuccess(jsonResponse)
 
         assertThat(registration).isEqualTo(Registration("00000000-0000-0000-0000-000000000001"))
@@ -95,7 +113,17 @@ class ResidentApiShould {
         var registration: Registration? = null
         var error: Exception? = null
 
-        residentApi.confirmDevice("some-activation-code", "firebase-token", { registration = it }, { error = it })
+        val confirmation = DeviceConfirmation(
+            activationCode = "::activation code::",
+            pushToken = "::push token::",
+            deviceModel = "::device model::",
+            deviceOsVersion = "::device os version::"
+        )
+
+        residentApi.confirmDevice(
+            confirmation,
+            { registration = it },
+            { error = it })
         requestQueue.returnError(VolleyError("boom"))
 
         assertThat(registration).isNull()

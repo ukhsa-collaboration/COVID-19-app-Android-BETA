@@ -16,6 +16,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
 import uk.nhs.nhsx.sonar.android.client.resident.Registration
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
 import java.io.IOException
@@ -28,8 +29,18 @@ class RegistrationUseCaseTest {
     private val activationCodeObserver = mockk<ActivationCodeObserver>()
     private val residentIdProvider = mockk<ResidentIdProvider>()
 
+    private val confirmation =
+        DeviceConfirmation(ACTIVATION_CODE, FIREBASE_TOKEN, DEVICE_MODEL, DEVICE_OS_VERSION)
+
     private val sut =
-        RegistrationUseCase(tokenRetriever, residentApi, activationCodeObserver, residentIdProvider)
+        RegistrationUseCase(
+            tokenRetriever,
+            residentApi,
+            activationCodeObserver,
+            residentIdProvider,
+            DEVICE_MODEL,
+            DEVICE_OS_VERSION
+        )
 
     @Rule
     @JvmField
@@ -57,8 +68,8 @@ class RegistrationUseCaseTest {
             nothing
         }
 
-        every { residentApi.confirmDevice(ACTIVATION_CODE, FIREBASE_TOKEN, any(), any()) } answers {
-            thirdArg<(Registration) -> Unit>().invoke(Registration(RESIDENT_ID))
+        every { residentApi.confirmDevice(confirmation, any(), any()) } answers {
+            secondArg<(Registration) -> Unit>().invoke(Registration(RESIDENT_ID))
         }
     }
 
@@ -135,12 +146,12 @@ class RegistrationUseCaseTest {
     fun registersResident() = runBlockingTest {
         sut.register()
 
-        verify { residentApi.confirmDevice(ACTIVATION_CODE, FIREBASE_TOKEN, any(), any()) }
+        verify { residentApi.confirmDevice(confirmation, any(), any()) }
     }
 
     @Test
     fun onResidentRegistrationFailureReturnsFailure() = runBlockingTest {
-        every { residentApi.confirmDevice(ACTIVATION_CODE, FIREBASE_TOKEN, any(), any()) } answers {
+        every { residentApi.confirmDevice(confirmation, any(), any()) } answers {
             arg<(Exception) -> Unit>(3).invoke(IOException())
         }
 
@@ -157,8 +168,10 @@ class RegistrationUseCaseTest {
     }
 
     companion object {
-        const val FIREBASE_TOKEN = "TOKEN"
-        const val ACTIVATION_CODE = "ACTIVATION_CODE"
-        const val RESIDENT_ID = "RESIDENT_ID"
+        const val FIREBASE_TOKEN = "::firebase token::"
+        const val ACTIVATION_CODE = "::activation code::"
+        const val DEVICE_MODEL = "::device model::"
+        const val DEVICE_OS_VERSION = "24"
+        const val RESIDENT_ID = "::resident id::"
     }
 }

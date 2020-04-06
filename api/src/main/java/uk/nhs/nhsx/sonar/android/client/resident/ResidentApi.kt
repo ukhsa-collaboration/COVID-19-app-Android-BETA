@@ -36,16 +36,18 @@ class ResidentApi @Inject constructor(
     }
 
     fun confirmDevice(
-        activationCode: String,
-        firebaseToken: String,
+        deviceConfirmation: DeviceConfirmation,
         onSuccess: Callback<Registration>,
         onError: ErrorCallback
     ) {
-        val requestJson = jsonObjectOf(
-            "activationCode" to activationCode,
-            "pushToken" to firebaseToken
-        )
-        val request = HttpRequest("/api/devices", requestJson)
+        val request = jsonObjectOf(
+            "activationCode" to deviceConfirmation.activationCode,
+            "pushToken" to deviceConfirmation.pushToken,
+            "deviceModel" to deviceConfirmation.deviceModel,
+            "deviceOSVersion" to deviceConfirmation.deviceOsVersion
+        ).let {
+            HttpRequest("/api/devices", it)
+        }
 
         httpClient.post(
             request,
@@ -60,3 +62,10 @@ class ResidentApi @Inject constructor(
         )
     }
 }
+
+data class DeviceConfirmation(
+    val activationCode: String,
+    val pushToken: String,
+    val deviceModel: String,
+    val deviceOsVersion: String
+)
