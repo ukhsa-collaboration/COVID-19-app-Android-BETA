@@ -80,7 +80,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.method).isEqualTo("POST")
         assertThat(lastRequest?.path).isEqualTo("/api/devices")
-        assertThat(lastRequest?.body?.readUtf8()).isEqualTo("""{"activationCode":"test activation code #001","pushToken":"test firebase token #010"}""")
+        assertThat(lastRequest?.body?.readUtf8())
+            .contains("""{"activationCode":"test activation code #001","pushToken":"test firebase token #010",""")
     }
 
     fun verifyResidentIdAndSecretKey() {
