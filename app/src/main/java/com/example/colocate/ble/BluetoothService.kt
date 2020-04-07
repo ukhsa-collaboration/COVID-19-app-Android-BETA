@@ -63,13 +63,9 @@ class BluetoothService : Service() {
             .observeStateChanges()
             .startWith(bleClient.state)
             .subscribe { state ->
-                when (state!!) {
-                    RxBleClient.State.BLUETOOTH_NOT_AVAILABLE -> {
-                    }
-                    RxBleClient.State.LOCATION_PERMISSION_NOT_GRANTED -> {
-                    }
+                Timber.d("state changed: $state")
+                when (state) {
                     RxBleClient.State.BLUETOOTH_NOT_ENABLED -> {
-                        Timber.d("bluetoothReceiver stop gatt and advertising")
                         stopGattAndAdvertise()
                         showBluetoothIsDisabledNotification(this)
 
@@ -98,6 +94,8 @@ class BluetoothService : Service() {
                         hideBluetoothIsDisabledNotification(this)
                         hideLocationIsDisabledNotification(this)
                     }
+                    else -> {
+                    }
                 }
             }
     }
@@ -115,11 +113,8 @@ class BluetoothService : Service() {
         stopSubServices()
     }
 
-    override fun onTaskRemoved(rootIntent: Intent?) {
-        stopSubServices()
-    }
-
     private fun startScan() {
+        Timber.d("startScan isScanRunning = $isScanRunning")
         if (!isScanRunning) {
             isScanRunning = true
             coroutineScope = CoroutineScope(coroutineDispatcher + Job())
@@ -135,15 +130,16 @@ class BluetoothService : Service() {
     }
 
     private fun startGattAndAdvertise() {
+        Timber.d("startGattAndAdvertise areGattAndAdvertiseRunning = $areGattAndAdvertiseRunning")
         if (!areGattAndAdvertiseRunning) {
             areGattAndAdvertiseRunning = true
-            Timber.d("BluetoothService startGattAndAdvertise")
             gatt.start()
             advertise.start()
         }
     }
 
     private fun stopGattAndAdvertise() {
+        Timber.d("stopGattAndAdvertise areGattAndAdvertiseRunning = $areGattAndAdvertiseRunning")
         if (areGattAndAdvertiseRunning) {
             areGattAndAdvertiseRunning = false
             gatt.stop()
@@ -152,6 +148,7 @@ class BluetoothService : Service() {
     }
 
     private fun stopScan() {
+        Timber.d("stopScan isScanRunning = $isScanRunning")
         if (isScanRunning) {
             isScanRunning = false
             coroutineScope.cancel()
