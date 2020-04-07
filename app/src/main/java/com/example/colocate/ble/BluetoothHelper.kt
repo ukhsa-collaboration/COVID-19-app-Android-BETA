@@ -2,6 +2,7 @@ package com.example.colocate.ble
 
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -9,7 +10,7 @@ import com.example.colocate.REQUEST_ENABLE_BT
 
 fun isBluetoothEnabled() = BluetoothAdapter.getDefaultAdapter().isEnabled
 
-fun AppCompatActivity.startBluetoothService() {
+fun Context.startBluetoothService() {
     ContextCompat.startForegroundService(this, Intent(this, BluetoothService::class.java))
 }
 

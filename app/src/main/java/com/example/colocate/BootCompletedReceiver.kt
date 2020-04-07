@@ -3,8 +3,7 @@ package com.example.colocate
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.content.ContextCompat
-import com.example.colocate.ble.BluetoothService
+import com.example.colocate.ble.startBluetoothService
 import com.example.colocate.persistence.ResidentIdProvider
 import timber.log.Timber
 import javax.inject.Inject
@@ -20,10 +19,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
 
             Timber.d("CoLocate onReceive hasProperResidentId: ${residentIdProvider.hasProperResidentId()}")
             if (residentIdProvider.hasProperResidentId()) {
-                ContextCompat.startForegroundService(
-                    context,
-                    Intent(context, BluetoothService::class.java)
-                )
+                context.startBluetoothService()
             }
         }
     }
