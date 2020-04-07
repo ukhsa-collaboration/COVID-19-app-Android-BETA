@@ -27,16 +27,15 @@ class DiagnoseActivity : BaseActivity() {
         val radioGroup = findViewById<RadioGroup>(R.id.diagnosis_answer)
 
         findViewById<Button>(R.id.confirm_diagnosis).setOnClickListener {
-            val selected = radioGroup.checkedRadioButtonId
-            if (selected == -1)
-                return@setOnClickListener
-
-            if (selected == R.id.yes) {
-                statusStorage.update(CovidStatus.RED)
-                IsolateActivity.start(this)
-            } else {
-                statusStorage.update(CovidStatus.OK)
-                OkActivity.start(this)
+            when (radioGroup.checkedRadioButtonId) {
+                R.id.yes -> {
+                    statusStorage.update(CovidStatus.RED)
+                    IsolateActivity.start(this)
+                }
+                R.id.no -> {
+                    statusStorage.update(CovidStatus.OK)
+                    OkActivity.start(this)
+                }
             }
         }
     }
