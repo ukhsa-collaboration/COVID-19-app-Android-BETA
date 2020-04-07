@@ -50,7 +50,6 @@ class ColocateApplication : Application() {
             throw RuntimeException("Unexpected Throwable in RxJavaPlugins error handler", throwable)
         }
 
-
         FirebaseApp.initializeApp(this)
 
         when (BuildConfig.BUILD_TYPE) {
