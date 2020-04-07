@@ -119,6 +119,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.3.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta03'
 
+    implementation 'com.jakewharton:process-phoenix:2.0.0'
+
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.2.0'

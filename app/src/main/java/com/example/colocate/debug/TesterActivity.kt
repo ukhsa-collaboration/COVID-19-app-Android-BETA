@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.colocate.MainActivity
 import com.example.colocate.R
 import com.example.colocate.appComponent
 import com.example.colocate.ble.BleEvents
@@ -54,6 +53,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         events.layoutManager = LinearLayoutManager(this)
 
         viewModelFactory = TestViewModelFactory(
+            this,
             appComponent.provideEventsV2Dao(),
             bleEvents
         )
@@ -68,8 +68,6 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             residentIdProvider.clear()
 
             viewModel.clear()
-
-            navigateToMain()
         }
 
         exportButton.setOnClickListener {
@@ -119,10 +117,6 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         startActivity(Intent.createChooser(sendIntent, "Exported Contact Events"))
-    }
-
-    private fun navigateToMain() {
-        MainActivity.start(this)
     }
 
     companion object {

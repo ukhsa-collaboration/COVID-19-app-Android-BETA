@@ -15,6 +15,7 @@ import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.RegistrationModule
 import com.example.colocate.di.module.StatusModule
+import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.polidea.rxandroidble2.exceptions.BleException
 import io.reactivex.exceptions.UndeliverableException
@@ -49,6 +50,7 @@ class ColocateApplication : Application() {
             throw RuntimeException("Unexpected Throwable in RxJavaPlugins error handler", throwable)
         }
 
+        FirebaseApp.initializeApp(this)
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
