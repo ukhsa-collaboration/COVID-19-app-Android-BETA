@@ -33,26 +33,42 @@ fun showBluetoothIsDisabledNotification(context: Context) {
     val turnBluetoothOnIntent = Intent(context, TurnBluetoothOnReceiver::class.java).apply {
         action = TurnBluetoothOnReceiver.ACTION_TURN_BLUETOOTH_ON
     }
+    val actionPendingIntent: PendingIntent =
+        PendingIntent.getBroadcast(
+            context,
+            0,
+            turnBluetoothOnIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
     showNotification(
         context,
         notificationId,
         context.getString(R.string.notification_bluetooth_disabled_title),
         context.getString(R.string.notification_bluetooth_disabled_text),
         context.getString(R.string.notification_bluetooth_disabled_action),
-        turnBluetoothOnIntent
+        actionPendingIntent
     )
 }
 
 fun showLocationIsDisabledNotification(context: Context) {
     val notificationId = NOTIFICATION_ID_LOCATION_IS_DISABLED
     val turnLocationOnIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+    val actionPendingIntent: PendingIntent =
+        PendingIntent.getActivity(
+            context,
+            0,
+            turnLocationOnIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
     showNotification(
         context,
         notificationId,
         context.getString(R.string.notification_location_disabled_title),
         context.getString(R.string.notification_location_disabled_text),
         context.getString(R.string.notification_location_disabled_action),
-        turnLocationOnIntent
+        actionPendingIntent
     )
 }
 
@@ -62,22 +78,14 @@ private fun showNotification(
     contentTitle: String,
     contentText: String,
     actionTitle: String,
-    actionIntent: Intent
+    actionPendingIntent: PendingIntent
 ) {
     val intent = MainActivity.getIntent(context)
     val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
 
-    val actionPendingIntent: PendingIntent =
-        PendingIntent.getBroadcast(
-            context,
-            0,
-            actionIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
     val builder = context
         .notificationBuilder()
-        .setSmallIcon(R.drawable.ic_launcher_foreground)
+        .setSmallIcon(R.mipmap.ic_launcher_round)
         .setContentTitle(contentTitle)
         .setContentText(contentText)
         .setPriority(NotificationCompat.PRIORITY_MAX)
