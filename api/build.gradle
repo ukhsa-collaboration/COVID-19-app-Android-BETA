@@ -24,6 +24,10 @@ android {
         testInstrumentationRunnerArguments = ["package": "uk.nhs.nhsx.sonar"]
     }
     buildTypes {
+        staging {
+            debuggable true
+            minifyEnabled false
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

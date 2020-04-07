@@ -50,10 +50,17 @@ class ColocateApplication : Application() {
             throw RuntimeException("Unexpected Throwable in RxJavaPlugins error handler", throwable)
         }
 
+
         FirebaseApp.initializeApp(this)
-        if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-            FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+
+        when (BuildConfig.BUILD_TYPE) {
+            "staging" -> {
+                Timber.plant(Timber.DebugTree())
+            }
+            "debug" -> {
+                Timber.plant(Timber.DebugTree())
+                FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
+            }
         }
     }
 }
