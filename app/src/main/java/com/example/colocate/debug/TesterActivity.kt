@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colocate.R
@@ -23,9 +22,6 @@ import kotlinx.android.synthetic.main.activity_test.no_events
 import kotlinx.android.synthetic.main.activity_test.reset_button
 import kotlinx.android.synthetic.main.activity_test.sonar_id
 import timber.log.Timber
-import java.io.File
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
 
 class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
@@ -71,7 +67,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         exportButton.setOnClickListener {
-            exportEvents()
+            viewModel.storeEvents()
         }
 
         viewModel.observeConnectionEvents().observe(this, Observer {
@@ -85,38 +81,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             }
         })
 
-        viewModel.getEvents()
         viewModel.observeConnectionEvents()
-    }
-
-    private fun exportEvents() {
-        val text = viewModel.eventsLiveData.value?.joinToString("\n") {
-            "${it.sonarId},${it.timestamp},${it.duration},${it.rssiValues.joinToString(":")}"
-        } ?: "There was no contact events"
-
-        val zipFile = "contact-events-exports.zip"
-
-        openFileOutput(zipFile, Context.MODE_PRIVATE).use {
-            ZipOutputStream(it).use { zip ->
-                zip.putNextEntry(ZipEntry("contact-events.csv"))
-                zip.write(text.toByteArray())
-            }
-        }
-
-        val sendIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_STREAM,
-                FileProvider.getUriForFile(
-                    this@TesterActivity,
-                    "com.example.colocate.exports",
-                    File(filesDir, zipFile)
-                )
-            )
-            type = "application/zip"
-        }
-
-        startActivity(Intent.createChooser(sendIntent, "Exported Contact Events"))
     }
 
     companion object {
