@@ -85,14 +85,8 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
     }
 
     companion object {
-
-        fun start(context: Context) {
-            context.startActivity(
-                getIntent(
-                    context
-                )
-            )
-        }
+        fun start(context: Context) =
+            context.startActivity(getIntent(context))
 
         private fun getIntent(context: Context) =
             Intent(context, TesterActivity::class.java)

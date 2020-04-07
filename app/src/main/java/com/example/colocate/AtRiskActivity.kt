@@ -33,10 +33,8 @@ class AtRiskActivity : BaseActivity() {
     }
 
     companion object {
-
-        fun start(context: Context) {
+        fun start(context: Context) =
             context.startActivity(getIntent(context))
-        }
 
         fun getIntent(context: Context) =
             Intent(context, AtRiskActivity::class.java)

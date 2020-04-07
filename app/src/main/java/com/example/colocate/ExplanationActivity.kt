@@ -19,9 +19,8 @@ class ExplanationActivity : AppCompatActivity(R.layout.activity_explanation) {
     }
 
     companion object {
-        fun start(context: Context) {
+        fun start(context: Context) =
             context.startActivity(getIntent(context))
-        }
 
         private fun getIntent(context: Context) =
             Intent(context, ExplanationActivity::class.java)

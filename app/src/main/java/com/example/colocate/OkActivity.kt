@@ -38,12 +38,7 @@ class OkActivity : BaseActivity() {
     }
 
     companion object {
-
-        fun start(context: Context) {
-            context.startActivity(getIntent(context))
-        }
-
-        private fun getIntent(context: Context) =
-            Intent(context, OkActivity::class.java)
+        fun start(context: Context) =
+            context.startActivity(Intent(context, OkActivity::class.java))
     }
 }

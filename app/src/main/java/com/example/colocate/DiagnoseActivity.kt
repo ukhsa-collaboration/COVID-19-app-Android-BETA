@@ -42,10 +42,8 @@ class DiagnoseActivity : BaseActivity() {
     }
 
     companion object {
-
-        fun start(context: Context) {
+        fun start(context: Context) =
             context.startActivity(getIntent(context))
-        }
 
         private fun getIntent(context: Context) =
             Intent(context, DiagnoseActivity::class.java)
