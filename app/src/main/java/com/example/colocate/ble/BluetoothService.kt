@@ -11,6 +11,7 @@ import android.content.Intent
 import android.location.LocationManager
 import android.os.IBinder
 import androidx.core.location.LocationManagerCompat
+import com.example.colocate.ServiceRestarterBroadcastReceiver
 import com.example.colocate.appComponent
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.util.hideBluetoothIsDisabledNotification
@@ -111,6 +112,19 @@ class BluetoothService : Service() {
     override fun onDestroy() {
         Timber.d("BluetoothService onDestroy")
         stopSubServices()
+        sendBroadcastToRestartService()
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        super.onTaskRemoved(rootIntent)
+        sendBroadcastToRestartService()
+    }
+
+    private fun sendBroadcastToRestartService() {
+        val broadcastIntent = Intent(this, ServiceRestarterBroadcastReceiver::class.java).apply {
+            action = ServiceRestarterBroadcastReceiver.ACTION_RESTART_BLUETOOTH_SERVICE
+        }
+        sendBroadcast(broadcastIntent)
     }
 
     private fun startScan() {

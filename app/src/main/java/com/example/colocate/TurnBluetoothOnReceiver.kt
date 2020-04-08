@@ -18,6 +18,6 @@ class TurnBluetoothOnReceiver : BroadcastReceiver() {
     }
 
     companion object {
-        const val ACTION_TURN_BLUETOOTH_ON = "ACTION_SNOOZE"
+        const val ACTION_TURN_BLUETOOTH_ON = "ACTION_TURN_BLUETOOTH_ON"
     }
 }

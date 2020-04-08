@@ -73,6 +73,7 @@
         </receiver>
 
         <receiver android:name=".TurnBluetoothOnReceiver" />
+        <receiver android:name=".ServiceRestarterBroadcastReceiver" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
