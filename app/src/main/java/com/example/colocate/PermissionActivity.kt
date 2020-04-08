@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.example.colocate.ble.BluetoothResult.Enabled
@@ -64,11 +63,8 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
         }
     }
 
-    private fun showToast() {
-        Toast
-            .makeText(this, R.string.permissions_required, Toast.LENGTH_LONG)
-            .show()
-    }
+    private fun showToast() =
+        showLongToast(R.string.permissions_required)
 
     companion object {
         fun start(context: Context) =

@@ -6,6 +6,8 @@ package com.example.colocate
 
 import android.app.Application
 import android.app.Service
+import android.content.Context
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.colocate.di.ApplicationComponent
 import com.example.colocate.di.DaggerApplicationComponent
@@ -69,3 +71,9 @@ val AppCompatActivity.appComponent: ApplicationComponent
 
 val Service.appComponent: ApplicationComponent
     get() = (application as ColocateApplication).appComponent
+
+fun Context.showShortToast(stringResource: Int) =
+    Toast.makeText(this, getString(stringResource), Toast.LENGTH_SHORT).show()
+
+fun Context.showLongToast(stringResource: Int) =
+    Toast.makeText(this, getString(stringResource), Toast.LENGTH_LONG).show()
