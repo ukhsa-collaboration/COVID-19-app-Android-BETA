@@ -13,6 +13,7 @@ import android.widget.RadioGroup
 import com.example.colocate.BaseActivity
 import com.example.colocate.R
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.symptom_banner.close_btn
 
 class DiagnoseCoughActivity : BaseActivity() {
 
@@ -24,6 +25,11 @@ class DiagnoseCoughActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_cough_diagnosis)
+
+        close_btn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
+        close_btn.setOnClickListener {
+            onBackPressed()
+        }
 
         val radioGroup = findViewById<RadioGroup>(R.id.cough_diagnosis_answer)
 

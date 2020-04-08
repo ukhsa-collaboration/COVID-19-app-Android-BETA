@@ -15,6 +15,7 @@ import com.example.colocate.appComponent
 import com.example.colocate.isolate.IsolateActivity
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
+import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import javax.inject.Inject
 
 class DiagnoseReviewActivity : BaseActivity() {
@@ -34,6 +35,11 @@ class DiagnoseReviewActivity : BaseActivity() {
         appComponent.inject(this)
 
         setContentView(R.layout.activity_review_diagnosis)
+
+        close_btn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
+        close_btn.setOnClickListener {
+            onBackPressed()
+        }
 
         findViewById<Button>(R.id.confirm_diagnosis).setOnClickListener {
 

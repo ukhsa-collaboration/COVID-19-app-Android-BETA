@@ -13,6 +13,7 @@ import android.widget.RadioGroup
 import com.example.colocate.BaseActivity
 import com.example.colocate.R
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.symptom_banner.close_btn
 
 class DiagnoseTemperatureActivity : BaseActivity() {
 
@@ -37,8 +38,12 @@ class DiagnoseTemperatureActivity : BaseActivity() {
             }
         }
 
-        radioGroup.setOnCheckedChangeListener { group, checkedId ->
+        radioGroup.setOnCheckedChangeListener { _, _ ->
             radio_selection_error.visibility = View.GONE
+        }
+
+        close_btn.setOnClickListener {
+            onBackPressed()
         }
     }
 

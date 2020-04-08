@@ -10,7 +10,7 @@
 
     tools:context=".MainActivity">
 
-    <include layout="@layout/banner" />
+    <include layout="@layout/symptom_banner" />
 
     <ScrollView
         android:layout_width="match_parent"
