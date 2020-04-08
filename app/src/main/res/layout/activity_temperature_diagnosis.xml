@@ -46,11 +46,23 @@
                 android:text="@string/temperature_description"
                 android:textSize="16sp" />
 
+            <TextView
+                android:id="@+id/radio_selection_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/temperature_description"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/colorDanger"
+                android:text="@string/radio_button_error"
+                android:visibility="gone"
+                android:textSize="16sp" />
+
+
             <RadioGroup
                 android:id="@+id/temperature_diagnosis_answer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/temperature_description"
+                android:layout_below="@id/radio_selection_error"
                 android:layout_marginTop="16dp">
 
                 <RadioButton
@@ -63,11 +75,7 @@
                     android:textSize="16sp" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@android:color/darker_gray" />
+                    style="@style/HorizontalDivider" />
 
                 <RadioButton
                     android:id="@+id/no"
@@ -80,11 +88,7 @@
                     android:textSize="16sp" />
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@android:color/darker_gray" />
+                    style="@style/HorizontalDivider" />
 
             </RadioGroup>
         </RelativeLayout>

@@ -10,7 +10,6 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
         <item name="android:textViewStyle">@style/AppTextView</item>
     </style>
 
@@ -27,11 +26,14 @@
         <item name="android:layout_height">match_parent</item>
     </style>
 
-    <style name="Divider.Horizontal" parent="Divider">
+
+    <style name="HorizontalDivider">
         <item name="android:layout_height">1dp</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@android:color/darker_gray</item>
-
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginStart">50dp</item>
+        <item name="android:layout_marginTop">8dp</item>
     </style>
 
 </resources>

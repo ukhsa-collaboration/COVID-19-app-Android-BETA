@@ -7,10 +7,12 @@ package com.example.colocate.diagnose
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.RadioGroup
 import com.example.colocate.BaseActivity
 import com.example.colocate.R
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
 
 class DiagnoseCoughActivity : BaseActivity() {
 
@@ -33,7 +35,14 @@ class DiagnoseCoughActivity : BaseActivity() {
                 R.id.no -> {
                     DiagnoseReviewActivity.start(this, hasTemperature, false)
                 }
+                else -> {
+                    radio_selection_error.visibility = View.VISIBLE
+                }
             }
+        }
+
+        radioGroup.setOnCheckedChangeListener { _, _ ->
+            radio_selection_error.visibility = View.GONE
         }
     }
 

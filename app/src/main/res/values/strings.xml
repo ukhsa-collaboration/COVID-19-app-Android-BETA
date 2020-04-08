@@ -73,4 +73,5 @@
     <string name="diagnosis_review_title">Thank you for sharing this data with the NHS.</string>
     <string name="diagnosis_review_description">We will use this information to anonymously inform people they have come into contact with covid symptoms and encourage them to self-isolate. Thank you for helping us save lives</string>
     <string name="submit">Submit</string>
+    <string name="radio_button_error">Please select the best answer from below</string>
 </resources>
