@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/banner" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/logo"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="72dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="36dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/review_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.18"
+                android:text="@string/diagnosis_review_title"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/review_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/review_title"
+                android:layout_marginTop="16dp"
+                android:text="@string/diagnosis_review_description"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirm_diagnosis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="14dp"
+        android:background="#007F3B"
+        android:text="@string/submit"
+        android:textColor="#FFFFFF" />
+
+</RelativeLayout>

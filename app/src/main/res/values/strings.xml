@@ -66,4 +66,11 @@
     <string name="notification_location_disabled_text">Location should be turned on for context application to work properly</string>
     <string name="notification_location_disabled_action">Turn Location On</string>
     <string name="started">Started %s</string>
+    <string name="temperature_question">Do you have a high temperature?</string>
+    <string name="temperature_description">You don\'t need a thermometer or to know a precise temperature. If you feel hot to touch on your chest or back answer \'yes\'.</string>
+    <string name="cough_question">Do you have a new continuous cough?</string>
+    <string name="cough_description">I have a new, continuous cough (I am coughing a lot for more than an hour, or have had 3 or more coughing episodes in 24 hours)</string>
+    <string name="diagnosis_review_title">Thank you for sharing this data with the NHS.</string>
+    <string name="diagnosis_review_description">We will use this information to anonymously inform people they have come into contact with covid symptoms and encourage them to self-isolate. Thank you for helping us save lives</string>
+    <string name="submit">Submit</string>
 </resources>

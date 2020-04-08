@@ -224,9 +224,20 @@ class FlowTest {
     private fun checkCanTransitionToIsolateActivity() {
         onView(withId(R.id.re_diagnose_button)).perform(click())
 
-        onView(withId(R.id.diagnosis)).check(matches(isDisplayed()))
+        // Temperature step
+        onView(withId(R.id.temperature_question)).check(matches(isDisplayed()))
         onView(withId(R.id.yes)).perform(click())
         onView(withId(R.id.yes)).check(matches(isChecked()))
+        onView(withId(R.id.confirm_diagnosis)).perform(click())
+
+        // Cough step
+        onView(withId(R.id.cough_question)).check(matches(isDisplayed()))
+        onView(withId(R.id.yes)).perform(click())
+        onView(withId(R.id.yes)).check(matches(isChecked()))
+        onView(withId(R.id.confirm_diagnosis)).perform(click())
+
+        // Review Step
+        onView(withId(R.id.review_title)).check(matches(isDisplayed()))
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
         onView(withId(R.id.isolate_title)).check(matches(isDisplayed()))

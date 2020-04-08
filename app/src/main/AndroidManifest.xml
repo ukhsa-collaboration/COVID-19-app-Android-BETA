@@ -44,7 +44,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".DiagnoseActivity" />
+        <activity android:name=".diagnose.DiagnoseTemperatureActivity" />
         <activity android:name=".AtRiskActivity" />
         <activity android:name=".OkActivity" />
         <activity android:name=".isolate.IsolateActivity" />
@@ -53,6 +53,8 @@
         <activity android:name=".PermissionActivity" />
         <activity android:name=".ExplanationActivity" />
         <activity android:name=".debug.TesterActivity" />
+        <activity android:name=".diagnose.DiagnoseReviewActivity" />
+        <activity android:name=".diagnose.DiagnoseCoughActivity" />
 
         <service
             android:name=".ble.BluetoothService"
