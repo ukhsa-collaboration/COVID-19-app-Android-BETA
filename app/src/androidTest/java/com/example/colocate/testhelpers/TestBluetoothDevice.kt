@@ -1,4 +1,4 @@
-package com.example.colocate
+package com.example.colocate.testhelpers
 
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleConnection.RxBleConnectionState.CONNECTED
@@ -19,7 +19,8 @@ class TestBluetoothDevice(macAddress: String, services: RxBleDeviceServices, rss
     RxBleDeviceMock("Fake device", macAddress, ByteArray(0), -1, services, mutableMapOf(), null) {
 
     private val isConnected = AtomicBoolean(false)
-    private val connection = TestBluetoothConnection(services, rssiList)
+    private val connection =
+        TestBluetoothConnection(services, rssiList)
     private val connectionStateBehaviorSubject = BehaviorSubject.createDefault(DISCONNECTED)
 
     override fun establishConnection(autoConnect: Boolean): Observable<RxBleConnection> {

@@ -1,7 +1,10 @@
-package com.example.colocate
+package com.example.colocate.testhelpers
 
 import androidx.core.os.bundleOf
 import androidx.test.rule.ActivityTestRule
+import com.example.colocate.ColocateApplication
+import com.example.colocate.FlowTestStartActivity
+import com.example.colocate.NotificationService
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.StatusModule
@@ -33,7 +36,12 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     private val startTimestampProvider = { Date.from(Instant.parse("2020-04-01T14:33:13Z")) }
     private val endTimestampProvider = { Date.from(Instant.parse("2020-04-01T14:43:13Z")) }
 
-    private val testModule = TestModule(app, testRxBleClient, startTimestampProvider, endTimestampProvider)
+    private val testModule = TestModule(
+        app,
+        testRxBleClient,
+        startTimestampProvider,
+        endTimestampProvider
+    )
     private val mockServer = MockWebServer()
 
     init {
@@ -107,7 +115,11 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 "06-00-00-00-00-00",
                 listOf(10, 20, 15)
             ),
-            ScanResultArgs(UUID.fromString("984c61e2-0d66-44eb-beea-fbd8f2991de3"), "07-00-00-00-00-00", listOf(10))
+            ScanResultArgs(
+                UUID.fromString("984c61e2-0d66-44eb-beea-fbd8f2991de3"),
+                "07-00-00-00-00-00",
+                listOf(10)
+            )
         )
 
         val dao = testActivity.appDatabase.contactEventV2Dao()

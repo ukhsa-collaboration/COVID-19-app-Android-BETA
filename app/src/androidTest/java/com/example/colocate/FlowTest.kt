@@ -19,6 +19,9 @@ import androidx.test.rule.GrantPermissionRule
 import com.example.colocate.persistence.SharedPreferencesResidentIdProvider
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.SharedPreferencesStatusStorage
+import com.example.colocate.testhelpers.TestApplicationContext
+import com.example.colocate.testhelpers.TestCoLocateServiceDispatcher
+import com.example.colocate.testhelpers.isToast
 import org.junit.After
 import org.junit.Assert.fail
 import org.junit.Before

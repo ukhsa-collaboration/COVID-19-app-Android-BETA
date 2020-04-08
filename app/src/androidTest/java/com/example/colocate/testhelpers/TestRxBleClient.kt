@@ -1,4 +1,4 @@
-package com.example.colocate
+package com.example.colocate.testhelpers
 
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_READ
@@ -73,7 +73,11 @@ class TestRxBleClient(context: Context) : RxBleClient() {
         val services = RxBleDeviceServices(mutableListOf<BluetoothGattService>())
         services.bluetoothGattServices.add(service)
 
-        val rxBleDevice = TestBluetoothDevice(args.macAddress, services, args.rssiList)
+        val rxBleDevice = TestBluetoothDevice(
+            args.macAddress,
+            services,
+            args.rssiList
+        )
         val timestamp = Instant.now().toEpochMilli() * 1000
 
         return ScanResult(rxBleDevice, -1, timestamp, CALLBACK_TYPE_ALL_MATCHES, scanRecord)

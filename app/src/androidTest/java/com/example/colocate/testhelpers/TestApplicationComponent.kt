@@ -1,4 +1,4 @@
-package com.example.colocate
+package com.example.colocate.testhelpers
 
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.BluetoothLeAdvertiser

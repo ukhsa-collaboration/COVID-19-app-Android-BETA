@@ -1,4 +1,4 @@
-package com.example.colocate
+package com.example.colocate.testhelpers
 
 import android.view.WindowManager
 import androidx.test.espresso.Root

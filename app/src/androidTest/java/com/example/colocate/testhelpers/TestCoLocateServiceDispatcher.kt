@@ -1,4 +1,4 @@
-package com.example.colocate
+package com.example.colocate.testhelpers
 
 import android.util.Base64
 import okhttp3.mockwebserver.Dispatcher
