@@ -8,9 +8,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.example.colocate.BaseActivity
 import com.example.colocate.status.OkActivity
 import com.example.colocate.R
+import com.example.colocate.ViewModelFactory
+import com.example.colocate.ViewState
 import com.example.colocate.appComponent
 import com.example.colocate.status.IsolateActivity
 import com.example.colocate.status.CovidStatus
@@ -22,6 +27,13 @@ class DiagnoseReviewActivity : BaseActivity() {
     @Inject
     protected lateinit var statusStorage: StatusStorage
 
+    @Inject
+    protected lateinit var viewModelFactory: ViewModelFactory<DiagnoseReviewViewModel>
+
+    private val viewModel: DiagnoseReviewViewModel by viewModels {
+        viewModelFactory
+    }
+
     private val hasTemperature: Boolean by lazy {
         intent.getBooleanExtra(HAS_TEMPERATURE, false)
     }
@@ -30,9 +42,13 @@ class DiagnoseReviewActivity : BaseActivity() {
         intent.getBooleanExtra(HAS_COUGH, false)
     }
 
+    private val confirmButton: Button by lazy {
+        findViewById<Button>(R.id.confirm_diagnosis)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         appComponent.inject(this)
+        super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_review_diagnosis)
 
@@ -41,15 +57,36 @@ class DiagnoseReviewActivity : BaseActivity() {
             onBackPressed()
         }
 
-        findViewById<Button>(R.id.confirm_diagnosis).setOnClickListener {
-
-            if (hasCough or hasTemperature) {
-                statusStorage.update(CovidStatus.RED)
-                IsolateActivity.start(this)
+        viewModel.isolationResult.observe(this, Observer { result ->
+            if (result is ViewState.Success) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.successfull_data_upload),
+                    Toast.LENGTH_SHORT
+                ).show()
+                updateStatusAndNavigate()
             } else {
-                statusStorage.update(CovidStatus.OK)
-                OkActivity.start(this)
+                Toast.makeText(
+                    this,
+                    getString(R.string.erro_data_submission),
+                    Toast.LENGTH_SHORT
+                ).show()
+                confirmButton.text = getString(R.string.retry)
             }
+        })
+
+        confirmButton.setOnClickListener {
+            viewModel.uploadContactData()
+        }
+    }
+
+    private fun updateStatusAndNavigate() {
+        if (hasCough or hasTemperature) {
+            statusStorage.update(CovidStatus.RED)
+            IsolateActivity.start(this)
+        } else {
+            statusStorage.update(CovidStatus.OK)
+            OkActivity.start(this)
         }
     }
 

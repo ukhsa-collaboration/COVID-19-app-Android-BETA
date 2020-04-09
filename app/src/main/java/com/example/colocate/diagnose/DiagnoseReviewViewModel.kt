@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package com.example.colocate.status
+package com.example.colocate.diagnose
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -19,7 +19,7 @@ import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import javax.inject.Inject
 import javax.inject.Named
 
-class IsolateViewModel @Inject constructor(
+class DiagnoseReviewViewModel @Inject constructor(
     private val coLocationApi: CoLocationApi,
     @Named(AppModule.DISPATCHER_IO) private val ioDispatcher: CoroutineDispatcher,
     private val coLocationDataProvider: CoLocationDataProvider
@@ -28,7 +28,7 @@ class IsolateViewModel @Inject constructor(
     private val _isolationResult = MutableLiveData<ViewState>()
     val isolationResult: LiveData<ViewState> = _isolationResult
 
-    fun onNotifyClick() {
+    fun uploadContactData() {
         viewModelScope.launch(ioDispatcher) {
             coLocationApi.save(
                 coLocationDataProvider.getData(),

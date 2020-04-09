@@ -2,11 +2,10 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package com.example.colocate.isolate
+package com.example.colocate.diagnose
 
 import com.example.colocate.persistence.CoLocationDataProvider
 import com.example.colocate.persistence.ResidentIdProvider
-import com.example.colocate.status.IsolateViewModel
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -18,12 +17,12 @@ import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationEvent
 
-class IsolateViewModelTest {
+class DiagnoseReviewViewModelTest {
 
     private val coLocationApi = mockk<CoLocationApi>(relaxed = true)
     private val coLocationDataProvider = mockk<CoLocationDataProvider>()
     private val residentIdProvider = mockk<ResidentIdProvider>()
-    private val testSubject = IsolateViewModel(
+    private val testSubject = DiagnoseReviewViewModel(
         coLocationApi,
         Dispatchers.Unconfined,
         coLocationDataProvider
@@ -44,7 +43,7 @@ class IsolateViewModelTest {
             coEvery { coLocationDataProvider.getData() } returns coLocationData
             every { residentIdProvider.getResidentId() } returns RESIDENT_ID
 
-            testSubject.onNotifyClick()
+            testSubject.uploadContactData()
 
             verify {
                 coLocationApi.save(eq(coLocationData), any(), any())

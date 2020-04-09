@@ -80,14 +80,14 @@ class FlowTest {
     @Test
     fun testBluetoothInteractions() {
         clearDatabase()
-        setStatus(CovidStatus.RED)
+        setStatus(CovidStatus.OK)
         setValidResidentIdAndSecretKey()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
         testAppContext!!.simulateDeviceInProximity()
 
-        onView(withId(R.id.isolate_notify)).perform(click())
+        checkCanTransitionToIsolateActivity()
 
         testAppContext!!.verifyReceivedProximityRequest()
 
@@ -119,7 +119,9 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkOkActivityIsShown()
-        checkCanTransitionToIsolateActivity()
+
+//        checkCanTransitionToIsolateActivity()
+
     }
 
     @Test
@@ -181,7 +183,8 @@ class FlowTest {
     }
 
     private fun unsetResidentId() {
-        val residentIdProvider = activityRule.activity.residentIdProvider as SharedPreferencesResidentIdProvider
+        val residentIdProvider =
+            activityRule.activity.residentIdProvider as SharedPreferencesResidentIdProvider
         residentIdProvider.clear()
     }
 
@@ -240,6 +243,6 @@ class FlowTest {
         onView(withId(R.id.review_title)).check(matches(isDisplayed()))
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
-        onView(withId(R.id.isolate_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.isolate_disclaimer)).check(matches(isDisplayed()))
     }
 }
