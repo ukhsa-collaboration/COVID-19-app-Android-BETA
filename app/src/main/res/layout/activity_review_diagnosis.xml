@@ -58,6 +58,7 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
+        style="@style/PrimaryButton"
         android:id="@+id/confirm_diagnosis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,8 +66,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
-        android:background="@drawable/button_round_background"
-        android:text="@string/submit"
-        android:textColor="#FFFFFF" />
+        android:text="@string/submit"/>
 
 </RelativeLayout>

@@ -118,14 +118,13 @@
     </ScrollView>
 
     <androidx.appcompat.widget.AppCompatButton
+        style="@style/PrimaryButton"
         android:id="@+id/re_diagnose_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/button_round_background"
-        android:text="@string/check_my_symptoms"
-        android:textColor="@color/white" />
+        android:text="@string/check_my_symptoms" />
 
 </RelativeLayout>

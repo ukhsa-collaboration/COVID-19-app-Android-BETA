@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
-    android:paddingStart="6dp"
+    android:paddingStart="12dp"
     android:paddingTop="12dp"
     android:paddingEnd="6dp"
     android:paddingBottom="12dp">
@@ -15,7 +15,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:src="@drawable/nhs" />
 
     <TextView
@@ -23,5 +23,6 @@
         android:layout_height="match_parent"
         android:text="@string/app_title"
         android:textColor="@color/white"
-        android:textSize="23sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 </LinearLayout>

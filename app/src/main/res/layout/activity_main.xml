@@ -54,13 +54,12 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
+        style="@style/PrimaryButton"
         android:id="@+id/confirm_onboarding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="32dp"
-        android:background="@drawable/button_round_background"
-        android:text="@string/start_now"
-        android:textColor="@color/white" />
+        android:text="@string/start_now" />
 
 </RelativeLayout>
