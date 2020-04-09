@@ -5,12 +5,13 @@
 package com.example.colocate.ble
 
 import android.app.Service
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.location.LocationManager
 import android.os.IBinder
-import androidx.core.location.LocationManagerCompat
 import com.example.colocate.ServiceRestarterBroadcastReceiver
 import com.example.colocate.appComponent
 import com.example.colocate.di.module.AppModule
@@ -20,7 +21,10 @@ import com.example.colocate.util.notificationBuilder
 import com.example.colocate.util.showBluetoothIsDisabledNotification
 import com.example.colocate.util.showLocationIsDisabledNotification
 import com.polidea.rxandroidble2.RxBleClient
+import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
+import io.reactivex.functions.BiFunction
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -54,51 +58,55 @@ class BluetoothService : Service() {
     private var isInjected = false
     private var areGattAndAdvertiseRunning = false
     private var isScanRunning = false
+    private val locationProviderChangedReceiver = LocationProviderChangedReceiver()
+
+    data class CombinedStatus(
+        val isBleClientInReadyState: Boolean,
+        val isBluetoothEnabled: Boolean,
+        val isLocationEnabled: Boolean
+    )
 
     override fun onCreate() {
         super.onCreate()
         startForeground(FOREGROUND_NOTIFICATION_ID, notificationBuilder().build())
 
         val bleClient = appComponent.provideRxBleClient()
-        stateChangeDisposable = bleClient
-            .observeStateChanges()
-            .startWith(bleClient.state)
-            .subscribe { state ->
-                Timber.d("state changed: $state")
-                when (state) {
-                    RxBleClient.State.BLUETOOTH_NOT_ENABLED -> {
-                        stopGattAndAdvertise()
-                        showBluetoothIsDisabledNotification(this)
+        stateChangeDisposable = Observable.combineLatest(
+            bleClient.observeStateChanges().startWith(bleClient.state),
+            locationProviderChangedReceiver.getLocationStatus(),
+            BiFunction<RxBleClient.State, Boolean, CombinedStatus> { bleClientState, isLocationEnabled ->
+                val isBleClientInReadyState = bleClientState == RxBleClient.State.READY
+                val isBluetoothEnabled = isBluetoothEnabled()
+                CombinedStatus(isBleClientInReadyState, isBluetoothEnabled, isLocationEnabled)
+            })
+            .subscribe { status ->
+                Timber.d("Combined state $status")
+                if (status.isLocationEnabled) {
+                    hideLocationIsDisabledNotification(this)
+                } else {
+                    showLocationIsDisabledNotification(this)
+                }
 
-                        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-                        if (LocationManagerCompat.isLocationEnabled(locationManager)) {
-                            hideLocationIsDisabledNotification(this)
-                        }
+                if (status.isBluetoothEnabled) {
+                    hideBluetoothIsDisabledNotification(this)
+                } else {
+                    stopGattAndAdvertise()
+                    showBluetoothIsDisabledNotification(this)
+                }
+
+                if (status.isBleClientInReadyState) {
+                    if (!isInjected) {
+                        appComponent.inject(this)
+                        isInjected = true
                     }
-                    RxBleClient.State.LOCATION_SERVICES_NOT_ENABLED -> {
-                        showLocationIsDisabledNotification(this)
-                        val defaultAdapter = BluetoothAdapter.getDefaultAdapter()
-                        if (defaultAdapter != null) {
-                            val bluetoothState = defaultAdapter.state
-                            if (bluetoothState == BluetoothAdapter.STATE_TURNING_ON || bluetoothState == BluetoothAdapter.STATE_ON) {
-                                hideBluetoothIsDisabledNotification(this)
-                            }
-                        }
-                    }
-                    RxBleClient.State.READY -> {
-                        if (!isInjected) {
-                            appComponent.inject(this)
-                            isInjected = true
-                        }
-                        startGattAndAdvertise()
-                        startScan()
-                        hideBluetoothIsDisabledNotification(this)
-                        hideLocationIsDisabledNotification(this)
-                    }
-                    else -> {
-                    }
+                    startGattAndAdvertise()
+                    startScan()
                 }
             }
+
+        val filter = IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
+        registerReceiver(locationProviderChangedReceiver, filter)
+        locationProviderChangedReceiver.onCreate(this)
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -111,6 +119,7 @@ class BluetoothService : Service() {
 
     override fun onDestroy() {
         Timber.d("BluetoothService onDestroy")
+        unregisterReceiver(locationProviderChangedReceiver)
         stopSubServices()
         sendBroadcastToRestartService()
     }
@@ -167,6 +176,42 @@ class BluetoothService : Service() {
             isScanRunning = false
             coroutineScope.cancel()
             scan.stop()
+        }
+    }
+
+    inner class LocationProviderChangedReceiver : BroadcastReceiver() {
+
+        private var isGpsEnabled: Boolean = false
+        private var isNetworkEnabled: Boolean = false
+
+        private val subject = BehaviorSubject.create<Boolean>()
+
+        fun getLocationStatus(): Observable<Boolean> {
+            return subject.distinctUntilChanged()
+        }
+
+        fun onCreate(context: Context) {
+            checkStatus(context)
+        }
+
+        override fun onReceive(context: Context, intent: Intent) {
+            intent.action?.let { act ->
+                if (act.matches("android.location.PROVIDERS_CHANGED".toRegex())) {
+                    checkStatus(context)
+                }
+            }
+        }
+
+        private fun checkStatus(context: Context) {
+            val locationManager =
+                context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+
+            Timber.i("Location Providers changed, is GPS Enabled: $isGpsEnabled is network enabled = $isNetworkEnabled")
+
+            val isEnabled = isGpsEnabled || isNetworkEnabled
+            subject.onNext(isEnabled)
         }
     }
 }
