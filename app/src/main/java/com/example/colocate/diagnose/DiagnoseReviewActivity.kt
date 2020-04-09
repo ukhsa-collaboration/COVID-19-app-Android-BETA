@@ -7,6 +7,7 @@ package com.example.colocate.diagnose
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -20,6 +21,7 @@ import com.example.colocate.appComponent
 import com.example.colocate.status.IsolateActivity
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
+import kotlinx.android.synthetic.main.activity_review_diagnosis.submission_error
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import javax.inject.Inject
 
@@ -68,12 +70,9 @@ class DiagnoseReviewActivity : BaseActivity() {
                 ).show()
 
                 updateStatusAndNavigate()
+                submission_error.visibility = View.GONE
             } else {
-                Toast.makeText(
-                    this,
-                    getString(R.string.erro_data_submission),
-                    Toast.LENGTH_SHORT
-                ).show()
+                submission_error.visibility = View.VISIBLE
                 confirmButton.text = getString(R.string.retry)
             }
         })

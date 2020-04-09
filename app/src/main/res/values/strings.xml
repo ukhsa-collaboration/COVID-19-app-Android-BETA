@@ -81,4 +81,5 @@
     <string name="progress_one_trird">1/3</string>
     <string name="progress_two_trird">2/3</string>
     <string name="progress_three_third">3/3</string>
+    <string name="submission_error">Submission failed. Please try again</string>
 </resources>
