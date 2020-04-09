@@ -71,8 +71,14 @@
     <string name="cough_question">Do you have a new continuous cough?</string>
     <string name="cough_description">I have a new, continuous cough (I am coughing a lot for more than an hour, or have had 3 or more coughing episodes in 24 hours)</string>
     <string name="diagnosis_review_title">Thank you for sharing this data with the NHS.</string>
-    <string name="diagnosis_review_description">We will use this information to anonymously inform people they have come into contact with covid symptoms and encourage them to self-isolate. Thank you for helping us save lives</string>
+    <string name="diagnosis_review_description">Thank you for sharing this data with the NHS. We will use this information to anonymously inform people they have come into contact with covid symptoms and encourage them to self-isolate. Thank you for helping us save lives</string>
     <string name="submit">Submit</string>
-    <string name="radio_button_error">Please select the best answer from below</string>
+    <string name="radio_button_temperature_error">Select yes if you have a high temperature</string>
+    <string name="radio_button_cough_error">Select yes if you have a continuous cough</string>
     <string name="add_my_symptoms">Add my symptoms</string>
+    <string name="yes_temperature">Yes, I have a high temperature</string>
+    <string name="no_temperature">No, I don’t have a high temperature</string>
+    <string name="progress_one_trird">1/3</string>
+    <string name="progress_two_trird">2/3</string>
+    <string name="progress_three_third">3/3</string>
 </resources>

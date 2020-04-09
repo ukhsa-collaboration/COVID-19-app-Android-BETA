@@ -26,7 +26,7 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         setContentView(R.layout.activity_cough_diagnosis)
 
-        close_btn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
+        close_btn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
         close_btn.setOnClickListener {
             onBackPressed()
         }

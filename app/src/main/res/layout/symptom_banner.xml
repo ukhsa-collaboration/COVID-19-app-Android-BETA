@@ -3,9 +3,10 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/logo"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="56dp"
     android:background="@color/colorPrimary"
     android:paddingStart="12dp"
     android:paddingTop="12dp"
@@ -14,10 +15,10 @@
 
     <ImageView
         android:id="@+id/close_btn"
-        android:foreground="?attr/selectableItemBackground"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="16dp"
+        android:foreground="?attr/selectableItemBackground"
         android:src="@drawable/ic_close" />
 
     <TextView
@@ -25,5 +26,6 @@
         android:layout_height="match_parent"
         android:text="@string/add_my_symptoms"
         android:textColor="@color/white"
-        android:textSize="23sp" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
 </LinearLayout>

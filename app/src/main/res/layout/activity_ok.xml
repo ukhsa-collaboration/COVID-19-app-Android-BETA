@@ -124,7 +124,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="16dp"
-        android:background="#007F3B"
+        android:background="@drawable/button_round_background"
         android:text="@string/check_my_symptoms"
         android:textColor="@color/white" />
 

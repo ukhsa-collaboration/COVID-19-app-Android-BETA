@@ -52,7 +52,7 @@ class DiagnoseReviewActivity : BaseActivity() {
 
         setContentView(R.layout.activity_review_diagnosis)
 
-        close_btn.setImageDrawable(getDrawable(R.drawable.ic_chevron_left))
+        close_btn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
         close_btn.setOnClickListener {
             onBackPressed()
         }

@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_nhsuk_grey_5"
     android:orientation="vertical">
 
     <include layout="@layout/symptom_banner" />
@@ -13,24 +14,33 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/logo"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_below="@+id/logo"
         android:layout_marginBottom="72dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="36dp"
-            android:orientation="vertical"
-            tools:context=".MainActivity">
+            android:layout_marginTop="24dp"
+            >
+
+            <TextView
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto_medium"
+                android:letterSpacing="0.1"
+                android:text="@string/progress_one_trird"
+                android:textColor="@color/text_sub_title"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/temperature_question"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/progress"
                 android:lineSpacingMultiplier="1.18"
                 android:text="@string/temperature_question"
                 android:textSize="20sp"
@@ -41,8 +51,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/temperature_question"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/temperature_description"
+                android:textColor="@color/text_sub_title"
                 android:textSize="16sp" />
 
             <TextView
@@ -51,10 +62,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/temperature_description"
                 android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/radio_button_temperature_error"
                 android:textColor="@color/colorDanger"
-                android:text="@string/radio_button_error"
-                android:visibility="gone"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
 
             <RadioGroup
@@ -66,28 +78,26 @@
 
                 <RadioButton
                     android:id="@+id/yes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="88dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/radio_button_background_selector"
+                    android:fontFamily="@font/roboto_medium"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="@string/yes"
+                    android:text="@string/yes_temperature"
                     android:textSize="16sp" />
 
-                <View
-                    style="@style/HorizontalDivider" />
 
                 <RadioButton
                     android:id="@+id/no"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="88dp"
+                    android:background="@drawable/radio_button_background_selector"
+                    android:fontFamily="@font/roboto_medium"
                     android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="@string/no"
+                    android:text="@string/no_temperature"
                     android:textSize="16sp" />
 
-                <View
-                    style="@style/HorizontalDivider" />
 
             </RadioGroup>
         </RelativeLayout>
@@ -98,11 +108,11 @@
         android:id="@+id/confirm_diagnosis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="14dp"
-        android:background="#007F3B"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/button_round_background"
         android:text="@string/next"
         android:textColor="#FFFFFF" />
 

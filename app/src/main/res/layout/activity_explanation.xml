@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="32dp"
-        android:background="#007F3B"
+        android:background="@drawable/button_round_background"
         android:text="@string/go_back"
         android:textColor="@color/white" />
 </RelativeLayout>

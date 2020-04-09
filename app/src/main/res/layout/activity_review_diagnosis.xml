@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/color_nhsuk_grey_5">
 
     <include layout="@layout/symptom_banner" />
 
@@ -18,30 +18,31 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="72dp">
 
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="36dp"
-            android:orientation="vertical">
+            android:layout_marginTop="24dp">
 
             <TextView
-                android:id="@+id/review_title"
+                android:id="@+id/progress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lineSpacingMultiplier="1.18"
-                android:text="@string/diagnosis_review_title"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto_medium"
+                android:letterSpacing="0.1"
+                android:text="@string/progress_three_third"
+                android:textColor="@color/text_sub_title"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/review_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/review_title"
+                android:layout_below="@+id/progress"
                 android:layout_marginTop="16dp"
                 android:text="@string/diagnosis_review_description"
+                android:textColor="@color/text_sub_title"
                 android:textSize="16sp" />
 
         </RelativeLayout>
@@ -55,8 +56,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="14dp"
-        android:background="#007F3B"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/button_round_background"
         android:text="@string/submit"
         android:textColor="#FFFFFF" />
 
