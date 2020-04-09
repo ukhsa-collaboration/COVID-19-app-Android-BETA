@@ -10,7 +10,6 @@ import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -28,21 +27,23 @@ class RegistrationUseCase @Inject constructor(
 
     suspend fun register(): RegistrationResult {
         try {
-            if (sonarIdProvider.hasProperSonarId()) {
-                Timber.d("Already registered")
-                return RegistrationResult.AlreadyRegistered
+            return withTimeout(20_000) {
+                if (sonarIdProvider.hasProperSonarId()) {
+                    Timber.d("Already registered")
+                    return@withTimeout RegistrationResult.AlreadyRegistered
+                }
+                val firebaseToken = getFirebaseToken()
+                Timber.d("RegistrationUseCase firebaseToken = $firebaseToken")
+                registerDevice(firebaseToken)
+                Timber.d("RegistrationUseCase registered device")
+                val activationCode = waitForActivationCode()
+                Timber.d("RegistrationUseCase activationCode = $activationCode")
+                val sonarId = registerResident(activationCode, firebaseToken)
+                Timber.d("RegistrationUseCase sonarId = $sonarId")
+                storeSonarId(sonarId)
+                Timber.d("RegistrationUseCase sonarId stored")
+                return@withTimeout RegistrationResult.Success
             }
-            val firebaseToken = getFirebaseToken()
-            Timber.d("RegistrationUseCase firebaseToken = $firebaseToken")
-            registerDevice(firebaseToken)
-            Timber.d("RegistrationUseCase registered device")
-            val activationCode = waitForActivationCode(10_000)
-            Timber.d("RegistrationUseCase activationCode = $activationCode")
-            val sonarId = registerResident(activationCode, firebaseToken)
-            Timber.d("RegistrationUseCase sonarId = $sonarId")
-            storeSonarId(sonarId)
-            Timber.d("RegistrationUseCase sonarId stored")
-            return RegistrationResult.Success
         } catch (e: Exception) {
             Timber.e(e, "RegistrationUseCase exception")
             return RegistrationResult.Failure(e)
@@ -73,8 +74,8 @@ class RegistrationUseCase @Inject constructor(
         }
     }
 
-    private suspend fun waitForActivationCode(timeout: Long): String {
-        return suspendCoroutineWithTimeout(timeout) { continuation ->
+    private suspend fun waitForActivationCode(): String {
+        return suspendCancellableCoroutine { continuation ->
             activationCodeObserver.setListener { activationCode ->
                 activationCodeObserver.removeListener()
                 continuation.resume(activationCode)
@@ -101,12 +102,5 @@ class RegistrationUseCase @Inject constructor(
 
     private fun storeSonarId(sonarId: String) {
         sonarIdProvider.setSonarId(sonarId)
-    }
-
-    private suspend inline fun <T> suspendCoroutineWithTimeout(
-        timeout: Long,
-        crossinline block: (Continuation<T>) -> Unit
-    ) = withTimeout(timeout) {
-        suspendCancellableCoroutine(block = block)
     }
 }

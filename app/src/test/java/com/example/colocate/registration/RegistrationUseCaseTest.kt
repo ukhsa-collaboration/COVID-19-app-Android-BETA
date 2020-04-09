@@ -9,6 +9,7 @@ import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
 import kotlinx.coroutines.test.runBlockingTest
 import net.lachlanmckee.timberjunit.TimberTestRule
 import org.assertj.core.api.Assertions.assertThat
@@ -132,14 +133,25 @@ class RegistrationUseCaseTest {
 
     @Test
     fun onActivationCodeTimeoutReturnsFailure() = runBlockingTest {
-        every { activationCodeObserver.setListener(any()) } coAnswers {
-            // NOTHING
+        every { activationCodeObserver.setListener(any()) } returns Unit
+
+        val result = async {
+            sut.register()
         }
+        advanceTimeBy(25_000)
 
-        val result = sut.register()
-        advanceTimeBy(15_000)
+        assertThat(result.getCompleted()).isInstanceOf(RegistrationResult.Failure::class.java)
+    }
 
-        assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
+    @Test(expected = IllegalStateException::class)
+    fun onActivationCodeTimeoutShouldWaitFor20seconds() = runBlockingTest {
+        every { activationCodeObserver.setListener(any()) } returns Unit
+
+        val result = async {
+            sut.register()
+        }
+        advanceTimeBy(19_000)
+        result.getCompleted()
     }
 
     @Test
