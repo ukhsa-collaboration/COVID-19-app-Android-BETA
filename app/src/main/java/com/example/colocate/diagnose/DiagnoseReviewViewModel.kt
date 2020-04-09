@@ -28,7 +28,7 @@ class DiagnoseReviewViewModel @Inject constructor(
     private val _isolationResult = MutableLiveData<ViewState>()
     val isolationResult: LiveData<ViewState> = _isolationResult
 
-    fun uploadContactData() {
+    fun uploadContactEvents() {
         viewModelScope.launch(ioDispatcher) {
             coLocationApi.save(
                 coLocationDataProvider.getData(),
@@ -39,6 +39,12 @@ class DiagnoseReviewViewModel @Inject constructor(
                     e("Error: $it")
                     _isolationResult.value = ViewState.Error(it)
                 })
+        }
+    }
+
+    fun clearContactEvents() {
+        viewModelScope.launch(ioDispatcher) {
+            coLocationDataProvider.clearData()
         }
     }
 }

@@ -59,11 +59,14 @@ class DiagnoseReviewActivity : BaseActivity() {
 
         viewModel.isolationResult.observe(this, Observer { result ->
             if (result is ViewState.Success) {
+                viewModel.clearContactEvents()
+
                 Toast.makeText(
                     this,
                     getString(R.string.successfull_data_upload),
                     Toast.LENGTH_SHORT
                 ).show()
+
                 updateStatusAndNavigate()
             } else {
                 Toast.makeText(
@@ -76,7 +79,7 @@ class DiagnoseReviewActivity : BaseActivity() {
         })
 
         confirmButton.setOnClickListener {
-            viewModel.uploadContactData()
+            viewModel.uploadContactEvents()
         }
     }
 

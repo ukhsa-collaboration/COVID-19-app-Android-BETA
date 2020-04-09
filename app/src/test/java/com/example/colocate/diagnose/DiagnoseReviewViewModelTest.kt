@@ -7,6 +7,7 @@ package com.example.colocate.diagnose
 import com.example.colocate.persistence.CoLocationDataProvider
 import com.example.colocate.persistence.ResidentIdProvider
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -33,7 +34,7 @@ class DiagnoseReviewViewModelTest {
     }
 
     @Test
-    fun onNotifyCallsCoLocationApi() {
+    fun onUploadContactEvents() {
         runBlocking {
             val events = listOf(
                 CoLocationEvent("001", listOf(-10, 0), "2s ago", 10),
@@ -43,10 +44,24 @@ class DiagnoseReviewViewModelTest {
             coEvery { coLocationDataProvider.getData() } returns coLocationData
             every { residentIdProvider.getResidentId() } returns RESIDENT_ID
 
-            testSubject.uploadContactData()
+            testSubject.uploadContactEvents()
 
             verify {
                 coLocationApi.save(eq(coLocationData), any(), any())
+            }
+        }
+    }
+
+    @Test
+    fun onClearContactEvents() {
+        runBlocking {
+            every { residentIdProvider.getResidentId() } returns RESIDENT_ID
+            coEvery { coLocationDataProvider.clearData() } returns Unit
+
+            testSubject.clearContactEvents()
+
+            coVerify {
+                coLocationDataProvider.clearData()
             }
         }
     }

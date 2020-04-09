@@ -38,7 +38,7 @@ class CoLocationDataProvider @Inject constructor(
             duration = contactEvent.duration
         )
 
-    suspend fun cleatData() {
+    suspend fun clearData() {
         if (useConnectionV2) {
             contactEventV2Dao.clearEvents()
         } else {
