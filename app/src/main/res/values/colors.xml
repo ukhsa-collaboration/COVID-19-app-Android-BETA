@@ -11,8 +11,9 @@
     <color name="black">#212B32</color>
     <color name="button_background">#007F3B</color>
     <color name="button_background_disabled">#7F007F3B</color>
-    
+
     <color name="color_nhsuk_grey_5">#F0F4F5</color>
 
     <color name="text_sub_title">#4C6272</color>
+    <color name="divider">#1F000000</color>
 </resources>

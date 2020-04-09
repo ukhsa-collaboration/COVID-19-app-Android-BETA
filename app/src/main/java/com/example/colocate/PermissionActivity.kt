@@ -17,7 +17,7 @@ import com.example.colocate.ble.BluetoothResult.Rejected
 import com.example.colocate.ble.checkBluetoothResult
 import com.example.colocate.ble.isBluetoothEnabled
 import com.example.colocate.ble.requestEnablingBluetooth
-import com.example.colocate.registration.RegistrationActivity
+import com.example.colocate.status.OkActivity
 
 class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,7 +46,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
             grantResults.last() == PackageManager.PERMISSION_GRANTED
         ) {
             if (isBluetoothEnabled()) {
-                RegistrationActivity.start(this)
+                startOkActivity()
             } else {
                 requestEnablingBluetooth()
             }
@@ -57,7 +57,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (checkBluetoothResult(requestCode, resultCode)) {
-            Enabled -> RegistrationActivity.start(this)
+            Enabled -> startOkActivity()
             Rejected -> showToast()
             NotApplicable -> super.onActivityResult(requestCode, resultCode, data)
         }
@@ -65,6 +65,12 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
 
     private fun showToast() =
         showLongToast(R.string.permissions_required)
+
+    private fun startOkActivity() {
+        OkActivity.start(this)
+        finish()
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+    }
 
     companion object {
         fun start(context: Context) =

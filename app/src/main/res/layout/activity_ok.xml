@@ -11,10 +11,18 @@
 
     <include layout="@layout/banner" />
 
+    <com.example.colocate.status.RegistrationProgressPanel
+        android:id="@+id/registrationPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:minHeight="60dp"
+        android:paddingStart="16dp" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/logo"
+        android:layout_below="@id/registrationPanel"
         android:layout_marginBottom="72dp">
 
         <RelativeLayout

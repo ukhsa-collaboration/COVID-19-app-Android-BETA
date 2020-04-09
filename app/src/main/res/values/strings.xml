@@ -82,4 +82,7 @@
     <string name="progress_two_trird">2/3</string>
     <string name="progress_three_third">3/3</string>
     <string name="submission_error">Submission failed. Please try again</string>
+    <string name="registration_finalising_setup">Finalising setup…</string>
+    <string name="registration_everything_is_working_ok">Everything is working OK</string>
+    <string name="registration_app_setup_failed">App setup failed</string>
 </resources>
