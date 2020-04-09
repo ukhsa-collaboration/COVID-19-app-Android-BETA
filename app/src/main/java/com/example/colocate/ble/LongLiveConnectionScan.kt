@@ -27,7 +27,7 @@ class LongLiveConnectionScan @Inject constructor(
     private val saveContactWorker: SaveContactWorker,
     private val startTimestampProvider: () -> Date = { Date() },
     private val endTimestampProvider: () -> Date = startTimestampProvider,
-    private val periodInMilliseconds: Long = 10_000,
+    private val periodInMilliseconds: Long = 20_000,
     private val bleEvents: BleEvents
 ) : Scanner {
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
