@@ -119,9 +119,6 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkOkActivityIsShown()
-
-//        checkCanTransitionToIsolateActivity()
-
     }
 
     @Test

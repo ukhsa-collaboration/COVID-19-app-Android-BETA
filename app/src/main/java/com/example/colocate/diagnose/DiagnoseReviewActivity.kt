@@ -47,8 +47,8 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.inject(this)
         super.onCreate(savedInstanceState)
+        appComponent.inject(this)
 
         setContentView(R.layout.activity_review_diagnosis)
 

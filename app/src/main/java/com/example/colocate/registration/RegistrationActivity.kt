@@ -26,8 +26,8 @@ class RegistrationActivity : AppCompatActivity(R.layout.activity_register) {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        appComponent.inject(this)
         super.onCreate(savedInstanceState)
+        appComponent.inject(this)
 
         confirm_registration.setOnClickListener {
             viewModel.register()
