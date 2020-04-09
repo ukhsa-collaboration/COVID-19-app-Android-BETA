@@ -45,9 +45,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".diagnose.DiagnoseTemperatureActivity" />
-        <activity android:name=".AtRiskActivity" />
-        <activity android:name=".OkActivity" />
-        <activity android:name=".isolate.IsolateActivity" />
+        <activity android:name=".status.AtRiskActivity" />
+        <activity android:name=".status.OkActivity" />
+        <activity android:name=".status.IsolateActivity" />
         <activity android:name=".FlowTestStartActivity" />
         <activity android:name=".registration.RegistrationActivity" />
         <activity android:name=".PermissionActivity" />

@@ -1,9 +1,6 @@
 package com.example.colocate.status
 
 import android.app.Activity
-import com.example.colocate.AtRiskActivity
-import com.example.colocate.OkActivity
-import com.example.colocate.isolate.IsolateActivity
 import com.example.colocate.status.CovidStatus.OK
 import com.example.colocate.status.CovidStatus.POTENTIAL
 import com.example.colocate.status.CovidStatus.RED

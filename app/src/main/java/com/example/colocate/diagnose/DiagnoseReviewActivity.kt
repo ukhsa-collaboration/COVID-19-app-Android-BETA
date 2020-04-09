@@ -9,10 +9,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.example.colocate.BaseActivity
-import com.example.colocate.OkActivity
+import com.example.colocate.status.OkActivity
 import com.example.colocate.R
 import com.example.colocate.appComponent
-import com.example.colocate.isolate.IsolateActivity
+import com.example.colocate.status.IsolateActivity
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
 import kotlinx.android.synthetic.main.symptom_banner.close_btn

@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.example.colocate.OkActivity
+import com.example.colocate.status.OkActivity
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
 import com.example.colocate.ViewState

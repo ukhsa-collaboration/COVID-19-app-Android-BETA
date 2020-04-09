@@ -6,6 +6,7 @@ package com.example.colocate.isolate
 
 import com.example.colocate.persistence.CoLocationDataProvider
 import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.status.IsolateViewModel
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

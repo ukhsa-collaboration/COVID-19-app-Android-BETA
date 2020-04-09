@@ -8,6 +8,7 @@ import android.app.PendingIntent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.colocate.registration.ActivationCodeObserver
+import com.example.colocate.status.AtRiskActivity
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.StatusStorage
 import com.example.colocate.util.notificationBuilder

@@ -2,16 +2,17 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package com.example.colocate
+package com.example.colocate.status
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.widget.AppCompatButton
+import com.example.colocate.BaseActivity
+import com.example.colocate.R
+import com.example.colocate.appComponent
 import com.example.colocate.ble.startBluetoothService
 import com.example.colocate.diagnose.DiagnoseTemperatureActivity
-import com.example.colocate.status.StatusStorage
-import com.example.colocate.status.navigateTo
 import javax.inject.Inject
 
 class OkActivity : BaseActivity() {
@@ -39,7 +40,11 @@ class OkActivity : BaseActivity() {
 
     companion object {
         fun start(context: Context) =
-            context.startActivity(getIntent(context))
+            context.startActivity(
+                getIntent(
+                    context
+                )
+            )
 
         private fun getIntent(context: Context) =
             Intent(context, OkActivity::class.java).apply {

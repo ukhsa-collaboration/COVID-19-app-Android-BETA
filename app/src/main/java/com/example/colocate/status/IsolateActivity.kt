@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package com.example.colocate.isolate
+package com.example.colocate.status
 
 import android.content.Context
 import android.content.Intent
@@ -16,8 +16,6 @@ import com.example.colocate.ViewModelFactory
 import com.example.colocate.ViewState
 import com.example.colocate.appComponent
 import com.example.colocate.ble.startBluetoothService
-import com.example.colocate.status.StatusStorage
-import com.example.colocate.status.navigateTo
 import kotlinx.android.synthetic.main.activity_isolate.isolate_notify
 import javax.inject.Inject
 
@@ -68,7 +66,11 @@ class IsolateActivity : BaseActivity() {
 
     companion object {
         fun start(context: Context) =
-            context.startActivity(getIntent(context))
+            context.startActivity(
+                getIntent(
+                    context
+                )
+            )
 
         private fun getIntent(context: Context) =
             Intent(context, IsolateActivity::class.java)
