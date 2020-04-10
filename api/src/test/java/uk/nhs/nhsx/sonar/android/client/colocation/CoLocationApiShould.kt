@@ -23,17 +23,17 @@ class CoLocationApiShould {
     }
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
-    private val httpClient = VolleyHttpClient(baseUrl, requestQueue)
+    private val httpClient = VolleyHttpClient(requestQueue)
+    private val coLocationApi = CoLocationApi(baseUrl, encryptionKeyStorage, httpClient)
 
     @Test
     fun testSave_Request() {
-        val cut = CoLocationApi(encryptionKeyStorage, httpClient)
         val events = listOf(
             CoLocationEvent("001", listOf(-10, 0), "2s ago", 10),
             CoLocationEvent("002", listOf(-10, -10, 10), "yesterday", 120)
         )
 
-        cut.save(CoLocationData("residentId", events), {}, {})
+        coLocationApi.save(CoLocationData("residentId", events), {}, {})
 
         val request = requestQueue.lastRequest
         assertThat(request.method).isEqualTo(PATCH)
@@ -58,11 +58,10 @@ class CoLocationApiShould {
 
     @Test
     fun testSave_OnSuccess() {
-        val cut = CoLocationApi(encryptionKeyStorage, httpClient)
         var success = false
         var error = false
 
-        cut.save(CoLocationData("residentId", emptyList()), { success = true }, { error = true })
+        coLocationApi.save(CoLocationData("residentId", emptyList()), { success = true }, { error = true })
 
         requestQueue.returnSuccess(JSONObject())
         assertThat(success).isTrue()
@@ -71,11 +70,10 @@ class CoLocationApiShould {
 
     @Test
     fun testSave_OnError() {
-        val cut = CoLocationApi(encryptionKeyStorage, httpClient)
         var success = false
         var error = false
 
-        cut.save(CoLocationData("residentId", emptyList()), { success = true }, { error = true })
+        coLocationApi.save(CoLocationData("residentId", emptyList()), { success = true }, { error = true })
 
         requestQueue.returnError(VolleyError())
         assertThat(success).isFalse()

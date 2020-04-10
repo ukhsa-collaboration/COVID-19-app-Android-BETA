@@ -22,15 +22,14 @@ import javax.inject.Inject
 // -> 200 { "id": "uuid-blabalabla", "secretKey": "base 64 encoded hmac compatible key" }
 
 class ResidentApi @Inject constructor(
+    private val baseUrl: String,
     private val encryptionKeyStorage: EncryptionKeyStorage,
     private val httpClient: HttpClient
 ) {
 
     fun register(token: String, onSuccess: SimpleCallback, onError: ErrorCallback) {
-        val requestJson = jsonObjectOf(
-            "pushToken" to token
-        )
-        val request = HttpRequest("/api/devices/registrations", requestJson)
+        val requestJson = jsonObjectOf("pushToken" to token)
+        val request = HttpRequest("$baseUrl/api/devices/registrations", requestJson)
 
         httpClient.post(request, { onSuccess() }, onError)
     }
@@ -40,14 +39,13 @@ class ResidentApi @Inject constructor(
         onSuccess: Callback<Registration>,
         onError: ErrorCallback
     ) {
-        val request = jsonObjectOf(
+        val requestJson = jsonObjectOf(
             "activationCode" to deviceConfirmation.activationCode,
             "pushToken" to deviceConfirmation.pushToken,
             "deviceModel" to deviceConfirmation.deviceModel,
             "deviceOSVersion" to deviceConfirmation.deviceOsVersion
-        ).let {
-            HttpRequest("/api/devices", it)
-        }
+        )
+        val request = HttpRequest("$baseUrl/api/devices", requestJson)
 
         httpClient.post(
             request,

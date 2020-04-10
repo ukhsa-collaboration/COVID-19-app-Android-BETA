@@ -13,9 +13,9 @@ import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.client.http.SimpleCallback
 import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
-import javax.inject.Inject
 
-class CoLocationApi @Inject constructor(
+class CoLocationApi(
+    private val baseUrl: String,
     private val keyStorage: EncryptionKeyStorage,
     private val httpClient: HttpClient
 ) {
@@ -26,7 +26,7 @@ class CoLocationApi @Inject constructor(
         onError: ErrorCallback
     ) {
         val request = HttpRequest(
-            "/api/residents/${coLocationData.residentId}",
+            "$baseUrl/api/residents/${coLocationData.residentId}",
             coLocationData.toJson(),
             keyStorage.provideKey()
         )

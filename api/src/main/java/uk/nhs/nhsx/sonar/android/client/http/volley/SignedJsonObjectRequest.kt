@@ -18,21 +18,17 @@ class SignedJsonObjectRequest(
     private val key: ByteArray,
     method: Int,
     url: String,
-    request: JSONObject,
+    body: JSONObject?,
     listener: Response.Listener<JSONObject>,
     errorListener: Response.ErrorListener
-) : UnsignedJsonObjectRequest(method, url, request, listener, errorListener) {
+) : UnsignedJsonObjectRequest(method, url, body, listener, errorListener) {
 
     override fun getHeaders(): Map<String?, String?> {
-        val timestampAsString = LocalDateTime.now(
-            DateTimeZone.UTC
-        ).toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
+        val timestampAsString = LocalDateTime
+            .now(DateTimeZone.UTC)
+            .toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
-        val signature: String? = generateSignature(
-            key,
-            timestampAsString,
-            body
-        )
+        val signature: String? = generateSignature(key, timestampAsString, body)
 
         return super.getHeaders() + mapOf(
             "Sonar-Request-Timestamp" to timestampAsString,

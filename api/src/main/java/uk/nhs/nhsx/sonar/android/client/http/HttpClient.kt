@@ -8,8 +8,8 @@ package uk.nhs.nhsx.sonar.android.client.http
 import org.json.JSONObject
 
 class HttpRequest(
-    val urlPath: String,
-    val json: JSONObject,
+    val url: String,
+    val jsonBody: JSONObject?,
     val key: ByteArray? = null
 )
 

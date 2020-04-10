@@ -46,16 +46,14 @@ class CoLocationApiIT {
 
     @Test
     fun shouldSendCoLocationData() {
-        val successResponse = MockResponse().setResponseCode(200)
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val httpClient = VolleyHttpClient(ctx)
+        val coLocationApi = CoLocationApi("http://localhost:8089", encryptionKeyStorage, httpClient)
 
-        server.enqueue(successResponse)
+        server.enqueue(MockResponse().setResponseCode(200))
 
         var isSuccess = false
         var isError = false
-
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-        val httpClient = VolleyHttpClient("http://localhost:8089", context)
-        val coLocationApi = CoLocationApi(encryptionKeyStorage, httpClient)
 
         coLocationApi.save(
             CoLocationData("residentId", emptyList()),

@@ -22,8 +22,8 @@ class ResidentApiShould {
     private val encryptionKeyStorage = mockk<EncryptionKeyStorage>(relaxed = true)
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
-    private val httpClient = VolleyHttpClient(baseUrl, requestQueue)
-    private val residentApi = ResidentApi(encryptionKeyStorage, httpClient)
+    private val httpClient = VolleyHttpClient(requestQueue)
+    private val residentApi = ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
 
     @Test
     fun testRegister_Request() {
