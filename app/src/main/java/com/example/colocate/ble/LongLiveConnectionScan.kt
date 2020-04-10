@@ -4,12 +4,14 @@
 
 package com.example.colocate.ble
 
+import android.bluetooth.BluetoothAdapter
 import android.os.ParcelUuid
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.exceptions.BleAlreadyConnectedException
 import com.polidea.rxandroidble2.exceptions.BleException
+import com.polidea.rxandroidble2.exceptions.BleScanException
 import com.polidea.rxandroidble2.scan.ScanFilter
 import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
@@ -35,6 +37,8 @@ class LongLiveConnectionScan @Inject constructor(
         .build()
 
     private var compositeDisposable = CompositeDisposable()
+
+    private var restartingBluetooth = false
 
     /*
      When the iPhone app goes into the background iOS changes how services are advertised:
@@ -88,6 +92,13 @@ class LongLiveConnectionScan @Inject constructor(
                 Timber.d("LongLiveConnectionScan state = $state")
 
                 when (state) {
+                    RxBleClient.State.BLUETOOTH_NOT_AVAILABLE -> {
+                        if (restartingBluetooth) {
+                            BluetoothAdapter.getDefaultAdapter().enable()
+                            restartingBluetooth = false
+                        }
+                        Observable.empty()
+                    }
                     RxBleClient.State.READY ->
                         rxBleClient.scanBleDevices(
                             settings,
@@ -95,6 +106,12 @@ class LongLiveConnectionScan @Inject constructor(
                             coLocateServiceUuidFilter
                         ).onErrorResumeNext { throwable: Throwable ->
                             Timber.e(throwable, "LongLiveConnectionScan scan failure")
+                            if (throwable is BleScanException) {
+                                if (throwable.reason == BleScanException.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED) {
+                                    BluetoothAdapter.getDefaultAdapter().disable()
+                                    restartingBluetooth = true
+                                }
+                            }
                             Observable.empty()
                         }
                     else -> Observable.empty<ScanResult>()
