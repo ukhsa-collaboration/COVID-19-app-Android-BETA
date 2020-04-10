@@ -38,7 +38,7 @@ class LongLiveConnectionScan @Inject constructor(
 
     private var compositeDisposable = CompositeDisposable()
 
-    private var restartingBluetooth = false
+    private var bluetoothWasDisabledToHandleApplicationRegistrationFailure = false
 
     /*
      When the iPhone app goes into the background iOS changes how services are advertised:
@@ -93,9 +93,9 @@ class LongLiveConnectionScan @Inject constructor(
 
                 when (state) {
                     RxBleClient.State.BLUETOOTH_NOT_AVAILABLE -> {
-                        if (restartingBluetooth) {
+                        if (bluetoothWasDisabledToHandleApplicationRegistrationFailure) {
                             BluetoothAdapter.getDefaultAdapter().enable()
-                            restartingBluetooth = false
+                            bluetoothWasDisabledToHandleApplicationRegistrationFailure = false
                         }
                         Observable.empty()
                     }
@@ -106,11 +106,11 @@ class LongLiveConnectionScan @Inject constructor(
                             coLocateServiceUuidFilter
                         ).onErrorResumeNext { throwable: Throwable ->
                             Timber.e(throwable, "LongLiveConnectionScan scan failure")
-                            if (throwable is BleScanException) {
-                                if (throwable.reason == BleScanException.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED) {
-                                    BluetoothAdapter.getDefaultAdapter().disable()
-                                    restartingBluetooth = true
-                                }
+                            if (throwable is BleScanException &&
+                                throwable.reason == BleScanException.SCAN_FAILED_APPLICATION_REGISTRATION_FAILED
+                            ) {
+                                BluetoothAdapter.getDefaultAdapter().disable()
+                                bluetoothWasDisabledToHandleApplicationRegistrationFailure = true
                             }
                             Observable.empty()
                         }
