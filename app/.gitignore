@@ -1,4 +1,7 @@
 google-services.json
+google-play-services-publish.json
+*.json
+
 /build
 /release
 /debug

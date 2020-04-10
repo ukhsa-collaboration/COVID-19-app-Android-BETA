@@ -11,6 +11,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'com.github.triplet.play'
 apply from: "$rootDir/ktlint.gradle"
 
 android {
@@ -63,6 +64,14 @@ android {
 
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
+}
+
+play {
+    track = "internal"
+    defaultToAppBundles = true
+    fromTrack = "internal"
+    promoteTrack = "alpha"
+    serviceAccountCredentials = file("google-play-services-publish.json")
 }
 
 task("outputInstrumentationErrors") {
