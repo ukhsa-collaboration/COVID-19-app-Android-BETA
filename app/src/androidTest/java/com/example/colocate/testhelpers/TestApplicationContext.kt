@@ -101,6 +101,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         device.findObject(By.text(notificationText)).click()
     }
 
+    fun simulateBackendResponse(isError: Boolean) {
+        testDispatcher.simulateResponse(isError)
+    }
+
     fun verifyReceivedRegistrationRequest() {
         val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
 
@@ -108,6 +112,12 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(lastRequest?.method).isEqualTo("POST")
         assertThat(lastRequest?.path).isEqualTo("/api/devices/registrations")
         assertThat(lastRequest?.body?.readUtf8()).isEqualTo("""{"pushToken":"test firebase token #010"}""")
+    }
+
+    fun verifyRegistrationFlow() {
+        verifyReceivedRegistrationRequest()
+        verifyReceivedActivationRequest()
+        verifyResidentIdAndSecretKey()
     }
 
     fun verifyReceivedActivationRequest() {
@@ -182,6 +192,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             )
         )
         assertThat(body.countOccurrences("""{"sonarId":""")).isEqualTo(2)
+    }
+
+    fun simulateBackendDelay(delayInMillis: Long) {
+        testDispatcher.simulateDelay(delayInMillis)
     }
 }
 

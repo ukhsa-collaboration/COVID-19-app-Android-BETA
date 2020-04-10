@@ -3,6 +3,7 @@ package com.example.colocate.registration
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.colocate.ViewState
+import com.example.colocate.status.OkViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verifyOrder
@@ -20,7 +21,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeoutException
 
 @ExperimentalCoroutinesApi
-class RegistrationViewModelTest {
+class OkViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -46,7 +47,7 @@ class RegistrationViewModelTest {
     fun registerSuccess() = runBlockingTest {
         coEvery { registrationUseCase.register() } returns RegistrationResult.Success
 
-        val sut = RegistrationViewModel(registrationUseCase)
+        val sut = OkViewModel(registrationUseCase)
         sut.viewState().observeForever(observer)
         sut.register()
 
@@ -61,9 +62,11 @@ class RegistrationViewModelTest {
         val exception = TimeoutException()
         coEvery { registrationUseCase.register() } returns RegistrationResult.Failure(exception)
 
-        val sut = RegistrationViewModel(registrationUseCase)
+        val sut = OkViewModel(registrationUseCase)
         sut.viewState().observeForever(observer)
         sut.register()
+
+        advanceTimeBy(5000)
 
         verifyOrder {
             observer.onChanged(ViewState.Progress)

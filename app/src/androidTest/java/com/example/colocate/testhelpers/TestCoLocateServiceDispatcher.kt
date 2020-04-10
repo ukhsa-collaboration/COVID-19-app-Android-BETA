@@ -5,8 +5,12 @@ import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
 import java.nio.charset.Charset
+import java.util.concurrent.TimeUnit
 
 class TestCoLocateServiceDispatcher : Dispatcher() {
+
+    private var delay = 0L
+    private var shouldSimulateError = false
 
     companion object {
         const val SECRET_KEY: String = "secret key from TestCoLocateServiceDispatcher"
@@ -17,16 +21,31 @@ class TestCoLocateServiceDispatcher : Dispatcher() {
             .toString(Charset.defaultCharset())
     }
 
-    override fun dispatch(request: RecordedRequest): MockResponse =
-        when (request.path) {
-            "/api/devices/registrations" -> MockResponse()
-            "/api/devices" -> MockResponse().apply {
-                setBody("""{"id":"$RESIDENT_ID","secretKey":"$encodedKey"}""")
-            }
-            "/api/residents/$RESIDENT_ID" -> MockResponse()
-            else -> MockResponse().apply {
-                setBody("Unexpected request reached TestCoLocateServiceDispatcher class")
-                setResponseCode(500)
+    override fun dispatch(request: RecordedRequest): MockResponse {
+        val responseCode = if (shouldSimulateError) {
+            MockResponse().setResponseCode(500)
+        } else {
+            when (request.path) {
+                "/api/devices/registrations" -> MockResponse()
+                "/api/devices" -> MockResponse().apply {
+                    setBody("""{"id":"$RESIDENT_ID","secretKey":"$encodedKey"}""")
+                }
+                "/api/residents/$RESIDENT_ID" -> MockResponse()
+                else -> MockResponse().apply {
+                    setBody("Unexpected request reached TestCoLocateServiceDispatcher class")
+                    setResponseCode(500)
+                }
             }
         }
+        responseCode.setHeadersDelay(delay, TimeUnit.MILLISECONDS)
+        return responseCode
+    }
+
+    fun simulateResponse(isError: Boolean) {
+        shouldSimulateError = isError
+    }
+
+    fun simulateDelay(delayInMillis: Long) {
+        delay = delayInMillis
+    }
 }

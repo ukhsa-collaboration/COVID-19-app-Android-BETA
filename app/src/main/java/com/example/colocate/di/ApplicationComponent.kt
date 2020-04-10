@@ -7,6 +7,7 @@ package com.example.colocate.di
 import com.example.colocate.BootCompletedReceiver
 import com.example.colocate.FlowTestStartActivity
 import com.example.colocate.MainActivity
+import com.example.colocate.NotificationService
 import com.example.colocate.ble.BleEvents
 import com.example.colocate.ble.BluetoothService
 import com.example.colocate.di.module.AppModule
@@ -19,7 +20,6 @@ import com.example.colocate.di.module.StatusModule
 import com.example.colocate.diagnose.DiagnoseReviewActivity
 import com.example.colocate.notifications.NotificationService
 import com.example.colocate.persistence.ContactEventV2Dao
-import com.example.colocate.registration.RegistrationActivity
 import com.example.colocate.registration.RegistrationUseCase
 import com.example.colocate.status.AtRiskActivity
 import com.example.colocate.status.IsolateActivity
@@ -55,7 +55,6 @@ interface ApplicationComponent {
 
     fun registrationUseCase(): RegistrationUseCase
 
-    fun inject(registrationActivity: RegistrationActivity)
     fun provideEventsV2Dao(): ContactEventV2Dao
     fun provideBleEvents(): BleEvents
     fun provideRxBleClient(): RxBleClient

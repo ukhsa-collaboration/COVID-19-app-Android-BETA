@@ -6,6 +6,7 @@ package com.example.colocate
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.bluetooth.BluetoothManager
+import android.content.Context
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -14,6 +15,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import com.example.colocate.persistence.SharedPreferencesSonarIdProvider
@@ -22,6 +24,7 @@ import com.example.colocate.status.SharedPreferencesStatusStorage
 import com.example.colocate.testhelpers.TestApplicationContext
 import com.example.colocate.testhelpers.TestCoLocateServiceDispatcher
 import com.example.colocate.testhelpers.isToast
+import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Assert.fail
 import org.junit.Before
@@ -32,6 +35,8 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class FlowTest {
 
+    lateinit var targetContext: Context
+
     @get:Rule
     val activityRule: ActivityTestRule<FlowTestStartActivity> =
         ActivityTestRule(FlowTestStartActivity::class.java)
@@ -40,23 +45,25 @@ class FlowTest {
     val permissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(ACCESS_FINE_LOCATION)
 
-    private var testAppContext: TestApplicationContext? = null
+    private lateinit var testAppContext: TestApplicationContext
 
     @Before
     fun setup() {
+        targetContext = InstrumentationRegistry.getInstrumentation().targetContext
         testAppContext = TestApplicationContext(activityRule)
         ensureBluetoothEnabled()
     }
 
     @After
     fun teardown() {
-        testAppContext?.shutdownMockServer()
+        testAppContext.shutdownMockServer()
     }
 
     @Test
     fun testRegistration() {
         resetStatusStorage()
         unsetSonarId()
+        testAppContext.simulateBackendDelay(400)
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -66,18 +73,49 @@ class FlowTest {
 
         onView(withId(R.id.permission_continue)).perform(click())
 
-        checkRegistrationActivityIsShown()
+        checkOkActivityIsShown()
 
-        onView(withId(R.id.confirm_registration)).perform(click())
+        testAppContext.simulateActivationCodeReceived()
 
-        testAppContext!!.apply {
-            verifyReceivedRegistrationRequest()
-            simulateActivationCodeReceived()
-            verifyReceivedActivationRequest()
-            verifySonarIdAndSecretKey()
-        }
+        verifyText(R.id.registrationStatusText, R.string.registration_finalising_setup)
+
+        testAppContext.verifyRegistrationFlow()
+        verifyText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
+    }
+
+    @Test
+    fun testRegistrationRetry() {
+        resetStatusStorage()
+        unsetResidentId()
+        testAppContext.simulateBackendResponse(isError = true)
+        testAppContext.simulateBackendDelay(0)
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        onView(withId(R.id.confirm_onboarding)).perform(click())
+
+        checkPermissionActivityIsShown()
+
+        onView(withId(R.id.permission_continue)).perform(click())
 
         checkOkActivityIsShown()
+
+        testAppContext.verifyReceivedRegistrationRequest()
+        verifyText(R.id.registrationStatusText, R.string.registration_finalising_setup)
+
+        Thread.sleep(2_000)
+        verifyText(R.id.registrationStatusText, R.string.registration_app_setup_failed)
+        onView(withId(R.id.registrationRetryButton)).check(matches(isDisplayed()))
+
+        testAppContext.simulateBackendResponse(isError = false)
+
+        onView(withId(R.id.registrationRetryButton)).perform(click())
+
+        testAppContext.simulateActivationCodeReceived()
+
+        testAppContext.verifyRegistrationFlow()
+        verifyText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
+        onView(withId(R.id.registrationRetryButton)).check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -88,11 +126,11 @@ class FlowTest {
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
-        testAppContext!!.simulateDeviceInProximity()
+        testAppContext.simulateDeviceInProximity()
 
         checkCanTransitionToIsolateActivity()
 
-        testAppContext!!.verifyReceivedProximityRequest()
+        testAppContext.verifyReceivedProximityRequest()
 
         onView(withText(R.string.successfull_data_upload))
             .inRoot(isToast())
@@ -169,10 +207,6 @@ class FlowTest {
 
     private fun checkExplanationActivityIsShown() {
         onView(withId(R.id.explanation_back)).check(matches(isDisplayed()))
-    }
-
-    private fun checkRegistrationActivityIsShown() {
-        onView(withId(R.id.confirm_registration)).check(matches(isDisplayed()))
     }
 
     private fun checkOkActivityIsShown() {
@@ -259,5 +293,10 @@ class FlowTest {
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
         onView(withId(R.id.isolate_disclaimer)).check(matches(isDisplayed()))
+    }
+
+    private fun verifyText(textViewId: Int, stringId: Int) {
+        val text = targetContext.getString(stringId)
+        onView(withId(textViewId)).check(matches(withText(text)))
     }
 }

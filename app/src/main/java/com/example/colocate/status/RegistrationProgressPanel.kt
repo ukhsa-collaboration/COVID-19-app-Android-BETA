@@ -16,8 +16,9 @@ import kotlinx.android.synthetic.main.registration_panel.view.registrationStatus
 class RegistrationProgressPanel @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : FrameLayout(context, attrs, defStyleAttr) {
+    defStyleAttr: Int = 0,
+    defStyleRes: Int = 0
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     enum class State {
         IN_PROGRESS, FAILED, REGISTERED
@@ -31,7 +32,6 @@ class RegistrationProgressPanel @JvmOverloads constructor(
     }
 
     private fun initializeViews() {
-        layoutTransition = null
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.registration_panel, this)
         registrationRetryButton.setOnClickListener {
@@ -43,7 +43,7 @@ class RegistrationProgressPanel @JvmOverloads constructor(
         this.retryListener = listener
     }
 
-    public fun setState(newState: State) {
+    fun setState(newState: State) {
         if (state != newState) {
             state = newState
             when (state) {
@@ -58,6 +58,7 @@ class RegistrationProgressPanel @JvmOverloads constructor(
         setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
         registrationRetryButton.isVisible = false
         registrationProgressBar.isVisible = true
+        registrationProgressBar.isIndeterminate = false
         registrationStatusIcon.isVisible = false
         registrationPanelDivider.isVisible = true
         registrationStatusText.setText(R.string.registration_finalising_setup)
