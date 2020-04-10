@@ -5,8 +5,6 @@
 package com.example.colocate.notifications
 
 import com.example.colocate.appComponent
-import com.example.colocate.registration.ActivationCodeObserver
-import com.example.colocate.status.StatusStorage
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import timber.log.Timber
@@ -15,10 +13,7 @@ import javax.inject.Inject
 class NotificationService : FirebaseMessagingService() {
 
     @Inject
-    protected lateinit var statusStorage: StatusStorage
-
-    @Inject
-    lateinit var activationCodeObserver: ActivationCodeObserver
+    lateinit var notificationHandler: NotificationHandler
 
     override fun onCreate() {
         appComponent.inject(this)
@@ -30,13 +25,6 @@ class NotificationService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         Timber.i("New Message: ${message.messageId} ${message.data}")
-
-        val handler = NotificationHandler(
-            AndroidNotificationSender(this),
-            statusStorage,
-            activationCodeObserver
-        )
-
-        handler.handle(message.data)
+        notificationHandler.handle(message.data)
     }
 }

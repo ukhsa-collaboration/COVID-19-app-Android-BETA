@@ -8,9 +8,11 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
+import com.example.colocate.notifications.Acknowledgement
+import com.example.colocate.notifications.AcknowledgementsDao
 
 @Database(
-    entities = [ContactEvent::class, ContactEventV2::class],
+    entities = [ContactEvent::class, ContactEventV2::class, Acknowledgement::class],
     version = 2,
     exportSchema = false
 )
@@ -18,6 +20,7 @@ import androidx.room.TypeConverters
 abstract class AppDatabase : RoomDatabase() {
     abstract fun contactEventDao(): ContactEventDao
     abstract fun contactEventV2Dao(): ContactEventV2Dao
+    abstract fun acknowledgementsDao(): AcknowledgementsDao
 }
 
 class Converters {

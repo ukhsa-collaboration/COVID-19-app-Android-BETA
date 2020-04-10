@@ -15,6 +15,7 @@ import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.BluetoothModule
 import com.example.colocate.di.module.BluetoothModule.Companion.USE_CONNECTION_V2
 import com.example.colocate.di.module.NetworkModule
+import com.example.colocate.di.module.NotificationsModule
 import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.StatusModule
 import com.example.colocate.persistence.AppDatabase
@@ -39,6 +40,7 @@ import javax.inject.Singleton
         NetworkModule::class,
         EncryptionKeyStorageModule::class,
         StatusModule::class,
+        NotificationsModule::class,
         TestModule::class
     ]
 )
