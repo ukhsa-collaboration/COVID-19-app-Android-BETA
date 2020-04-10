@@ -16,32 +16,42 @@ class BleEventTracker : BleEvents {
     override fun observeConnectionEvents(): LiveData<List<ConnectedDevice>> =
         connectionEvents
 
+    private val lock = Object()
+
     override fun connectedDeviceEvent(id: String, rssiValues: List<Int>) {
-        eventsList.removeIf { it.id == id }
-        eventsList.add(
-            ConnectedDevice(
-                id = id,
-                timestamp = getCurrentTimeStamp(),
-                rssiValues = rssiValues
+        synchronized(lock) {
+            eventsList.removeIf { it.id == id }
+            eventsList.add(
+                ConnectedDevice(
+                    id = id,
+                    timestamp = getCurrentTimeStamp(),
+                    rssiValues = rssiValues
+                )
             )
-        )
-        connectionEvents.postValue(eventsList)
+            connectionEvents.postValue(eventsList)
+        }
     }
 
     override fun disconnectDeviceEvent(id: String?) {
-        eventsList.removeIf { it.id == id }
-        eventsList.add(ConnectedDevice(id = id, isConnectionError = true))
-        connectionEvents.postValue(eventsList)
+        synchronized(lock) {
+            eventsList.removeIf { it.id == id }
+            eventsList.add(ConnectedDevice(id = id, isConnectionError = true))
+            connectionEvents.postValue(eventsList)
+        }
     }
 
     override fun scanFailureEvent() {
-        eventsList.add(ConnectedDevice(isReadFailure = true))
-        connectionEvents.postValue(eventsList)
+        synchronized(lock) {
+            eventsList.add(ConnectedDevice(isReadFailure = true))
+            connectionEvents.postValue(eventsList)
+        }
     }
 
     override fun clear() {
-        eventsList.clear()
-        connectionEvents.postValue(eventsList)
+        synchronized(lock) {
+            eventsList.clear()
+            connectionEvents.postValue(eventsList)
+        }
     }
 }
 
