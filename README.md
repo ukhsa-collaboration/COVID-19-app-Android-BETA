@@ -46,13 +46,13 @@ Android Studio setup.
 
 1. Make sure you have configured the following properties in `~/.gradle/gradle.properties`
 
-  ```properties
-  SIGNING_KEY_ALIAS=<keystore alias>
-  SIGNING_KEY_STORE=<path/to/keystore>
-  SIGNING_KEY_STORE_PASSWORD=<keystore password>
-  SIGNING_KEY_PASSWORD=<key password>
-  PLAY_SERVICES_PUBLISH=<path/to/play-services.json>
-  ```
+   ```properties
+   SIGNING_KEY_ALIAS=<keystore alias>
+   SIGNING_KEY_STORE=<path/to/keystore>
+   SIGNING_KEY_STORE_PASSWORD=<keystore password>
+   SIGNING_KEY_PASSWORD=<key password>
+   PLAY_SERVICES_PUBLISH=<path/to/play-services.json>
+   ```
 
 1. Update the release notes in `app/src/main/play/release-notes/en-GB/default.txt`
 
@@ -61,5 +61,14 @@ Android Studio setup.
    ```bash
    ./gradlew publish -Pplay-enabled
    ```
+
+1. To prompt a release from internal track to alpha (stakeholder) track, run following command in project root directory:
+
+   ```bash
+   ./gradlew promoteArtifact -Pplay-enabled
+   ```
+
 **NOTE**
   * The build number will be set automatically. you don't need to change or commit it to git
+
+Check [Gradle Play Publisher](https://github.com/Triple-T/gradle-play-publisher) for more info
