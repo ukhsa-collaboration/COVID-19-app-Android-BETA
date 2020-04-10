@@ -92,11 +92,13 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun clickOnStatusNotification() {
+        val notificationText = testActivity.getString(R.string.notification_text)
         val notificationTitle = testActivity.getString(R.string.notification_title)
 
         device.openNotification()
+        device.wait(Until.hasObject(By.text(notificationText)), 500)
         device.wait(Until.hasObject(By.text(notificationTitle)), 500)
-        device.findObject(By.text(notificationTitle)).click()
+        device.findObject(By.text(notificationText)).click()
     }
 
     fun verifyReceivedRegistrationRequest() {
