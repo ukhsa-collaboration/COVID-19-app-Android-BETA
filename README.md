@@ -54,7 +54,9 @@ Android Studio setup.
   PLAY_SERVICES_PUBLISH=<path/to/play-services.json>
   ```
 
-2. To publish new release in `internal test track`, run following command in project root directory:
+1. Update the release notes in `app/src/main/play/release-notes/en-GB/default.txt`
+
+1. To publish new release in `internal test track`, run following command in project root directory:
 
    ```bash
    ./gradlew publish -Pplay-enabled
