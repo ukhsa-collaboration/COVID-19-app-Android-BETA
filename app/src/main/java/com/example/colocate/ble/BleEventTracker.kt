@@ -19,7 +19,7 @@ class BleEventTracker : BleEvents {
     private val lock = Object()
 
     override fun connectedDeviceEvent(id: String, rssiValues: List<Int>) {
-        synchronized(lock) {
+        safelyUpdateEventList {
             eventsList.removeIf { it.id == id }
             eventsList.add(
                 ConnectedDevice(
@@ -28,30 +28,34 @@ class BleEventTracker : BleEvents {
                     rssiValues = rssiValues
                 )
             )
-            connectionEvents.postValue(eventsList)
         }
     }
 
     override fun disconnectDeviceEvent(id: String?) {
-        synchronized(lock) {
+        safelyUpdateEventList {
             eventsList.removeIf { it.id == id }
             eventsList.add(ConnectedDevice(id = id, isConnectionError = true))
-            connectionEvents.postValue(eventsList)
         }
     }
 
     override fun scanFailureEvent() {
-        synchronized(lock) {
+        safelyUpdateEventList {
             eventsList.add(ConnectedDevice(isReadFailure = true))
-            connectionEvents.postValue(eventsList)
         }
     }
 
     override fun clear() {
-        synchronized(lock) {
+        safelyUpdateEventList {
             eventsList.clear()
-            connectionEvents.postValue(eventsList)
         }
+    }
+
+    private fun safelyUpdateEventList(codeBlock: () -> Unit) {
+        val eventListCopy = synchronized(lock) {
+            codeBlock()
+            mutableListOf<ConnectedDevice>().apply { addAll(eventsList) }
+        }
+        connectionEvents.postValue(eventListCopy)
     }
 }
 
