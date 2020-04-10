@@ -5,14 +5,14 @@
         <shape>
             <solid android:color="#FFFFFF" />
             <stroke android:width="2dp" android:color="@color/colorPrimary" />
-            <corners android:radius="10dp" />
+            <corners android:radius="16dp" />
         </shape>
     </item>
     <item android:state_checked="false">
         <shape>
             <solid android:color="#FFFFFF" />
             <stroke android:width="2dp" android:color="@color/color_nhsuk_grey_5" />
-            <corners android:radius="10dp" />
+            <corners android:radius="16dp" />
             <padding android:bottom="0dp" android:left="16dp" android:right="0dp" android:top="0dp" />
         </shape>
     </item>
