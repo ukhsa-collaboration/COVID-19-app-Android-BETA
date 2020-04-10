@@ -41,3 +41,23 @@ Android Studio setup.
 1. Files should end with a new line character.
     
     ![Ensure line feed on save](docs/kotlin-newline-character.png)
+
+## Play Store
+
+1. Make sure you have configured the following properties in `~/.gradle/gradle.properties`
+
+  ```properties
+  SIGNING_KEY_ALIAS=<keystore alias>
+  SIGNING_KEY_STORE=<path/to/keystore>
+  SIGNING_KEY_STORE_PASSWORD=<keystore password>
+  SIGNING_KEY_PASSWORD=<key password>
+  PLAY_SERVICES_PUBLISH=<path/to/play-services.json>
+  ```
+
+2. To publish new release in `internal test track`, run following command in project root directory:
+
+   ```bash
+   ./gradlew publish -Pplay-enabled
+   ```
+**NOTE**
+  * The build number will be set automatically. you don't need to change or commit it to git

@@ -10,7 +10,7 @@ def signingKeyStore = project.hasProperty('SIGNING_KEY_STORE') ? project.SIGNING
 def signingKeyStorePassword = project.hasProperty('SIGNING_KEY_STORE_PASSWORD') ? project.SIGNING_KEY_STORE_PASSWORD : 'secret'
 def signingKeyPassword = project.hasProperty('SIGNING_KEY_PASSWORD') ? project.SIGNING_KEY_PASSWORD : 'secret'
 def playServicesPublish = project.hasProperty('PLAY_SERVICES_PUBLISH') ? project.PLAY_SERVICES_PUBLISH : 'non-existing.json'
-
+def isPlayEnabled = project.hasProperty('play-enabled')
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -85,7 +85,7 @@ android {
 }
 
 play {
-    enabled = false
+    enabled = isPlayEnabled
     serviceAccountCredentials = file(playServicesPublish)
 
     track = "internal"
