@@ -4,10 +4,10 @@ import androidx.core.os.bundleOf
 import androidx.test.rule.ActivityTestRule
 import com.example.colocate.ColocateApplication
 import com.example.colocate.FlowTestStartActivity
-import com.example.colocate.NotificationService
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.StatusModule
+import com.example.colocate.notifications.NotificationService
 import com.example.colocate.persistence.ID_NOT_REGISTERED
 import com.example.colocate.registration.TokenRetriever
 import com.google.firebase.messaging.RemoteMessage
