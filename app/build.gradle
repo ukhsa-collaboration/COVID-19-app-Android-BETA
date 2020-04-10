@@ -9,7 +9,7 @@ def signingKeyAlias = project.hasProperty('SIGNING_KEY_ALIAS') ? project.SIGNING
 def signingKeyStore = project.hasProperty('SIGNING_KEY_STORE') ? project.SIGNING_KEY_STORE : 'dummy-keystore'
 def signingKeyStorePassword = project.hasProperty('SIGNING_KEY_STORE_PASSWORD') ? project.SIGNING_KEY_STORE_PASSWORD : 'secret'
 def signingKeyPassword = project.hasProperty('SIGNING_KEY_PASSWORD') ? project.SIGNING_KEY_PASSWORD : 'secret'
-def playServicesPublish = project.hasProperty('PLAY_SERVICES_PUBLISH') ? project.PLAY_SERVICES_PUBLISH : 'dummy-play-services.json'
+def playServicesPublish = project.hasProperty('PLAY_SERVICES_PUBLISH') ? project.PLAY_SERVICES_PUBLISH : 'non-existing.json'
 
 
 apply plugin: 'com.android.application'
@@ -85,6 +85,7 @@ android {
 }
 
 play {
+    enabled = false
     serviceAccountCredentials = file(playServicesPublish)
 
     track = "internal"
