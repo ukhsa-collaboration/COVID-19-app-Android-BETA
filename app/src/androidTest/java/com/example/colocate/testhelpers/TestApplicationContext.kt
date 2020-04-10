@@ -1,9 +1,15 @@
 package com.example.colocate.testhelpers
 
+import android.content.ContextWrapper
 import androidx.core.os.bundleOf
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
 import com.example.colocate.ColocateApplication
 import com.example.colocate.FlowTestStartActivity
+import com.example.colocate.R
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.StatusModule
@@ -29,6 +35,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
     private val testActivity = rule.activity
     private val app = rule.activity.application as ColocateApplication
+    private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     private val notificationService = NotificationService()
     private val testDispatcher = TestCoLocateServiceDispatcher()
@@ -61,7 +68,13 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 .testModule(testModule)
                 .build()
 
-        app.appComponent.inject(notificationService)
+        notificationService.let {
+            val contextField = ContextWrapper::class.java.getDeclaredField("mBase")
+            contextField.isAccessible = true
+            contextField.set(it, app)
+
+            app.appComponent.inject(it)
+        }
     }
 
     fun shutdownMockServer() {
@@ -71,6 +84,20 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun simulateActivationCodeReceived() {
         val msg = RemoteMessage(bundleOf("activationCode" to "test activation code #001"))
         notificationService.onMessageReceived(msg)
+    }
+
+    fun simulateStatusUpdateReceived() {
+        val msg = RemoteMessage(bundleOf("status" to "POTENTIAL"))
+        notificationService.onMessageReceived(msg)
+    }
+
+    fun clickOnStatusNotification() {
+        val notificationText = testActivity.getString(R.string.notification_text)
+        val notificationTitle = testActivity.getString(R.string.notification_title)
+
+        device.openNotification()
+        device.wait(Until.hasObject(By.text(notificationText)), 500)
+        device.findObject(By.text(notificationTitle)).click()
     }
 
     fun verifyReceivedRegistrationRequest() {

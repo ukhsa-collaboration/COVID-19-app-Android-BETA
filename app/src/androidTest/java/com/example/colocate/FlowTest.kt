@@ -100,6 +100,21 @@ class FlowTest {
     }
 
     @Test
+    fun testReceivingStatusUpdateNotification() {
+        setStatus(CovidStatus.OK)
+        setValidResidentId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        testAppContext!!.apply {
+            simulateStatusUpdateReceived()
+            clickOnStatusNotification()
+        }
+
+        checkAtRiskActivityIsShown()
+    }
+
+    @Test
     fun testExplanation() {
         unsetResidentId()
 

@@ -167,6 +167,7 @@ dependencies {
     androidTestImplementation 'org.assertj:assertj-core:3.15.0'
     androidTestImplementation "com.polidea.rxandroidble2:mockclient:$rx_android_ble_version"
     androidTestImplementation 'org.awaitility:awaitility-kotlin:3.1.6'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 
     testImplementation 'androidx.test:core:1.2.0'
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
