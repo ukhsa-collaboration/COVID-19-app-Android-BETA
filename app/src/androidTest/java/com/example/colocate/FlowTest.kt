@@ -86,7 +86,7 @@ class FlowTest {
     @Test
     fun testRegistrationRetry() {
         resetStatusStorage()
-        unsetResidentId()
+        unsetSonarId()
         testAppContext.simulateBackendResponse(isError = true)
         testAppContext.simulateBackendDelay(0)
 
@@ -144,11 +144,14 @@ class FlowTest {
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
-        testAppContext!!.apply {
+        testAppContext.apply {
             simulateStatusUpdateReceived()
             clickOnStatusNotification()
         }
 
+        // TODO: Is there a better way to detect AtRiskActivity without using a delay?
+        // We believe without this delay it tries to find the disclaimer title in the notification panel and fails.
+        Thread.sleep(100)
         checkAtRiskActivityIsShown()
     }
 

@@ -117,7 +117,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun verifyRegistrationFlow() {
         verifyReceivedRegistrationRequest()
         verifyReceivedActivationRequest()
-        verifyResidentIdAndSecretKey()
+        verifySonarIdAndSecretKey()
     }
 
     fun verifyReceivedActivationRequest() {

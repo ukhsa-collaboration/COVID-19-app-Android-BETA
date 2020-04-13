@@ -9,6 +9,7 @@ import io.mockk.mockk
 import io.mockk.verifyOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
@@ -29,18 +30,21 @@ class OkViewModelTest {
     @get:Rule
     val logAllOnFailuresRule: TimberTestRule = TimberTestRule.logAllWhenTestFails()
 
+    val testDispatcher = TestCoroutineDispatcher()
+
     private val registrationUseCase = mockk<RegistrationUseCase>()
     private val observer = mockk<Observer<ViewState>>(relaxed = true)
 
     @Before
     fun setUp() {
         Timber.plant(Timber.DebugTree())
-        Dispatchers.setMain(Dispatchers.Unconfined)
+        Dispatchers.setMain(testDispatcher)
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain() // reset main dispatcher to the original Main dispatcher
+        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test
@@ -66,7 +70,7 @@ class OkViewModelTest {
         sut.viewState().observeForever(observer)
         sut.register()
 
-        advanceTimeBy(5000)
+        testDispatcher.advanceTimeBy(2_000)
 
         verifyOrder {
             observer.onChanged(ViewState.Progress)

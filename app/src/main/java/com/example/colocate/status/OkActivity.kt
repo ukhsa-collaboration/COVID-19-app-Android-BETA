@@ -17,7 +17,7 @@ import com.example.colocate.ViewState
 import com.example.colocate.appComponent
 import com.example.colocate.ble.startBluetoothService
 import com.example.colocate.diagnose.DiagnoseTemperatureActivity
-import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.persistence.SonarIdProvider
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import javax.inject.Inject
 
@@ -30,7 +30,7 @@ class OkActivity : BaseActivity() {
     lateinit var viewModelFactory: ViewModelFactory<OkViewModel>
 
     @Inject
-    lateinit var residentIdProvider: ResidentIdProvider
+    lateinit var sonarIdProvider: SonarIdProvider
 
     private val viewModel: OkViewModel by viewModels {
         viewModelFactory
@@ -40,7 +40,7 @@ class OkActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
 
-        if (residentIdProvider.hasProperResidentId()) {
+        if (sonarIdProvider.hasProperSonarId()) {
             startBluetoothService()
         }
 
