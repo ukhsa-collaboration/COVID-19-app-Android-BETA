@@ -109,7 +109,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         // It might have shown up because we toggled by clicking on the title
         // It might have always been visible if there was enough room on the screen
         if (device.hasObject(By.text(notificationText))) {
-            device.findObject(By.text(notificationTitle)).click()
+            device.findObject(By.text(notificationText)).click()
         }
 
         // Ensure notifications are hidden before moving on.
