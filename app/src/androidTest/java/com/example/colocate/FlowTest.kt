@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -291,7 +292,7 @@ class FlowTest {
     }
 
     private fun checkCanTransitionToIsolateActivity() {
-        onView(withId(R.id.status_not_feeling_well)).perform(click())
+        onView(withId(R.id.status_not_feeling_well)).perform(scrollTo(), click())
 
         // Temperature step
         onView(withId(R.id.temperature_question)).check(matches(isDisplayed()))
