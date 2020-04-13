@@ -65,6 +65,8 @@ class OkActivity : BaseActivity() {
                 ViewState.Success -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.REGISTERED)
                     startBluetoothService()
+                    status_not_feeling_well.isClickable = true
+                    status_not_feeling_well.isFocusable = true
                     status_not_feeling_well.isEnabled = true
                 }
                 ViewState.Progress -> {

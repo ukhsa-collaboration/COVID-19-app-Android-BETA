@@ -74,6 +74,7 @@ android {
     }
 
     testOptions {
+        animationsDisabled = true
         unitTests.returnDefaultValues = true
         unitTests.all {
             testLogging.exceptionFormat = TestExceptionFormat.FULL
