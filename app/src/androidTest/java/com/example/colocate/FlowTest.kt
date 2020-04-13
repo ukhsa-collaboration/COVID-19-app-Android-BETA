@@ -12,6 +12,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -81,6 +82,7 @@ class FlowTest {
 
         testAppContext.verifyRegistrationFlow()
         verifyText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
+        verifyCheckMySymptomsButtonState(isEnabled = true)
     }
 
     @Test
@@ -102,10 +104,12 @@ class FlowTest {
 
         testAppContext.verifyReceivedRegistrationRequest()
         verifyText(R.id.registrationStatusText, R.string.registration_finalising_setup)
+        verifyCheckMySymptomsButtonState(isEnabled = false)
 
         Thread.sleep(2_000)
         verifyText(R.id.registrationStatusText, R.string.registration_app_setup_failed)
         onView(withId(R.id.registrationRetryButton)).check(matches(isDisplayed()))
+        verifyCheckMySymptomsButtonState(isEnabled = false)
 
         testAppContext.simulateBackendResponse(isError = false)
 
@@ -116,6 +120,16 @@ class FlowTest {
         testAppContext.verifyRegistrationFlow()
         verifyText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
         onView(withId(R.id.registrationRetryButton)).check(matches(not(isDisplayed())))
+        verifyCheckMySymptomsButtonState(isEnabled = true)
+    }
+
+    private fun verifyCheckMySymptomsButtonState(isEnabled: Boolean) {
+        val matcher = if (isEnabled) {
+            isEnabled()
+        } else {
+            not(isEnabled())
+        }
+        onView(withId(R.id.re_diagnose_button)).check(matches(matcher))
     }
 
     @Test

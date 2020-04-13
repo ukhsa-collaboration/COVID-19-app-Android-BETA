@@ -18,6 +18,7 @@ import com.example.colocate.appComponent
 import com.example.colocate.ble.startBluetoothService
 import com.example.colocate.diagnose.DiagnoseTemperatureActivity
 import com.example.colocate.persistence.SonarIdProvider
+import kotlinx.android.synthetic.main.activity_ok.re_diagnose_button
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import javax.inject.Inject
 
@@ -64,6 +65,7 @@ class OkActivity : BaseActivity() {
                 ViewState.Success -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.REGISTERED)
                     startBluetoothService()
+                    re_diagnose_button.isEnabled = true
                 }
                 ViewState.Progress -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.IN_PROGRESS)
