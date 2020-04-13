@@ -6,9 +6,9 @@ package com.example.colocate.di.module
 
 import android.content.Context
 import androidx.room.Room
+import com.example.colocate.ble.BleEventTracker
 import com.example.colocate.ble.BleEvents
 import com.example.colocate.ble.DefaultSaveContactWorker
-import com.example.colocate.ble.BleEventTracker
 import com.example.colocate.ble.SaveContactWorker
 import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ContactEventDao
@@ -29,10 +29,10 @@ class PersistenceModule(
     @Provides
     fun provideDatabase() =
         Room.databaseBuilder(
-                applicationContext,
-                AppDatabase::class.java,
-                "event-database"
-            ).fallbackToDestructiveMigration()
+            applicationContext,
+            AppDatabase::class.java,
+            "event-database"
+        ).fallbackToDestructiveMigration()
             .build()
 
     @Provides

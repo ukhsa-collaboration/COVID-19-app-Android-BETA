@@ -21,7 +21,8 @@ import javax.inject.Named
 @Module
 class BluetoothModule(
     private val applicationContext: Context,
-    private val connectionV2: Boolean
+    private val connectionV2: Boolean,
+    private val encryptSonarId: Boolean
 ) {
     @Provides
     fun provideBluetoothManager(): BluetoothManager =
@@ -52,7 +53,12 @@ class BluetoothModule(
     @Named(USE_CONNECTION_V2)
     fun provideUseConnectionV2() = connectionV2
 
+    @Provides
+    @Named(ENCRYPT_SONAR_ID)
+    fun provideEncryptSonarId() = encryptSonarId
+
     companion object {
         const val USE_CONNECTION_V2 = "USE_CONNECTION_V2"
+        const val ENCRYPT_SONAR_ID = "ENCRYPT_SONAR_ID"
     }
 }

@@ -159,6 +159,8 @@ dependencies {
 
     implementation 'com.jakewharton:process-phoenix:2.0.0'
 
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.64'
+
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.2.0'

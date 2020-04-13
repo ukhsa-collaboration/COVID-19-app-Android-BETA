@@ -1,5 +1,6 @@
 package com.example.colocate.ble
 
+import android.util.Base64
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
@@ -8,6 +9,8 @@ import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.slot
 import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +24,6 @@ import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
 import java.util.Date
-import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 class LongLiveConnectionScanTest {
@@ -32,11 +34,11 @@ class LongLiveConnectionScanTest {
     private val connection = mockk<RxBleConnection>()
     private val saveContactWorker = FakeSaveContactWorker()
 
-    private val identifier = Identifier(UUID.randomUUID())
     private val timestamp = Date()
     private val rssiValues = listOf(-50, -49)
     private val duration = 5L
     private val period = 50L
+    private lateinit var identifier: Identifier
 
     @Rule
     @JvmField
@@ -69,7 +71,30 @@ class LongLiveConnectionScanTest {
                 }
         )
         every { connection.readRssi() } returnsMany rssiValues.map { Single.just(it) }
-        every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(identifier.asBytes)
+
+        `bypass android_util_Base64 to java_util_Base64`()
+        identifier = Identifier.fromBytes(ByteArray(64) { 1 })
+        every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(
+            identifier.asBytes
+        )
+    }
+
+    fun `bypass android_util_Base64 to java_util_Base64`() {
+        mockkStatic(Base64::class)
+        val arraySlot = slot<ByteArray>()
+
+        every {
+            Base64.encodeToString(capture(arraySlot), Base64.DEFAULT)
+        } answers {
+            java.util.Base64.getEncoder().encodeToString(arraySlot.captured)
+        }
+
+        val stringSlot = slot<String>()
+        every {
+            Base64.decode(capture(stringSlot), Base64.DEFAULT)
+        } answers {
+            java.util.Base64.getDecoder().decode(stringSlot.captured)
+        }
     }
 
     @Test
@@ -88,7 +113,7 @@ class LongLiveConnectionScanTest {
             await untilNotNull { saveContactWorker.savedRecord }
 
             val record = saveContactWorker.savedRecord!!
-            assertThat(record.sonarId).isEqualTo(identifier)
+            assertThat(record.sonarId.asBytes).isEqualTo(identifier.asBytes)
             assertThat(record.duration).isEqualTo(duration)
             assertThat(record.timestamp).isEqualTo(timestamp)
             assertThat(record.rssiValues).containsAll(rssiValues)

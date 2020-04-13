@@ -68,7 +68,7 @@ class DefaultSaveContactWorker(
 
                     val contactEvent =
                         ContactEventV2(
-                            sonarId = record.sonarId.asString,
+                            sonarId = record.sonarId.asBytes,
                             rssiValues = record.rssiValues,
                             timestamp = timestamp,
                             duration = record.duration

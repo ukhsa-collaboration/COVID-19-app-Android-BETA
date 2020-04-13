@@ -1,5 +1,6 @@
 package com.example.colocate.registration
 
+import com.example.colocate.persistence.BluetoothCryptogramProvider
 import com.example.colocate.persistence.ID_NOT_REGISTERED
 import com.example.colocate.persistence.SonarIdProvider
 import io.mockk.coEvery
@@ -29,6 +30,7 @@ class RegistrationUseCaseTest {
     private val residentApi = mockk<ResidentApi>()
     private val activationCodeObserver = mockk<ActivationCodeObserver>()
     private val sonarIdProvider = mockk<SonarIdProvider>()
+    private val bluetoothCryptogramProvider = mockk<BluetoothCryptogramProvider>()
 
     private val confirmation =
         DeviceConfirmation(ACTIVATION_CODE, FIREBASE_TOKEN, DEVICE_MODEL, DEVICE_OS_VERSION)
@@ -39,6 +41,7 @@ class RegistrationUseCaseTest {
             residentApi,
             activationCodeObserver,
             sonarIdProvider,
+            bluetoothCryptogramProvider,
             DEVICE_MODEL,
             DEVICE_OS_VERSION
         )

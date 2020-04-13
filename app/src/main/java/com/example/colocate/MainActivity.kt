@@ -19,7 +19,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    protected lateinit var statusStorage: StatusStorage
+    lateinit var statusStorage: StatusStorage
 
     @Inject
     protected lateinit var sonarIdProvider: SonarIdProvider

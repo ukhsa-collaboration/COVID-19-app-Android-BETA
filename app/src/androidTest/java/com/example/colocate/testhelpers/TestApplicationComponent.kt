@@ -10,15 +10,20 @@ import com.example.colocate.ble.LongLiveConnectionScan
 import com.example.colocate.ble.SaveContactWorker
 import com.example.colocate.ble.Scan
 import com.example.colocate.ble.Scanner
+import com.example.colocate.crypto.Encrypter
+import com.example.colocate.crypto.EphemeralKeyProvider
 import com.example.colocate.di.ApplicationComponent
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.BluetoothModule
+import com.example.colocate.di.module.BluetoothModule.Companion.ENCRYPT_SONAR_ID
 import com.example.colocate.di.module.BluetoothModule.Companion.USE_CONNECTION_V2
+import com.example.colocate.di.module.CryptoModule
 import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.NotificationsModule
 import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.StatusModule
 import com.example.colocate.persistence.AppDatabase
+import com.example.colocate.persistence.BluetoothCryptogramProvider
 import com.example.colocate.persistence.ContactEventDao
 import com.example.colocate.persistence.ContactEventV2Dao
 import com.example.colocate.persistence.SonarIdProvider
@@ -29,6 +34,7 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
+import uk.nhs.nhsx.sonar.android.client.security.ServerPublicKeyProvider
 import java.util.Date
 import javax.inject.Named
 import javax.inject.Singleton
@@ -52,11 +58,13 @@ class TestModule(
     private val rxBleClient: RxBleClient,
     private val startTimestampProvider: () -> Date,
     private val endTimestampProvider: () -> Date,
-    private val connectionV2: Boolean = true
+    private val connectionV2: Boolean = true,
+    private val encryptSonarId: Boolean = false
 ) {
 
-    private val bluetoothModule = BluetoothModule(appContext, connectionV2)
+    private val bluetoothModule = BluetoothModule(appContext, connectionV2, encryptSonarId)
     private val persistenceModule = PersistenceModule(appContext)
+    private val cryptoModule = CryptoModule()
 
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
@@ -84,6 +92,27 @@ class TestModule(
     @Provides
     fun provideSonarIdProvider(): SonarIdProvider =
         persistenceModule.provideSonarIdProvider()
+
+    @Provides
+    fun provideEphemeralKeyProvider(): EphemeralKeyProvider = cryptoModule.provideEphemeralKeyProvider()
+
+    @Provides
+    fun provideServerPublicKeyProvider(): ServerPublicKeyProvider =
+        cryptoModule.provideServerPublicKeyProvider()
+
+    @Provides
+    fun providesEncrypter(
+        serverPublicKeyProvider: ServerPublicKeyProvider,
+        ephemeralKeyProvider: EphemeralKeyProvider
+    ): Encrypter =
+        cryptoModule.provideEncrypter(serverPublicKeyProvider, ephemeralKeyProvider)
+
+    @Provides
+    fun provideBluetoothCryptogramProvider(
+        sonarIdProvider: SonarIdProvider,
+        encrypter: Encrypter
+    ): BluetoothCryptogramProvider =
+        cryptoModule.provideBluetoothCryptogramProvider(sonarIdProvider, encrypter)
 
     @Provides
     fun provideContactEventV2Dao(database: AppDatabase): ContactEventV2Dao {
@@ -128,4 +157,8 @@ class TestModule(
     @Provides
     @Named(USE_CONNECTION_V2)
     fun provideUseConnectionV2() = connectionV2
+
+    @Provides
+    @Named(ENCRYPT_SONAR_ID)
+    fun provideEncryptSonarId() = encryptSonarId
 }

@@ -16,17 +16,27 @@ import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import com.example.colocate.di.module.BluetoothModule.Companion.ENCRYPT_SONAR_ID
+import com.example.colocate.persistence.BluetoothCryptogramProvider
 import com.example.colocate.persistence.SonarIdProvider
 import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Named
 
 class Gatt @Inject constructor(
     private val context: Context,
     private val bluetoothManager: BluetoothManager,
-    private val sonarIdProvider: SonarIdProvider
+    private val sonarIdProvider: SonarIdProvider,
+    private val bluetoothCryptogramProvider: BluetoothCryptogramProvider,
+    @Named(ENCRYPT_SONAR_ID)
+    private val encryptSonarId: Boolean
 ) {
     private val identifier: Identifier
-        get() = Identifier.fromString(sonarIdProvider.getSonarId())
+        get() = if (encryptSonarId) {
+            Identifier.fromBytes(bluetoothCryptogramProvider.provideBluetoothCryptogram().asBytes())
+        } else {
+            Identifier.fromString(sonarIdProvider.getSonarId())
+        }
 
     private val service: BluetoothGattService = BluetoothGattService(
         COLOCATE_SERVICE_UUID,

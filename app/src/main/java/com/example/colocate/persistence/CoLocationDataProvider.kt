@@ -1,5 +1,6 @@
 package com.example.colocate.persistence
 
+import com.example.colocate.ble.Identifier
 import com.example.colocate.di.module.BluetoothModule.Companion.USE_CONNECTION_V2
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationEvent
@@ -29,10 +30,9 @@ class CoLocationDataProvider @Inject constructor(
             timestamp = contactEvent.timestamp,
             duration = -1
         )
-
     private fun convert(contactEvent: ContactEventV2): CoLocationEvent =
         CoLocationEvent(
-            sonarId = contactEvent.sonarId,
+            sonarId = Identifier.fromBytes(contactEvent.sonarId).asString,
             rssiValues = contactEvent.rssiValues,
             timestamp = contactEvent.timestamp,
             duration = contactEvent.duration

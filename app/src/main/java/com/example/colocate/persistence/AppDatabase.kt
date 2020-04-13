@@ -13,7 +13,7 @@ import com.example.colocate.notifications.AcknowledgementsDao
 
 @Database(
     entities = [ContactEvent::class, ContactEventV2::class, Acknowledgement::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

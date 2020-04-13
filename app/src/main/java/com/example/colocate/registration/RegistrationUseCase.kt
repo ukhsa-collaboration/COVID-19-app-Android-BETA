@@ -1,6 +1,7 @@
 package com.example.colocate.registration
 
 import com.example.colocate.di.module.AppModule
+import com.example.colocate.persistence.BluetoothCryptogramProvider
 import com.example.colocate.persistence.SonarIdProvider
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
@@ -21,6 +22,7 @@ class RegistrationUseCase @Inject constructor(
     private val residentApi: ResidentApi,
     private val activationCodeObserver: ActivationCodeObserver,
     private val sonarIdProvider: SonarIdProvider,
+    private val bluetoothCryptogramProvider: BluetoothCryptogramProvider,
     @Named(AppModule.DEVICE_MODEL) private val deviceModel: String,
     @Named(AppModule.DEVICE_OS_VERSION) private val deviceOsVersion: String
 ) {

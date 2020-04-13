@@ -9,10 +9,12 @@ import android.app.Service
 import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.colocate.crypto.PROVIDER_NAME
 import com.example.colocate.di.ApplicationComponent
 import com.example.colocate.di.DaggerApplicationComponent
 import com.example.colocate.di.module.AppModule
 import com.example.colocate.di.module.BluetoothModule
+import com.example.colocate.di.module.CryptoModule
 import com.example.colocate.di.module.NetworkModule
 import com.example.colocate.di.module.PersistenceModule
 import com.example.colocate.di.module.RegistrationModule
@@ -24,6 +26,7 @@ import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
+import java.security.Security
 
 const val BASE_URL = "https://sonar-colocate-services-test.apps.cp.data.england.nhs.uk"
 
@@ -34,14 +37,20 @@ class ColocateApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        // Remove existing built in Bouncy Castle
+        Security.removeProvider(PROVIDER_NAME)
+        val bouncyCastleProvider = org.bouncycastle.jce.provider.BouncyCastleProvider()
+        Security.insertProviderAt(bouncyCastleProvider, 1)
+
         appComponent = DaggerApplicationComponent.builder()
             .persistenceModule(PersistenceModule(this))
-            .bluetoothModule(BluetoothModule(this, connectionV2 = true))
+            .bluetoothModule(BluetoothModule(this, connectionV2 = true, encryptSonarId = false))
             .appModule(AppModule(this))
             .networkModule(NetworkModule(BASE_URL))
             .encryptionKeyStorageModule(EncryptionKeyStorageModule(this))
             .statusModule(StatusModule(this))
             .registrationModule(RegistrationModule())
+            .cryptoModule(CryptoModule())
             .build()
 
         RxJavaPlugins.setErrorHandler { throwable ->
