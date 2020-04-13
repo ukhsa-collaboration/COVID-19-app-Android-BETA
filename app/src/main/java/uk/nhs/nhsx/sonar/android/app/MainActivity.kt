@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         confirm_onboarding.setOnClickListener {
-            PermissionActivity.start(this)
+            PostCodeActivity.start(this)
         }
 
         explanation_link.setOnClickListener {
@@ -46,11 +46,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         fun start(context: Context) =
-            context.startActivity(
-                getIntent(
-                    context
-                )
-            )
+            context.startActivity(getIntent(context))
 
         fun getIntent(context: Context) =
             Intent(context, MainActivity::class.java)

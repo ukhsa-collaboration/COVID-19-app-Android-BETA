@@ -75,6 +75,10 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
+        checkPostCodeActivityIsShown()
+
+        onView(withId(R.id.postCodeContinue)).perform(click())
+
         checkPermissionActivityIsShown()
 
         onView(withId(R.id.permission_continue)).perform(click())
@@ -106,6 +110,10 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
+
+        checkPostCodeActivityIsShown()
+
+        onView(withId(R.id.postCodeContinue)).perform(click())
 
         checkPermissionActivityIsShown()
 
@@ -241,6 +249,10 @@ class FlowTest {
 
     private fun checkMainActivityIsShown() {
         onView(withId(R.id.confirm_onboarding)).check(matches(isDisplayed()))
+    }
+
+    private fun checkPostCodeActivityIsShown() {
+        onView(withId(R.id.postCodeContinue)).check(matches(isDisplayed()))
     }
 
     private fun checkPermissionActivityIsShown() {

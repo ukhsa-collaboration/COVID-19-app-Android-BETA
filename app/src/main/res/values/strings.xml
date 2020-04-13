@@ -96,4 +96,7 @@
     <string name="registration_finalising_setup">Finalising setup…</string>
     <string name="registration_everything_is_working_ok">Everything is working OK</string>
     <string name="registration_app_setup_failed">App setup failed</string>
+    <string name="post_code_title">Enter your post code</string>
+    <string name="post_code">Post Code</string>
+    <string name="post_code_rationale">Your post code will not be used to track your location.</string>
 </resources>

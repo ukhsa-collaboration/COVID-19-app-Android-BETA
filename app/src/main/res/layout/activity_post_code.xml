@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_isolate"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    tools:context=".MainActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/nhs_logo" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/postCodeMarker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="118dp"
+        android:src="@drawable/ic_onboarding_postcode_marker" />
+
+    <TextView
+        android:id="@+id/postCodeTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postCodeMarker"
+        android:layout_marginTop="32dp"
+        android:text="@string/post_code_title"
+        android:textSize="32sp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/postCodeTextInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postCodeTitle"
+        android:layout_marginTop="32dp"
+        android:hint="@string/post_code">
+
+        <EditText
+            android:id="@+id/postCodeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPostalAddress"
+            android:maxLength="4" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/postCodeRationale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postCodeTextInputLayout"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/text_sub_title"
+        android:lineSpacingMultiplier="1.2"
+        android:text="@string/post_code_rationale" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/postCodeContinue"
+        style="@style/PrimaryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
+        android:text="@string/submit" />
+
+</RelativeLayout>

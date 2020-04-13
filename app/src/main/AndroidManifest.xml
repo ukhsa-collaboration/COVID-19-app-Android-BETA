@@ -57,6 +57,7 @@
         <activity android:name=".debug.TesterActivity" />
         <activity android:name=".diagnose.DiagnoseReviewActivity" />
         <activity android:name=".diagnose.DiagnoseCoughActivity" />
+        <activity android:name=".onboarding.PostCodeActivity" />
 
         <service
             android:name=".ble.BluetoothService"
