@@ -22,27 +22,30 @@ class TestCoLocateServiceDispatcher : Dispatcher() {
     }
 
     override fun dispatch(request: RecordedRequest): MockResponse {
-        val responseCode = if (shouldSimulateError) {
-            MockResponse().setResponseCode(500)
-        } else {
-            when (request.path) {
-                "/api/devices/registrations" -> MockResponse()
-                "/api/devices" -> MockResponse().apply {
-                    setBody("""{"id":"$RESIDENT_ID","secretKey":"$encodedKey"}""")
-                }
-                "/api/residents/$RESIDENT_ID" -> MockResponse()
-                else -> MockResponse().apply {
-                    setBody("Unexpected request reached TestCoLocateServiceDispatcher class")
-                    setResponseCode(500)
+        val response =
+            if (shouldSimulateError) {
+                MockResponse().setResponseCode(500)
+            } else {
+                when (request.path) {
+                    "/api/devices/registrations" -> MockResponse()
+                    "/api/devices" -> MockResponse().apply {
+                        setBody("""{"id":"$RESIDENT_ID","secretKey":"$encodedKey"}""")
+                    }
+                    "/api/residents/$RESIDENT_ID" -> MockResponse()
+                    else -> MockResponse().apply {
+                        setBody("Unexpected request reached TestCoLocateServiceDispatcher class")
+                        setResponseCode(500)
+                    }
                 }
             }
-        }
-        responseCode.setHeadersDelay(delay, TimeUnit.MILLISECONDS)
-        return responseCode
+
+        response.setHeadersDelay(delay, TimeUnit.MILLISECONDS)
+
+        return response
     }
 
-    fun simulateResponse(isError: Boolean) {
-        shouldSimulateError = isError
+    fun simulateResponse(error: Boolean) {
+        shouldSimulateError = error
     }
 
     fun simulateDelay(delayInMillis: Long) {

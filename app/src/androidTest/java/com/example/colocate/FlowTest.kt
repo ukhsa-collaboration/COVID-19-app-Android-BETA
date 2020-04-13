@@ -6,7 +6,9 @@ package com.example.colocate
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.bluetooth.BluetoothManager
-import android.content.Context
+import android.view.View
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
@@ -20,15 +22,20 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.Until
 import com.example.colocate.persistence.SharedPreferencesSonarIdProvider
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.SharedPreferencesStatusStorage
 import com.example.colocate.testhelpers.TestApplicationContext
 import com.example.colocate.testhelpers.TestCoLocateServiceDispatcher
 import com.example.colocate.testhelpers.isToast
+import org.awaitility.kotlin.await
+import org.awaitility.kotlin.until
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Matcher
 import org.junit.After
-import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -36,8 +43,6 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class FlowTest {
-
-    lateinit var targetContext: Context
 
     @get:Rule
     val activityRule: ActivityTestRule<FlowTestStartActivity> =
@@ -51,7 +56,6 @@ class FlowTest {
 
     @Before
     fun setup() {
-        targetContext = InstrumentationRegistry.getInstrumentation().targetContext
         testAppContext = TestApplicationContext(activityRule)
         ensureBluetoothEnabled()
     }
@@ -79,18 +83,18 @@ class FlowTest {
 
         testAppContext.simulateActivationCodeReceived()
 
-        verifyText(R.id.registrationStatusText, R.string.registration_finalising_setup)
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
 
         testAppContext.verifyRegistrationFlow()
-        verifyText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
-        verifyCheckMySymptomsButtonState(isEnabled = true)
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
+        verifyCheckMySymptomsButton(isEnabled())
     }
 
     @Test
     fun testRegistrationRetry() {
         resetStatusStorage()
         unsetSonarId()
-        testAppContext.simulateBackendResponse(isError = true)
+        testAppContext.simulateBackendResponse(error = true)
         testAppContext.simulateBackendDelay(0)
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -104,32 +108,28 @@ class FlowTest {
         checkOkActivityIsShown()
 
         testAppContext.verifyReceivedRegistrationRequest()
-        verifyText(R.id.registrationStatusText, R.string.registration_finalising_setup)
-        verifyCheckMySymptomsButtonState(isEnabled = false)
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
+        verifyCheckMySymptomsButton(not(isEnabled()))
 
-        Thread.sleep(2_000)
-        verifyText(R.id.registrationStatusText, R.string.registration_app_setup_failed)
+        waitForText(R.string.registration_app_setup_failed, timeoutInMs = 2_000)
+
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_app_setup_failed)
         onView(withId(R.id.registrationRetryButton)).check(matches(isDisplayed()))
-        verifyCheckMySymptomsButtonState(isEnabled = false)
+        verifyCheckMySymptomsButton(not(isEnabled()))
 
-        testAppContext.simulateBackendResponse(isError = false)
+        testAppContext.simulateBackendResponse(error = false)
 
         onView(withId(R.id.registrationRetryButton)).perform(click())
 
         testAppContext.simulateActivationCodeReceived()
 
         testAppContext.verifyRegistrationFlow()
-        verifyText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
         onView(withId(R.id.registrationRetryButton)).check(matches(not(isDisplayed())))
-        verifyCheckMySymptomsButtonState(isEnabled = true)
+        verifyCheckMySymptomsButton(isEnabled())
     }
 
-    private fun verifyCheckMySymptomsButtonState(isEnabled: Boolean) {
-        val matcher = if (isEnabled) {
-            isEnabled()
-        } else {
-            not(isEnabled())
-        }
+    private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
         onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
     }
 
@@ -164,9 +164,6 @@ class FlowTest {
             clickOnStatusNotification()
         }
 
-        // TODO: Is there a better way to detect AtRiskActivity without using a delay?
-        // We believe without this delay it tries to find the disclaimer title in the notification panel and fails.
-        Thread.sleep(100)
         checkAtRiskActivityIsShown()
     }
 
@@ -213,6 +210,18 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkIsolateActivityIsShown()
+    }
+
+    private fun waitForText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        val context = activityRule.activity
+        val text = context.getString(stringId)
+
+        device.wait(Until.findObject(By.text(text)), timeoutInMs)
+    }
+
+    private fun checkViewHasText(@IdRes viewId: Int, @StringRes stringId: Int) {
+        onView(withId(viewId)).check(matches(withText(stringId)))
     }
 
     private fun checkMainActivityIsShown() {
@@ -280,14 +289,8 @@ class FlowTest {
 
         adapter.enable()
 
-        var attempts = 1
-        while (attempts <= 20 && !adapter.isEnabled) {
-            Thread.sleep(200)
-            attempts++
-        }
-
-        if (!adapter.isEnabled) {
-            fail("Failed enabling bluetooth")
+        await until {
+            adapter.isEnabled
         }
     }
 
@@ -311,10 +314,5 @@ class FlowTest {
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
         onView(withId(R.id.status_red)).check(matches(isDisplayed()))
-    }
-
-    private fun verifyText(textViewId: Int, stringId: Int) {
-        val text = targetContext.getString(stringId)
-        onView(withId(textViewId)).check(matches(withText(text)))
     }
 }

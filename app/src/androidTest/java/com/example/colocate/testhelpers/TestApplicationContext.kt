@@ -96,13 +96,29 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val notificationTitle = testActivity.getString(R.string.notification_title)
 
         device.openNotification()
-        device.wait(Until.hasObject(By.text(notificationText)), 500)
+
         device.wait(Until.hasObject(By.text(notificationTitle)), 500)
-        device.findObject(By.text(notificationText)).click()
+
+        // Only title is shown, click on it to toggle notification,
+        // on some devices/android version it might trigger the notification action instead
+        if (!device.hasObject(By.text(notificationText))) {
+            device.findObject(By.text(notificationTitle)).click()
+        }
+
+        // If notification text is visible, click it.
+        // It might have shown up because we toggled by clicking on the title
+        // It might have always been visible if there was enough room on the screen
+        if (device.hasObject(By.text(notificationText))) {
+            device.findObject(By.text(notificationText)).click()
+        }
+
+        // Ensure notifications are hidden before moving on.
+        device.wait(Until.gone(By.text(notificationText)), 500)
+        device.wait(Until.gone(By.text(notificationTitle)), 500)
     }
 
-    fun simulateBackendResponse(isError: Boolean) {
-        testDispatcher.simulateResponse(isError)
+    fun simulateBackendResponse(error: Boolean) {
+        testDispatcher.simulateResponse(error)
     }
 
     fun verifyReceivedRegistrationRequest() {
