@@ -10,16 +10,16 @@ class CoLocationDataProvider @Inject constructor(
     @Named(USE_CONNECTION_V2) private val useConnectionV2: Boolean,
     private val contactEventDao: ContactEventDao,
     private val contactEventV2Dao: ContactEventV2Dao,
-    private val residentIdProvider: ResidentIdProvider
+    private val sonarIdProvider: SonarIdProvider
 ) {
 
     suspend fun getData(): CoLocationData =
         if (useConnectionV2) {
             val events = contactEventV2Dao.getAll().map(::convert)
-            CoLocationData(residentIdProvider.getResidentId(), events)
+            CoLocationData(sonarIdProvider.getSonarId(), events)
         } else {
             val events = contactEventDao.getAll().map(::convert)
-            CoLocationData(residentIdProvider.getResidentId(), events)
+            CoLocationData(sonarIdProvider.getSonarId(), events)
         }
 
     private fun convert(contactEvent: ContactEvent): CoLocationEvent =

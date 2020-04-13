@@ -9,7 +9,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import com.example.colocate.persistence.AppDatabase
-import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.persistence.SonarIdProvider
 import com.example.colocate.status.StatusStorage
 import org.jetbrains.annotations.TestOnly
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
@@ -25,7 +25,7 @@ class FlowTestStartActivity : AppCompatActivity() {
     lateinit var encryptionKeyStorage: EncryptionKeyStorage
 
     @Inject
-    lateinit var residentIdProvider: ResidentIdProvider
+    lateinit var sonarIdProvider: SonarIdProvider
 
     @Inject
     lateinit var appDatabase: AppDatabase

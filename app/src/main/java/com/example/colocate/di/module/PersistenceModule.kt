@@ -13,8 +13,8 @@ import com.example.colocate.ble.SaveContactWorker
 import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ContactEventDao
 import com.example.colocate.persistence.ContactEventV2Dao
-import com.example.colocate.persistence.ResidentIdProvider
-import com.example.colocate.persistence.SharedPreferencesResidentIdProvider
+import com.example.colocate.persistence.SonarIdProvider
+import com.example.colocate.persistence.SharedPreferencesSonarIdProvider
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -48,8 +48,8 @@ class PersistenceModule(
     fun providesBleEvents(): BleEvents = BleEventTracker()
 
     @Provides
-    fun provideResidentIdProvider(): ResidentIdProvider =
-        SharedPreferencesResidentIdProvider(applicationContext)
+    fun provideSonarIdProvider(): SonarIdProvider =
+        SharedPreferencesSonarIdProvider(applicationContext)
 
     @Provides
     fun provideSaveContactWorker(

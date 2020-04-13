@@ -120,14 +120,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             .contains("""{"activationCode":"test activation code #001","pushToken":"test firebase token #010",""")
     }
 
-    fun verifyResidentIdAndSecretKey() {
-        val idProvider = testActivity.residentIdProvider
+    fun verifySonarIdAndSecretKey() {
+        val idProvider = testActivity.sonarIdProvider
         val keyStorage = testActivity.encryptionKeyStorage
 
         await until {
-            idProvider.getResidentId() != ID_NOT_REGISTERED
+            idProvider.getSonarId() != ID_NOT_REGISTERED
         }
-        assertThat(idProvider.getResidentId()).isEqualTo(TestCoLocateServiceDispatcher.RESIDENT_ID)
+        assertThat(idProvider.getSonarId()).isEqualTo(TestCoLocateServiceDispatcher.RESIDENT_ID)
 
         await untilNotNull {
             keyStorage.provideKey()

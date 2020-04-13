@@ -1,7 +1,7 @@
 package com.example.colocate.registration
 
 import com.example.colocate.di.module.AppModule
-import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.persistence.SonarIdProvider
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
@@ -21,14 +21,14 @@ class RegistrationUseCase @Inject constructor(
     private val tokenRetriever: TokenRetriever,
     private val residentApi: ResidentApi,
     private val activationCodeObserver: ActivationCodeObserver,
-    private val residentIdProvider: ResidentIdProvider,
+    private val sonarIdProvider: SonarIdProvider,
     @Named(AppModule.DEVICE_MODEL) private val deviceModel: String,
     @Named(AppModule.DEVICE_OS_VERSION) private val deviceOsVersion: String
 ) {
 
     suspend fun register(): RegistrationResult {
         try {
-            if (residentIdProvider.hasProperResidentId()) {
+            if (sonarIdProvider.hasProperSonarId()) {
                 Timber.d("Already registered")
                 return RegistrationResult.AlreadyRegistered
             }
@@ -38,10 +38,10 @@ class RegistrationUseCase @Inject constructor(
             Timber.d("RegistrationUseCase registered device")
             val activationCode = waitForActivationCode(10_000)
             Timber.d("RegistrationUseCase activationCode = $activationCode")
-            val residentId = registerResident(activationCode, firebaseToken)
-            Timber.d("RegistrationUseCase residentId = $residentId")
-            storeResidentId(residentId)
-            Timber.d("RegistrationUseCase residentId stored")
+            val sonarId = registerResident(activationCode, firebaseToken)
+            Timber.d("RegistrationUseCase sonarId = $sonarId")
+            storeSonarId(sonarId)
+            Timber.d("RegistrationUseCase sonarId stored")
             return RegistrationResult.Success
         } catch (e: Exception) {
             Timber.e(e, "RegistrationUseCase exception")
@@ -99,8 +99,8 @@ class RegistrationUseCase @Inject constructor(
         }
     }
 
-    private fun storeResidentId(citizenId: String) {
-        residentIdProvider.setResidentId(citizenId)
+    private fun storeSonarId(sonarId: String) {
+        sonarIdProvider.setSonarId(sonarId)
     }
 
     private suspend inline fun <T> suspendCoroutineWithTimeout(

@@ -16,17 +16,17 @@ import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.persistence.SonarIdProvider
 import timber.log.Timber
 import javax.inject.Inject
 
 class Gatt @Inject constructor(
     private val context: Context,
     private val bluetoothManager: BluetoothManager,
-    private val residentIdProvider: ResidentIdProvider
+    private val sonarIdProvider: SonarIdProvider
 ) {
     private val identifier: Identifier
-        get() = Identifier.fromString(residentIdProvider.getResidentId())
+        get() = Identifier.fromString(sonarIdProvider.getSonarId())
 
     private val service: BluetoothGattService = BluetoothGattService(
         COLOCATE_SERVICE_UUID,

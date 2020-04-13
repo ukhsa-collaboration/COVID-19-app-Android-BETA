@@ -5,7 +5,7 @@
 package com.example.colocate.diagnose
 
 import com.example.colocate.persistence.CoLocationDataProvider
-import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.persistence.SonarIdProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -22,7 +22,7 @@ class DiagnoseReviewViewModelTest {
 
     private val coLocationApi = mockk<CoLocationApi>(relaxed = true)
     private val coLocationDataProvider = mockk<CoLocationDataProvider>()
-    private val residentIdProvider = mockk<ResidentIdProvider>()
+    private val sonarIdProvider = mockk<SonarIdProvider>()
     private val testSubject = DiagnoseReviewViewModel(
         coLocationApi,
         Dispatchers.Unconfined,
@@ -42,7 +42,7 @@ class DiagnoseReviewViewModelTest {
             )
             val coLocationData = CoLocationData(RESIDENT_ID, events)
             coEvery { coLocationDataProvider.getData() } returns coLocationData
-            every { residentIdProvider.getResidentId() } returns RESIDENT_ID
+            every { sonarIdProvider.getSonarId() } returns RESIDENT_ID
 
             testSubject.uploadContactEvents()
 
@@ -55,7 +55,7 @@ class DiagnoseReviewViewModelTest {
     @Test
     fun onClearContactEvents() {
         runBlocking {
-            every { residentIdProvider.getResidentId() } returns RESIDENT_ID
+            every { sonarIdProvider.getSonarId() } returns RESIDENT_ID
             coEvery { coLocationDataProvider.clearData() } returns Unit
 
             testSubject.clearContactEvents()

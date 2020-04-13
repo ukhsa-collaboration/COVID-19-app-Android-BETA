@@ -4,23 +4,23 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.core.content.edit
 
-class SharedPreferencesResidentIdProvider(context: Context) : ResidentIdProvider {
+class SharedPreferencesSonarIdProvider(context: Context) : SonarIdProvider {
 
     private val sharedPreferences: SharedPreferences by lazy {
         context.getSharedPreferences("residentId", Context.MODE_PRIVATE)
     }
 
-    override fun getResidentId(): String {
+    override fun getSonarId(): String {
         return sharedPreferences.getString(KEY, ID_NOT_REGISTERED)!!
     }
 
-    override fun hasProperResidentId(): Boolean {
-        val residentId = getResidentId()
-        return residentId.isNotEmpty() && residentId != ID_NOT_REGISTERED
+    override fun hasProperSonarId(): Boolean {
+        val sonarId = getSonarId()
+        return sonarId.isNotEmpty() && sonarId != ID_NOT_REGISTERED
     }
 
-    override fun setResidentId(residentId: String) {
-        sharedPreferences.edit { putString(KEY, residentId) }
+    override fun setSonarId(sonarId: String) {
+        sharedPreferences.edit { putString(KEY, sonarId) }
     }
 
     fun clear() {

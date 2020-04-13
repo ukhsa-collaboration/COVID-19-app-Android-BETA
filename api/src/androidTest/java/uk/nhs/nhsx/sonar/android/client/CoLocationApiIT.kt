@@ -56,13 +56,13 @@ class CoLocationApiIT {
         var isError = false
 
         coLocationApi.save(
-            CoLocationData("residentId", emptyList()),
+            CoLocationData("::sonar-id::", emptyList()),
             { isSuccess = true },
             { isError = true }
         )
 
         val request = server.takeRequest(300, MILLISECONDS)
-        assertEquals("/api/residents/residentId", request?.path)
+        assertEquals("/api/residents/::sonar-id::", request?.path)
 
         await until { isSuccess }
         assertThat(isError).isFalse()

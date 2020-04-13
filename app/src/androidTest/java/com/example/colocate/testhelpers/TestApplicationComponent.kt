@@ -21,7 +21,7 @@ import com.example.colocate.di.module.StatusModule
 import com.example.colocate.persistence.AppDatabase
 import com.example.colocate.persistence.ContactEventDao
 import com.example.colocate.persistence.ContactEventV2Dao
-import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.persistence.SonarIdProvider
 import com.example.colocate.registration.TokenRetriever
 import com.polidea.rxandroidble2.RxBleClient
 import dagger.Component
@@ -82,8 +82,8 @@ class TestModule(
         persistenceModule.provideContactEventDao(database)
 
     @Provides
-    fun provideResidentIdProvider(): ResidentIdProvider =
-        persistenceModule.provideResidentIdProvider()
+    fun provideSonarIdProvider(): SonarIdProvider =
+        persistenceModule.provideSonarIdProvider()
 
     @Provides
     fun provideContactEventV2Dao(database: AppDatabase): ContactEventV2Dao {

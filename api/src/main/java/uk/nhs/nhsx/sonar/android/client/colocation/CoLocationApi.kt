@@ -26,7 +26,7 @@ class CoLocationApi(
         onError: ErrorCallback
     ) {
         val request = HttpRequest(
-            "$baseUrl/api/residents/${coLocationData.residentId}",
+            "$baseUrl/api/residents/${coLocationData.sonarId}",
             coLocationData.toJson(),
             keyStorage.provideKey()
         )
@@ -38,7 +38,7 @@ class CoLocationApi(
 typealias Seconds = Long
 
 data class CoLocationData(
-    val residentId: String,
+    val sonarId: String,
     val contactEvents: List<CoLocationEvent>
 )
 

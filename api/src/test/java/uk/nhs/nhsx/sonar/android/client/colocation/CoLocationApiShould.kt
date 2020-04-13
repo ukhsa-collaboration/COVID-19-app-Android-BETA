@@ -33,11 +33,11 @@ class CoLocationApiShould {
             CoLocationEvent("002", listOf(-10, -10, 10), "yesterday", 120)
         )
 
-        coLocationApi.save(CoLocationData("residentId", events), {}, {})
+        coLocationApi.save(CoLocationData("::sonar-id::", events), {}, {})
 
         val request = requestQueue.lastRequest
         assertThat(request.method).isEqualTo(PATCH)
-        assertThat(request.url).isEqualTo("$baseUrl/api/residents/residentId")
+        assertThat(request.url).isEqualTo("$baseUrl/api/residents/::sonar-id::")
         request.assertBodyHasJson(
             "contactEvents" to listOf(
                 mapOf(
@@ -61,7 +61,7 @@ class CoLocationApiShould {
         var success = false
         var error = false
 
-        coLocationApi.save(CoLocationData("residentId", emptyList()), { success = true }, { error = true })
+        coLocationApi.save(CoLocationData("::sonar-id::", emptyList()), { success = true }, { error = true })
 
         requestQueue.returnSuccess(JSONObject())
         assertThat(success).isTrue()
@@ -73,7 +73,7 @@ class CoLocationApiShould {
         var success = false
         var error = false
 
-        coLocationApi.save(CoLocationData("residentId", emptyList()), { success = true }, { error = true })
+        coLocationApi.save(CoLocationData("::sonar-id::", emptyList()), { success = true }, { error = true })
 
         requestQueue.returnError(VolleyError())
         assertThat(success).isFalse()

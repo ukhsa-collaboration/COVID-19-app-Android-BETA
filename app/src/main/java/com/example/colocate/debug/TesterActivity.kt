@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.colocate.R
 import com.example.colocate.appComponent
 import com.example.colocate.ble.BleEvents
-import com.example.colocate.persistence.SharedPreferencesResidentIdProvider
+import com.example.colocate.persistence.SharedPreferencesSonarIdProvider
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.SharedPreferencesStatusStorage
 import com.example.colocate.status.StatusStorage
@@ -29,8 +29,8 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         SharedPreferencesStatusStorage(this)
     }
 
-    private val residentIdProvider: SharedPreferencesResidentIdProvider by lazy {
-        SharedPreferencesResidentIdProvider(this)
+    private val sonarIdProvider: SharedPreferencesSonarIdProvider by lazy {
+        SharedPreferencesSonarIdProvider(this)
     }
 
     private lateinit var viewModelFactory: TestViewModelFactory
@@ -43,7 +43,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sonar_id.text = "This is ${residentIdProvider.getResidentId()}"
+        sonar_id.text = "This is ${sonarIdProvider.getSonarId()}"
         val adapter = EventsAdapter()
         events.adapter = adapter
         events.layoutManager = LinearLayoutManager(this)
@@ -61,7 +61,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         reset_button.setOnClickListener {
             statusStorage.update(CovidStatus.OK)
 
-            residentIdProvider.clear()
+            sonarIdProvider.clear()
 
             viewModel.clear()
         }

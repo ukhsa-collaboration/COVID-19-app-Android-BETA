@@ -9,7 +9,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.colocate.ble.startBluetoothService
-import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.persistence.SonarIdProvider
 import com.example.colocate.status.StatusStorage
 import com.example.colocate.status.navigateTo
 import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     protected lateinit var statusStorage: StatusStorage
 
     @Inject
-    protected lateinit var residentIdProvider: ResidentIdProvider
+    protected lateinit var sonarIdProvider: SonarIdProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             ExplanationActivity.start(this)
         }
 
-        if (residentIdProvider.hasProperResidentId()) {
+        if (sonarIdProvider.hasProperSonarId()) {
             startBluetoothService()
             navigateTo(statusStorage.get())
         }

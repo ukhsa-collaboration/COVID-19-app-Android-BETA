@@ -1,7 +1,7 @@
 package com.example.colocate.registration
 
 import com.example.colocate.persistence.ID_NOT_REGISTERED
-import com.example.colocate.persistence.ResidentIdProvider
+import com.example.colocate.persistence.SonarIdProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -27,7 +27,7 @@ class RegistrationUseCaseTest {
     private val tokenRetriever = mockk<TokenRetriever>()
     private val residentApi = mockk<ResidentApi>()
     private val activationCodeObserver = mockk<ActivationCodeObserver>()
-    private val residentIdProvider = mockk<ResidentIdProvider>()
+    private val sonarIdProvider = mockk<SonarIdProvider>()
 
     private val confirmation =
         DeviceConfirmation(ACTIVATION_CODE, FIREBASE_TOKEN, DEVICE_MODEL, DEVICE_OS_VERSION)
@@ -37,7 +37,7 @@ class RegistrationUseCaseTest {
             tokenRetriever,
             residentApi,
             activationCodeObserver,
-            residentIdProvider,
+            sonarIdProvider,
             DEVICE_MODEL,
             DEVICE_OS_VERSION
         )
@@ -50,9 +50,9 @@ class RegistrationUseCaseTest {
     fun setUp() {
         Timber.plant(Timber.DebugTree())
 
-        every { residentIdProvider.getResidentId() } returns ID_NOT_REGISTERED
-        every { residentIdProvider.hasProperResidentId() } returns false
-        every { residentIdProvider.setResidentId(any()) } returns Unit
+        every { sonarIdProvider.getSonarId() } returns ID_NOT_REGISTERED
+        every { sonarIdProvider.hasProperSonarId() } returns false
+        every { sonarIdProvider.setSonarId(any()) } returns Unit
         coEvery { tokenRetriever.retrieveToken() } returns TokenRetriever.Result.Success(
             FIREBASE_TOKEN
         )
@@ -82,7 +82,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun shouldReturnIfAlreadyRegistered() = runBlockingTest {
-        every { residentIdProvider.hasProperResidentId() } returns true
+        every { sonarIdProvider.hasProperSonarId() } returns true
 
         val result = sut.register()
 
@@ -161,10 +161,10 @@ class RegistrationUseCaseTest {
     }
 
     @Test
-    fun onSuccessSavesResidentId() = runBlockingTest {
+    fun onSuccessSavesSonarId() = runBlockingTest {
         sut.register()
 
-        verify { residentIdProvider.setResidentId(RESIDENT_ID) }
+        verify { sonarIdProvider.setSonarId(RESIDENT_ID) }
     }
 
     companion object {

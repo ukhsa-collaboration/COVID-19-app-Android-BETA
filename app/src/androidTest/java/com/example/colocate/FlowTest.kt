@@ -16,7 +16,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import com.example.colocate.persistence.SharedPreferencesResidentIdProvider
+import com.example.colocate.persistence.SharedPreferencesSonarIdProvider
 import com.example.colocate.status.CovidStatus
 import com.example.colocate.status.SharedPreferencesStatusStorage
 import com.example.colocate.testhelpers.TestApplicationContext
@@ -56,7 +56,7 @@ class FlowTest {
     @Test
     fun testRegistration() {
         resetStatusStorage()
-        unsetResidentId()
+        unsetSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -74,7 +74,7 @@ class FlowTest {
             verifyReceivedRegistrationRequest()
             simulateActivationCodeReceived()
             verifyReceivedActivationRequest()
-            verifyResidentIdAndSecretKey()
+            verifySonarIdAndSecretKey()
         }
 
         checkOkActivityIsShown()
@@ -84,7 +84,7 @@ class FlowTest {
     fun testBluetoothInteractions() {
         clearDatabase()
         setStatus(CovidStatus.OK)
-        setValidResidentIdAndSecretKey()
+        setValidSonarIdAndSecretKey()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -102,7 +102,7 @@ class FlowTest {
     @Test
     fun testReceivingStatusUpdateNotification() {
         setStatus(CovidStatus.OK)
-        setValidResidentId()
+        setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -116,7 +116,7 @@ class FlowTest {
 
     @Test
     fun testExplanation() {
-        unsetResidentId()
+        unsetSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -132,7 +132,7 @@ class FlowTest {
     @Test
     fun testLaunchWhenStateIsOk() {
         setStatus(CovidStatus.OK)
-        setValidResidentId()
+        setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -142,7 +142,7 @@ class FlowTest {
     @Test
     fun testLaunchWhenStateIsPotential() {
         setStatus(CovidStatus.POTENTIAL)
-        setValidResidentId()
+        setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -152,7 +152,7 @@ class FlowTest {
     @Test
     fun testLaunchWhenStateIsRed() {
         setStatus(CovidStatus.RED)
-        setValidResidentId()
+        setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -197,19 +197,19 @@ class FlowTest {
         storage.reset()
     }
 
-    private fun unsetResidentId() {
-        val residentIdProvider =
-            activityRule.activity.residentIdProvider as SharedPreferencesResidentIdProvider
-        residentIdProvider.clear()
+    private fun unsetSonarId() {
+        val sonarIdProvider =
+            activityRule.activity.sonarIdProvider as SharedPreferencesSonarIdProvider
+        sonarIdProvider.clear()
     }
 
-    private fun setValidResidentId() {
-        val residentIdProvider = activityRule.activity.residentIdProvider
-        residentIdProvider.setResidentId(TestCoLocateServiceDispatcher.RESIDENT_ID)
+    private fun setValidSonarId() {
+        val sonarIdProvider = activityRule.activity.sonarIdProvider
+        sonarIdProvider.setSonarId(TestCoLocateServiceDispatcher.RESIDENT_ID)
     }
 
-    private fun setValidResidentIdAndSecretKey() {
-        setValidResidentId()
+    private fun setValidSonarIdAndSecretKey() {
+        setValidSonarId()
 
         val keyStorage = activityRule.activity.encryptionKeyStorage
         keyStorage.putBase64Key(TestCoLocateServiceDispatcher.encodedKey)
