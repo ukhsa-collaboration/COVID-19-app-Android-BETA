@@ -3,7 +3,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.colocate">
+    package="uk.nhs.nhsx.sonar.android.app">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -52,7 +52,6 @@
         <activity android:name=".status.OkActivity" />
         <activity android:name=".status.IsolateActivity" />
         <activity android:name=".FlowTestStartActivity" />
-        <activity android:name=".registration.RegistrationActivity" />
         <activity android:name=".PermissionActivity" />
         <activity android:name=".ExplanationActivity" />
         <activity android:name=".debug.TesterActivity" />
@@ -82,7 +81,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.colocate.exports"
+            android:authorities="uk.nhs.nhsx.sonar.android.app.exports"
             android:exported="false"
             android:grantUriPermissions="true">
 

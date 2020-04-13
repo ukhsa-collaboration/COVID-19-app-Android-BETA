@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
-    tools:context=".PermissionActivity">
+    tools:context="uk.nhs.nhsx.sonar.android.app.PermissionActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/logo"

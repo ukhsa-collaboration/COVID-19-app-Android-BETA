@@ -10,7 +10,7 @@
 
     <include layout="@layout/banner" />
 
-    <com.example.colocate.status.RegistrationProgressPanel
+    <uk.nhs.nhsx.sonar.android.app.status.RegistrationProgressPanel
         android:id="@+id/registrationPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
