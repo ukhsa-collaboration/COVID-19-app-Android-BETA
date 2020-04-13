@@ -129,7 +129,7 @@ class FlowTest {
         } else {
             not(isEnabled())
         }
-        onView(withId(R.id.re_diagnose_button)).check(matches(matcher))
+        onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
     }
 
     @Test
@@ -227,15 +227,15 @@ class FlowTest {
     }
 
     private fun checkOkActivityIsShown() {
-        onView(withId(R.id.ok_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_initial)).check(matches(isDisplayed()))
     }
 
     private fun checkAtRiskActivityIsShown() {
-        onView(withId(R.id.potential_disclaimer_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_amber)).check(matches(isDisplayed()))
     }
 
     private fun checkIsolateActivityIsShown() {
-        onView(withId(R.id.isolate_disclaimer_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_red)).check(matches(isDisplayed()))
     }
 
     private fun setStatus(covidStatus: CovidStatus) {
@@ -291,7 +291,7 @@ class FlowTest {
     }
 
     private fun checkCanTransitionToIsolateActivity() {
-        onView(withId(R.id.re_diagnose_button)).perform(click())
+        onView(withId(R.id.status_not_feeling_well)).perform(click())
 
         // Temperature step
         onView(withId(R.id.temperature_question)).check(matches(isDisplayed()))
@@ -309,7 +309,7 @@ class FlowTest {
         onView(withId(R.id.review_description)).check(matches(isDisplayed()))
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
-        onView(withId(R.id.isolate_disclaimer)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_red)).check(matches(isDisplayed()))
     }
 
     private fun verifyText(textViewId: Int, stringId: Int) {

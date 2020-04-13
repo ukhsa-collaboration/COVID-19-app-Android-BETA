@@ -7,10 +7,12 @@ package com.example.colocate.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import com.example.colocate.BaseActivity
 import com.example.colocate.R
 import com.example.colocate.appComponent
 import com.example.colocate.ble.startBluetoothService
+import com.example.colocate.diagnose.DiagnoseTemperatureActivity
 import javax.inject.Inject
 
 class AtRiskActivity : BaseActivity() {
@@ -24,6 +26,10 @@ class AtRiskActivity : BaseActivity() {
         startBluetoothService()
 
         setContentView(R.layout.activity_at_risk)
+
+        findViewById<TextView>(R.id.status_not_feeling_well).setOnClickListener {
+            DiagnoseTemperatureActivity.start(this)
+        }
     }
 
     override fun onResume() {

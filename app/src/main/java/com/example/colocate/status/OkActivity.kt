@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.Observer
+import android.widget.TextView
 import com.example.colocate.BaseActivity
 import com.example.colocate.R
 import com.example.colocate.ViewModelFactory
@@ -18,7 +18,7 @@ import com.example.colocate.appComponent
 import com.example.colocate.ble.startBluetoothService
 import com.example.colocate.diagnose.DiagnoseTemperatureActivity
 import com.example.colocate.persistence.SonarIdProvider
-import kotlinx.android.synthetic.main.activity_ok.re_diagnose_button
+import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import javax.inject.Inject
 
@@ -47,7 +47,7 @@ class OkActivity : BaseActivity() {
 
         setContentView(R.layout.activity_ok)
 
-        findViewById<AppCompatButton>(R.id.re_diagnose_button).setOnClickListener {
+        findViewById<TextView>(R.id.status_not_feeling_well).setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
         }
 
@@ -65,7 +65,7 @@ class OkActivity : BaseActivity() {
                 ViewState.Success -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.REGISTERED)
                     startBluetoothService()
-                    re_diagnose_button.isEnabled = true
+                    status_not_feeling_well.isEnabled = true
                 }
                 ViewState.Progress -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.IN_PROGRESS)
