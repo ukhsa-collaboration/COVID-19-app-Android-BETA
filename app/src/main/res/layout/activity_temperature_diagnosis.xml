@@ -33,13 +33,11 @@
 
         <TextView
             android:id="@+id/temperature_question"
+            style="@style/TextViewSubHead"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/progress"
-            android:lineSpacingMultiplier="1.18"
-            android:text="@string/temperature_question"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:text="@string/temperature_question" />
 
         <TextView
             android:id="@+id/temperature_description"
@@ -99,8 +97,8 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/PrimaryButton"
         android:id="@+id/confirm_diagnosis"
+        style="@style/PrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

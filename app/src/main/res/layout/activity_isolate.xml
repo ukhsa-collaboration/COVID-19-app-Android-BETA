@@ -36,37 +36,29 @@
 
                 <TextView
                     android:id="@+id/status_red_title"
+                    style="@style/TextViewStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:lineSpacingMultiplier="1.18"
-                    android:text="@string/status_red_title"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
+                    android:text="@string/status_red_title" />
 
                 <TextView
+                    style="@style/TextViewSubStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:lineSpacingMultiplier="1.18"
-                    android:text="@string/status_latest_advice"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
+                    android:text="@string/status_latest_advice" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/status_red_next_steps"
+                style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="16dp"
-                android:lineSpacingMultiplier="1.18"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="@string/status_red_next_steps"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:text="@string/status_red_next_steps" />
 
             <LinearLayout
                 android:id="@+id/status_feeling_ok"
@@ -79,23 +71,20 @@
 
                 <TextView
                     android:id="@+id/need_medical_advice"
+                    style="@style/TextViewActionSubTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:lineSpacingMultiplier="1.18"
                     android:text="@string/need_medical_advice"
-                    android:textColor="@color/text_sub_title"
-                    android:textSize="16sp"
-                    android:textStyle="normal" />
+                    android:textSize="16sp" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    style="@style/TextViewActionTitle"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:lineSpacingMultiplier="1.18"
-                    android:text="@string/nhs_online_service"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"
+                    android:text="@string/nhs_online_service" />
 
             </LinearLayout>
 
