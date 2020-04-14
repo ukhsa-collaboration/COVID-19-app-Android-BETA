@@ -78,7 +78,11 @@ class DiagnoseReviewActivity : BaseActivity() {
         })
 
         confirmButton.setOnClickListener {
-            viewModel.uploadContactEvents()
+            if (hasCough || hasTemperature) {
+                viewModel.uploadContactEvents()
+            } else {
+                updateStatusAndNavigate()
+            }
         }
     }
 
