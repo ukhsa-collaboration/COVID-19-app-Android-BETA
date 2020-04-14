@@ -4,7 +4,6 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
-import uk.nhs.nhsx.sonar.android.app.persistence.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
@@ -24,7 +23,6 @@ class RegistrationUseCase @Inject constructor(
     private val activationCodeObserver: ActivationCodeObserver,
     private val sonarIdProvider: SonarIdProvider,
     private val postCodeProvider: PostCodeProvider,
-    private val bluetoothCryptogramProvider: BluetoothCryptogramProvider,
     @Named(AppModule.DEVICE_MODEL) private val deviceModel: String,
     @Named(AppModule.DEVICE_OS_VERSION) private val deviceOsVersion: String
 ) {

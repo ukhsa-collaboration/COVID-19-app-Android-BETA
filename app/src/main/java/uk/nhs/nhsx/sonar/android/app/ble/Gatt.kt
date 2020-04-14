@@ -17,8 +17,8 @@ import android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule.Companion.ENCRYPT_SONAR_ID
-import uk.nhs.nhsx.sonar.android.app.persistence.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import javax.inject.Inject
 import javax.inject.Named

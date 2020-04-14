@@ -18,6 +18,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.Scan
 import uk.nhs.nhsx.sonar.android.app.ble.Scanner
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.Encrypter
 import uk.nhs.nhsx.sonar.android.app.crypto.EphemeralKeyProvider
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
@@ -31,7 +32,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.di.module.StatusModule
 import uk.nhs.nhsx.sonar.android.app.persistence.AppDatabase
-import uk.nhs.nhsx.sonar.android.app.persistence.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider

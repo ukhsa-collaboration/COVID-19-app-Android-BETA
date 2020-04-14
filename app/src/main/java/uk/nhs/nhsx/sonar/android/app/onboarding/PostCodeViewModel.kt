@@ -7,8 +7,7 @@ import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.util.LiveDataEvent
 import javax.inject.Inject
 
-class PostCodeViewModel @Inject constructor(private val postCodeProvider: PostCodeProvider) :
-    ViewModel() {
+class PostCodeViewModel @Inject constructor(private val postCodeProvider: PostCodeProvider) : ViewModel() {
 
     private val viewState = MutableLiveData<PostCodeViewState>()
     fun viewState(): LiveData<PostCodeViewState> {

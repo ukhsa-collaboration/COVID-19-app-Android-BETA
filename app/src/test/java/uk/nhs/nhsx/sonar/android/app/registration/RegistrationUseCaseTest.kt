@@ -15,7 +15,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.persistence.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.ID_NOT_REGISTERED
 import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
@@ -32,7 +31,6 @@ class RegistrationUseCaseTest {
     private val activationCodeObserver = mockk<ActivationCodeObserver>()
     private val sonarIdProvider = mockk<SonarIdProvider>()
     private val postCodeProvider = mockk<PostCodeProvider>()
-    private val bluetoothCryptogramProvider = mockk<BluetoothCryptogramProvider>()
 
     private val confirmation =
         DeviceConfirmation(
@@ -50,7 +48,6 @@ class RegistrationUseCaseTest {
             activationCodeObserver,
             sonarIdProvider,
             postCodeProvider,
-            bluetoothCryptogramProvider,
             DEVICE_MODEL,
             DEVICE_OS_VERSION
         )
