@@ -3,7 +3,6 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_nhsuk_grey_5">
@@ -26,7 +25,7 @@
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/roboto_medium"
             android:letterSpacing="0.1"
-            android:text="@string/progress_two_trird"
+            android:text="@string/progress_two_thirds"
             android:textColor="@color/text_sub_title"
             android:textSize="12sp" />
 

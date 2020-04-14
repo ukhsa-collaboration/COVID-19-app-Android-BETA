@@ -1,103 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_isolate"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_nhsuk_grey_5"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
-    tools:context="uk.nhs.nhsx.sonar.android.app.PermissionActivity">
+    tools:context="uk.nhs.nhsx.sonar.android.app.MainActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:src="@drawable/nhs_logo" />
+        android:layout_marginTop="28dp"
+        android:baselineAlignBottom="true"
+        android:src="@drawable/nhs_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/permission_title"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bluetooth_rationale"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="40dp"
-        android:text="@string/permission_title"
-        android:textSize="32sp"
-        android:textStyle="bold" />
+        android:layout_marginStart="8dp"
+        android:text="@string/coronavirus"
+        android:textColor="?attr/colorAccent"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        app:layout_constraintBaseline_toBaselineOf="@id/logo"
+        app:layout_constraintStart_toEndOf="@id/logo" />
 
-    <LinearLayout
-        android:id="@+id/bluetooth_rationale"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/location_rationale">
-
-        <View style="@style/Divider.Vertical" />
+        android:layout_height="0dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/permission_continue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="148dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:src="@drawable/ic_onboarding_permissions" />
+
+            </FrameLayout>
+
             <TextView
+                android:id="@+id/permission_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:lineSpacingMultiplier="1.2"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:text="@string/bluetooth_rationale_title"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:text="@string/permission_title"
+                android:textSize="32sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/bluetooth_rationale"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <View style="@style/Divider.Vertical" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.2"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="@string/bluetooth_rationale_title"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.2"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="@string/bluetooth_rationale" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/location_rationale"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lineSpacingMultiplier="1.2"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:text="@string/bluetooth_rationale" />
+                android:layout_marginTop="32dp">
+
+                <View style="@style/Divider.Vertical" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.2"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="@string/permission_rationale_title"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingMultiplier="1.2"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="@string/location_rationale" />
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/location_rationale"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/permission_continue"
-        android:layout_marginTop="32dp">
-
-        <View style="@style/Divider.Vertical" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lineSpacingMultiplier="1.2"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:text="@string/permission_rationale_title"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lineSpacingMultiplier="1.2"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:text="@string/permission_rationale" />
-        </LinearLayout>
-
-    </LinearLayout>
+    </ScrollView>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/permission_continue"
@@ -105,8 +148,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
-        android:text="@string/continue_button" />
+        android:minHeight="54dp"
+        android:text="@string/continue_button"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,11 +2,13 @@
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_isolate"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_nhsuk_grey_5"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
     tools:context="uk.nhs.nhsx.sonar.android.app.MainActivity">
@@ -15,51 +17,96 @@
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:src="@drawable/nhs_logo" />
+        android:layout_marginTop="28dp"
+        android:baselineAlignBottom="true"
+        android:src="@drawable/nhs_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/onboarding_title"
+        android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="24dp"
-        android:text="@string/onboarding_title"
-        android:textSize="32sp"
-        android:textStyle="bold" />
+        android:layout_marginStart="8dp"
+        android:text="@string/coronavirus"
+        android:textColor="?attr/colorAccent"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        app:layout_constraintBaseline_toBaselineOf="@id/logo"
+        app:layout_constraintStart_toEndOf="@id/logo" />
 
-    <TextView
-        android:id="@+id/app_rationale"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/onboarding_title"
-        android:layout_marginBottom="32sp"
-        android:lineSpacingMultiplier="1.2"
-        android:text="@string/bluetooth_rationale" />
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/confirm_onboarding"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/explanation_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/app_rationale"
-        android:clickable="true"
-        android:focusable="true"
-        android:linksClickable="true"
-        android:text="@string/explanation_link"
-        android:textColor="@color/colorAccent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="148dp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/introMarker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:src="@drawable/ic_onboarding_intro" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/onboarding_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/onboarding_title"
+                android:textSize="32sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/app_rationale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16sp"
+                android:lineSpacingMultiplier="1.2"
+                android:text="@string/app_rationale" />
+
+            <TextView
+                android:id="@+id/explanation_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:minHeight="48dp"
+                android:text="@string/explanation_link"
+                android:textColor="?attr/colorAccent"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/PrimaryButton"
         android:id="@+id/confirm_onboarding"
+        style="@style/PrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="32dp"
-        android:text="@string/start_now" />
+        android:minHeight="54dp"
+        android:text="@string/start_now"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

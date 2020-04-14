@@ -57,7 +57,9 @@
         <activity android:name=".debug.TesterActivity" />
         <activity android:name=".diagnose.DiagnoseReviewActivity" />
         <activity android:name=".diagnose.DiagnoseCoughActivity" />
-        <activity android:name=".onboarding.PostCodeActivity" />
+        <activity
+            android:name=".onboarding.PostCodeActivity"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <service
             android:name=".ble.BluetoothService"
