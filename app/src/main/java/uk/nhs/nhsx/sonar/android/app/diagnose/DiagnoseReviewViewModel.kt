@@ -37,7 +37,7 @@ class DiagnoseReviewViewModel @Inject constructor(
                     _isolationResult.value = ViewState.Success
                 }, onError = {
                     e("Error: $it")
-                    _isolationResult.value = ViewState.Error(it)
+                    _isolationResult.value = ViewState.Error
                 })
         }
     }

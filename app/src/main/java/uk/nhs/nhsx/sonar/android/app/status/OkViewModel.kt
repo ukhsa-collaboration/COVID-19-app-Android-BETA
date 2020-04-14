@@ -7,13 +7,17 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import uk.nhs.nhsx.sonar.android.app.ViewState
+import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
+import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationResult
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationUseCase
 import java.util.Date
 import javax.inject.Inject
 
 class OkViewModel @Inject constructor(
-    private val registrationUseCase: RegistrationUseCase
+    private val registrationUseCase: RegistrationUseCase,
+    private val onboardingStatusProvider: OnboardingStatusProvider,
+    private val sonarIdProvider: SonarIdProvider
 ) : ViewModel() {
 
     private val viewState = MutableLiveData<ViewState>()
@@ -30,7 +34,7 @@ class OkViewModel @Inject constructor(
                 RegistrationResult.Success, RegistrationResult.AlreadyRegistered -> ViewState.Success
                 is RegistrationResult.Failure -> {
                     waitForReadability(startTime)
-                    ViewState.Error(registrationResult.exception)
+                    ViewState.Error
                 }
             }
         }
@@ -40,6 +44,21 @@ class OkViewModel @Inject constructor(
         val elapsedTime = Date().time - startTime
         val remainingDelay = MINIMUM_DELAY_FOR_READING - elapsedTime
         delay(remainingDelay)
+    }
+
+    fun onStart() {
+        if (sonarIdProvider.hasProperSonarId()) {
+            viewState.value = ViewState.Success
+        } else {
+            val userSeesThisScreenForTheFirstTime = !onboardingStatusProvider.isOnboardingFinished()
+            if (userSeesThisScreenForTheFirstTime) {
+                onboardingStatusProvider.setOnboardingFinished(true)
+                register()
+            } else {
+                // registration failed previously. let the user decide when to retry registration
+                viewState.value = ViewState.Error
+            }
+        }
     }
 
     companion object {

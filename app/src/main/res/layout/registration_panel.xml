@@ -24,7 +24,8 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_warning_outline" />
+        android:src="@drawable/ic_warning_outline"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/registrationStatusText"
@@ -44,7 +45,7 @@
         android:text="@string/retry"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <View
         android:id="@+id/registrationPanelDivider"

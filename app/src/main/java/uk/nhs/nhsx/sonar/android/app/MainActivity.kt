@@ -12,7 +12,9 @@ import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
 import kotlinx.android.synthetic.main.activity_main.explanation_link
 import uk.nhs.nhsx.sonar.android.app.ble.startBluetoothService
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
+import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.status.OkActivity
 import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
@@ -23,7 +25,10 @@ class MainActivity : AppCompatActivity() {
     lateinit var statusStorage: StatusStorage
 
     @Inject
-    protected lateinit var sonarIdProvider: SonarIdProvider
+    lateinit var sonarIdProvider: SonarIdProvider
+
+    @Inject
+    lateinit var onboardingStatusProvider: OnboardingStatusProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +47,10 @@ class MainActivity : AppCompatActivity() {
         if (sonarIdProvider.hasProperSonarId()) {
             startBluetoothService()
             navigateTo(statusStorage.get())
+        } else if (onboardingStatusProvider.isOnboardingFinished()) {
+            OkActivity.start(this)
+            finish()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
     }
 

@@ -32,6 +32,7 @@ import uk.nhs.nhsx.sonar.android.app.persistence.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.persistence.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
+import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
@@ -97,6 +98,10 @@ class TestModule(
     @Provides
     fun provideSonarIdProvider(): SonarIdProvider =
         persistenceModule.provideSonarIdProvider()
+
+    @Provides
+    fun provideOnboardingStatusProvider(): OnboardingStatusProvider =
+        persistenceModule.provideOnboardingStatusProvider()
 
     @Provides
     fun provideEphemeralKeyProvider(): EphemeralKeyProvider = cryptoModule.provideEphemeralKeyProvider()

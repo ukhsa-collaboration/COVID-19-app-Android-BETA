@@ -3,7 +3,10 @@ package uk.nhs.nhsx.sonar.android.app.registration
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import io.mockk.verifyOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,6 +21,8 @@ import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ViewState
+import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
+import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.OkViewModel
 import java.util.concurrent.TimeoutException
 
@@ -30,10 +35,13 @@ class OkViewModelTest {
     @get:Rule
     val logAllOnFailuresRule: TimberTestRule = TimberTestRule.logAllWhenTestFails()
 
-    val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = TestCoroutineDispatcher()
 
-    private val registrationUseCase = mockk<RegistrationUseCase>()
+    private val registrationUseCase = mockk<RegistrationUseCase>(relaxed = true)
+    private val onboardingStatusProvider = mockk<OnboardingStatusProvider>(relaxed = true)
+    private val sonarIdProvider = mockk<SonarIdProvider>(relaxed = true)
     private val observer = mockk<Observer<ViewState>>(relaxed = true)
+    private val sut = OkViewModel(registrationUseCase, onboardingStatusProvider, sonarIdProvider)
 
     @Before
     fun setUp() {
@@ -48,10 +56,76 @@ class OkViewModelTest {
     }
 
     @Test
+    fun whenStartedForTheFirstTimeSetsOnboardingFinished() {
+        every { sonarIdProvider.hasProperSonarId() } returns false
+        every { onboardingStatusProvider.isOnboardingFinished() } returns false
+
+        sut.onStart()
+
+        verify(exactly = 1) {
+            onboardingStatusProvider.setOnboardingFinished(true)
+        }
+    }
+
+    @Test
+    fun whenStartedForTheFirstTimeStartsRegistration() {
+        every { sonarIdProvider.hasProperSonarId() } returns false
+        every { onboardingStatusProvider.isOnboardingFinished() } returns false
+
+        sut.onStart()
+
+        coVerify(exactly = 1) {
+            registrationUseCase.register()
+        }
+    }
+
+    @Test
+    fun whenStartedForTheSecondTimeOrLaterDoesNotSetOnboardingFinished() {
+        every { onboardingStatusProvider.isOnboardingFinished() } returns true
+        sut.viewState().observeForever(observer)
+
+        sut.onStart()
+
+        verify(exactly = 0) {
+            onboardingStatusProvider.setOnboardingFinished(any())
+        }
+    }
+
+    @Test
+    fun whenRegisteredDoesNotStartRegistration() {
+        every { sonarIdProvider.hasProperSonarId() } returns true
+        sut.viewState().observeForever(observer)
+
+        sut.onStart()
+
+        coVerify(exactly = 0) {
+            registrationUseCase.register()
+        }
+        verify {
+            observer.onChanged(ViewState.Success)
+        }
+    }
+
+    @Test
+    fun whenStartedForTheSecondTimeOrLaterDoesNotStartsRegistration() {
+        every { sonarIdProvider.hasProperSonarId() } returns false
+        every { onboardingStatusProvider.isOnboardingFinished() } returns true
+        sut.viewState().observeForever(observer)
+
+        sut.onStart()
+
+        coVerify(exactly = 0) {
+            registrationUseCase.register()
+        }
+        verify {
+            observer.onChanged(ViewState.Error)
+        }
+    }
+
+    @Test
     fun registerSuccess() = runBlockingTest {
         coEvery { registrationUseCase.register() } returns RegistrationResult.Success
 
-        val sut = OkViewModel(registrationUseCase)
         sut.viewState().observeForever(observer)
         sut.register()
 
@@ -66,7 +140,6 @@ class OkViewModelTest {
         val exception = TimeoutException()
         coEvery { registrationUseCase.register() } returns RegistrationResult.Failure(exception)
 
-        val sut = OkViewModel(registrationUseCase)
         sut.viewState().observeForever(observer)
         sut.register()
 
@@ -74,7 +147,7 @@ class OkViewModelTest {
 
         verifyOrder {
             observer.onChanged(ViewState.Progress)
-            observer.onChanged(ViewState.Error(exception))
+            observer.onChanged(ViewState.Error)
         }
     }
 }

@@ -56,7 +56,7 @@ class OkActivity : BaseActivity() {
         }
 
         addViewModelListener()
-        viewModel.register()
+        viewModel.onStart()
     }
 
     private fun addViewModelListener() {

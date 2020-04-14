@@ -16,7 +16,9 @@ import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.persistence.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
+import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
+import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesOnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesPostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesSonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
@@ -65,4 +67,9 @@ class PersistenceModule(
     @Singleton
     fun providePostCodeProvider(): PostCodeProvider =
         SharedPreferencesPostCodeProvider(applicationContext)
+
+    @Provides
+    @Singleton
+    fun provideOnboardingStatusProvider(): OnboardingStatusProvider =
+        SharedPreferencesOnboardingStatusProvider(applicationContext)
 }

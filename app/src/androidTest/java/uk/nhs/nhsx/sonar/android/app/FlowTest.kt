@@ -248,6 +248,15 @@ class FlowTest {
         checkIsolateActivityIsShown()
     }
 
+    @Test
+    fun testLaunchWhenOnboardingIsFinishedButNotRegistered() {
+        setFinishedOnboarding()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkOkActivityIsShown()
+    }
+
     private fun waitForText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         val context = activityRule.activity
@@ -302,6 +311,11 @@ class FlowTest {
         val sonarIdProvider =
             activityRule.activity.sonarIdProvider as SharedPreferencesSonarIdProvider
         sonarIdProvider.clear()
+    }
+
+    private fun setFinishedOnboarding() {
+        val storage = activityRule.activity.onboardingStatusProvider
+        storage.setOnboardingFinished(true)
     }
 
     private fun setValidSonarId() {
