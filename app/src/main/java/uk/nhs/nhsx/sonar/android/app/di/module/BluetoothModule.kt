@@ -19,7 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.Scanner
 import javax.inject.Named
 
 @Module
-class BluetoothModule(
+open class BluetoothModule(
     private val applicationContext: Context,
     private val connectionV2: Boolean,
     private val encryptSonarId: Boolean
@@ -33,11 +33,11 @@ class BluetoothModule(
         bluetoothManager.adapter.bluetoothLeAdvertiser
 
     @Provides
-    fun provideRxBleClient(): RxBleClient =
+    open fun provideRxBleClient(): RxBleClient =
         RxBleClient.create(applicationContext)
 
     @Provides
-    fun provideScanner(
+    open fun provideScanner(
         rxBleClient: RxBleClient,
         saveContactWorker: SaveContactWorker,
         bleEvents: BleEvents

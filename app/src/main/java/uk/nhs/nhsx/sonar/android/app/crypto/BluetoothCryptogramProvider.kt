@@ -8,16 +8,14 @@ import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.client.colocation.Seconds
 import java.util.Date
+import javax.inject.Inject
+import javax.inject.Singleton
 
-interface BluetoothCryptogramProvider {
-    fun provideBluetoothCryptogram(): Cryptogram
-    fun canProvideCryptogram(): Boolean
-}
-
-class ConcreteBluetoothCryptogramProvider(
+@Singleton
+class BluetoothCryptogramProvider @Inject constructor(
     private val sonarIdProvider: SonarIdProvider,
     private val encrypter: Encrypter
-) : BluetoothCryptogramProvider {
+) {
 
     private lateinit var latestDate: Date
     private var cryptogram: Cryptogram? = null
@@ -26,7 +24,7 @@ class ConcreteBluetoothCryptogramProvider(
     // TODO: Parametrize, preferably via something we inject.
     private val offset: Seconds = 24 * 60 * 60
 
-    override fun provideBluetoothCryptogram(): Cryptogram {
+    fun provideBluetoothCryptogram(): Cryptogram {
         synchronized(lock) {
             val currentDate = Date()
             return if (currentCryptogramExpired(currentDate)) {
@@ -39,7 +37,7 @@ class ConcreteBluetoothCryptogramProvider(
         }
     }
 
-    override fun canProvideCryptogram(): Boolean {
+    fun canProvideCryptogram(): Boolean {
         // TODO: Ensure encrypter has server public key
         return sonarIdProvider.hasProperSonarId()
     }

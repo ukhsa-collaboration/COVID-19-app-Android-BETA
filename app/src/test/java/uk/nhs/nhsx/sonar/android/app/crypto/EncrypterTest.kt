@@ -16,7 +16,6 @@ import org.bouncycastle.jce.ECPointUtil
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
 import org.junit.Before
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.security.ServerPublicKeyProvider
 import java.nio.ByteBuffer
 import java.security.KeyFactory
 import java.security.PrivateKey
@@ -59,7 +58,7 @@ const val knownInitialisationVector = "470D6E206CB55D2890558C01B315A7E0"
 private val knownXCoordinate = "373C625FB9D728D2A13F68154B4D57D38B0237C7B816813E7D7A261C40D1ABF1"
 private val knownYCoordinate = "9F5054033AB40BECEEC90DEEA6D3D9F34572F123061BDC6AF8D7643926F21EE4"
 
-class BouncyEncrypterTest {
+class EncrypterTest {
 
     @Before
     fun setUp() {
@@ -82,7 +81,7 @@ class BouncyEncrypterTest {
             exampleLocalPrivPEM
         )
 
-        val encrypter = BouncyEncrypter(
+        val encrypter = Encrypter(
             serverPublicKeyProvider,
             ephemeralKeyProvider
         )

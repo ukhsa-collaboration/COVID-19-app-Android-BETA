@@ -10,29 +10,21 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import uk.nhs.nhsx.sonar.android.app.AppDatabase
-import uk.nhs.nhsx.sonar.android.app.ble.BleEventTracker
-import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.DefaultSaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
-import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
+import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgementsDao
 import javax.inject.Named
-import javax.inject.Singleton
 
 @Module
-class PersistenceModule(
-    private val applicationContext: Context
-) {
+class PersistenceModule(private val appContext: Context) {
 
     @Provides
     fun provideDatabase() =
         Room
             .databaseBuilder(
-                applicationContext,
+                appContext,
                 AppDatabase::class.java,
                 "event-database"
             )
@@ -48,12 +40,8 @@ class PersistenceModule(
         database.contactEventV2Dao()
 
     @Provides
-    @Singleton
-    fun providesBleEvents(): BleEvents = BleEventTracker()
-
-    @Provides
-    fun provideSonarIdProvider(): SonarIdProvider =
-        SonarIdProvider(applicationContext)
+    fun provideAcknowledgementsDao(database: AppDatabase): AcknowledgementsDao =
+        database.acknowledgementsDao()
 
     @Provides
     fun provideSaveContactWorker(
@@ -62,18 +50,4 @@ class PersistenceModule(
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
         DefaultSaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao)
-
-    @Provides
-    @Singleton
-    fun providePostCodeProvider(): PostCodeProvider =
-        PostCodeProvider(applicationContext)
-
-    @Provides
-    @Singleton
-    fun provideOnboardingStatusProvider(): OnboardingStatusProvider =
-        OnboardingStatusProvider(applicationContext)
-
-    @Provides
-    fun providesStatusStorage(): StatusStorage =
-        StatusStorage(applicationContext)
 }

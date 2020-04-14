@@ -5,19 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class BleEventTracker : BleEvents {
+@Singleton
+class BleEvents @Inject constructor() {
 
     private val eventsList = mutableListOf<ConnectedDevice>()
-
     private val connectionEvents = MutableLiveData<List<ConnectedDevice>>()
-
-    override fun observeConnectionEvents(): LiveData<List<ConnectedDevice>> =
-        connectionEvents
-
     private val lock = Object()
 
-    override fun connectedDeviceEvent(id: String, rssiValues: List<Int>) {
+    fun observeConnectionEvents(): LiveData<List<ConnectedDevice>> =
+        connectionEvents
+
+    fun connectedDeviceEvent(id: String, rssiValues: List<Int>) {
         safelyUpdateEventList {
             eventsList.removeIf { it.id == id }
             eventsList.add(
@@ -30,20 +31,20 @@ class BleEventTracker : BleEvents {
         }
     }
 
-    override fun disconnectDeviceEvent(id: String?) {
+    fun disconnectDeviceEvent(id: String? = null) {
         safelyUpdateEventList {
             eventsList.removeIf { it.id == id }
             eventsList.add(ConnectedDevice(id = id, isConnectionError = true))
         }
     }
 
-    override fun scanFailureEvent() {
+    fun scanFailureEvent() {
         safelyUpdateEventList {
             eventsList.add(ConnectedDevice(isReadFailure = true))
         }
     }
 
-    override fun clear() {
+    fun clear() {
         safelyUpdateEventList {
             eventsList.clear()
         }
@@ -58,20 +59,7 @@ class BleEventTracker : BleEvents {
     }
 }
 
-interface BleEvents {
-
-    fun observeConnectionEvents(): LiveData<List<ConnectedDevice>>
-
-    fun connectedDeviceEvent(id: String, rssiValues: List<Int>)
-
-    fun disconnectDeviceEvent(id: String? = null)
-
-    fun scanFailureEvent()
-
-    fun clear()
-}
-
-fun getCurrentTimeStamp() = DateTime.now(DateTimeZone.UTC).toUtcIsoFormat()
+private fun getCurrentTimeStamp() = DateTime.now(DateTimeZone.UTC).toUtcIsoFormat()
 
 data class ConnectedDevice(
     val id: String? = null,

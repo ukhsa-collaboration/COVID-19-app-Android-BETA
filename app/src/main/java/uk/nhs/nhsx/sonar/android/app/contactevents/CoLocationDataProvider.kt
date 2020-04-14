@@ -31,6 +31,7 @@ class CoLocationDataProvider @Inject constructor(
             timestamp = contactEvent.timestamp,
             duration = -1
         )
+
     private fun convert(contactEvent: ContactEventV2): CoLocationEvent =
         CoLocationEvent(
             sonarId = Identifier.fromBytes(contactEvent.sonarId).asString,

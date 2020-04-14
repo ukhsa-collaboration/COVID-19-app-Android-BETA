@@ -19,11 +19,12 @@ import uk.nhs.nhsx.sonar.android.app.ColocateApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
+import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
+import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.registration.ID_NOT_REGISTERED
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
-import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import uk.nhs.nhsx.sonar.android.client.http.jsonOf
 import java.nio.charset.Charset
 import java.util.UUID
@@ -41,7 +42,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     private val startTimestampProvider = { DateTime.parse("2020-04-01T14:33:13Z") }
     private val endTimestampProvider = { DateTime.parse("2020-04-01T14:43:13Z") }
 
-    private val testModule = TestModule(
+    private val testBluetoothModule = TestBluetoothModule(
         app,
         testRxBleClient,
         startTimestampProvider,
@@ -60,9 +61,11 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         app.appComponent =
             DaggerTestAppComponent.builder()
                 .appModule(AppModule(app))
-                .encryptionKeyStorageModule(EncryptionKeyStorageModule(app))
+                .persistenceModule(PersistenceModule(app))
+                .bluetoothModule(testBluetoothModule)
+                .cryptoModule(CryptoModule())
                 .networkModule(NetworkModule(mockServerUrl))
-                .testModule(testModule)
+                .testModule(TestModule())
                 .build()
 
         notificationService.let {

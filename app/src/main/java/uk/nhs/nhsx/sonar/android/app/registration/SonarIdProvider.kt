@@ -6,10 +6,11 @@ package uk.nhs.nhsx.sonar.android.app.registration
 
 import android.content.Context
 import androidx.core.content.edit
+import javax.inject.Inject
 
 const val ID_NOT_REGISTERED = "00000000-0000-0000-0000-000000000000"
 
-class SonarIdProvider(context: Context) {
+class SonarIdProvider @Inject constructor(context: Context) {
 
     private val sharedPreferences by lazy {
         context.getSharedPreferences("residentId", Context.MODE_PRIVATE)

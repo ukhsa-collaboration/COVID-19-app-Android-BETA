@@ -24,9 +24,8 @@ import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
+import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
-import uk.nhs.nhsx.sonar.android.app.di.module.RegistrationModule
-import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import java.security.Security
 
 const val BASE_URL = "https://sonar-colocate-services-test.apps.cp.data.england.nhs.uk"
@@ -69,17 +68,15 @@ class ColocateApplication : Application() {
         }
     }
 
-    private fun buildApplicationComponent(): ApplicationComponent {
-        return DaggerApplicationComponent.builder()
+    private fun buildApplicationComponent(): ApplicationComponent =
+        DaggerApplicationComponent.builder()
+            .appModule(AppModule(this))
             .persistenceModule(PersistenceModule(this))
             .bluetoothModule(BluetoothModule(this, connectionV2 = true, encryptSonarId = false))
-            .appModule(AppModule(this))
-            .networkModule(NetworkModule(BASE_URL))
-            .encryptionKeyStorageModule(EncryptionKeyStorageModule(this))
-            .registrationModule(RegistrationModule())
             .cryptoModule(CryptoModule())
+            .networkModule(NetworkModule(BASE_URL))
+            .notificationsModule(NotificationsModule())
             .build()
-    }
 
     private fun configureBouncyCastleProvider() {
         // Remove existing built in Bouncy Castle

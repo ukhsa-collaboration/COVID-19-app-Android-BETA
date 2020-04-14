@@ -108,7 +108,7 @@ class LongLiveConnectionScanTest {
                 startTimestampProvider = { timestamp },
                 endTimestampProvider = { timestamp.plusSeconds(duration) },
                 periodInMilliseconds = period,
-                bleEvents = BleEventTracker()
+                bleEvents = BleEvents()
             )
             sut.start(this)
 

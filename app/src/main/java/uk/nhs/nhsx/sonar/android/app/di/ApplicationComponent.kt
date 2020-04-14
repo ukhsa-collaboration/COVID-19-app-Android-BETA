@@ -19,7 +19,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
-import uk.nhs.nhsx.sonar.android.app.di.module.RegistrationModule
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
@@ -27,19 +26,16 @@ import uk.nhs.nhsx.sonar.android.app.registration.RegistrationUseCase
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
-import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import javax.inject.Singleton
 
 @Singleton
 @Component(
     modules = [
-        PersistenceModule::class,
         AppModule::class,
+        PersistenceModule::class,
         BluetoothModule::class,
         CryptoModule::class,
         NetworkModule::class,
-        EncryptionKeyStorageModule::class,
-        RegistrationModule::class,
         NotificationsModule::class
     ]
 )

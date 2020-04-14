@@ -8,21 +8,13 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.notificationBuilder
+import javax.inject.Inject
 
-interface NotificationSender {
-    fun send(
-        serviceId: Int,
-        notificationTitle: Int,
-        notificationText: Int,
-        launchedIntentFactory: (Context) -> Intent
-    )
-}
-
-class AndroidNotificationSender(private val context: Context) : NotificationSender {
+class NotificationSender @Inject constructor(private val context: Context) {
 
     private val manager = NotificationManagerCompat.from(context)
 
-    override fun send(
+    fun send(
         serviceId: Int,
         @StringRes notificationTitle: Int,
         @StringRes notificationText: Int,

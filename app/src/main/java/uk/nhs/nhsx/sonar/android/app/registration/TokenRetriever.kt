@@ -2,6 +2,7 @@ package uk.nhs.nhsx.sonar.android.app.registration
 
 import com.google.firebase.iid.FirebaseInstanceId
 import timber.log.Timber
+import javax.inject.Inject
 import kotlin.coroutines.suspendCoroutine
 
 interface TokenRetriever {
@@ -13,7 +14,7 @@ interface TokenRetriever {
     suspend fun retrieveToken(): Result
 }
 
-class FirebaseTokenRetriever : TokenRetriever {
+class FirebaseTokenRetriever @Inject constructor() : TokenRetriever {
     override suspend fun retrieveToken(): TokenRetriever.Result {
         return suspendCoroutine { cont ->
             FirebaseInstanceId.getInstance().instanceId

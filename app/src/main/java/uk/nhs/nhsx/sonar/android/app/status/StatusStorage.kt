@@ -5,8 +5,9 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
+import javax.inject.Inject
 
-class StatusStorage(private val context: Context) {
+class StatusStorage @Inject constructor(context: Context) {
 
     private val sharedPreferences by lazy {
         context.getSharedPreferences("status", Context.MODE_PRIVATE)

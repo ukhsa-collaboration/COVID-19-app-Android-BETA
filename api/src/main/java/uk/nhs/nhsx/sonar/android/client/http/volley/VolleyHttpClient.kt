@@ -11,6 +11,7 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.http.Callback
 import uk.nhs.nhsx.sonar.android.client.http.ErrorCallback
@@ -19,7 +20,7 @@ import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 
 class VolleyHttpClient(private val queue: RequestQueue) : HttpClient {
 
-    constructor(ctx: Context) : this(RequestQueueFactory.createQueue(ctx))
+    constructor(ctx: Context) : this(Volley.newRequestQueue(ctx))
 
     override fun post(
         request: HttpRequest,

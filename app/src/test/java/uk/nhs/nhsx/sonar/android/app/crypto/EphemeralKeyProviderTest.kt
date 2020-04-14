@@ -14,7 +14,7 @@ import java.security.KeyFactory
 import java.security.Security
 import java.security.spec.ECPublicKeySpec
 
-class ECP256KeyProviderTest {
+class EphemeralKeyProviderTest {
     init {
         val bouncyCastleProvider = org.bouncycastle.jce.provider.BouncyCastleProvider()
         Security.insertProviderAt(bouncyCastleProvider, 1)
@@ -24,7 +24,7 @@ class ECP256KeyProviderTest {
 
     @Before
     fun setUp() {
-        provider = ECP256KeyProvider()
+        provider = EphemeralKeyProvider()
     }
 
     @Test
