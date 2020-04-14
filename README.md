@@ -1,4 +1,5 @@
 # Sonar Co-Locate for Android
+![CI](https://github.com/nhsx/sonar-colocate-android/workflows/CI/badge.svg)
 
 ## Running tests
 
