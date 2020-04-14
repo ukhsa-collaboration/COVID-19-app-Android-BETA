@@ -1,0 +1,5 @@
+name: 'Setup play environment'
+description: 'Setup play environment to publish the app to internal test track'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
