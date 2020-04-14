@@ -77,6 +77,7 @@
                 android:background="@drawable/radio_button_background_selector"
                 android:fontFamily="@font/roboto_medium"
                 android:paddingStart="16dp"
+                android:button="@drawable/radio_button_inset"
                 android:paddingEnd="16dp"
                 android:text="@string/yes_temperature"
                 android:textSize="16sp" />
@@ -90,6 +91,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
+                android:button="@drawable/radio_button_inset"
                 android:text="@string/no_temperature"
                 android:textSize="16sp" />
         </RadioGroup>
