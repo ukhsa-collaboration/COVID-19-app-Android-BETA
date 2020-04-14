@@ -124,6 +124,7 @@ def room_version = "2.2.5"
 def timber_version = "4.7.1"
 def lifecycle_version = "2.2.0"
 def rx_android_ble_version = "1.11.1"
+def work_version="2.3.4"
 
 dependencies {
     implementation project(":api")
@@ -139,6 +140,8 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
+
+    implementation "androidx.work:work-runtime-ktx:$work_version"
 
     kapt 'com.google.dagger:dagger-compiler:2.27'
     kaptAndroidTest 'com.google.dagger:dagger-compiler:2.27'

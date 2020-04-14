@@ -18,4 +18,7 @@ interface ContactEventDao {
 
     @Query("DELETE FROM ${ContactEvent.TABLE_NAME}")
     suspend fun clearEvents()
+
+    @Query("DELETE FROM ${ContactEvent.TABLE_NAME} WHERE timestamp < :timestamp")
+    suspend fun clearOldEvents(timestamp: String)
 }

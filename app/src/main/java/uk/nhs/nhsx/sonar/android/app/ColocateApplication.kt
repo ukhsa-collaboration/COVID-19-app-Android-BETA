@@ -9,6 +9,7 @@ import android.app.Service
 import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.ListenableWorker
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.polidea.rxandroidble2.exceptions.BleException
@@ -25,6 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.di.module.RegistrationModule
 import uk.nhs.nhsx.sonar.android.app.di.module.StatusModule
+import uk.nhs.nhsx.sonar.android.app.util.DeleteOutdatedEvents
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import java.security.Security
 
@@ -72,8 +74,13 @@ class ColocateApplication : Application() {
                 FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
             }
         }
+
+        DeleteOutdatedEvents.schedule(this)
     }
 }
+
+val ListenableWorker.appComponent: ApplicationComponent
+    get() = (applicationContext as ColocateApplication).appComponent
 
 val AppCompatActivity.appComponent: ApplicationComponent
     get() = (application as ColocateApplication).appComponent

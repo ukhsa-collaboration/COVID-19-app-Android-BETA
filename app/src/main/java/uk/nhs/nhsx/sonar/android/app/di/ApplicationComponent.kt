@@ -26,6 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.registration.RegistrationUseCase
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
+import uk.nhs.nhsx.sonar.android.app.util.DeleteOutdatedEvents
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import javax.inject.Singleton
 
@@ -44,6 +45,7 @@ import javax.inject.Singleton
     ]
 )
 interface ApplicationComponent {
+    fun inject(deleteOutdatedEvents: DeleteOutdatedEvents)
     fun inject(bluetoothService: BluetoothService)
     fun inject(isolateActivity: IsolateActivity)
     fun inject(okActivity: OkActivity)
