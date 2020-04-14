@@ -35,9 +35,10 @@ class PostCodeActivity : AppCompatActivity(R.layout.activity_post_code) {
 
         viewModel.viewState().observe(this, Observer { viewState ->
             when (viewState) {
-                PostCodeViewState.Valid -> postCodeTextInputLayout.error = null
-                PostCodeViewState.Invalid -> postCodeTextInputLayout.error =
-                    getString(R.string.valid_post_code_is_required)
+                PostCodeViewState.Valid ->
+                    postCodeTextInputLayout.error = null
+                PostCodeViewState.Invalid ->
+                    postCodeTextInputLayout.error = getString(R.string.valid_post_code_is_required)
             }
         })
 

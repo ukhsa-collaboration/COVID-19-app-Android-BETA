@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
     android:paddingTop="36dp"
-    tools:context="uk.nhs.nhsx.sonar.android.app.ExplanationActivity">
+    tools:context="uk.nhs.nhsx.sonar.android.app.onboarding.ExplanationActivity">
 
     <TextView
         android:id="@+id/explanation_title"

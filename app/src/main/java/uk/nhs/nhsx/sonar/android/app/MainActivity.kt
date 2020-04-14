@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
 import kotlinx.android.synthetic.main.activity_main.explanation_link
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
+import uk.nhs.nhsx.sonar.android.app.onboarding.ExplanationActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
 import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider

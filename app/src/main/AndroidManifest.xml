@@ -53,7 +53,7 @@
         <activity android:name=".status.IsolateActivity" />
         <activity android:name=".FlowTestStartActivity" />
         <activity android:name=".PermissionActivity" />
-        <activity android:name=".ExplanationActivity" />
+        <activity android:name=".onboarding.ExplanationActivity" />
         <activity android:name=".debug.TesterActivity" />
         <activity android:name=".diagnose.DiagnoseReviewActivity" />
         <activity android:name=".diagnose.DiagnoseCoughActivity" />
