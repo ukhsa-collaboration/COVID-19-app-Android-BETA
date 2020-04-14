@@ -19,11 +19,12 @@ import net.lachlanmckee.timberjunit.TimberTestRule
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.untilNotNull
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
-import java.util.Date
 import java.util.concurrent.TimeUnit
 
 class LongLiveConnectionScanTest {
@@ -34,9 +35,9 @@ class LongLiveConnectionScanTest {
     private val connection = mockk<RxBleConnection>()
     private val saveContactWorker = FakeSaveContactWorker()
 
-    private val timestamp = Date()
+    private val timestamp = DateTime.now(DateTimeZone.UTC).toLocalDateTime()
     private val rssiValues = listOf(-50, -49)
-    private val duration = 5L
+    private val duration = 5
     private val period = 50L
     private lateinit var identifier: Identifier
 
@@ -79,6 +80,7 @@ class LongLiveConnectionScanTest {
         )
     }
 
+    @Test
     fun `bypass android_util_Base64 to java_util_Base64`() {
         mockkStatic(Base64::class)
         val arraySlot = slot<ByteArray>()
@@ -104,7 +106,7 @@ class LongLiveConnectionScanTest {
                 bleClient,
                 saveContactWorker,
                 startTimestampProvider = { timestamp },
-                endTimestampProvider = { Date(timestamp.time + duration * 1_000) },
+                endTimestampProvider = { timestamp.plusSeconds(duration) },
                 periodInMilliseconds = period,
                 bleEvents = BleEventTracker()
             )
@@ -114,7 +116,7 @@ class LongLiveConnectionScanTest {
 
             val record = saveContactWorker.savedRecord!!
             assertThat(record.sonarId.asBytes).isEqualTo(identifier.asBytes)
-            assertThat(record.duration).isEqualTo(duration)
+            assertThat(record.duration).isEqualTo(duration.toLong())
             assertThat(record.timestamp).isEqualTo(timestamp)
             assertThat(record.rssiValues).containsAll(rssiValues)
 

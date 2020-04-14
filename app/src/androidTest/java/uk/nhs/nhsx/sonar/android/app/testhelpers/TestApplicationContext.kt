@@ -14,6 +14,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.awaitility.kotlin.untilNotNull
+import org.joda.time.LocalDateTime
 import uk.nhs.nhsx.sonar.android.app.ColocateApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -26,8 +27,6 @@ import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import uk.nhs.nhsx.sonar.android.client.http.jsonOf
 import java.nio.charset.Charset
-import java.time.Instant
-import java.util.Date
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -40,8 +39,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     private val notificationService = NotificationService()
     private val testDispatcher = TestCoLocateServiceDispatcher()
     private val testRxBleClient = TestRxBleClient(app)
-    private val startTimestampProvider = { Date.from(Instant.parse("2020-04-01T14:33:13Z")) }
-    private val endTimestampProvider = { Date.from(Instant.parse("2020-04-01T14:43:13Z")) }
+    private val startTimestampProvider = { LocalDateTime.parse("2020-04-01T14:33:13Z") }
+    private val endTimestampProvider = { LocalDateTime.parse("2020-04-01T14:43:13Z") }
 
     private val testModule = TestModule(
         app,

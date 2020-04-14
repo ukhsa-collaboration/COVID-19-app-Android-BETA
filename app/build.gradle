@@ -106,13 +106,13 @@ task("outputInstrumentationErrors") {
         def slurper = new XmlSlurper(new Parser())
 
         htmlFiles
-            .collectMany { file ->
-                def html = slurper.parse(file)
-                html.'**'.findAll { node -> node.name() == 'pre' }*.text()
-            }
-            .each { stacktrace ->
-                System.err.println("\n==============================\n$stacktrace==============================\n")
-            }
+                .collectMany { file ->
+                    def html = slurper.parse(file)
+                    html.'**'.findAll { node -> node.name() == 'pre' }*.text()
+                }
+                .each { stacktrace ->
+                    System.err.println("\n==============================\n$stacktrace==============================\n")
+                }
     }
 }
 
@@ -124,7 +124,7 @@ def room_version = "2.2.5"
 def timber_version = "4.7.1"
 def lifecycle_version = "2.2.0"
 def rx_android_ble_version = "1.11.1"
-def work_version="2.3.4"
+def work_version = "2.3.4"
 
 dependencies {
     implementation project(":api")

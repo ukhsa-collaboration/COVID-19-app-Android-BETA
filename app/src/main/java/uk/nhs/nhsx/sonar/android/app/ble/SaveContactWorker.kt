@@ -8,16 +8,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.joda.time.LocalDateTime
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEvent
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import javax.inject.Named
 
 interface SaveContactWorker {
@@ -25,7 +23,7 @@ interface SaveContactWorker {
     fun saveContactEventV2(scope: CoroutineScope, record: Record)
 
     data class Record(
-        val timestamp: Date,
+        val timestamp: LocalDateTime,
         val sonarId: Identifier,
         val rssiValues: MutableList<Int> = mutableListOf(),
         val duration: Long = 0
@@ -36,14 +34,14 @@ class DefaultSaveContactWorker(
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
     private val contactEventDao: ContactEventDao,
     private val contactEventV2Dao: ContactEventV2Dao,
-    private val dateProvider: () -> Date = { Date() }
+    private val dateProvider: () -> LocalDateTime = { LocalDateTime.now() }
 ) : SaveContactWorker {
 
     override fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int) {
         scope.launch {
             withContext(dispatcher) {
                 try {
-                    val timestamp = formatTimestamp(dateProvider())
+                    val timestamp = dateProvider().toUtcIsoFormat()
 
                     val contactEvent =
                         ContactEvent(
@@ -64,7 +62,7 @@ class DefaultSaveContactWorker(
         scope.launch {
             withContext(dispatcher) {
                 try {
-                    val timestamp = formatTimestamp(record.timestamp)
+                    val timestamp = record.timestamp.toUtcIsoFormat()
 
                     val contactEvent =
                         ContactEventV2(
@@ -81,12 +79,6 @@ class DefaultSaveContactWorker(
             }
         }
     }
-
-    private fun formatTimestamp(date: Date): String =
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.UK).let {
-            it.timeZone = TimeZone.getTimeZone("UTC")
-            it.format(date)
-        }
 
     companion object {
         const val TAG = "SaveWorker"

@@ -19,16 +19,17 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import kotlinx.coroutines.CoroutineScope
+import org.joda.time.DateTimeZone.UTC
+import org.joda.time.LocalDateTime
 import timber.log.Timber
-import java.util.Date
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class LongLiveConnectionScan @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val saveContactWorker: SaveContactWorker,
-    private val startTimestampProvider: () -> Date = { Date() },
-    private val endTimestampProvider: () -> Date = startTimestampProvider,
+    private val startTimestampProvider: () -> LocalDateTime = { LocalDateTime.now(UTC) },
+    private val endTimestampProvider: () -> LocalDateTime = startTimestampProvider,
     private val periodInMilliseconds: Long = 20_000,
     private val bleEvents: BleEvents
 ) : Scanner {
@@ -177,7 +178,10 @@ class LongLiveConnectionScan @Inject constructor(
         val record = macAddressToRecord.remove(macAddress)
 
         if (record != null) {
-            val duration = (endTimestampProvider().time - record.timestamp.time) / 1000
+
+            val duration =
+                (endTimestampProvider().toDateTime(UTC).millis - record.timestamp.toDateTime(UTC).millis) / 1000
+
             val finalRecord = record.copy(duration = duration)
             Timber.d("Save record: $finalRecord")
             saveContactWorker.saveContactEventV2(

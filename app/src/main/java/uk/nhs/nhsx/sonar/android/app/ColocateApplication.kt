@@ -15,6 +15,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.polidea.rxandroidble2.exceptions.BleException
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.PROVIDER_NAME
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
@@ -39,29 +40,11 @@ class ColocateApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // Remove existing built in Bouncy Castle
-        Security.removeProvider(PROVIDER_NAME)
-        val bouncyCastleProvider = org.bouncycastle.jce.provider.BouncyCastleProvider()
-        Security.insertProviderAt(bouncyCastleProvider, 1)
+        configureBouncyCastleProvider()
 
-        appComponent = DaggerApplicationComponent.builder()
-            .persistenceModule(PersistenceModule(this))
-            .bluetoothModule(BluetoothModule(this, connectionV2 = true, encryptSonarId = false))
-            .appModule(AppModule(this))
-            .networkModule(NetworkModule(BASE_URL))
-            .encryptionKeyStorageModule(EncryptionKeyStorageModule(this))
-            .statusModule(StatusModule(this))
-            .registrationModule(RegistrationModule())
-            .cryptoModule(CryptoModule())
-            .build()
+        appComponent = buildApplicationComponent()
 
-        RxJavaPlugins.setErrorHandler { throwable ->
-            if (throwable is UndeliverableException && throwable.cause is BleException) {
-                return@setErrorHandler // ignore BleExceptions as they were surely delivered at least once
-            }
-            // add other custom handlers if needed
-            throw RuntimeException("Unexpected Throwable in RxJavaPlugins error handler", throwable)
-        }
+        configureRxJavaErrorHandler()
 
         FirebaseApp.initializeApp(this)
 
@@ -76,6 +59,36 @@ class ColocateApplication : Application() {
         }
 
         DeleteOutdatedEvents.schedule(this)
+    }
+
+    private fun configureRxJavaErrorHandler() {
+        RxJavaPlugins.setErrorHandler { throwable ->
+            if (throwable is UndeliverableException && throwable.cause is BleException) {
+                return@setErrorHandler // ignore BleExceptions as they were surely delivered at least once
+            }
+            // add other custom handlers if needed
+            throw RuntimeException("Unexpected Throwable in RxJavaPlugins error handler", throwable)
+        }
+    }
+
+    private fun buildApplicationComponent(): ApplicationComponent {
+        return DaggerApplicationComponent.builder()
+            .persistenceModule(PersistenceModule(this))
+            .bluetoothModule(BluetoothModule(this, connectionV2 = true, encryptSonarId = false))
+            .appModule(AppModule(this))
+            .networkModule(NetworkModule(BASE_URL))
+            .encryptionKeyStorageModule(EncryptionKeyStorageModule(this))
+            .statusModule(StatusModule(this))
+            .registrationModule(RegistrationModule())
+            .cryptoModule(CryptoModule())
+            .build()
+    }
+
+    private fun configureBouncyCastleProvider() {
+        // Remove existing built in Bouncy Castle
+        Security.removeProvider(PROVIDER_NAME)
+        val bouncyCastleProvider = BouncyCastleProvider()
+        Security.insertProviderAt(bouncyCastleProvider, 1)
     }
 }
 
