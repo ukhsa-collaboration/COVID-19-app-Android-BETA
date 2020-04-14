@@ -65,7 +65,8 @@ class ResidentApiShould {
             activationCode = "::activation code::",
             pushToken = "::push token::",
             deviceModel = "::device model::",
-            deviceOsVersion = "::device os version::"
+            deviceOsVersion = "::device os version::",
+            postalCode = "::postal code::"
         )
         residentApi.confirmDevice(confirmation, {}, {})
 
@@ -75,7 +76,8 @@ class ResidentApiShould {
             "activationCode" to "::activation code::",
             "pushToken" to "::push token::",
             "deviceModel" to "::device model::",
-            "deviceOSVersion" to "::device os version::"
+            "deviceOSVersion" to "::device os version::",
+            "postalCode" to "::postal code::"
         )
     }
 
@@ -88,7 +90,8 @@ class ResidentApiShould {
             activationCode = "::activation code::",
             pushToken = "::push token::",
             deviceModel = "::device model::",
-            deviceOsVersion = "::device os version::"
+            deviceOsVersion = "::device os version::",
+            postalCode = "::postal code::"
         )
 
         val jsonResponse = jsonObjectOf(
@@ -115,7 +118,8 @@ class ResidentApiShould {
             activationCode = "::activation code::",
             pushToken = "::push token::",
             deviceModel = "::device model::",
-            deviceOsVersion = "::device os version::"
+            deviceOsVersion = "::device os version::",
+            postalCode = "::postal code::"
         )
 
         residentApi.confirmDevice(

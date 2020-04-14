@@ -21,6 +21,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.RegistrationModule
 import uk.nhs.nhsx.sonar.android.app.di.module.StatusModule
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
+import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationUseCase
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
@@ -55,9 +56,9 @@ interface ApplicationComponent {
     fun inject(notificationService: NotificationService)
     fun inject(flowTestStartActivity: FlowTestStartActivity)
     fun inject(bootCompletedReceiver: BootCompletedReceiver)
+    fun inject(postCodeActivity: PostCodeActivity)
 
     fun registrationUseCase(): RegistrationUseCase
-
     fun provideEventsV2Dao(): ContactEventV2Dao
     fun provideBleEvents(): BleEvents
     fun provideRxBleClient(): RxBleClient

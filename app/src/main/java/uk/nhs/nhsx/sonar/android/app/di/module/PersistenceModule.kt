@@ -16,6 +16,8 @@ import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.persistence.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
+import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
+import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesPostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesSonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import javax.inject.Named
@@ -58,4 +60,9 @@ class PersistenceModule(
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
         DefaultSaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao)
+
+    @Provides
+    @Singleton
+    fun providePostCodeProvider(): PostCodeProvider =
+        SharedPreferencesPostCodeProvider(applicationContext)
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,15 +9,15 @@
     tools:orientation="horizontal"
     tools:parentTag="android.widget.FrameLayout">
 
-    <ProgressBar
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/registrationProgressBar"
-        style="?attr/indeterminateProgressStyle"
+        style="@style/Widget.MaterialProgressBar.ProgressBar"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"
         android:indeterminate="true"
-        android:indeterminateTint="@color/black"
-        android:indeterminateTintMode="src_in" />
+        app:mpb_indeterminateTint="@color/black"
+        app:mpb_useIntrinsicPadding="false" />
 
     <ImageView
         android:id="@+id/registrationStatusIcon"

@@ -17,6 +17,7 @@ import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.persistence.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.ID_NOT_REGISTERED
+import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
 import uk.nhs.nhsx.sonar.android.client.resident.Registration
@@ -30,10 +31,17 @@ class RegistrationUseCaseTest {
     private val residentApi = mockk<ResidentApi>()
     private val activationCodeObserver = mockk<ActivationCodeObserver>()
     private val sonarIdProvider = mockk<SonarIdProvider>()
+    private val postCodeProvider = mockk<PostCodeProvider>()
     private val bluetoothCryptogramProvider = mockk<BluetoothCryptogramProvider>()
 
     private val confirmation =
-        DeviceConfirmation(ACTIVATION_CODE, FIREBASE_TOKEN, DEVICE_MODEL, DEVICE_OS_VERSION)
+        DeviceConfirmation(
+            ACTIVATION_CODE,
+            FIREBASE_TOKEN,
+            DEVICE_MODEL,
+            DEVICE_OS_VERSION,
+            POST_CODE
+        )
 
     private val sut =
         RegistrationUseCase(
@@ -41,6 +49,7 @@ class RegistrationUseCaseTest {
             residentApi,
             activationCodeObserver,
             sonarIdProvider,
+            postCodeProvider,
             bluetoothCryptogramProvider,
             DEVICE_MODEL,
             DEVICE_OS_VERSION
@@ -75,6 +84,8 @@ class RegistrationUseCaseTest {
         every { residentApi.confirmDevice(confirmation, any(), any()) } answers {
             secondArg<(Registration) -> Unit>().invoke(Registration(RESIDENT_ID))
         }
+
+        every { postCodeProvider.getPostCode() } returns POST_CODE
     }
 
     @Test
@@ -188,5 +199,6 @@ class RegistrationUseCaseTest {
         const val DEVICE_MODEL = "::device model::"
         const val DEVICE_OS_VERSION = "24"
         const val RESIDENT_ID = "::resident id::"
+        const val POST_CODE = "::postal code::"
     }
 }

@@ -99,4 +99,5 @@
     <string name="post_code_title">Enter your post code</string>
     <string name="post_code">Post Code</string>
     <string name="post_code_rationale">Your post code will not be used to track your location.</string>
+    <string name="valid_post_code_is_required">Valid post code is required</string>
 </resources>

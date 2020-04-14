@@ -32,6 +32,7 @@ import uk.nhs.nhsx.sonar.android.app.persistence.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.persistence.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
+import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
@@ -69,6 +70,10 @@ class TestModule(
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
         TestTokenRetriever()
+
+    @Provides
+    fun providePostCodeProvider(): PostCodeProvider =
+        persistenceModule.providePostCodeProvider()
 
     @Provides
     fun provideBluetoothManager(): BluetoothManager =

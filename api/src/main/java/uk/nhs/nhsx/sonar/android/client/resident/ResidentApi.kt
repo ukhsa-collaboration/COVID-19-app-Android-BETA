@@ -43,7 +43,8 @@ class ResidentApi @Inject constructor(
             "activationCode" to deviceConfirmation.activationCode,
             "pushToken" to deviceConfirmation.pushToken,
             "deviceModel" to deviceConfirmation.deviceModel,
-            "deviceOSVersion" to deviceConfirmation.deviceOsVersion
+            "deviceOSVersion" to deviceConfirmation.deviceOsVersion,
+            "postalCode" to deviceConfirmation.postalCode
         )
         val request = HttpRequest("$baseUrl/api/devices", requestJson)
 
@@ -65,5 +66,6 @@ data class DeviceConfirmation(
     val activationCode: String,
     val pushToken: String,
     val deviceModel: String,
-    val deviceOsVersion: String
+    val deviceOsVersion: String,
+    val postalCode: String
 )

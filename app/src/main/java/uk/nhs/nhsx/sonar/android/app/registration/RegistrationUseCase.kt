@@ -5,6 +5,7 @@ import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.persistence.BluetoothCryptogramProvider
+import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
@@ -22,6 +23,7 @@ class RegistrationUseCase @Inject constructor(
     private val residentApi: ResidentApi,
     private val activationCodeObserver: ActivationCodeObserver,
     private val sonarIdProvider: SonarIdProvider,
+    private val postCodeProvider: PostCodeProvider,
     private val bluetoothCryptogramProvider: BluetoothCryptogramProvider,
     @Named(AppModule.DEVICE_MODEL) private val deviceModel: String,
     @Named(AppModule.DEVICE_OS_VERSION) private val deviceOsVersion: String
@@ -40,7 +42,8 @@ class RegistrationUseCase @Inject constructor(
                 Timber.d("RegistrationUseCase registered device")
                 val activationCode = waitForActivationCode()
                 Timber.d("RegistrationUseCase activationCode = $activationCode")
-                val sonarId = registerResident(activationCode, firebaseToken)
+                val sonarId =
+                    registerResident(activationCode, firebaseToken, postCodeProvider.getPostCode())
                 Timber.d("RegistrationUseCase sonarId = $sonarId")
                 storeSonarId(sonarId)
                 Timber.d("RegistrationUseCase sonarId stored")
@@ -85,12 +88,17 @@ class RegistrationUseCase @Inject constructor(
         }
     }
 
-    private suspend fun registerResident(activationCode: String, firebaseToken: String): String {
+    private suspend fun registerResident(
+        activationCode: String,
+        firebaseToken: String,
+        postCode: String
+    ): String {
         val confirmation = DeviceConfirmation(
             activationCode = activationCode,
             pushToken = firebaseToken,
             deviceModel = deviceModel,
-            deviceOsVersion = deviceOsVersion
+            deviceOsVersion = deviceOsVersion,
+            postalCode = postCode
         )
 
         return suspendCoroutine { continuation ->

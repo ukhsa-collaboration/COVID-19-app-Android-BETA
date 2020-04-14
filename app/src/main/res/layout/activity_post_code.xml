@@ -51,7 +51,7 @@
             android:id="@+id/postCodeEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPostalAddress"
+            android:inputType="textPostalAddress|textCapCharacters"
             android:maxLength="4" />
     </com.google.android.material.textfield.TextInputLayout>
 

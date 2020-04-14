@@ -25,7 +25,7 @@ class RegistrationProgressPanel @JvmOverloads constructor(
     }
 
     private var retryListener: (() -> Unit)? = null
-    private var state = State.IN_PROGRESS
+    private var state: State? = null
 
     init {
         initializeViews()
@@ -58,7 +58,6 @@ class RegistrationProgressPanel @JvmOverloads constructor(
         setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
         registrationRetryButton.isVisible = false
         registrationProgressBar.isVisible = true
-        registrationProgressBar.isIndeterminate = false
         registrationStatusIcon.isVisible = false
         registrationPanelDivider.isVisible = true
         registrationStatusText.setText(R.string.registration_finalising_setup)

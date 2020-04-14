@@ -9,9 +9,11 @@ import android.bluetooth.BluetoothManager
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
+import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -39,6 +41,7 @@ import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
 import uk.nhs.nhsx.sonar.android.app.status.SharedPreferencesStatusStorage
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
+import uk.nhs.nhsx.sonar.android.app.testhelpers.hasTextInputLayoutErrorText
 import uk.nhs.nhsx.sonar.android.app.testhelpers.isToast
 
 @RunWith(AndroidJUnit4::class)
@@ -79,6 +82,13 @@ class FlowTest {
 
         onView(withId(R.id.postCodeContinue)).perform(click())
 
+        onView(withId(R.id.postCodeTextInputLayout)).check(matches(hasTextInputLayoutErrorText(R.string.valid_post_code_is_required)))
+
+        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
+        closeSoftKeyboard()
+
+        onView(withId(R.id.postCodeContinue)).perform(click())
+
         checkPermissionActivityIsShown()
 
         onView(withId(R.id.permission_continue)).perform(click())
@@ -112,6 +122,9 @@ class FlowTest {
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
         checkPostCodeActivityIsShown()
+
+        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
+        closeSoftKeyboard()
 
         onView(withId(R.id.postCodeContinue)).perform(click())
 

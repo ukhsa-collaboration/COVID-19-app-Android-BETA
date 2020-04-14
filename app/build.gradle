@@ -137,6 +137,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     implementation "androidx.fragment:fragment-ktx:1.2.4"
     implementation 'com.google.android.material:material:1.1.0'
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
 
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"
