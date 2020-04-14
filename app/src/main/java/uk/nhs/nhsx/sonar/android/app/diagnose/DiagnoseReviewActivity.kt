@@ -18,7 +18,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.showLongToast
+import uk.nhs.nhsx.sonar.android.app.showToast
 import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
@@ -63,7 +63,7 @@ class DiagnoseReviewActivity : BaseActivity() {
             if (result is ViewState.Success) {
                 viewModel.clearContactEvents()
 
-                showLongToast(R.string.successfull_data_upload)
+                showToast(R.string.successfull_data_upload)
 
                 updateStatusAndNavigate()
                 submission_error.visibility = View.GONE

@@ -51,20 +51,17 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
                 requestEnablingBluetooth()
             }
         } else {
-            showToast()
+            showToast(R.string.permissions_required)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (checkBluetoothResult(requestCode, resultCode)) {
             Enabled -> startOkActivity()
-            Rejected -> showToast()
+            Rejected -> showToast(R.string.permissions_required)
             NotApplicable -> super.onActivityResult(requestCode, resultCode, data)
         }
     }
-
-    private fun showToast() =
-        showLongToast(R.string.permissions_required)
 
     private fun startOkActivity() {
         OkActivity.start(this)

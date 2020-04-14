@@ -97,8 +97,5 @@ val ListenableWorker.appComponent: ApplicationComponent
 val Context.appComponent: ApplicationComponent
     get() = (applicationContext as ColocateApplication).appComponent
 
-fun Context.showShortToast(@StringRes stringResource: Int) =
-    Toast.makeText(this, getString(stringResource), Toast.LENGTH_SHORT).show()
-
-fun Context.showLongToast(@StringRes stringResource: Int) =
-    Toast.makeText(this, getString(stringResource), Toast.LENGTH_LONG).show()
+fun Context.showToast(@StringRes stringResource: Int, duration: Int = Toast.LENGTH_LONG) =
+    Toast.makeText(this, getString(stringResource), duration).show()
