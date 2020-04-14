@@ -9,8 +9,8 @@ import android.hardware.SensorManager
 import timber.log.Timber
 import kotlin.math.abs
 
-class ShakeListener(context: Context, val onShake: () -> Unit) :
-    SensorEventListener {
+class ShakeListener(context: Context, val onShake: () -> Unit) : SensorEventListener {
+
     private val sensorManager = context.getSystemService(SENSOR_SERVICE) as SensorManager
     private val sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
     private var lastUpdate = System.currentTimeMillis()

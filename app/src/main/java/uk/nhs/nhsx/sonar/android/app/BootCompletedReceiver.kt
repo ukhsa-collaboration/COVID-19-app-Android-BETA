@@ -15,7 +15,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Timber.d("CoLocate onReceive: $intent")
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            (context.applicationContext as ColocateApplication).appComponent.inject(this)
+            context.appComponent.inject(this)
 
             Timber.d("CoLocate onReceive hasProperSonarId: ${sonarIdProvider.hasProperSonarId()}")
             if (sonarIdProvider.hasProperSonarId()) {

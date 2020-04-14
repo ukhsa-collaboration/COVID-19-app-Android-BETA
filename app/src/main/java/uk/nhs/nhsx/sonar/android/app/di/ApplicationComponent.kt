@@ -11,6 +11,8 @@ import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
+import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEvents
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
@@ -22,12 +24,10 @@ import uk.nhs.nhsx.sonar.android.app.di.module.StatusModule
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
-import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationUseCase
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
-import uk.nhs.nhsx.sonar.android.app.util.DeleteOutdatedEvents
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import javax.inject.Singleton
 

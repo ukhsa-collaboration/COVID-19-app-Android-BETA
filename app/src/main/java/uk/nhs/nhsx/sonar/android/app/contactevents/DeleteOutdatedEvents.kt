@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app.util
+package uk.nhs.nhsx.sonar.android.app.contactevents
 
 import android.content.Context
 import androidx.work.BackoffPolicy
@@ -11,8 +11,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventDao
-import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
+import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

@@ -11,11 +11,11 @@ import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
-import uk.nhs.nhsx.sonar.android.app.persistence.ContactEvent
-import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventDao
-import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2
-import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import javax.inject.Named
 

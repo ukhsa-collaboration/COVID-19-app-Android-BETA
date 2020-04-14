@@ -9,7 +9,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submission_error
@@ -19,6 +18,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.showLongToast
 import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
@@ -63,11 +63,7 @@ class DiagnoseReviewActivity : BaseActivity() {
             if (result is ViewState.Success) {
                 viewModel.clearContactEvents()
 
-                Toast.makeText(
-                    this,
-                    getString(R.string.successfull_data_upload),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showLongToast(R.string.successfull_data_upload)
 
                 updateStatusAndNavigate()
                 submission_error.visibility = View.GONE

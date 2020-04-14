@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app.persistence
+package uk.nhs.nhsx.sonar.android.app.contactevents
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

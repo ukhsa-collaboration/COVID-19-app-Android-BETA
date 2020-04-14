@@ -8,6 +8,10 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
 import uk.nhs.nhsx.sonar.android.app.notifications.Acknowledgement
 import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgementsDao
 

@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
-import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventV2Dao
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
 import java.io.File
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream

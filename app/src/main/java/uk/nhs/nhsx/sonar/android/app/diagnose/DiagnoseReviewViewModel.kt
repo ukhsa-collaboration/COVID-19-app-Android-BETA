@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 import timber.log.Timber.e
 import timber.log.Timber.i
 import uk.nhs.nhsx.sonar.android.app.ViewState
+import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
-import uk.nhs.nhsx.sonar.android.app.persistence.CoLocationDataProvider
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
 import javax.inject.Inject
 import javax.inject.Named
