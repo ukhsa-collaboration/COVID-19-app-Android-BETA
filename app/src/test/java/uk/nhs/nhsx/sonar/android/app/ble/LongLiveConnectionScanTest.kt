@@ -35,7 +35,7 @@ class LongLiveConnectionScanTest {
     private val connection = mockk<RxBleConnection>()
     private val saveContactWorker = FakeSaveContactWorker()
 
-    private val timestamp = DateTime.now(DateTimeZone.UTC).toLocalDateTime()
+    private val timestamp = DateTime.now(DateTimeZone.UTC)
     private val rssiValues = listOf(-50, -49)
     private val duration = 5
     private val period = 50L

@@ -7,7 +7,8 @@ import androidx.work.CoroutineWorker
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import org.joda.time.LocalDateTime
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEventDao
@@ -37,7 +38,7 @@ class DeleteOutdatedEvents(
             return Result.failure()
         }
 
-        val timestamp = LocalDateTime.now().minusDays(28).toUtcIsoFormat()
+        val timestamp = DateTime.now(DateTimeZone.UTC).minusDays(28).toUtcIsoFormat()
 
         Timber.d("Deleting all events before $timestamp")
         return try {

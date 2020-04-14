@@ -2,8 +2,8 @@ package uk.nhs.nhsx.sonar.android.app.ble
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import org.joda.time.LocalDateTime
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 
 class BleEventTracker : BleEvents {
@@ -71,7 +71,7 @@ interface BleEvents {
     fun clear()
 }
 
-fun getCurrentTimeStamp() = LocalDateTime.now(DateTimeZone.UTC).toUtcIsoFormat()
+fun getCurrentTimeStamp() = DateTime.now(DateTimeZone.UTC).toUtcIsoFormat()
 
 data class ConnectedDevice(
     val id: String? = null,

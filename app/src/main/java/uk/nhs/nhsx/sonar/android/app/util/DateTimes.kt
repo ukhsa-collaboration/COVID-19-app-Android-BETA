@@ -1,9 +1,7 @@
 package uk.nhs.nhsx.sonar.android.app.util
 
-import org.joda.time.DateTimeZone
-import org.joda.time.LocalDateTime
+import org.joda.time.DateTime
 
 private const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'"
 
-fun LocalDateTime.toUtcIsoFormat(): String =
-    this.toDateTime(DateTimeZone.UTC).toString(DATE_TIME_FORMAT)
+fun DateTime.toUtcIsoFormat(): String = toString(DATE_TIME_FORMAT)

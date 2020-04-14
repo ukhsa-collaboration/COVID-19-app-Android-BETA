@@ -8,7 +8,7 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
-import org.joda.time.LocalDateTime
+import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.ble.BleEventTracker
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.DefaultSaveContactWorker
@@ -57,8 +57,8 @@ interface TestAppComponent : ApplicationComponent
 class TestModule(
     appContext: Context,
     private val rxBleClient: RxBleClient,
-    private val startTimestampProvider: () -> LocalDateTime,
-    private val endTimestampProvider: () -> LocalDateTime,
+    private val startTimestampProvider: () -> DateTime,
+    private val endTimestampProvider: () -> DateTime,
     private val connectionV2: Boolean = true,
     private val encryptSonarId: Boolean = false
 ) {

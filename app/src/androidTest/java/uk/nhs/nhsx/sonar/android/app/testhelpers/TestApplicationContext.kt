@@ -14,7 +14,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.awaitility.kotlin.untilNotNull
-import org.joda.time.LocalDateTime
+import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.ColocateApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -39,8 +39,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     private val notificationService = NotificationService()
     private val testDispatcher = TestCoLocateServiceDispatcher()
     private val testRxBleClient = TestRxBleClient(app)
-    private val startTimestampProvider = { LocalDateTime.parse("2020-04-01T14:33:13Z") }
-    private val endTimestampProvider = { LocalDateTime.parse("2020-04-01T14:43:13Z") }
+    private val startTimestampProvider = { DateTime.parse("2020-04-01T14:33:13Z") }
+    private val endTimestampProvider = { DateTime.parse("2020-04-01T14:43:13Z") }
 
     private val testModule = TestModule(
         app,

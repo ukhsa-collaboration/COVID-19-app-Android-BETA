@@ -8,7 +8,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.joda.time.LocalDateTime
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.persistence.ContactEvent
@@ -23,7 +24,7 @@ interface SaveContactWorker {
     fun saveContactEventV2(scope: CoroutineScope, record: Record)
 
     data class Record(
-        val timestamp: LocalDateTime,
+        val timestamp: DateTime,
         val sonarId: Identifier,
         val rssiValues: MutableList<Int> = mutableListOf(),
         val duration: Long = 0
@@ -34,7 +35,7 @@ class DefaultSaveContactWorker(
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
     private val contactEventDao: ContactEventDao,
     private val contactEventV2Dao: ContactEventV2Dao,
-    private val dateProvider: () -> LocalDateTime = { LocalDateTime.now() }
+    private val dateProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) }
 ) : SaveContactWorker {
 
     override fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int) {
