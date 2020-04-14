@@ -17,7 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.ble.startBluetoothService
+import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import javax.inject.Inject
@@ -42,7 +42,7 @@ class OkActivity : BaseActivity() {
         appComponent.inject(this)
 
         if (sonarIdProvider.hasProperSonarId()) {
-            startBluetoothService()
+            BluetoothService.start(this)
         }
 
         setContentView(R.layout.activity_ok)
@@ -64,7 +64,7 @@ class OkActivity : BaseActivity() {
             when (result) {
                 ViewState.Success -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.REGISTERED)
-                    startBluetoothService()
+                    BluetoothService.start(this)
                     status_not_feeling_well.isClickable = true
                     status_not_feeling_well.isFocusable = true
                     status_not_feeling_well.isEnabled = true

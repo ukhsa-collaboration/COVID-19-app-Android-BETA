@@ -10,7 +10,7 @@ import android.os.Bundle
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.ble.startBluetoothService
+import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import javax.inject.Inject
 
 class IsolateActivity : BaseActivity() {
@@ -22,7 +22,7 @@ class IsolateActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_isolate)
         appComponent.inject(this)
-        startBluetoothService()
+        BluetoothService.start(this)
     }
 
     override fun onResume() {

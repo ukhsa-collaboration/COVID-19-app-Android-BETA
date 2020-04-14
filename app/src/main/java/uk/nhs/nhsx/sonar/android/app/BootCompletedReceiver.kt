@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.ble.startBluetoothService
+import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
 
             Timber.d("CoLocate onReceive hasProperSonarId: ${sonarIdProvider.hasProperSonarId()}")
             if (sonarIdProvider.hasProperSonarId()) {
-                context.startBluetoothService()
+                BluetoothService.start(context)
             }
         }
     }

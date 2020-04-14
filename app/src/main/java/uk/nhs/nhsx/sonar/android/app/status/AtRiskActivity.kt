@@ -11,7 +11,7 @@ import android.widget.TextView
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.ble.startBluetoothService
+import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ class AtRiskActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        startBluetoothService()
+        BluetoothService.start(this)
 
         setContentView(R.layout.activity_at_risk)
 

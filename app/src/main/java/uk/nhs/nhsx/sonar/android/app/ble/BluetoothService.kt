@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.ble
 
 import android.app.Service
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,6 +13,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.location.LocationManager
 import android.os.IBinder
+import androidx.core.content.ContextCompat
 import com.polidea.rxandroidble2.RxBleClient
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
@@ -36,6 +38,9 @@ import javax.inject.Named
 class BluetoothService : Service() {
     companion object {
         const val FOREGROUND_NOTIFICATION_ID = 1235
+
+        fun start(context: Context) =
+            ContextCompat.startForegroundService(context, Intent(context, BluetoothService::class.java))
     }
 
     private var stateChangeDisposable: Disposable? = null
@@ -128,6 +133,9 @@ class BluetoothService : Service() {
         super.onTaskRemoved(rootIntent)
         sendBroadcastToRestartService()
     }
+
+    private fun isBluetoothEnabled() =
+        BluetoothAdapter.getDefaultAdapter().isEnabled
 
     private fun sendBroadcastToRestartService() {
         val broadcastIntent = Intent(this, ServiceRestarterBroadcastReceiver::class.java).apply {
