@@ -21,8 +21,7 @@ import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ViewState
-import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.status.OkViewModel
 import java.util.concurrent.TimeoutException
 

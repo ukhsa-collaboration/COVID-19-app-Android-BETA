@@ -25,7 +25,6 @@ class ECP256KeyProvider : EphemeralKeyProvider {
     override fun providePublicKey(): PublicKey = keyPair.public
     override fun providePrivateKey(): PrivateKey = keyPair.private
 
-    // the
     override fun providePublicKeyPoint(): ByteArray {
         // using the Bouncy Castle specific type because it exposes the points
         val key = (keyPair.public as BCECPublicKey)

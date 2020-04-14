@@ -4,8 +4,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
-import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
 import javax.inject.Inject

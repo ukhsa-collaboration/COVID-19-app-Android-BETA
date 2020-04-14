@@ -36,9 +36,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesSonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
-import uk.nhs.nhsx.sonar.android.app.status.SharedPreferencesStatusStorage
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
 import uk.nhs.nhsx.sonar.android.app.testhelpers.hasTextInputLayoutErrorText
@@ -298,18 +296,17 @@ class FlowTest {
     }
 
     private fun setStatus(covidStatus: CovidStatus) {
-        val storage = activityRule.activity.statusStorage as SharedPreferencesStatusStorage
+        val storage = activityRule.activity.statusStorage
         storage.update(covidStatus)
     }
 
     private fun resetStatusStorage() {
-        val storage = activityRule.activity.statusStorage as SharedPreferencesStatusStorage
+        val storage = activityRule.activity.statusStorage
         storage.reset()
     }
 
     private fun unsetSonarId() {
-        val sonarIdProvider =
-            activityRule.activity.sonarIdProvider as SharedPreferencesSonarIdProvider
+        val sonarIdProvider = activityRule.activity.sonarIdProvider
         sonarIdProvider.clear()
     }
 

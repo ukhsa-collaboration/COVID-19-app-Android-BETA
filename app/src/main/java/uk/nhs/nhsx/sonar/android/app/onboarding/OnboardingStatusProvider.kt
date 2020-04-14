@@ -1,20 +1,19 @@
-package uk.nhs.nhsx.sonar.android.app.persistence
+package uk.nhs.nhsx.sonar.android.app.onboarding
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.core.content.edit
 
-class SharedPreferencesOnboardingStatusProvider(context: Context) : OnboardingStatusProvider {
+class OnboardingStatusProvider(context: Context) {
 
-    private val sharedPreferences: SharedPreferences by lazy {
+    private val sharedPreferences by lazy {
         context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
     }
 
-    override fun isOnboardingFinished(): Boolean {
+    fun isOnboardingFinished(): Boolean {
         return sharedPreferences.getBoolean(KEY, false)
     }
 
-    override fun setOnboardingFinished(finished: Boolean) {
+    fun setOnboardingFinished(finished: Boolean) {
         sharedPreferences.edit { putBoolean(KEY, finished) }
     }
 

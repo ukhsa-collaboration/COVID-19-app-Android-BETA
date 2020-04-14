@@ -13,7 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.crypto.ECP256KeyProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.Encrypter
 import uk.nhs.nhsx.sonar.android.app.crypto.EphemeralKeyProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.FakeServerPublicKeyProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.client.security.ServerPublicKeyProvider
 import javax.inject.Singleton
 

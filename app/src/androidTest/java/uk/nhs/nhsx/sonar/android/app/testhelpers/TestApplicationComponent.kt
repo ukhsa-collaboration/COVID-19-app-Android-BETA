@@ -9,6 +9,7 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import org.joda.time.DateTime
+import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.ble.BleEventTracker
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.DefaultSaveContactWorker
@@ -30,12 +31,11 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
-import uk.nhs.nhsx.sonar.android.app.di.module.StatusModule
-import uk.nhs.nhsx.sonar.android.app.persistence.AppDatabase
-import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
+import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import uk.nhs.nhsx.sonar.android.client.security.ServerPublicKeyProvider
 import javax.inject.Named
@@ -47,7 +47,6 @@ import javax.inject.Singleton
         AppModule::class,
         NetworkModule::class,
         EncryptionKeyStorageModule::class,
-        StatusModule::class,
         NotificationsModule::class,
         TestModule::class
     ]
@@ -102,6 +101,10 @@ class TestModule(
     @Provides
     fun provideOnboardingStatusProvider(): OnboardingStatusProvider =
         persistenceModule.provideOnboardingStatusProvider()
+
+    @Provides
+    fun providesStatusStorage(): StatusStorage =
+        persistenceModule.providesStatusStorage()
 
     @Provides
     fun provideEphemeralKeyProvider(): EphemeralKeyProvider = cryptoModule.provideEphemeralKeyProvider()

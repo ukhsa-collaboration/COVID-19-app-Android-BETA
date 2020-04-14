@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import javax.inject.Inject
 
 class BootCompletedReceiver : BroadcastReceiver() {

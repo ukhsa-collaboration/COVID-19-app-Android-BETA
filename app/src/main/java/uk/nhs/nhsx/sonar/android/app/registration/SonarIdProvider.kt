@@ -1,25 +1,33 @@
-package uk.nhs.nhsx.sonar.android.app.persistence
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
+package uk.nhs.nhsx.sonar.android.app.registration
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.core.content.edit
 
-class SharedPreferencesSonarIdProvider(context: Context) : SonarIdProvider {
+const val ID_NOT_REGISTERED = "00000000-0000-0000-0000-000000000000"
 
-    private val sharedPreferences: SharedPreferences by lazy {
+class SonarIdProvider(context: Context) {
+
+    private val sharedPreferences by lazy {
         context.getSharedPreferences("residentId", Context.MODE_PRIVATE)
     }
 
-    override fun getSonarId(): String {
-        return sharedPreferences.getString(KEY, ID_NOT_REGISTERED)!!
+    fun getSonarId(): String {
+        return sharedPreferences.getString(
+            KEY,
+            ID_NOT_REGISTERED
+        )!!
     }
 
-    override fun hasProperSonarId(): Boolean {
+    fun hasProperSonarId(): Boolean {
         val sonarId = getSonarId()
         return sonarId.isNotEmpty() && sonarId != ID_NOT_REGISTERED
     }
 
-    override fun setSonarId(sonarId: String) {
+    fun setSonarId(sonarId: String) {
         sharedPreferences.edit { putString(KEY, sonarId) }
     }
 

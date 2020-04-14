@@ -2,7 +2,7 @@ package uk.nhs.nhsx.sonar.android.app.contactevents
 
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule.Companion.USE_CONNECTION_V2
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationEvent
 import javax.inject.Inject

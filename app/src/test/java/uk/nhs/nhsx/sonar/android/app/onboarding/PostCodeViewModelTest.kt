@@ -6,7 +6,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Rule
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.util.observeEventForever
 
 class PostCodeViewModelTest {

@@ -3,7 +3,6 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.util.LiveDataEvent
 import javax.inject.Inject
 

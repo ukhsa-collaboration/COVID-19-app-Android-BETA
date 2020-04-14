@@ -9,9 +9,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import org.jetbrains.annotations.TestOnly
-import uk.nhs.nhsx.sonar.android.app.persistence.AppDatabase
-import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 import javax.inject.Inject

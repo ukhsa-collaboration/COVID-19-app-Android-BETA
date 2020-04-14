@@ -20,7 +20,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.di.module.RegistrationModule
-import uk.nhs.nhsx.sonar.android.app.di.module.StatusModule
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
@@ -40,7 +39,6 @@ import javax.inject.Singleton
         CryptoModule::class,
         NetworkModule::class,
         EncryptionKeyStorageModule::class,
-        StatusModule::class,
         RegistrationModule::class,
         NotificationsModule::class
     ]

@@ -19,7 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import javax.inject.Inject
 
 class OkActivity : BaseActivity() {

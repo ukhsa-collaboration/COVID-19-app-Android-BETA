@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app.persistence
+package uk.nhs.nhsx.sonar.android.app
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

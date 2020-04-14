@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import uk.nhs.nhsx.sonar.android.app.ViewState
-import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationResult
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationUseCase
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import java.util.Date
 import javax.inject.Inject
 

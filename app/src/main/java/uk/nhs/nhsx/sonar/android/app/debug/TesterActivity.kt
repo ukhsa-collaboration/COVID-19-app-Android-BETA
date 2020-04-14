@@ -18,28 +18,25 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
-import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesSonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
-import uk.nhs.nhsx.sonar.android.app.status.SharedPreferencesStatusStorage
 import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
 
 class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
-    private val statusStorage: StatusStorage by lazy {
-        SharedPreferencesStatusStorage(this)
-    }
+    private val statusStorage by lazy { StatusStorage(this) }
 
-    private val sonarIdProvider: SharedPreferencesSonarIdProvider by lazy {
-        SharedPreferencesSonarIdProvider(this)
+    private val sonarIdProvider by lazy {
+        SonarIdProvider(
+            this
+        )
     }
 
     private lateinit var viewModelFactory: TestViewModelFactory
 
     private val viewModel: TestViewModel by viewModels { viewModelFactory }
 
-    private val bleEvents: BleEvents by lazy {
-        appComponent.provideBleEvents()
-    }
+    private val bleEvents: BleEvents by lazy { appComponent.provideBleEvents() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

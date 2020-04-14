@@ -9,19 +9,17 @@ import androidx.room.Room
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
+import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.ble.BleEventTracker
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.DefaultSaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
-import uk.nhs.nhsx.sonar.android.app.persistence.AppDatabase
-import uk.nhs.nhsx.sonar.android.app.persistence.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesOnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesPostCodeProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SharedPreferencesSonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -32,11 +30,13 @@ class PersistenceModule(
 
     @Provides
     fun provideDatabase() =
-        Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "event-database"
-        ).fallbackToDestructiveMigration()
+        Room
+            .databaseBuilder(
+                applicationContext,
+                AppDatabase::class.java,
+                "event-database"
+            )
+            .fallbackToDestructiveMigration()
             .build()
 
     @Provides
@@ -53,7 +53,7 @@ class PersistenceModule(
 
     @Provides
     fun provideSonarIdProvider(): SonarIdProvider =
-        SharedPreferencesSonarIdProvider(applicationContext)
+        SonarIdProvider(applicationContext)
 
     @Provides
     fun provideSaveContactWorker(
@@ -66,10 +66,14 @@ class PersistenceModule(
     @Provides
     @Singleton
     fun providePostCodeProvider(): PostCodeProvider =
-        SharedPreferencesPostCodeProvider(applicationContext)
+        PostCodeProvider(applicationContext)
 
     @Provides
     @Singleton
     fun provideOnboardingStatusProvider(): OnboardingStatusProvider =
-        SharedPreferencesOnboardingStatusProvider(applicationContext)
+        OnboardingStatusProvider(applicationContext)
+
+    @Provides
+    fun providesStatusStorage(): StatusStorage =
+        StatusStorage(applicationContext)
 }

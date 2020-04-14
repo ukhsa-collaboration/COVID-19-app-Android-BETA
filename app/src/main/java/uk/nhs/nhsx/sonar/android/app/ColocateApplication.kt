@@ -26,7 +26,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.di.module.RegistrationModule
-import uk.nhs.nhsx.sonar.android.app.di.module.StatusModule
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import java.security.Security
 
@@ -77,7 +76,6 @@ class ColocateApplication : Application() {
             .appModule(AppModule(this))
             .networkModule(NetworkModule(BASE_URL))
             .encryptionKeyStorageModule(EncryptionKeyStorageModule(this))
-            .statusModule(StatusModule(this))
             .registrationModule(RegistrationModule())
             .cryptoModule(CryptoModule())
             .build()

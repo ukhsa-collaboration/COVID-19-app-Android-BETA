@@ -15,9 +15,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.persistence.ID_NOT_REGISTERED
-import uk.nhs.nhsx.sonar.android.app.persistence.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
 import uk.nhs.nhsx.sonar.android.client.resident.Registration
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi

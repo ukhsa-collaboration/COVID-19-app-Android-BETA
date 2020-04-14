@@ -19,7 +19,7 @@ import android.content.Context
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothCryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule.Companion.ENCRYPT_SONAR_ID
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import javax.inject.Inject
 import javax.inject.Named
 

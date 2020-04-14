@@ -20,9 +20,8 @@ import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
-import uk.nhs.nhsx.sonar.android.app.di.module.StatusModule
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
-import uk.nhs.nhsx.sonar.android.app.persistence.ID_NOT_REGISTERED
+import uk.nhs.nhsx.sonar.android.app.registration.ID_NOT_REGISTERED
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.client.di.EncryptionKeyStorageModule
 import uk.nhs.nhsx.sonar.android.client.http.jsonOf

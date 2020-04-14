@@ -5,7 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.crypto
 
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
-import uk.nhs.nhsx.sonar.android.app.persistence.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.client.colocation.Seconds
 import java.util.Date
 
