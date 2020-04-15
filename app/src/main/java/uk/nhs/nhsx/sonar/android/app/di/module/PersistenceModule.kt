@@ -13,7 +13,6 @@ import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.ble.DefaultSaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
-import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
 import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgementsDao
 import javax.inject.Named
 
@@ -32,11 +31,7 @@ class PersistenceModule(private val appContext: Context) {
             .build()
 
     @Provides
-    fun provideContactEventDao(database: AppDatabase): ContactEventDao =
-        database.contactEventDao()
-
-    @Provides
-    fun provideContactEventV2Dao(database: AppDatabase): ContactEventV2Dao =
+    fun provideContactEventV2Dao(database: AppDatabase): ContactEventDao =
         database.contactEventV2Dao()
 
     @Provides
@@ -46,8 +41,8 @@ class PersistenceModule(private val appContext: Context) {
     @Provides
     fun provideSaveContactWorker(
         contactEventDao: ContactEventDao,
-        contactEventV2Dao: ContactEventV2Dao,
+        @Named(BluetoothModule.ERROR_MARGIN) errorMargin: Int,
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
-        DefaultSaveContactWorker(ioDispatcher, contactEventDao, contactEventV2Dao)
+        DefaultSaveContactWorker(ioDispatcher, errorMargin, contactEventDao)
 }

@@ -21,6 +21,7 @@ import io.reactivex.functions.BiFunction
 import kotlinx.coroutines.CoroutineScope
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
+import org.joda.time.Seconds
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -178,12 +179,10 @@ class LongLiveConnectionScan @Inject constructor(
         val record = macAddressToRecord.remove(macAddress)
 
         if (record != null) {
-
-            val duration = (endTimestampProvider().millis - record.timestamp.millis) / 1000
-
-            val finalRecord = record.copy(duration = duration)
+            val duration = Seconds.secondsBetween(startTimestampProvider(), endTimestampProvider())
+            val finalRecord = record.copy(duration = duration.seconds)
             Timber.d("Save record: $finalRecord")
-            saveContactWorker.saveContactEventV2(
+            saveContactWorker.saveContactEvent(
                 coroutineScope,
                 finalRecord
             )

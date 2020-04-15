@@ -12,14 +12,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
-import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import java.io.File
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
 class TestViewModel(
     private val context: Context,
-    private val contactEventDao: ContactEventV2Dao,
+    private val contactEventDao: ContactEventDao,
     private val eventTracker: BleEvents
 ) : ViewModel() {
 
@@ -38,7 +38,7 @@ class TestViewModel(
         viewModelScope.launch {
             val events = contactEventDao.getAll()
             val text = events.joinToString("\n") {
-                "${it.sonarId},${it.timestamp},${it.duration},${it.rssiValues.joinToString(":")}"
+                "${it.idAsString()},${it.timestamp},${it.duration},${it.rssiValues.joinToString(":")}"
             }
 
             val zipFile = "contact-events-exports.zip"
@@ -72,7 +72,7 @@ class TestViewModel(
 
 class TestViewModelFactory(
     private val context: Context,
-    private val contractEventDao: ContactEventV2Dao,
+    private val contractEventDao: ContactEventDao,
     private val eventTracker: BleEvents
 ) :
     ViewModelProvider.Factory {

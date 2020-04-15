@@ -131,7 +131,7 @@ private class FakeSaveContactWorker : SaveContactWorker by mockk() {
     var savedRecord: SaveContactWorker.Record? = null
         private set
 
-    override fun saveContactEventV2(scope: CoroutineScope, record: SaveContactWorker.Record) {
+    override fun saveContactEvent(scope: CoroutineScope, record: SaveContactWorker.Record) {
         saveScope = scope
         savedRecord = record
     }

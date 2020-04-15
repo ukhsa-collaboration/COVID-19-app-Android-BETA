@@ -21,6 +21,7 @@ import javax.inject.Named
 @Module
 open class BluetoothModule(
     private val applicationContext: Context,
+    private val errorMarginInSeconds: Int,
     private val connectionV2: Boolean,
     private val encryptSonarId: Boolean
 ) {
@@ -57,8 +58,13 @@ open class BluetoothModule(
     @Named(ENCRYPT_SONAR_ID)
     fun provideEncryptSonarId() = encryptSonarId
 
+    @Provides
+    @Named(ERROR_MARGIN)
+    fun provideErrorMarginInSeconds() = errorMarginInSeconds
+
     companion object {
         const val USE_CONNECTION_V2 = "USE_CONNECTION_V2"
+        const val ERROR_MARGIN = "ERROR_MARGIN"
         const val ENCRYPT_SONAR_ID = "ENCRYPT_SONAR_ID"
     }
 }

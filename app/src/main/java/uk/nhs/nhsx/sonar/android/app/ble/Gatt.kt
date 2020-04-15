@@ -33,6 +33,7 @@ class Gatt @Inject constructor(
 ) {
     private val identifier: Identifier
         get() = if (encryptSonarId) {
+            // TODO: Not actually an identifier
             Identifier.fromBytes(bluetoothCryptogramProvider.provideBluetoothCryptogram().asBytes())
         } else {
             Identifier.fromString(sonarIdProvider.getSonarId())

@@ -23,9 +23,6 @@ class DeleteOutdatedEvents(
     @Inject
     protected lateinit var contactEventDao: ContactEventDao
 
-    @Inject
-    protected lateinit var contactEventV2Dao: ContactEventV2Dao
-
     override suspend fun doWork(): Result {
         appComponent.inject(this)
 
@@ -42,7 +39,6 @@ class DeleteOutdatedEvents(
         Timber.d("Deleting all events before $timestamp")
         return try {
             contactEventDao.clearOldEvents(timestamp)
-            contactEventV2Dao.clearOldEvents(timestamp)
             Result.success()
         } catch (e: Exception) {
             Timber.e(e, "Failed to delete events")

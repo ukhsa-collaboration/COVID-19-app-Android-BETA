@@ -13,44 +13,41 @@ import org.joda.time.DateTimeZone
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
-import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2
-import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventV2Dao
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
-import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
+import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule.Companion.ERROR_MARGIN
 import javax.inject.Named
 
 interface SaveContactWorker {
-    fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int)
-    fun saveContactEventV2(scope: CoroutineScope, record: Record)
+    fun createOrUpdateContactEvent(scope: CoroutineScope, id: String, rssi: Int, timestamp: DateTime)
+    fun saveContactEvent(scope: CoroutineScope, record: Record)
 
     data class Record(
         val timestamp: DateTime,
         val sonarId: Identifier,
         val rssiValues: MutableList<Int> = mutableListOf(),
-        val duration: Long = 0
+        val duration: Int = 0
     )
 }
 
 class DefaultSaveContactWorker(
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
+    @Named(ERROR_MARGIN) private val errorMargin: Int,
     private val contactEventDao: ContactEventDao,
-    private val contactEventV2Dao: ContactEventV2Dao,
     private val dateProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) }
 ) : SaveContactWorker {
 
-    override fun saveContactEvent(scope: CoroutineScope, id: String, rssi: Int) {
+    override fun createOrUpdateContactEvent(scope: CoroutineScope, id: String, rssi: Int, timestamp: DateTime) {
         scope.launch {
             withContext(dispatcher) {
                 try {
-                    val timestamp = dateProvider().toUtcIsoFormat()
-
                     val contactEvent =
                         ContactEvent(
-                            remoteContactId = id,
-                            rssi = rssi,
-                            timestamp = timestamp
+                            sonarId = Identifier.fromString(id).asBytes,
+                            rssiValues = listOf(rssi),
+                            timestamp = timestamp.millis,
+                            duration = 0
                         )
-                    contactEventDao.insert(contactEvent)
+                    contactEventDao.createOrUpdate(contactEvent, errorMargin)
                     Timber.i("$TAG event $contactEvent")
                 } catch (e: Exception) {
                     Timber.e("$TAG Failed to save with exception $e")
@@ -59,20 +56,20 @@ class DefaultSaveContactWorker(
         }
     }
 
-    override fun saveContactEventV2(scope: CoroutineScope, record: SaveContactWorker.Record) {
+    override fun saveContactEvent(scope: CoroutineScope, record: SaveContactWorker.Record) {
         scope.launch {
             withContext(dispatcher) {
                 try {
-                    val timestamp = record.timestamp.toUtcIsoFormat()
+                    val timestamp = record.timestamp.millis
 
                     val contactEvent =
-                        ContactEventV2(
+                        ContactEvent(
                             sonarId = record.sonarId.asBytes,
                             rssiValues = record.rssiValues,
                             timestamp = timestamp,
                             duration = record.duration
                         )
-                    contactEventV2Dao.insert(contactEvent)
+                    contactEventDao.insert(contactEvent)
                     Timber.i("$TAG eventV2 $contactEvent")
                 } catch (e: Exception) {
                     Timber.e("$TAG Failed to save eventV2 with exception $e")

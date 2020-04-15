@@ -38,9 +38,9 @@ class TestBluetoothModule(
     private val rxBleClient: RxBleClient,
     private val startTimestampProvider: () -> DateTime,
     private val endTimestampProvider: () -> DateTime,
-    private val connectionV2: Boolean = true,
+    private val connectionV2: Boolean = false,
     private val encryptSonarId: Boolean = false
-) : BluetoothModule(appContext, connectionV2, encryptSonarId) {
+) : BluetoothModule(appContext, 30, connectionV2, encryptSonarId) {
 
     override fun provideRxBleClient(): RxBleClient =
         rxBleClient
@@ -60,7 +60,11 @@ class TestBluetoothModule(
                 bleEvents = bleEvents
             )
         else
-            Scan(rxBleClient, saveContactWorker, bleEvents)
+            Scan(
+                rxBleClient,
+                saveContactWorker,
+                bleEvents
+            )
 }
 
 @Module

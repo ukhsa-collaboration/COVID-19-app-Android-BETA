@@ -72,7 +72,7 @@ class ColocateApplication : Application() {
         DaggerApplicationComponent.builder()
             .appModule(AppModule(this))
             .persistenceModule(PersistenceModule(this))
-            .bluetoothModule(BluetoothModule(this, connectionV2 = true, encryptSonarId = false))
+            .bluetoothModule(BluetoothModule(this, connectionV2 = false, errorMarginInSeconds = 60, encryptSonarId = false))
             .cryptoModule(CryptoModule())
             .networkModule(NetworkModule(BASE_URL))
             .notificationsModule(NotificationsModule())

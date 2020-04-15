@@ -18,9 +18,9 @@ import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Emitter
 import io.reactivex.Observable
 import org.assertj.core.api.Assertions.fail
+import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.ble.DEVICE_CHARACTERISTIC_UUID
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
-import java.time.Instant
 import java.util.UUID
 
 class TestRxBleClient(context: Context) : RxBleClient() {
@@ -30,11 +30,14 @@ class TestRxBleClient(context: Context) : RxBleClient() {
 
     override fun getBleDevice(macAddress: String): RxBleDevice = realClient.getBleDevice(macAddress)
     override fun isScanRuntimePermissionGranted() = realClient.isScanRuntimePermissionGranted
-    override fun getRecommendedScanRuntimePermissions(): Array<String> = realClient.recommendedScanRuntimePermissions
+    override fun getRecommendedScanRuntimePermissions(): Array<String> =
+        realClient.recommendedScanRuntimePermissions
+
     override fun getBackgroundScanner(): BackgroundScanner = realClient.backgroundScanner
     override fun getBondedDevices(): MutableSet<RxBleDevice> = realClient.bondedDevices
 
-    override fun scanBleDevices(vararg filterServiceUUIDs: UUID): Observable<RxBleScanResult> = fail("Not available")
+    override fun scanBleDevices(vararg filterServiceUUIDs: UUID): Observable<RxBleScanResult> =
+        fail("Not available")
 
     override fun getState(): State =
         stateIgnoringLocationServicesNotEnabled(realClient.state)
@@ -50,7 +53,10 @@ class TestRxBleClient(context: Context) : RxBleClient() {
             else -> state
         }
 
-    override fun scanBleDevices(scanSettings: ScanSettings, vararg scanFilters: ScanFilter): Observable<ScanResult> =
+    override fun scanBleDevices(
+        scanSettings: ScanSettings,
+        vararg scanFilters: ScanFilter
+    ): Observable<ScanResult> =
         Observable.create { e -> emitter = e }
 
     fun emitScanResults(vararg args: ScanResultArgs) {
@@ -61,10 +67,12 @@ class TestRxBleClient(context: Context) : RxBleClient() {
     }
 
     private fun createScanResult(args: ScanResultArgs): ScanResult {
-        val scanRecord = ScanRecordImplCompat(null, null, null, -1, Int.MIN_VALUE, null, ByteArray(0))
+        val scanRecord =
+            ScanRecordImplCompat(null, null, null, -1, Int.MIN_VALUE, null, ByteArray(0))
         val characteristicUuid = DEVICE_CHARACTERISTIC_UUID
 
-        val characteristic = BluetoothGattCharacteristic(characteristicUuid, PROPERTY_READ, PERMISSION_READ)
+        val characteristic =
+            BluetoothGattCharacteristic(characteristicUuid, PROPERTY_READ, PERMISSION_READ)
         characteristic.value = Identifier.fromString(args.sonarId.toString()).asBytes
 
         val service = BluetoothGattService(characteristicUuid, 0)
@@ -78,10 +86,20 @@ class TestRxBleClient(context: Context) : RxBleClient() {
             services,
             args.rssiList
         )
-        val timestamp = Instant.now().toEpochMilli() * 1000
 
-        return ScanResult(rxBleDevice, -1, timestamp, CALLBACK_TYPE_ALL_MATCHES, scanRecord)
+        return ScanResult(
+            rxBleDevice,
+            -1,
+            args.timestamp.millis * 1_000,
+            CALLBACK_TYPE_ALL_MATCHES,
+            scanRecord
+        )
     }
 }
 
-data class ScanResultArgs(val sonarId: UUID, val macAddress: String, val rssiList: List<Int>)
+data class ScanResultArgs(
+    val sonarId: UUID,
+    val macAddress: String,
+    val rssiList: List<Int>,
+    val timestamp: DateTime
+)

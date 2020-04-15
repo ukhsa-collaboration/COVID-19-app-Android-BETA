@@ -8,12 +8,18 @@ import android.os.ParcelUuid
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.scan.ScanFilter
+import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import timber.log.Timber
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 class Scan @Inject constructor(
@@ -26,7 +32,8 @@ class Scan @Inject constructor(
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
 
-    private var connectionDisposable: Disposable? = null
+    private val connectedDevices = ConcurrentHashMap<String, String>()
+    private var scanDisposable: Disposable? = null
 
     /*
      When the iPhone app goes into the background iOS changes how services are advertised:
@@ -69,27 +76,62 @@ class Scan @Inject constructor(
         .build()
 
     override fun start(coroutineScope: CoroutineScope) {
-        connectionDisposable = rxBleClient
+        coroutineScope.launch {
+            Timber.d("scan - Kicking off delay")
+            delay(2 * 60_000)
+            Timber.d("scan - Restarting")
+            stop()
+            delay(10_000)
+            start(this)
+        }
+
+        scanDisposable = rxBleClient
             .scanBleDevices(
                 settings,
                 coLocateBackgroundedIPhoneFilter,
                 coLocateServiceUuidFilter
             )
-            .distinct { it.bleDevice.macAddress }
             .subscribe(
-                { result ->
-                    result
-                        .bleDevice
-                        .establishConnection(false)
-                        .flatMapSingle { read(it, coroutineScope) }
-                        .subscribe(::onReadSuccess, ::onReadError)
+                {
+                    Timber.d("Scan found = ${it.bleDevice}")
+                    connectToDevice(it, coroutineScope)
                 },
                 ::onConnectionError
             )
     }
 
     override fun stop() {
-        connectionDisposable?.dispose()
+        scanDisposable?.dispose()
+        scanDisposable = null
+    }
+
+    private fun connectToDevice(scanResult: ScanResult, coroutineScope: CoroutineScope) {
+        val macAddress = scanResult.bleDevice.macAddress
+        Timber.d("Connectiing to $macAddress")
+        var connectionDisposable: Disposable? = null
+        scanResult
+            .bleDevice
+            .establishConnection(false)
+            .doFinally {
+                Timber.d("Disconnecting from $connectionDisposable")
+                connectionDisposable?.dispose()
+                connectionDisposable = null
+                connectedDevices.remove(macAddress)
+            }
+            .flatMapSingle {
+                Timber.d("Reading from - MAC:$macAddress")
+                read(it, coroutineScope)
+            }
+            .subscribe(
+                { event ->
+                    val eventWithTimestamp = event.copy(timestamp = scanResult.timestampNanos / 1_000)
+                    onReadSuccess(eventWithTimestamp, macAddress)
+                },
+                { e ->
+                    Timber.d("failed reading from $macAddress")
+                    onReadError(e)
+                }
+            ).let { connectionDisposable = it }
     }
 
     private fun read(connection: RxBleConnection, scope: CoroutineScope): Single<Event> {
@@ -116,21 +158,24 @@ class Scan @Inject constructor(
         Timber.e("Failed to read from remote device: $e")
     }
 
-    private fun onReadSuccess(event: Event) {
+    private fun onReadSuccess(event: Event, macAddress: String) {
         Timber.d("Scanning Saving: $event")
         bleEvents.connectedDeviceEvent(event.identifier.asString, listOf(event.rssi))
+        connectedDevices[macAddress] = event.identifier.asString
 
-        saveContactWorker.saveContactEvent(
+        saveContactWorker.createOrUpdateContactEvent(
             event.scope,
             event.identifier.asString,
-            event.rssi
+            event.rssi,
+            DateTime(event.timestamp, DateTimeZone.UTC)
         )
     }
 
     private data class Event(
         val identifier: Identifier,
         val rssi: Int,
-        val scope: CoroutineScope
+        val scope: CoroutineScope,
+        val timestamp: Long = 0
     ) {
         override fun toString() = "Event[identifier: ${identifier.asString}, rssi: $rssi]"
     }

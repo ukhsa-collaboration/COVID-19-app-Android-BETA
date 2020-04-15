@@ -1,50 +1,32 @@
 package uk.nhs.nhsx.sonar.android.app.contactevents
 
-import uk.nhs.nhsx.sonar.android.app.ble.Identifier
-import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule.Companion.USE_CONNECTION_V2
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
 import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationEvent
 import javax.inject.Inject
-import javax.inject.Named
 
 class CoLocationDataProvider @Inject constructor(
-    @Named(USE_CONNECTION_V2) private val useConnectionV2: Boolean,
     private val contactEventDao: ContactEventDao,
-    private val contactEventV2Dao: ContactEventV2Dao,
     private val sonarIdProvider: SonarIdProvider
 ) {
 
-    suspend fun getData(): CoLocationData =
-        if (useConnectionV2) {
-            val events = contactEventV2Dao.getAll().map(::convert)
-            CoLocationData(sonarIdProvider.getSonarId(), events)
-        } else {
-            val events = contactEventDao.getAll().map(::convert)
-            CoLocationData(sonarIdProvider.getSonarId(), events)
-        }
+    suspend fun getData(): CoLocationData {
+        val events = contactEventDao.getAll().map(::convert)
+        return CoLocationData(sonarIdProvider.getSonarId(), events)
+    }
 
     private fun convert(contactEvent: ContactEvent): CoLocationEvent =
         CoLocationEvent(
-            sonarId = contactEvent.remoteContactId,
-            rssiValues = listOf(contactEvent.rssi),
-            timestamp = contactEvent.timestamp,
-            duration = -1
-        )
-
-    private fun convert(contactEvent: ContactEventV2): CoLocationEvent =
-        CoLocationEvent(
-            sonarId = Identifier.fromBytes(contactEvent.sonarId).asString,
+            sonarId = contactEvent.idAsString(),
             rssiValues = contactEvent.rssiValues,
-            timestamp = contactEvent.timestamp,
+            timestamp = DateTime(contactEvent.timestamp, DateTimeZone.UTC).toUtcIsoFormat(),
             duration = contactEvent.duration
         )
 
     suspend fun clearData() {
-        if (useConnectionV2) {
-            contactEventV2Dao.clearEvents()
-        } else {
-            contactEventDao.clearEvents()
-        }
+        contactEventDao.clearEvents()
     }
 }

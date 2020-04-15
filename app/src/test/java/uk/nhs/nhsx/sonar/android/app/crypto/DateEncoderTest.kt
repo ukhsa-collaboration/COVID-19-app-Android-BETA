@@ -5,26 +5,32 @@
 package uk.nhs.nhsx.sonar.android.app.crypto
 
 import org.assertj.core.api.Assertions.assertThat
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.tz.UTCProvider
+import org.junit.Before
 import org.junit.Test
-import java.util.Date
 
 class DateEncoderTest {
+    @Before
+    fun setUp() {
+        DateTimeZone.setProvider(UTCProvider())
+    }
+
     @Test
     fun `correctly encodes time as unsigned int`() {
-        // multiplied because Java deals with milliseconds
-        val maxIntDate = Date(Int.MAX_VALUE.toLong() * 1000)
+        val maxIntDate = DateTime(Int.MAX_VALUE.toLong() * 1000)
         assertThat(maxIntDate.encodeAsSecondsSinceEpoch())
             .isEqualTo(byteArrayOf(127, -1, -1, -1))
 
-        val unsignedIntMaxDate = Date(4294967295L * 1000)
+        val unsignedIntMaxDate = DateTime(4294967295L * 1000)
         assertThat(unsignedIntMaxDate.encodeAsSecondsSinceEpoch())
             .isEqualTo(byteArrayOf(-1, -1, -1, -1))
     }
 
     @Test
     fun `correctly adds offset`() {
-        // multiplied because Java deals with milliseconds
-        val maxIntDate = Date((Int.MAX_VALUE - 5).toLong() * 1000)
+        val maxIntDate = DateTime((Int.MAX_VALUE - 5).toLong() * 1000)
         assertThat(maxIntDate.encodeAsSecondsSinceEpoch(5))
             .isEqualTo(byteArrayOf(127, -1, -1, -1))
     }

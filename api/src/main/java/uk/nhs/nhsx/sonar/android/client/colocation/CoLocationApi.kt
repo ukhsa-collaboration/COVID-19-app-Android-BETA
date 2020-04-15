@@ -35,8 +35,6 @@ class CoLocationApi(
     }
 }
 
-typealias Seconds = Long
-
 data class CoLocationData(
     val sonarId: String,
     val contactEvents: List<CoLocationEvent>
@@ -46,7 +44,7 @@ data class CoLocationEvent(
     val sonarId: String,
     val rssiValues: List<Int>,
     val timestamp: String,
-    val duration: Seconds
+    val duration: Int
 )
 
 private fun CoLocationData.toJson(): JSONObject =
