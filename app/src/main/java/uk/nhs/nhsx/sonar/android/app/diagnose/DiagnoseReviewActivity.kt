@@ -20,9 +20,8 @@ import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.showToast
 import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
-import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
-import uk.nhs.nhsx.sonar.android.app.status.OkActivity
 import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
+import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
 class DiagnoseReviewActivity : BaseActivity() {
@@ -85,11 +84,9 @@ class DiagnoseReviewActivity : BaseActivity() {
     private fun updateStatusAndNavigate() {
         if (hasCough or hasTemperature) {
             statusStorage.update(CovidStatus.RED)
-            IsolateActivity.start(this)
-        } else {
-            statusStorage.update(CovidStatus.OK)
-            OkActivity.start(this)
         }
+
+        navigateTo(statusStorage.get())
     }
 
     companion object {
