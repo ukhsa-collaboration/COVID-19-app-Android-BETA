@@ -2,9 +2,11 @@
 
 set -ev
 
+CURRENT_DIR=$(pwd)
+
 FIREBASE_SERVICES_FILE=app/google-services.json
-PLAY_SERVICES_FILE=build/play-services.json
-SIGNING_KEY_STORE_FILE=build/keystore
+PLAY_SERVICES_FILE=$CURRENT_DIR/build/play-services.json
+SIGNING_KEY_STORE_FILE=$CURRENT_DIR/build/keystore
 
 if [ -z "$FIREBASE_SERVICES" ]; then
   echo "FIREBASE_SERVICES is required to generate $FIREBASE_SERVICES_FILE"
