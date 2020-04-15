@@ -44,29 +44,26 @@ project.afterEvaluate {
     tasks.create(
             name: "jacocoRootReport",
             type: JacocoReport,
-            dependsOn: [
-                    ":api:testDebugUnitTest",
-                    ":app:testDebugUnitTest"
-            ]
     ) {
-        def api = project("api")
-        def app = project("app")
+        def classDirs = []
+        def sourceDirs = []
+        def executions = []
 
-        classDirectories.setFrom(files([
-                fileTree(dir: "${api.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter),
-                fileTree(dir: "${app.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter),
-        ]))
+        [
+                project("api"),
+                project("app")
+        ].each { prj ->
+            dependsOn(prj.testDebugUnitTest)
+            classDirs += fileTree(dir: "${prj.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
+            sourceDirs += files("${prj.projectDir}/src/main/java")
+            executions += "${prj.buildDir}/jacoco/testDebugUnitTest.exec"
+        }
 
-        def apiSource = files("${api.projectDir}/src/main/java")
-        def appSource = files("${app.projectDir}/src/main/java")
+        classDirectories.setFrom(files(classDirs))
+        additionalSourceDirs.setFrom(*sourceDirs)
+        sourceDirectories.setFrom(*sourceDirs)
 
-        additionalSourceDirs.setFrom(apiSource, appSource)
-        sourceDirectories.setFrom(apiSource, appSource)
-
-        executionData(
-                "${api.buildDir}/jacoco/testDebugUnitTest.exec",
-                "${app.buildDir}/jacoco/testDebugUnitTest.exec"
-        )
+        executionData(*executions)
 
         reports {
             html.enabled = true
