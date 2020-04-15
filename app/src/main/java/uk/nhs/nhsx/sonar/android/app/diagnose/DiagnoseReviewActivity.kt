@@ -68,6 +68,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                 submission_error.visibility = View.GONE
             } else {
                 submission_error.visibility = View.VISIBLE
+                submission_error.announceForAccessibility(getString(R.string.submission_error))
                 confirmButton.text = getString(R.string.retry)
             }
         })

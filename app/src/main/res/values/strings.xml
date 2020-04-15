@@ -102,5 +102,6 @@
     <string name="valid_post_code_is_required">Valid post code is required</string>
     <string name="coronavirus">Coronavirus</string>
     <string name="app_rationale">This app can let you know if you may have been near someone with coronavirus symptoms (COVID-19).</string>
+    <string name="back">Back</string>
     <string name="explanation_privacy_policy_and_terms_and_conditions">Read our privacy policy and terms and conditions.</string>
 </resources>

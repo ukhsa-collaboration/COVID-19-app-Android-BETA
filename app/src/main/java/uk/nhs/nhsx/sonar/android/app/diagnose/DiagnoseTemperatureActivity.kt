@@ -34,6 +34,7 @@ class DiagnoseTemperatureActivity : BaseActivity() {
                 }
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
+                    radio_selection_error.announceForAccessibility(getString(R.string.radio_button_temperature_error))
                 }
             }
         }

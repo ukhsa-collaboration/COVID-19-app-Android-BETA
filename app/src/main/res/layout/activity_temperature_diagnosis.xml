@@ -58,6 +58,7 @@
             android:fontFamily="@font/roboto_medium"
             android:text="@string/radio_button_temperature_error"
             android:textColor="@color/colorDanger"
+            android:labelFor="@+id/temperature_diagnosis_answer"
             android:textSize="16sp"
             android:visibility="gone" />
 
