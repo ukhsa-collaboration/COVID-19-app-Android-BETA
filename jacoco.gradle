@@ -1,62 +1,74 @@
-apply plugin: 'jacoco'
+def fileFilter = [
+    '**/R.class',
+    '**/R$*.class',
+    '**/BuildConfig.*',
+    '**/Manifest*.*',
+    '**/*Test*.*',
+    '**/com/example/databinding/*',
+    '**/com/example/generated/callback/*',
+    '**/android/databinding/*',
+    '**/androidx/databinding/*',
+    '**/di/module/*',
+    '**/*MapperImpl*.*',
+    '**/*$ViewInjector*.*',
+    '**/*$ViewBinder*.*',
+    '**/BuildConfig.*',
+    '**/*Component*.*',
+    '**/*BR*.*',
+    '**/Manifest*.*',
+    '**/*$Lambda$*.*',
+    '**/*Companion*.*',
+    '**/*Module.*',
+    '**/*Dagger*.*',
+    '**/*MembersInjector*.*',
+    '**/*_Factory*.*',
+    '**/*_Provide*Factory*.*',
+    '**/*Extensions*.*',
+    '**/*$Result.*', /* filtering `sealed` and `data` classes */
+    '**/*$Result$*.*'/* filtering `sealed` and `data` classes */
+]
+
+apply plugin: "jacoco"
 
 jacoco { toolVersion = "0.8.5" }
 
-tasks.withType(Test) { jacoco.includeNoLocationClasses = true }
-
-def fileFilter = [
-        '**/R.class',
-        '**/R$*.class',
-        '**/BuildConfig.*',
-        '**/Manifest*.*',
-        '**/*Test*.*',
-        '**/com/example/databinding/*',
-        '**/com/example/generated/callback/*',
-        '**/android/databinding/*',
-        '**/androidx/databinding/*',
-        '**/di/module/*',
-        '**/*MapperImpl*.*',
-        '**/*$ViewInjector*.*',
-        '**/*$ViewBinder*.*',
-        '**/BuildConfig.*',
-        '**/*Component*.*',
-        '**/*BR*.*',
-        '**/Manifest*.*',
-        '**/*$Lambda$*.*',
-        '**/*Companion*.*',
-        '**/*Module.*',
-        '**/*Dagger*.*',
-        '**/*MembersInjector*.*',
-        '**/*_Factory*.*',
-        '**/*_Provide*Factory*.*',
-        '**/*Extensions*.*',
-        '**/*$Result.*', /* filtering `sealed` and `data` classes */
-        '**/*$Result$*.*'/* filtering `sealed` and `data` classes */
-]
-
 subprojects {
-    apply plugin: 'jacoco'
+    apply plugin: "jacoco"
+
+    tasks.withType(Test) {
+        jacoco.includeNoLocationClasses = true
+        jacoco.excludes = ["jdk.internal.*"]
+
+        if (project.name == "app") {
+            jacoco.excludes += "uk.nhs.nhsx.sonar.android.client.*"
+        }
+    }
 }
 
 project.evaluationDependsOnChildren()
 
 project.afterEvaluate {
     tasks.create(
-            name: "jacocoRootReport",
-            type: JacocoReport,
+        name: "jacocoRootReport",
+        type: JacocoReport,
     ) {
         def classDirs = []
         def sourceDirs = []
         def executions = []
 
-        [
-                project("api"),
-                project("app")
-        ].each { prj ->
+        subprojects.each { prj ->
             dependsOn(prj.testDebugUnitTest)
-            classDirs += fileTree(dir: "${prj.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
-            sourceDirs += files("${prj.projectDir}/src/main/java")
-            executions += "${prj.buildDir}/jacoco/testDebugUnitTest.exec"
+            dependsOn(prj.connectedAndroidTest)
+
+            classDirs += fileTree(dir: "$prj.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+            sourceDirs += files("$prj.projectDir/src/main/java")
+            executions += "$prj.buildDir/jacoco/testDebugUnitTest.exec"
+
+            fileTree("$prj.buildDir/outputs/code_coverage/debugAndroidTest/connected") {
+                include "**/*.ec"
+            }.files.each { file ->
+                executions += file.absolutePath
+            }
         }
 
         classDirectories.setFrom(files(classDirs))
@@ -69,6 +81,4 @@ project.afterEvaluate {
             html.enabled = true
         }
     }
-
 }
-

@@ -24,6 +24,9 @@ android {
         testInstrumentationRunnerArguments = ["package": "uk.nhs.nhsx.sonar"]
     }
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
         staging {
             debuggable true
             minifyEnabled false

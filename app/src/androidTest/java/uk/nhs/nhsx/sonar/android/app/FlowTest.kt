@@ -59,6 +59,11 @@ class FlowTest {
     fun setup() {
         testAppContext = TestApplicationContext(activityRule)
         ensureBluetoothEnabled()
+
+        clearDatabase()
+        resetOnboarding()
+        resetStatusStorage()
+        unsetSonarId()
     }
 
     @After
@@ -68,8 +73,6 @@ class FlowTest {
 
     @Test
     fun testRegistration() {
-        resetStatusStorage()
-        unsetSonarId()
         testAppContext.simulateBackendDelay(400)
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -110,8 +113,6 @@ class FlowTest {
 
     @Test
     fun testRegistrationRetry() {
-        resetStatusStorage()
-        unsetSonarId()
         testAppContext.simulateBackendResponse(error = true)
         testAppContext.simulateBackendDelay(0)
 
@@ -169,7 +170,6 @@ class FlowTest {
 
     @Test
     fun testBluetoothInteractions() {
-        clearDatabase()
         setStatus(CovidStatus.OK)
         setValidSonarIdAndSecretKey()
 
@@ -203,8 +203,6 @@ class FlowTest {
 
     @Test
     fun testExplanation() {
-        unsetSonarId()
-
         onView(withId(R.id.start_main_activity)).perform(click())
 
         onView(withId(R.id.explanation_link)).perform(click())
@@ -313,6 +311,11 @@ class FlowTest {
     private fun setFinishedOnboarding() {
         val storage = activityRule.activity.onboardingStatusProvider
         storage.setOnboardingFinished(true)
+    }
+
+    private fun resetOnboarding() {
+        val storage = activityRule.activity.onboardingStatusProvider
+        storage.setOnboardingFinished(false)
     }
 
     private fun setValidSonarId() {
