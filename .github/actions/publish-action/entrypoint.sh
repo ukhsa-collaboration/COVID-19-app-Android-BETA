@@ -4,7 +4,7 @@ set -ev
 
 CURRENT_DIR=$(pwd)
 
-FIREBASE_SERVICES_FILE=app/google-services.json
+FIREBASE_SERVICES_FILE=$CURRENT_DIR/app/google-services.json
 PLAY_SERVICES_FILE=$CURRENT_DIR/build/play-services.json
 SIGNING_KEY_STORE_FILE=$CURRENT_DIR/build/keystore
 
