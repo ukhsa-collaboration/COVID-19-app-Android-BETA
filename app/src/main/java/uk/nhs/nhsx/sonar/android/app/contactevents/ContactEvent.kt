@@ -3,10 +3,8 @@ package uk.nhs.nhsx.sonar.android.app.contactevents
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.squareup.moshi.JsonClass
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 
-@JsonClass(generateAdapter = true)
 @Entity(tableName = ContactEvent.TABLE_NAME)
 data class ContactEvent(
     @PrimaryKey(autoGenerate = true)
