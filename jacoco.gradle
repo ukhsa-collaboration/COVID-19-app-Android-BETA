@@ -1,0 +1,77 @@
+apply plugin: 'jacoco'
+
+jacoco { toolVersion = "0.8.5" }
+
+tasks.withType(Test) { jacoco.includeNoLocationClasses = true }
+
+def fileFilter = [
+        '**/R.class',
+        '**/R$*.class',
+        '**/BuildConfig.*',
+        '**/Manifest*.*',
+        '**/*Test*.*',
+        '**/com/example/databinding/*',
+        '**/com/example/generated/callback/*',
+        '**/android/databinding/*',
+        '**/androidx/databinding/*',
+        '**/di/module/*',
+        '**/*MapperImpl*.*',
+        '**/*$ViewInjector*.*',
+        '**/*$ViewBinder*.*',
+        '**/BuildConfig.*',
+        '**/*Component*.*',
+        '**/*BR*.*',
+        '**/Manifest*.*',
+        '**/*$Lambda$*.*',
+        '**/*Companion*.*',
+        '**/*Module.*',
+        '**/*Dagger*.*',
+        '**/*MembersInjector*.*',
+        '**/*_Factory*.*',
+        '**/*_Provide*Factory*.*',
+        '**/*Extensions*.*',
+        '**/*$Result.*', /* filtering `sealed` and `data` classes */
+        '**/*$Result$*.*'/* filtering `sealed` and `data` classes */
+]
+
+subprojects {
+    apply plugin: 'jacoco'
+}
+
+project.evaluationDependsOnChildren()
+
+project.afterEvaluate {
+    tasks.create(
+            name: "jacocoRootReport",
+            type: JacocoReport,
+            dependsOn: [
+                    ":api:testDebugUnitTest",
+                    ":app:testDebugUnitTest"
+            ]
+    ) {
+        def api = project("api")
+        def app = project("app")
+
+        classDirectories.setFrom(files([
+                fileTree(dir: "${api.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter),
+                fileTree(dir: "${app.buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter),
+        ]))
+
+        def apiSource = files("${api.projectDir}/src/main/java")
+        def appSource = files("${app.projectDir}/src/main/java")
+
+        additionalSourceDirs.setFrom(apiSource, appSource)
+        sourceDirectories.setFrom(apiSource, appSource)
+
+        executionData(
+                "${api.buildDir}/jacoco/testDebugUnitTest.exec",
+                "${app.buildDir}/jacoco/testDebugUnitTest.exec"
+        )
+
+        reports {
+            html.enabled = true
+        }
+    }
+
+}
+
