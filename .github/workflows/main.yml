@@ -67,7 +67,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/publish-action
         env:
-          FIREBASE_SERVICES: ${{ secrets.ServiceAccount }}
+          FIREBASE_SERVICES: ${{ secrets.GoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
           SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}
           SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias}}
