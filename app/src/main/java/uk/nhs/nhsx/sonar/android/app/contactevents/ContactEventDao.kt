@@ -13,7 +13,6 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Seconds
 import timber.log.Timber
-import kotlin.math.abs
 
 @Dao
 interface ContactEventDao {
@@ -26,32 +25,60 @@ interface ContactEventDao {
     @Transaction
     suspend fun createOrUpdate(newEvent: ContactEvent, errorMargin: Int) {
         val sorted = getAll().sortedBy { it.timestamp }
+        Timber.d("all events $sorted")
         val eventsById = sorted.filter { it.sonarId.contentEquals(newEvent.sonarId) }
         for (event in eventsById.subList(0, eventsById.size)) {
             val newEventTime = DateTime(newEvent.timestamp, DateTimeZone.UTC)
-            val storedEventTime = DateTime(event.timestamp, DateTimeZone.UTC)
-            val diff = abs(Seconds.secondsBetween(newEventTime, storedEventTime).seconds)
+            val storedEventTimeStart = DateTime(event.timestamp, DateTimeZone.UTC)
+            val storedEventTimeEnd =
+                DateTime(event.timestamp, DateTimeZone.UTC).plus(Seconds.seconds(event.duration))
 
-            // TODO: What happens if the new event is in the middle of the existing one?
-            // Need to capture timestamp for each reading?
-            if (Seconds.seconds(diff).plus(event.duration).isLessThan(Seconds.seconds(errorMargin))
+            val rssis = event.rssiValues
+
+            if (newEventTime.isBefore(storedEventTimeStart) &&
+                newEventTime.isAfter(storedEventTimeStart.minus(Seconds.seconds(errorMargin)))
             ) {
-                val rssis = event.rssiValues
+                Timber.d(
+                    "Updated event duration is ${event.duration + Seconds.secondsBetween(
+                        storedEventTimeStart,
+                        newEventTime
+                    ).seconds}"
+                )
 
-                val updatedEvent = if (newEventTime.isAfter(storedEventTime)) {
+                event.copy(
+                    timestamp = newEvent.timestamp,
+                    duration = event.duration +
+                        Seconds.secondsBetween(newEventTime, storedEventTimeStart).seconds,
+                    rssiValues = newEvent.rssiValues.plus(rssis)
+                )
+                return
+            } else if (newEventTime.isAfter(storedEventTimeEnd) &&
+                newEventTime.isBefore(storedEventTimeEnd.plus(Seconds.seconds(errorMargin)))
+            ) {
+                Timber.d(
+                    "Updated event duration is ${event.duration + Seconds.secondsBetween(
+                        newEventTime,
+                        storedEventTimeEnd
+                    ).seconds}"
+                )
+                update(
                     event.copy(
-                        duration = event.duration + diff,
+                        duration = event.duration +
+                            Seconds.secondsBetween(storedEventTimeEnd, newEventTime).seconds,
                         rssiValues = rssis.plus(newEvent.rssiValues)
                     )
-                } else {
+                )
+                return
+            } else if (newEventTime.isAfter(storedEventTimeStart) &&
+                newEventTime.isBefore(storedEventTimeEnd)
+            ) {
+                Timber.d("Updated event duration is unaffected")
+
+                update(
                     event.copy(
-                        timestamp = newEvent.timestamp,
-                        duration = event.duration + diff,
-                        rssiValues = newEvent.rssiValues.plus(rssis)
+                        rssiValues = rssis.plus(newEvent.rssiValues)
                     )
-                }
-                Timber.d("saving Updating event $updatedEvent")
-                update(updatedEvent)
+                )
                 return
             }
         }
@@ -67,5 +94,5 @@ interface ContactEventDao {
     suspend fun clearEvents()
 
     @Query("DELETE FROM ${ContactEvent.TABLE_NAME} WHERE timestamp < :timestamp")
-    suspend fun clearOldEvents(timestamp: String)
+    suspend fun clearOldEvents(timestamp: Long)
 }

@@ -18,9 +18,9 @@ import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Emitter
 import io.reactivex.Observable
 import org.assertj.core.api.Assertions.fail
-import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.ble.DEVICE_CHARACTERISTIC_UUID
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
+import java.time.Instant
 import java.util.UUID
 
 class TestRxBleClient(context: Context) : RxBleClient() {
@@ -86,11 +86,12 @@ class TestRxBleClient(context: Context) : RxBleClient() {
             services,
             args.rssiList
         )
+        val timestamp = Instant.now().toEpochMilli() * 1000
 
         return ScanResult(
             rxBleDevice,
             -1,
-            args.timestamp.millis * 1_000,
+            timestamp,
             CALLBACK_TYPE_ALL_MATCHES,
             scanRecord
         )
@@ -100,6 +101,5 @@ class TestRxBleClient(context: Context) : RxBleClient() {
 data class ScanResultArgs(
     val sonarId: UUID,
     val macAddress: String,
-    val rssiList: List<Int>,
-    val timestamp: DateTime
+    val rssiList: List<Int>
 )

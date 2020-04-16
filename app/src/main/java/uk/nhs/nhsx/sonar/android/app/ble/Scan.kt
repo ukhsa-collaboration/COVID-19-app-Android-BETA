@@ -25,7 +25,8 @@ import javax.inject.Inject
 class Scan @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val saveContactWorker: SaveContactWorker,
-    private val bleEvents: BleEvents
+    private val bleEvents: BleEvents,
+    private val currentTimestampeProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) }
 ) : Scanner {
 
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
@@ -124,8 +125,7 @@ class Scan @Inject constructor(
             }
             .subscribe(
                 { event ->
-                    val eventWithTimestamp = event.copy(timestamp = scanResult.timestampNanos / 1_000)
-                    onReadSuccess(eventWithTimestamp, macAddress)
+                    onReadSuccess(event, macAddress)
                 },
                 { e ->
                     Timber.d("failed reading from $macAddress")
@@ -142,7 +142,8 @@ class Scan @Inject constructor(
                 Event(
                     Identifier.fromBytes(bytes),
                     rssi,
-                    scope
+                    scope,
+                    currentTimestampeProvider()
                 )
             }
         )
@@ -167,7 +168,7 @@ class Scan @Inject constructor(
             event.scope,
             event.identifier.asString,
             event.rssi,
-            DateTime(event.timestamp, DateTimeZone.UTC)
+            event.timestamp
         )
     }
 
@@ -175,7 +176,7 @@ class Scan @Inject constructor(
         val identifier: Identifier,
         val rssi: Int,
         val scope: CoroutineScope,
-        val timestamp: Long = 0
+        val timestamp: DateTime
     ) {
         override fun toString() = "Event[identifier: ${identifier.asString}, rssi: $rssi]"
     }

@@ -11,7 +11,6 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -34,11 +33,11 @@ class DeleteOutdatedEvents(
             return Result.failure()
         }
 
-        val timestamp = DateTime.now(DateTimeZone.UTC).minusDays(28).toUtcIsoFormat()
+        val timestamp = DateTime.now(DateTimeZone.UTC).minusDays(28)
 
         Timber.d("Deleting all events before $timestamp")
         return try {
-            contactEventDao.clearOldEvents(timestamp)
+            contactEventDao.clearOldEvents(timestamp.millis)
             Result.success()
         } catch (e: Exception) {
             Timber.e(e, "Failed to delete events")

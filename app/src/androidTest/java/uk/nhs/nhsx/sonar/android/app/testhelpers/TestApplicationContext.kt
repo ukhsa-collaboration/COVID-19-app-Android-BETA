@@ -15,7 +15,7 @@ import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.awaitility.kotlin.untilNotNull
 import org.joda.time.DateTime
-import org.joda.time.Seconds
+import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ColocateApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -42,12 +42,24 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     private val testRxBleClient = TestRxBleClient(app)
     private val startTimestampProvider = { DateTime.parse("2020-04-01T14:33:13Z") }
     private val endTimestampProvider = { DateTime.parse("2020-04-01T14:43:13Z") }
+    private var eventNumber = 0
+    private val currentTimestampProvider = {
+        eventNumber++
+        Timber.d("Sending event nr $eventNumber")
+        when (eventNumber) {
+            1, 2 -> DateTime.parse("2020-04-01T14:33:13Z")
+            3, 4 -> DateTime.parse("2020-04-01T14:34:43Z") // +90 seconds
+            5, 6 -> DateTime.parse("2020-04-01T14:44:53Z") // +610 seconds
+            else -> throw IllegalStateException()
+        }
+    }
 
     private val testBluetoothModule = TestBluetoothModule(
         app,
         testRxBleClient,
         startTimestampProvider,
-        endTimestampProvider
+        endTimestampProvider,
+        currentTimestampProvider
     )
     private val mockServer = MockWebServer()
 
@@ -164,38 +176,49 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun simulateDeviceInProximity() {
-        val timestamp = DateTime.parse("2020-04-01T14:33:13Z")
         testRxBleClient.emitScanResults(
             ScanResultArgs(
                 UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
                 "06-00-00-00-00-00",
-                listOf(10),
-                timestamp
-            ),
-            ScanResultArgs(
-                UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
-                "06-00-00-00-00-00",
-                listOf(20),
-                timestamp.plus(Seconds.seconds(10))
-            ),
-            ScanResultArgs(
-                UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
-                "06-00-00-00-00-00",
-                listOf(15),
-                timestamp.plus(Seconds.seconds(100))
-
+                listOf(10)
             ),
             ScanResultArgs(
                 UUID.fromString("984c61e2-0d66-44eb-beea-fbd8f2991de3"),
                 "07-00-00-00-00-00",
-                listOf(10),
-                timestamp
+                listOf(40)
             )
         )
 
         val dao = testActivity.appDatabase.contactEventV2Dao()
         await until {
+            runBlocking { dao.getAll().size } == 2
+        }
+
+        testRxBleClient.emitScanResults(
+            ScanResultArgs(
+                UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
+                "06-00-00-00-00-00",
+                listOf(20)
+            ),
+            ScanResultArgs(
+                UUID.fromString("98155054-72cc-4437-b8fc-82ea33ef683c"),
+                "09-00-00-00-00-00",
+                listOf(80)
+            )
+        )
+        await until {
             runBlocking { dao.getAll().size } == 3
+        }
+
+        testRxBleClient.emitScanResults(
+            ScanResultArgs(
+                UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
+                "06-00-00-00-00-00",
+                listOf(15)
+            )
+        )
+        await until {
+            runBlocking { dao.getAll().size } == 4
         }
     }
 
@@ -213,26 +236,26 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 "sonarId" to "04330a56-ad45-4b0f-81ee-dd414910e1f5",
                 "rssiValues" to listOf(10, 20),
                 "timestamp" to "2020-04-01T14:33:13Z",
-                "duration" to 10
+                "duration" to 90
             )
         )
         assertThat(body).contains(
             jsonOf(
                 "sonarId" to "04330a56-ad45-4b0f-81ee-dd414910e1f5",
                 "rssiValues" to listOf(15),
-                "timestamp" to "2020-04-01T14:34:53Z",
-                "duration" to 0
+                "timestamp" to "2020-04-01T14:44:53Z",
+                "duration" to 60
             )
         )
         assertThat(body).contains(
             jsonOf(
-                "sonarId" to "984c61e2-0d66-44eb-beea-fbd8f2991de3",
-                "rssiValues" to listOf(10),
-                "timestamp" to "2020-04-01T14:33:13Z",
-                "duration" to 0
+                "sonarId" to "98155054-72cc-4437-b8fc-82ea33ef683c",
+                "rssiValues" to listOf(80),
+                "timestamp" to "2020-04-01T14:34:43Z",
+                "duration" to 60
             )
         )
-        assertThat(body.countOccurrences("""{"sonarId":""")).isEqualTo(3)
+        assertThat(body.countOccurrences("""{"sonarId":""")).isEqualTo(4)
     }
 
     fun simulateBackendDelay(delayInMillis: Long) {

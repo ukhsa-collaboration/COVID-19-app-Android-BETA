@@ -45,7 +45,7 @@ class DefaultSaveContactWorker(
                             sonarId = Identifier.fromString(id).asBytes,
                             rssiValues = listOf(rssi),
                             timestamp = timestamp.millis,
-                            duration = 0
+                            duration = 60
                         )
                     contactEventDao.createOrUpdate(contactEvent, errorMargin)
                     Timber.i("$TAG event $contactEvent")
