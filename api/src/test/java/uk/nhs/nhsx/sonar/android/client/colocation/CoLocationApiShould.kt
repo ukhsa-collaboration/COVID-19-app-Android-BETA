@@ -33,7 +33,9 @@ class CoLocationApiShould {
             CoLocationEvent("002", listOf(-10, -10, 10), "yesterday", 120)
         )
 
-        coLocationApi.save(CoLocationData("::sonar-id::", events), {}, {})
+        val promise = coLocationApi.save(CoLocationData("::sonar-id::", events))
+
+        assertThat(promise.isInProgress).isTrue()
 
         val request = requestQueue.lastRequest
         assertThat(request.method).isEqualTo(PATCH)
@@ -58,25 +60,17 @@ class CoLocationApiShould {
 
     @Test
     fun testSave_OnSuccess() {
-        var success = false
-        var error = false
-
-        coLocationApi.save(CoLocationData("::sonar-id::", emptyList()), { success = true }, { error = true })
+        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
 
         requestQueue.returnSuccess(JSONObject())
-        assertThat(success).isTrue()
-        assertThat(error).isFalse()
+        assertThat(promise.isSuccess).isTrue()
     }
 
     @Test
     fun testSave_OnError() {
-        var success = false
-        var error = false
-
-        coLocationApi.save(CoLocationData("::sonar-id::", emptyList()), { success = true }, { error = true })
+        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
 
         requestQueue.returnError(VolleyError())
-        assertThat(success).isFalse()
-        assertThat(error).isTrue()
+        assertThat(promise.isFailed).isTrue()
     }
 }

@@ -23,7 +23,7 @@ class TestQueue : RequestQueue(mockk(), mockk()) {
 
     fun returnSuccess(json: JSONObject) =
         when (val request = requests.last()) {
-            is UnsignedJsonObjectRequest -> {
+            is SignableJsonObjectRequest -> {
                 // Ideally we would have access to this function without having to rely on reflection.
                 // Please don't do this in production code.
                 val requestClass = JsonRequest::class.java

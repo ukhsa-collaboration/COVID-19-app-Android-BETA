@@ -5,11 +5,12 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
-import org.awaitility.kotlin.untilNotNull
+import org.awaitility.kotlin.until
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.client.http.HttpMethod
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
 
@@ -33,14 +34,12 @@ class VolleyHttpClientIT {
         val ctx = InstrumentationRegistry.getInstrumentation().targetContext
         val client = VolleyHttpClient(ctx)
 
-        var responseJson: JSONObject? = null
-
         server.enqueue(MockResponse().setResponseCode(200))
 
-        val request = HttpRequest("http://localhost:8089", JSONObject())
-        client.post(request, { responseJson = it }, {})
+        val request = HttpRequest(HttpMethod.POST, "http://localhost:8089", JSONObject())
+        val promise = client.send(request)
 
-        await untilNotNull { responseJson }
-        assertThat(responseJson.toString()).isEqualTo("{}")
+        await until { promise.isSuccess }
+        assertThat(promise.value.toString()).isEqualTo("{}")
     }
 }

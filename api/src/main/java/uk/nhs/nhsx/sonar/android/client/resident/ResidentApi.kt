@@ -6,11 +6,10 @@
 package uk.nhs.nhsx.sonar.android.client.resident
 
 import org.json.JSONObject
-import uk.nhs.nhsx.sonar.android.client.http.Callback
-import uk.nhs.nhsx.sonar.android.client.http.ErrorCallback
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
+import uk.nhs.nhsx.sonar.android.client.http.HttpMethod.POST
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.client.http.SimpleCallback
+import uk.nhs.nhsx.sonar.android.client.http.Promise
 import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 import javax.inject.Inject
@@ -27,18 +26,14 @@ class ResidentApi @Inject constructor(
     private val httpClient: HttpClient
 ) {
 
-    fun register(token: String, onSuccess: SimpleCallback, onError: ErrorCallback) {
+    fun register(token: String): Promise<Unit> {
         val requestJson = jsonObjectOf("pushToken" to token)
-        val request = HttpRequest("$baseUrl/api/devices/registrations", requestJson)
+        val request = HttpRequest(POST, "$baseUrl/api/devices/registrations", requestJson)
 
-        httpClient.post(request, { onSuccess() }, onError)
+        return httpClient.send(request).mapToUnit()
     }
 
-    fun confirmDevice(
-        deviceConfirmation: DeviceConfirmation,
-        onSuccess: Callback<Registration>,
-        onError: ErrorCallback
-    ) {
+    fun confirmDevice(deviceConfirmation: DeviceConfirmation): Promise<Registration> {
         val requestJson = jsonObjectOf(
             "activationCode" to deviceConfirmation.activationCode,
             "pushToken" to deviceConfirmation.pushToken,
@@ -46,21 +41,21 @@ class ResidentApi @Inject constructor(
             "deviceOSVersion" to deviceConfirmation.deviceOsVersion,
             "postalCode" to deviceConfirmation.postalCode
         )
-        val request = HttpRequest("$baseUrl/api/devices", requestJson)
+        val request = HttpRequest(POST, "$baseUrl/api/devices", requestJson)
 
-        httpClient.post(
-            request,
-            { json: JSONObject ->
+        return httpClient
+            .send(request)
+            .map { json: JSONObject ->
                 val key = json.getString("secretKey")
                 val registrationId = json.getString("id")
 
                 encryptionKeyStorage.putBase64Key(key)
-                onSuccess(Registration(registrationId))
-            },
-            onError
-        )
+                Registration(registrationId)
+            }
     }
 }
+
+data class Registration(val id: String)
 
 data class DeviceConfirmation(
     val activationCode: String,

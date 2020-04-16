@@ -8,7 +8,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.junit.After
@@ -52,20 +51,12 @@ class CoLocationApiIT {
 
         server.enqueue(MockResponse().setResponseCode(200))
 
-        var isSuccess = false
-        var isError = false
-
-        coLocationApi.save(
-            CoLocationData("::sonar-id::", emptyList()),
-            { isSuccess = true },
-            { isError = true }
-        )
+        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
 
         val request = server.takeRequest(300, MILLISECONDS)
         assertEquals("/api/residents/::sonar-id::", request?.path)
 
-        await until { isSuccess }
-        assertThat(isError).isFalse()
+        await until { promise.isSuccess }
     }
 
     private fun generateKey(): ByteArray =

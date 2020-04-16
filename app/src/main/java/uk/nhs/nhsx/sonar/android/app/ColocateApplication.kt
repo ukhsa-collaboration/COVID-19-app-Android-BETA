@@ -72,7 +72,14 @@ class ColocateApplication : Application() {
         DaggerApplicationComponent.builder()
             .appModule(AppModule(this))
             .persistenceModule(PersistenceModule(this))
-            .bluetoothModule(BluetoothModule(this, connectionV2 = false, errorMarginInSeconds = 60, encryptSonarId = false))
+            .bluetoothModule(
+                BluetoothModule(
+                    this,
+                    connectionV2 = false,
+                    errorMarginInSeconds = 60,
+                    encryptSonarId = false
+                )
+            )
             .cryptoModule(CryptoModule())
             .networkModule(NetworkModule(BASE_URL))
             .notificationsModule(NotificationsModule())
@@ -81,8 +88,7 @@ class ColocateApplication : Application() {
     private fun configureBouncyCastleProvider() {
         // Remove existing built in Bouncy Castle
         Security.removeProvider(PROVIDER_NAME)
-        val bouncyCastleProvider = BouncyCastleProvider()
-        Security.insertProviderAt(bouncyCastleProvider, 1)
+        Security.insertProviderAt(BouncyCastleProvider(), 1)
     }
 }
 

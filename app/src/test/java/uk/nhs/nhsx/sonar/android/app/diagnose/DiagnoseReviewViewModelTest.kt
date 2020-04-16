@@ -47,7 +47,7 @@ class DiagnoseReviewViewModelTest {
             testSubject.uploadContactEvents()
 
             verify {
-                coLocationApi.save(eq(coLocationData), any(), any())
+                coLocationApi.save(eq(coLocationData))
             }
         }
     }

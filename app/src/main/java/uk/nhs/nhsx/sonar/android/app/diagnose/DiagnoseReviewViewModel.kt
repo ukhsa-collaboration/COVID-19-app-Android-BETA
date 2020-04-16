@@ -30,15 +30,16 @@ class DiagnoseReviewViewModel @Inject constructor(
 
     fun uploadContactEvents() {
         viewModelScope.launch(ioDispatcher) {
-            coLocationApi.save(
-                coLocationDataProvider.getData(),
-                onSuccess = {
+            coLocationApi
+                .save(coLocationDataProvider.getData())
+                .onSuccess {
                     i("Success")
                     _isolationResult.value = ViewState.Success
-                }, onError = {
+                }
+                .onError {
                     e("Error: $it")
                     _isolationResult.value = ViewState.Error
-                })
+                }
         }
     }
 

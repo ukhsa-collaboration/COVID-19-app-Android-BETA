@@ -69,10 +69,10 @@ class RegistrationUseCase @Inject constructor(
 
     private suspend fun registerDevice(firebaseToken: String) {
         return suspendCoroutine { continuation ->
-            residentApi.register(firebaseToken,
-                onSuccess = { continuation.resumeWith(Result.success(Unit)) },
-                onError = { continuation.resumeWith(Result.failure(it)) }
-            )
+            residentApi
+                .register(firebaseToken)
+                .onSuccess { continuation.resumeWith(Result.success(Unit)) }
+                .onError { continuation.resumeWith(Result.failure(it)) }
         }
     }
 
@@ -99,11 +99,10 @@ class RegistrationUseCase @Inject constructor(
         )
 
         return suspendCoroutine { continuation ->
-            residentApi.confirmDevice(
-                confirmation,
-                onSuccess = { continuation.resumeWith(Result.success(it.id)) },
-                onError = { continuation.resumeWith(Result.failure(it)) }
-            )
+            residentApi
+                .confirmDevice(confirmation)
+                .onSuccess { continuation.resumeWith(Result.success(it.id)) }
+                .onError { continuation.resumeWith(Result.failure(it)) }
         }
     }
 

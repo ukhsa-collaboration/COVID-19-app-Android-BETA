@@ -8,28 +8,23 @@ package uk.nhs.nhsx.sonar.android.client.http
 import org.json.JSONObject
 
 class HttpRequest(
+    val method: HttpMethod,
     val url: String,
-    val jsonBody: JSONObject?,
+    val jsonBody: JSONObject? = null,
     val key: ByteArray? = null
 )
 
-interface HttpClient {
-    fun post(
-        request: HttpRequest,
-        onSuccess: Callback<JSONObject>,
-        onError: ErrorCallback
-    )
-
-    fun patch(
-        request: HttpRequest,
-        onSuccess: Callback<JSONObject?>,
-        onError: ErrorCallback
-    )
+enum class HttpMethod {
+    GET,
+    POST,
+    PATCH,
+    PUT,
+    DELETE,
 }
 
-typealias Callback<T> = (T) -> Unit
-typealias ErrorCallback = Callback<Exception>
-typealias SimpleCallback = () -> Unit
+interface HttpClient {
+    fun send(request: HttpRequest): Promise<JSONObject>
+}
 
 fun jsonObjectOf(vararg pairs: Pair<String, Any>): JSONObject =
     JSONObject(mapOf(*pairs))

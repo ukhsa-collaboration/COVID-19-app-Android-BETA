@@ -27,7 +27,9 @@ class ResidentApiShould {
 
     @Test
     fun testRegister_Request() {
-        residentApi.register("some-token", {}, {})
+        val promise = residentApi.register("some-token")
+
+        assertThat(promise.isInProgress).isTrue()
 
         val request = requestQueue.lastRequest
         assertThat(request.url).isEqualTo("$baseUrl/api/devices/registrations")
@@ -36,27 +38,20 @@ class ResidentApiShould {
 
     @Test
     fun testRegister_OnSuccess() {
-        var success = false
-        var error: Exception? = null
-
-        residentApi.register("some-token", { success = true }, { error = it })
+        val promise = residentApi.register("some-token")
         requestQueue.returnSuccess(JSONObject())
 
-        assertThat(success).isTrue()
-        assertThat(error).isNull()
+        assertThat(promise.isSuccess).isTrue()
     }
 
     @Test
     fun testRegister_OnError() {
-        var success = false
-        var error: Exception? = null
-
-        residentApi.register("some-token", { success = true }, { error = it })
+        val promise = residentApi.register("some-token")
         requestQueue.returnError(VolleyError("boom"))
 
-        assertThat(success).isFalse()
-        assertThat(error).isInstanceOf(VolleyError::class.java)
-        assertThat(error).hasMessage("boom")
+        assertThat(promise.isFailed).isTrue()
+        assertThat(promise.error).isInstanceOf(VolleyError::class.java)
+        assertThat(promise.error).hasMessage("boom")
     }
 
     @Test
@@ -68,7 +63,9 @@ class ResidentApiShould {
             deviceOsVersion = "::device os version::",
             postalCode = "::postal code::"
         )
-        residentApi.confirmDevice(confirmation, {}, {})
+
+        val promise = residentApi.confirmDevice(confirmation)
+        assertThat(promise.isInProgress).isTrue()
 
         val request = requestQueue.lastRequest
         assertThat(request.url).isEqualTo("$baseUrl/api/devices")
@@ -83,9 +80,6 @@ class ResidentApiShould {
 
     @Test
     fun testConfirmDevice_OnSuccess() {
-        var registration: Registration? = null
-        var error: Exception? = null
-
         val confirmation = DeviceConfirmation(
             activationCode = "::activation code::",
             pushToken = "::push token::",
@@ -93,27 +87,21 @@ class ResidentApiShould {
             deviceOsVersion = "::device os version::",
             postalCode = "::postal code::"
         )
-
         val jsonResponse = jsonObjectOf(
             "id" to "00000000-0000-0000-0000-000000000001",
             "secretKey" to "some-secret-key-base64-encoded"
         )
-        residentApi.confirmDevice(
-            confirmation,
-            { registration = it },
-            { error = it })
+
+        val promise = residentApi.confirmDevice(confirmation)
         requestQueue.returnSuccess(jsonResponse)
 
-        assertThat(registration).isEqualTo(Registration("00000000-0000-0000-0000-000000000001"))
-        assertThat(error).isNull()
+        assertThat(promise.isSuccess).isTrue()
+        assertThat(promise.value).isEqualTo(Registration("00000000-0000-0000-0000-000000000001"))
         verify { encryptionKeyStorage.putBase64Key("some-secret-key-base64-encoded") }
     }
 
     @Test
     fun testConfirmDevice_OnError() {
-        var registration: Registration? = null
-        var error: Exception? = null
-
         val confirmation = DeviceConfirmation(
             activationCode = "::activation code::",
             pushToken = "::push token::",
@@ -122,14 +110,11 @@ class ResidentApiShould {
             postalCode = "::postal code::"
         )
 
-        residentApi.confirmDevice(
-            confirmation,
-            { registration = it },
-            { error = it })
+        val promise = residentApi.confirmDevice(confirmation)
         requestQueue.returnError(VolleyError("boom"))
 
-        assertThat(registration).isNull()
-        assertThat(error).isInstanceOf(VolleyError::class.java)
-        assertThat(error).hasMessage("boom")
+        assertThat(promise.isFailed).isTrue()
+        assertThat(promise.error).isInstanceOf(VolleyError::class.java)
+        assertThat(promise.error).hasMessage("boom")
     }
 }

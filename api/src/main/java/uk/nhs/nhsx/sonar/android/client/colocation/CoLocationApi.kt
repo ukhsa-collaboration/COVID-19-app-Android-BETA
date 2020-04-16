@@ -7,10 +7,10 @@ package uk.nhs.nhsx.sonar.android.client.colocation
 
 import android.util.Log
 import org.json.JSONObject
-import uk.nhs.nhsx.sonar.android.client.http.ErrorCallback
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
+import uk.nhs.nhsx.sonar.android.client.http.HttpMethod.PATCH
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.client.http.SimpleCallback
+import uk.nhs.nhsx.sonar.android.client.http.Promise
 import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
 import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 
@@ -20,18 +20,16 @@ class CoLocationApi(
     private val httpClient: HttpClient
 ) {
 
-    fun save(
-        coLocationData: CoLocationData,
-        onSuccess: SimpleCallback,
-        onError: ErrorCallback
-    ) {
+    fun save(coLocationData: CoLocationData): Promise<Unit> {
         val request = HttpRequest(
+            PATCH,
             "$baseUrl/api/residents/${coLocationData.sonarId}",
             coLocationData.toJson(),
-            keyStorage.provideKey()
+            keyStorage.provideKey()!!
         )
         Log.i("Sending", "Sending $coLocationData")
-        httpClient.patch(request, { onSuccess() }, onError)
+
+        return httpClient.send(request).mapToUnit()
     }
 }
 

@@ -16,6 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
+import uk.nhs.nhsx.sonar.android.client.http.Promise
 import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
 import uk.nhs.nhsx.sonar.android.client.resident.Registration
 import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
@@ -39,7 +40,7 @@ class RegistrationUseCaseTest {
             POST_CODE
         )
 
-    private val sut =
+    private val registrationUseCase =
         RegistrationUseCase(
             tokenRetriever,
             residentApi,
@@ -64,9 +65,9 @@ class RegistrationUseCaseTest {
         coEvery { tokenRetriever.retrieveToken() } returns TokenRetriever.Result.Success(
             FIREBASE_TOKEN
         )
-        every { residentApi.register(FIREBASE_TOKEN, any(), any()) } answers {
-            secondArg<() -> Unit>().invoke()
-        }
+        val registrationDeferred = Promise.Deferred<Unit>()
+        registrationDeferred.resolve(Unit)
+        every { residentApi.register(FIREBASE_TOKEN) } returns registrationDeferred.promise
 
         val slot = slot<(String) -> Unit>()
         every { activationCodeObserver.setListener(capture(slot)) } answers {
@@ -76,16 +77,16 @@ class RegistrationUseCaseTest {
             nothing
         }
 
-        every { residentApi.confirmDevice(confirmation, any(), any()) } answers {
-            secondArg<(Registration) -> Unit>().invoke(Registration(RESIDENT_ID))
-        }
+        val confirmationDeferred = Promise.Deferred<Registration>()
+        confirmationDeferred.resolve(Registration(RESIDENT_ID))
+        every { residentApi.confirmDevice(confirmation) } returns confirmationDeferred.promise
 
         every { postCodeProvider.getPostCode() } returns POST_CODE
     }
 
     @Test
     fun onSuccessReturnsSuccess() = runBlockingTest {
-        val result = sut.register()
+        val result = registrationUseCase.register()
 
         assertThat(RegistrationResult.Success).isEqualTo(result)
     }
@@ -94,14 +95,14 @@ class RegistrationUseCaseTest {
     fun shouldReturnIfAlreadyRegistered() = runBlockingTest {
         every { sonarIdProvider.hasProperSonarId() } returns true
 
-        val result = sut.register()
+        val result = registrationUseCase.register()
 
         assertThat(RegistrationResult.AlreadyRegistered).isEqualTo(result)
     }
 
     @Test
     fun retrievesFirebaseToken() = runBlockingTest {
-        sut.register()
+        registrationUseCase.register()
 
         coVerify { tokenRetriever.retrieveToken() }
     }
@@ -110,32 +111,32 @@ class RegistrationUseCaseTest {
     fun onTokenRetrievalFailureReturnFailure() = runBlockingTest {
         coEvery { tokenRetriever.retrieveToken() } returns TokenRetriever.Result.Failure(null)
 
-        val result = sut.register()
+        val result = registrationUseCase.register()
 
         assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
     }
 
     @Test
     fun registersDevice() = runBlockingTest {
-        sut.register()
+        registrationUseCase.register()
 
-        verify { residentApi.register(FIREBASE_TOKEN, any(), any()) }
+        verify { residentApi.register(FIREBASE_TOKEN) }
     }
 
     @Test
     fun onDeviceRegistrationFailureReturnsFailure() = runBlockingTest {
-        every { residentApi.register(any(), any(), any()) } answers {
-            thirdArg<(Exception) -> Unit>().invoke(IOException())
-        }
+        val deferred = Promise.Deferred<Unit>()
+        deferred.fail(IOException())
+        every { residentApi.register(any()) } returns deferred.promise
 
-        val result = sut.register()
+        val result = registrationUseCase.register()
 
         assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
     }
 
     @Test
     fun listensActivationCodeObserver() = runBlockingTest {
-        sut.register()
+        registrationUseCase.register()
 
         verify { activationCodeObserver.setListener(any()) }
     }
@@ -145,7 +146,7 @@ class RegistrationUseCaseTest {
         every { activationCodeObserver.setListener(any()) } returns Unit
 
         val result = async {
-            sut.register()
+            registrationUseCase.register()
         }
         advanceTimeBy(25_000)
 
@@ -157,7 +158,7 @@ class RegistrationUseCaseTest {
         every { activationCodeObserver.setListener(any()) } returns Unit
 
         val result = async {
-            sut.register()
+            registrationUseCase.register()
         }
         advanceTimeBy(19_000)
         result.getCompleted()
@@ -165,25 +166,25 @@ class RegistrationUseCaseTest {
 
     @Test
     fun registersResident() = runBlockingTest {
-        sut.register()
+        registrationUseCase.register()
 
-        verify { residentApi.confirmDevice(confirmation, any(), any()) }
+        verify { residentApi.confirmDevice(confirmation) }
     }
 
     @Test
     fun onResidentRegistrationFailureReturnsFailure() = runBlockingTest {
-        every { residentApi.confirmDevice(confirmation, any(), any()) } answers {
-            arg<(Exception) -> Unit>(3).invoke(IOException())
-        }
+        val deferred = Promise.Deferred<Registration>()
+        deferred.fail(IOException())
+        every { residentApi.confirmDevice(confirmation) } returns deferred.promise
 
-        val result = sut.register()
+        val result = registrationUseCase.register()
 
         assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
     }
 
     @Test
     fun onSuccessSavesSonarId() = runBlockingTest {
-        sut.register()
+        registrationUseCase.register()
 
         verify { sonarIdProvider.setSonarId(RESIDENT_ID) }
     }
