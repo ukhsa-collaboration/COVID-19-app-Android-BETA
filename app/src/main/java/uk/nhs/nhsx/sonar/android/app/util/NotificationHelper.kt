@@ -72,6 +72,11 @@ fun showLocationIsDisabledNotification(context: Context) {
     )
 }
 
+fun Context.notificationBuilder(): NotificationCompat.Builder =
+    NotificationCompat.Builder(this, createNotificationChannelReturningId())
+        .setSmallIcon(R.mipmap.ic_launcher_round)
+        .setContentIntent(mainActivityPendingContent(this))
+
 private fun showNotification(
     context: Context,
     notificationId: Int,
@@ -80,16 +85,13 @@ private fun showNotification(
     actionTitle: String,
     actionPendingIntent: PendingIntent
 ) {
-    val intent = MainActivity.getIntent(context)
-    val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-
     val builder = context
         .notificationBuilder()
         .setSmallIcon(R.mipmap.ic_launcher_round)
         .setContentTitle(contentTitle)
         .setContentText(contentText)
         .setPriority(NotificationCompat.PRIORITY_MAX)
-        .setContentIntent(pendingIntent)
+        .setContentIntent(mainActivityPendingContent(context))
         .setAutoCancel(true)
         .setOngoing(true)
         .setColor(context.getColor(R.color.colorAccent))
@@ -108,12 +110,13 @@ private fun Context.createNotificationChannelReturningId(): String {
             NotificationManager.IMPORTANCE_DEFAULT
         )
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
     }
 
     return getString(R.string.default_notification_channel_id)
 }
 
-fun Context.notificationBuilder(): NotificationCompat.Builder =
-    NotificationCompat.Builder(this, createNotificationChannelReturningId())
+private fun mainActivityPendingContent(context: Context) =
+    PendingIntent.getActivity(context, 0, MainActivity.getIntent(context), 0)
