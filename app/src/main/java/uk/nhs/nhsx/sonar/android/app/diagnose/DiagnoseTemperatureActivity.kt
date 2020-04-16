@@ -48,11 +48,7 @@ class DiagnoseTemperatureActivity : BaseActivity() {
 
     companion object {
         fun start(context: Context) =
-            context.startActivity(
-                getIntent(
-                    context
-                )
-            )
+            context.startActivity(getIntent(context))
 
         private fun getIntent(context: Context) =
             Intent(context, DiagnoseTemperatureActivity::class.java)

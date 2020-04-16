@@ -22,11 +22,7 @@ class PersistenceModule(private val appContext: Context) {
     @Provides
     fun provideDatabase() =
         Room
-            .databaseBuilder(
-                appContext,
-                AppDatabase::class.java,
-                "event-database"
-            )
+            .databaseBuilder(appContext, AppDatabase::class.java, "event-database")
             .fallbackToDestructiveMigration()
             .build()
 

@@ -22,27 +22,16 @@ class CoLocationApiShould {
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
     private val httpClient = HttpClient(requestQueue)
-    private val coLocationApi =
-        CoLocationApi(baseUrl, encryptionKeyStorage, httpClient)
+    private val coLocationApi = CoLocationApi(baseUrl, encryptionKeyStorage, httpClient)
 
     @Test
     fun testSave_Request() {
         val events = listOf(
             CoLocationEvent("001", listOf(-10, 0), "2s ago", 10),
-            CoLocationEvent(
-                "002",
-                listOf(-10, -10, 10),
-                "yesterday",
-                120
-            )
+            CoLocationEvent("002", listOf(-10, -10, 10), "yesterday", 120)
         )
 
-        val promise = coLocationApi.save(
-            CoLocationData(
-                "::sonar-id::",
-                events
-            )
-        )
+        val promise = coLocationApi.save(CoLocationData("::sonar-id::", events))
 
         assertThat(promise.isInProgress).isTrue()
 
@@ -69,12 +58,7 @@ class CoLocationApiShould {
 
     @Test
     fun testSave_OnSuccess() {
-        val promise = coLocationApi.save(
-            CoLocationData(
-                "::sonar-id::",
-                emptyList()
-            )
-        )
+        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
 
         requestQueue.returnSuccess(JSONObject())
         assertThat(promise.isSuccess).isTrue()
@@ -82,12 +66,7 @@ class CoLocationApiShould {
 
     @Test
     fun testSave_OnError() {
-        val promise = coLocationApi.save(
-            CoLocationData(
-                "::sonar-id::",
-                emptyList()
-            )
-        )
+        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
 
         requestQueue.returnError(VolleyError())
         assertThat(promise.isFailed).isTrue()

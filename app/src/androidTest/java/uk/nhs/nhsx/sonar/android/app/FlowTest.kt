@@ -98,16 +98,10 @@ class FlowTest {
 
         testAppContext.simulateActivationCodeReceived()
 
-        checkViewHasText(
-            R.id.registrationStatusText,
-            R.string.registration_finalising_setup
-        )
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
 
         testAppContext.verifyRegistrationFlow()
-        checkViewHasText(
-            R.id.registrationStatusText,
-            R.string.registration_everything_is_working_ok
-        )
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
         verifyCheckMySymptomsButton(isEnabled())
     }
 
@@ -134,18 +128,12 @@ class FlowTest {
         checkOkActivityIsShown()
 
         testAppContext.verifyReceivedRegistrationRequest()
-        checkViewHasText(
-            R.id.registrationStatusText,
-            R.string.registration_finalising_setup
-        )
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
         verifyCheckMySymptomsButton(not(isEnabled()))
 
         waitForText(R.string.registration_app_setup_failed, timeoutInMs = 2_000)
 
-        checkViewHasText(
-            R.id.registrationStatusText,
-            R.string.registration_app_setup_failed
-        )
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_app_setup_failed)
         onView(withId(R.id.registrationRetryButton)).check(matches(isDisplayed()))
         verifyCheckMySymptomsButton(not(isEnabled()))
 
@@ -156,10 +144,7 @@ class FlowTest {
         testAppContext.simulateActivationCodeReceived()
 
         testAppContext.verifyRegistrationFlow()
-        checkViewHasText(
-            R.id.registrationStatusText,
-            R.string.registration_everything_is_working_ok
-        )
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
         onView(withId(R.id.registrationRetryButton)).check(matches(not(isDisplayed())))
         verifyCheckMySymptomsButton(isEnabled())
     }

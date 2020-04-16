@@ -93,11 +93,7 @@ class OkActivity : BaseActivity() {
 
     companion object {
         fun start(context: Context) =
-            context.startActivity(
-                getIntent(
-                    context
-                )
-            )
+            context.startActivity(getIntent(context))
 
         private fun getIntent(context: Context) =
             Intent(context, OkActivity::class.java).apply {

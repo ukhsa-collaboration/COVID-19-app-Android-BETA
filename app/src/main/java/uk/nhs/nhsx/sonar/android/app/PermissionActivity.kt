@@ -4,7 +4,8 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
-import android.Manifest
+import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
@@ -33,10 +34,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
 
         permission_continue.setOnClickListener {
             requestPermissions(
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ),
+                arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION
             )
         }

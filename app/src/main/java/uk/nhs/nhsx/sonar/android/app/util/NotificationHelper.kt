@@ -2,7 +2,9 @@ package uk.nhs.nhsx.sonar.android.app.util
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -34,12 +36,7 @@ fun showBluetoothIsDisabledNotification(context: Context) {
         action = TurnBluetoothOnReceiver.ACTION_TURN_BLUETOOTH_ON
     }
     val actionPendingIntent: PendingIntent =
-        PendingIntent.getBroadcast(
-            context,
-            0,
-            turnBluetoothOnIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        PendingIntent.getBroadcast(context, 0, turnBluetoothOnIntent, FLAG_UPDATE_CURRENT)
 
     showNotification(
         context,
@@ -55,12 +52,7 @@ fun showLocationIsDisabledNotification(context: Context) {
     val notificationId = NOTIFICATION_ID_LOCATION_IS_DISABLED
     val turnLocationOnIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
     val actionPendingIntent: PendingIntent =
-        PendingIntent.getActivity(
-            context,
-            0,
-            turnLocationOnIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        PendingIntent.getActivity(context, 0, turnLocationOnIntent, FLAG_UPDATE_CURRENT)
 
     showNotification(
         context,
@@ -107,11 +99,9 @@ private fun Context.createNotificationChannelReturningId(): String {
         val notificationChannel = NotificationChannel(
             getString(R.string.default_notification_channel_id),
             getString(R.string.main_notification_channel_name),
-            NotificationManager.IMPORTANCE_DEFAULT
+            IMPORTANCE_DEFAULT
         )
-
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(notificationChannel)
     }
 

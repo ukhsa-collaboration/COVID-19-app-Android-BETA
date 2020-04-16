@@ -21,9 +21,8 @@ data class Identifier(private val uuid: UUID) {
     override fun toString() = "Identifier[uuid: $uuid]"
 
     companion object {
-        fun fromString(uuid: String): Identifier = Identifier(
-            UUID.fromString(uuid)
-        )
+        fun fromString(uuid: String): Identifier =
+            Identifier(UUID.fromString(uuid))
 
         fun fromBytes(bytes: ByteArray): Identifier =
             ByteBuffer.wrap(bytes).let {

@@ -21,10 +21,10 @@ class CoLocationApi(
 
     fun save(coLocationData: CoLocationData): Promise<Unit> {
         val request = HttpRequest(
-            PATCH,
-            "$baseUrl/api/residents/${coLocationData.sonarId}",
-            coLocationData.toJson(),
-            keyStorage.provideKey()!!
+            method = PATCH,
+            url = "$baseUrl/api/residents/${coLocationData.sonarId}",
+            jsonBody = coLocationData.toJson(),
+            key = keyStorage.provideKey()!!
         )
         Log.i("Sending", "Sending $coLocationData")
 

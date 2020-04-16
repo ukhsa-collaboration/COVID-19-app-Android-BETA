@@ -37,8 +37,10 @@ class HttpClientShould {
     fun testSend_PatchRequest_WithEncryptionKey() {
         val inputRequest =
             HttpRequest(
-                HttpMethod.PATCH, "http://localhost:123/api", JSONObject(),
-                generateSignatureKey()
+                method = HttpMethod.PATCH,
+                url = "http://localhost:123/api",
+                jsonBody = JSONObject(),
+                key = generateSignatureKey()
             )
         val promise = httpClient.send(inputRequest)
 

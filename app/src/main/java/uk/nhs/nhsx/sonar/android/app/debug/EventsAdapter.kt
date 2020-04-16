@@ -55,19 +55,10 @@ class EventsAdapter :
 
         val inflater = LayoutInflater.from(parent.context)
         return if (viewType == ERROR_TYPE) {
-            val view = inflater
-                .inflate(
-                    R.layout.event_error_view_item,
-                    parent,
-                    false
-                )
+            val view = inflater.inflate(R.layout.event_error_view_item, parent, false)
             EventErrorViewHolder(view)
         } else {
-            val view = inflater.inflate(
-                R.layout.event_view,
-                parent,
-                false
-            )
+            val view = inflater.inflate(R.layout.event_view, parent, false)
             EventViewHolder(view)
         }
     }

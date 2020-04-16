@@ -9,12 +9,7 @@ fun Activity.openUrl(url: String) {
     CustomTabsIntent.Builder()
         .setToolbarColor(getColor(R.color.colorPrimary))
         .build()
-        .launchUrl(
-            this,
-            Uri.parse(
-                url
-            )
-        )
+        .launchUrl(this, Uri.parse(url))
 }
 
 const val LATEST_ADVICE_URL =

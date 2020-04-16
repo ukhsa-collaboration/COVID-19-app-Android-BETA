@@ -21,8 +21,7 @@ class ResidentApiShould {
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
     private val httpClient = HttpClient(requestQueue)
-    private val residentApi =
-        ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
+    private val residentApi = ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
 
     @Test
     fun testRegister_Request() {

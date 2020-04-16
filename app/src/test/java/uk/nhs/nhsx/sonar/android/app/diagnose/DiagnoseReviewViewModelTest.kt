@@ -23,11 +23,7 @@ class DiagnoseReviewViewModelTest {
     private val coLocationApi = mockk<CoLocationApi>(relaxed = true)
     private val coLocationDataProvider = mockk<CoLocationDataProvider>()
     private val sonarIdProvider = mockk<SonarIdProvider>()
-    private val testSubject = DiagnoseReviewViewModel(
-        coLocationApi,
-        Dispatchers.Unconfined,
-        coLocationDataProvider
-    )
+    private val testSubject = DiagnoseReviewViewModel(coLocationApi, Dispatchers.Unconfined, coLocationDataProvider)
 
     companion object {
         private const val RESIDENT_ID = "80baf81b-8afd-47e9-9915-50691525c910"
@@ -37,18 +33,8 @@ class DiagnoseReviewViewModelTest {
     fun onUploadContactEvents() {
         runBlocking {
             val events = listOf(
-                CoLocationEvent(
-                    "001",
-                    listOf(-10, 0),
-                    "2s ago",
-                    10
-                ),
-                CoLocationEvent(
-                    "002",
-                    listOf(-10, -10, 10),
-                    "yesterday",
-                    120
-                )
+                CoLocationEvent("001", listOf(-10, 0), "2s ago", 10),
+                CoLocationEvent("002", listOf(-10, -10, 10), "yesterday", 120)
             )
             val coLocationData = CoLocationData(RESIDENT_ID, events)
             coEvery { coLocationDataProvider.getData() } returns coLocationData

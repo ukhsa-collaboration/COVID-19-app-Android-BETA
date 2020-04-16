@@ -178,14 +178,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun simulateDeviceInProximity() {
         testRxBleClient.emitScanResults(
             ScanResultArgs(
-                UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
-                "06-00-00-00-00-00",
-                listOf(10)
+                sonarId = UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
+                macAddress = "06-00-00-00-00-00",
+                rssiList = listOf(10)
             ),
             ScanResultArgs(
-                UUID.fromString("984c61e2-0d66-44eb-beea-fbd8f2991de3"),
-                "07-00-00-00-00-00",
-                listOf(40)
+                sonarId = UUID.fromString("984c61e2-0d66-44eb-beea-fbd8f2991de3"),
+                macAddress = "07-00-00-00-00-00",
+                rssiList = listOf(40)
             )
         )
 
@@ -196,14 +196,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
         testRxBleClient.emitScanResults(
             ScanResultArgs(
-                UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
-                "06-00-00-00-00-00",
-                listOf(20)
+                sonarId = UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
+                macAddress = "06-00-00-00-00-00",
+                rssiList = listOf(20)
             ),
             ScanResultArgs(
-                UUID.fromString("98155054-72cc-4437-b8fc-82ea33ef683c"),
-                "09-00-00-00-00-00",
-                listOf(80)
+                sonarId = UUID.fromString("98155054-72cc-4437-b8fc-82ea33ef683c"),
+                macAddress = "09-00-00-00-00-00",
+                rssiList = listOf(80)
             )
         )
         await until {
@@ -212,9 +212,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
         testRxBleClient.emitScanResults(
             ScanResultArgs(
-                UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
-                "06-00-00-00-00-00",
-                listOf(15)
+                sonarId = UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
+                macAddress = "06-00-00-00-00-00",
+                rssiList = listOf(15)
             )
         )
         await until {

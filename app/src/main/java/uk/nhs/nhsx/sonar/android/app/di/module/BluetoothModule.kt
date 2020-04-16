@@ -43,12 +43,10 @@ open class BluetoothModule(
         saveContactWorker: SaveContactWorker,
         bleEvents: BleEvents
     ): Scanner =
-        if (connectionV2) LongLiveConnectionScan(
-            rxBleClient,
-            saveContactWorker,
-            bleEvents = bleEvents
-        )
-        else Scan(rxBleClient, saveContactWorker, bleEvents)
+        if (connectionV2)
+            LongLiveConnectionScan(rxBleClient, saveContactWorker, bleEvents = bleEvents)
+        else
+            Scan(rxBleClient, saveContactWorker, bleEvents)
 
     @Provides
     @Named(USE_CONNECTION_V2)

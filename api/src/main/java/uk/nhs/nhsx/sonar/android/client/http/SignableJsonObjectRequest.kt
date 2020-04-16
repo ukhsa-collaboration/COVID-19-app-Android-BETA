@@ -28,10 +28,7 @@ class SignableJsonObjectRequest(
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<JSONObject> =
         if (response.data.isEmpty()) {
-            Response.success(
-                JSONObject(),
-                HttpHeaderParser.parseCacheHeaders(response)
-            )
+            Response.success(JSONObject(), HttpHeaderParser.parseCacheHeaders(response))
         } else {
             super.parseNetworkResponse(response)
         }

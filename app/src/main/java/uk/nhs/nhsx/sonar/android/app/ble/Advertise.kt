@@ -34,11 +34,7 @@ class Advertise @Inject constructor(private val bluetoothLeAdvertiser: Bluetooth
 
     fun start() {
         Timber.d("BluetoothLeAdvertiser startAdvertising")
-        bluetoothLeAdvertiser.startAdvertising(
-            advertiseSettings,
-            advertiseData,
-            advertisingCallback
-        )
+        bluetoothLeAdvertiser.startAdvertising(advertiseSettings, advertiseData, advertisingCallback)
     }
 
     fun stop() {
@@ -49,14 +45,10 @@ class Advertise @Inject constructor(private val bluetoothLeAdvertiser: Bluetooth
 
 private class AdvertisingCallback : AdvertiseCallback() {
     override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
-        Timber.i(
-            "BluetoothLeAdvertiser Started advertising with settings $settingsInEffect"
-        )
+        Timber.i("BluetoothLeAdvertiser Started advertising with settings $settingsInEffect")
     }
 
     override fun onStartFailure(errorCode: Int) {
-        Timber.e(
-            "BluetoothLeAdvertiser Failed to start with error code $errorCode"
-        )
+        Timber.e("BluetoothLeAdvertiser Failed to start with error code $errorCode")
     }
 }

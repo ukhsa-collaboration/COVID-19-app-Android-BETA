@@ -92,24 +92,10 @@ class DiagnoseReviewActivity : BaseActivity() {
 
         const val HAS_COUGH = "HAS_COUGH"
 
-        fun start(
-            context: Context,
-            hasTemperature: Boolean = false,
-            hasCough: Boolean = false
-        ) =
-            context.startActivity(
-                getIntent(
-                    context,
-                    hasTemperature,
-                    hasCough
-                )
-            )
+        fun start(context: Context, hasTemperature: Boolean = false, hasCough: Boolean = false) =
+            context.startActivity(getIntent(context, hasTemperature, hasCough))
 
-        private fun getIntent(
-            context: Context,
-            hasTemperature: Boolean,
-            hasCough: Boolean
-        ) =
+        private fun getIntent(context: Context, hasTemperature: Boolean, hasCough: Boolean) =
             Intent(context, DiagnoseReviewActivity::class.java).apply {
                 putExtra(HAS_COUGH, hasCough)
                 putExtra(HAS_TEMPERATURE, hasTemperature)

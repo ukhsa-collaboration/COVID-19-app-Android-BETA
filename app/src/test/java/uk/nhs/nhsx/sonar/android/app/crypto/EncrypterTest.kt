@@ -70,21 +70,14 @@ class EncrypterTest {
     fun `produces the expected encrypted payload`() {
         val serverPublicKeyProvider = mockk<ServerPublicKeyProvider>()
         val ephemeralKeyProvider = mockk<EphemeralKeyProvider>()
-        every { serverPublicKeyProvider.providePublicKey() } returns loadPublicKey(
-            exampleServerPubPEM
-        )
+        every { serverPublicKeyProvider.providePublicKey() } returns loadPublicKey(exampleServerPubPEM)
         every { ephemeralKeyProvider.providePublicKey() } returns loadPublicKey(exampleLocalPubPEM) as BCECPublicKey
         val x = knownXCoordinate.hexStringToByteArray()
         val y = knownYCoordinate.hexStringToByteArray()
         every { ephemeralKeyProvider.providePublicKeyPoint() } returns byteArrayOf(0x04) + x + y
-        every { ephemeralKeyProvider.providePrivateKey() } returns loadPrivateKey(
-            exampleLocalPrivPEM
-        )
+        every { ephemeralKeyProvider.providePrivateKey() } returns loadPrivateKey(exampleLocalPrivPEM)
 
-        val encrypter = Encrypter(
-            serverPublicKeyProvider,
-            ephemeralKeyProvider
-        )
+        val encrypter = Encrypter(serverPublicKeyProvider, ephemeralKeyProvider)
 
         val plainText = UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").uuidBytes()
 
@@ -128,10 +121,10 @@ class EncrypterTest {
         val key = SecretKeySpec(keyBytes, AES)
 
         val decrypted = decrypt(
-            knownPayload.hexStringToByteArray(),
-            knownTag.hexStringToByteArray(),
-            key,
-            iv
+            payload = knownPayload.hexStringToByteArray(),
+            tag = knownTag.hexStringToByteArray(),
+            key = key,
+            iv = iv
         )
 
         assertThat(decrypted).isEqualTo(
@@ -166,9 +159,7 @@ class EncrypterTest {
         serverPrivateKey: PrivateKey,
         localPublicKey: PublicKey
     ): SecretKeySpec {
-        val keyAgreement: KeyAgreement = KeyAgreement.getInstance(
-            ECDH, PROVIDER_NAME
-        )
+        val keyAgreement = KeyAgreement.getInstance(ECDH, PROVIDER_NAME)
         keyAgreement.init(serverPrivateKey)
         keyAgreement.doPhase(localPublicKey, true)
         return SecretKeySpec(keyAgreement.generateSecret(), AES)

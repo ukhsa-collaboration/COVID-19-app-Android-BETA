@@ -47,8 +47,7 @@ interface ContactEventDao {
 
                 event.copy(
                     timestamp = newEvent.timestamp,
-                    duration = event.duration +
-                        Seconds.secondsBetween(newEventTime, storedEventTimeStart).seconds,
+                    duration = event.duration + Seconds.secondsBetween(newEventTime, storedEventTimeStart).seconds,
                     rssiValues = newEvent.rssiValues.plus(rssis)
                 )
                 return
@@ -73,12 +72,7 @@ interface ContactEventDao {
                 newEventTime.isBefore(storedEventTimeEnd)
             ) {
                 Timber.d("Updated event duration is unaffected")
-
-                update(
-                    event.copy(
-                        rssiValues = rssis.plus(newEvent.rssiValues)
-                    )
-                )
+                update(event.copy(rssiValues = rssis.plus(newEvent.rssiValues)))
                 return
             }
         }

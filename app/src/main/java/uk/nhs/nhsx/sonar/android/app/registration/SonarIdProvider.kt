@@ -16,12 +16,8 @@ class SonarIdProvider @Inject constructor(context: Context) {
         context.getSharedPreferences("residentId", Context.MODE_PRIVATE)
     }
 
-    fun getSonarId(): String {
-        return sharedPreferences.getString(
-            KEY,
-            ID_NOT_REGISTERED
-        )!!
-    }
+    fun getSonarId(): String =
+        sharedPreferences.getString(KEY, ID_NOT_REGISTERED)!!
 
     fun hasProperSonarId(): Boolean {
         val sonarId = getSonarId()

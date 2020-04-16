@@ -53,10 +53,7 @@ class TestRxBleClient(context: Context) : RxBleClient() {
             else -> state
         }
 
-    override fun scanBleDevices(
-        scanSettings: ScanSettings,
-        vararg scanFilters: ScanFilter
-    ): Observable<ScanResult> =
+    override fun scanBleDevices(scanSettings: ScanSettings, vararg scanFilters: ScanFilter): Observable<ScanResult> =
         Observable.create { e -> emitter = e }
 
     fun emitScanResults(vararg args: ScanResultArgs) {
@@ -81,20 +78,10 @@ class TestRxBleClient(context: Context) : RxBleClient() {
         val services = RxBleDeviceServices(mutableListOf<BluetoothGattService>())
         services.bluetoothGattServices.add(service)
 
-        val rxBleDevice = TestBluetoothDevice(
-            args.macAddress,
-            services,
-            args.rssiList
-        )
+        val rxBleDevice = TestBluetoothDevice(args.macAddress, services, args.rssiList)
         val timestamp = Instant.now().toEpochMilli() * 1000
 
-        return ScanResult(
-            rxBleDevice,
-            -1,
-            timestamp,
-            CALLBACK_TYPE_ALL_MATCHES,
-            scanRecord
-        )
+        return ScanResult(rxBleDevice, -1, timestamp, CALLBACK_TYPE_ALL_MATCHES, scanRecord)
     }
 }
 

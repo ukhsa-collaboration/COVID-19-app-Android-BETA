@@ -139,12 +139,7 @@ class Scan @Inject constructor(
             connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID),
             connection.readRssi(),
             BiFunction<ByteArray, Int, Event> { bytes, rssi ->
-                Event(
-                    Identifier.fromBytes(bytes),
-                    rssi,
-                    scope,
-                    currentTimestampeProvider()
-                )
+                Event(Identifier.fromBytes(bytes), rssi, scope, currentTimestampeProvider())
             }
         )
     }

@@ -39,19 +39,17 @@ class Gatt @Inject constructor(
             Identifier.fromString(sonarIdProvider.getSonarId())
         }
 
-    private val service: BluetoothGattService = BluetoothGattService(
-        COLOCATE_SERVICE_UUID,
-        SERVICE_TYPE_PRIMARY
-    )
-        .also {
-            it.addCharacteristic(
-                BluetoothGattCharacteristic(
-                    DEVICE_CHARACTERISTIC_UUID,
-                    PROPERTY_READ,
-                    PERMISSION_READ
+    private val service: BluetoothGattService =
+        BluetoothGattService(COLOCATE_SERVICE_UUID, SERVICE_TYPE_PRIMARY)
+            .also {
+                it.addCharacteristic(
+                    BluetoothGattCharacteristic(
+                        DEVICE_CHARACTERISTIC_UUID,
+                        PROPERTY_READ,
+                        PERMISSION_READ
+                    )
                 )
-            )
-        }
+            }
 
     private var server: BluetoothGattServer? = null
 
@@ -66,21 +64,9 @@ class Gatt @Inject constructor(
             ) {
                 Timber.d("Bluetooth onCharacteristicReadRequest")
                 if (characteristic.isDeviceIdentifier()) {
-                    server?.sendResponse(
-                        device,
-                        requestId,
-                        GATT_SUCCESS,
-                        0,
-                        identifier.asBytes
-                    )
+                    server?.sendResponse(device, requestId, GATT_SUCCESS, 0, identifier.asBytes)
                 } else {
-                    server?.sendResponse(
-                        device,
-                        requestId,
-                        GATT_FAILURE,
-                        0,
-                        byteArrayOf()
-                    )
+                    server?.sendResponse(device, requestId, GATT_FAILURE, 0, byteArrayOf())
                 }
             }
         }

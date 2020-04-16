@@ -139,11 +139,7 @@ class LongLiveConnectionScan @Inject constructor(
             .establishConnection(false)
             .flatMap { connection -> captureContactEvents(connection, macAddress) }
             .subscribe(::onReadSuccess) { exception ->
-                onDisconnect(
-                    exception,
-                    macAddress,
-                    coroutineScope
-                )
+                onDisconnect(exception, macAddress, coroutineScope)
             }
 
         compositeDisposable.add(connectionDisposable)
@@ -182,10 +178,7 @@ class LongLiveConnectionScan @Inject constructor(
             val duration = Seconds.secondsBetween(startTimestampProvider(), endTimestampProvider())
             val finalRecord = record.copy(duration = duration.seconds)
             Timber.d("Save record: $finalRecord")
-            saveContactWorker.saveContactEvent(
-                coroutineScope,
-                finalRecord
-            )
+            saveContactWorker.saveContactEvent(coroutineScope, finalRecord)
             bleEvents.disconnectDeviceEvent(record.sonarId.asString)
         } else {
             Timber.e("Disconnecting from $macAddress without having read sonarID")
@@ -194,11 +187,7 @@ class LongLiveConnectionScan @Inject constructor(
 
     private fun createEvent(macAddress: String): BiFunction<Identifier, Int, Event> {
         return BiFunction<Identifier, Int, Event> { identifier, rssi ->
-            Event(
-                macAddress,
-                identifier,
-                rssi
-            )
+            Event(macAddress, identifier, rssi)
         }
     }
 

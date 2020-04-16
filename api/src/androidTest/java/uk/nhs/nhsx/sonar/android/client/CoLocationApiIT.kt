@@ -44,20 +44,11 @@ class CoLocationApiIT {
     fun shouldSendCoLocationData() {
         val ctx = InstrumentationRegistry.getInstrumentation().targetContext
         val httpClient = HttpClient(ctx)
-        val coLocationApi = CoLocationApi(
-            "http://localhost:8089",
-            encryptionKeyStorage,
-            httpClient
-        )
+        val coLocationApi = CoLocationApi("http://localhost:8089", encryptionKeyStorage, httpClient)
 
         server.enqueue(MockResponse().setResponseCode(200))
 
-        val promise = coLocationApi.save(
-            CoLocationData(
-                "::sonar-id::",
-                emptyList()
-            )
-        )
+        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
 
         val request = server.takeRequest(300, MILLISECONDS)
         assertEquals("/api/residents/::sonar-id::", request?.path)

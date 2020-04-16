@@ -56,12 +56,7 @@ class DiagnoseCoughActivity : BaseActivity() {
         const val HAS_TEMPERATURE = "HAS_TEMPERATURE"
 
         fun start(context: Context, hasTemperature: Boolean = false) =
-            context.startActivity(
-                getIntent(
-                    context,
-                    hasTemperature
-                )
-            )
+            context.startActivity(getIntent(context, hasTemperature))
 
         private fun getIntent(context: Context, hasTemperature: Boolean) =
             Intent(context, DiagnoseCoughActivity::class.java).apply {

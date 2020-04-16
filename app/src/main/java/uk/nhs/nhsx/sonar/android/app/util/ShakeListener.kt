@@ -19,10 +19,7 @@ class ShakeListener(context: Context, val onShake: () -> Unit) : SensorEventList
     private var lastZ = 0f
 
     fun start() {
-        sensorManager.registerListener(
-            this, sensor,
-            SensorManager.SENSOR_DELAY_GAME
-        )
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_GAME)
     }
 
     fun stop() {
