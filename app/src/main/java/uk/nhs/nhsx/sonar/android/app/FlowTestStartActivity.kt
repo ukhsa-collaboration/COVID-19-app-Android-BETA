@@ -12,7 +12,7 @@ import org.jetbrains.annotations.TestOnly
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
-import uk.nhs.nhsx.sonar.android.client.EncryptionKeyStorage
+import uk.nhs.nhsx.sonar.android.client.KeyStorage
 import javax.inject.Inject
 
 @TestOnly
@@ -22,7 +22,7 @@ class FlowTestStartActivity : AppCompatActivity() {
     lateinit var statusStorage: StatusStorage
 
     @Inject
-    lateinit var encryptionKeyStorage: EncryptionKeyStorage
+    lateinit var keyStorage: KeyStorage
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider

@@ -46,7 +46,7 @@ open class BluetoothModule(
         if (connectionV2)
             LongLiveConnectionScan(rxBleClient, saveContactWorker, bleEvents = bleEvents)
         else
-            Scan(rxBleClient, saveContactWorker, bleEvents)
+            Scan(rxBleClient, saveContactWorker, bleEvents, encryptSonarId = encryptSonarId)
 
     @Provides
     @Named(USE_CONNECTION_V2)

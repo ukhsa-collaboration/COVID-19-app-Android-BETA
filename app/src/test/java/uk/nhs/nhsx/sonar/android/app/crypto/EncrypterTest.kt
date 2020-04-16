@@ -16,6 +16,7 @@ import org.bouncycastle.jce.ECPointUtil
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
 import org.junit.Before
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.client.KeyStorage
 import java.nio.ByteBuffer
 import java.security.KeyFactory
 import java.security.PrivateKey
@@ -68,16 +69,16 @@ class EncrypterTest {
 
     @Test
     fun `produces the expected encrypted payload`() {
-        val serverPublicKeyProvider = mockk<ServerPublicKeyProvider>()
         val ephemeralKeyProvider = mockk<EphemeralKeyProvider>()
-        every { serverPublicKeyProvider.providePublicKey() } returns loadPublicKey(exampleServerPubPEM)
+        val keyStorage = mockk<KeyStorage>()
+        every { keyStorage.providePublicKey() } returns loadPublicKey(exampleServerPubPEM)
         every { ephemeralKeyProvider.providePublicKey() } returns loadPublicKey(exampleLocalPubPEM) as BCECPublicKey
         val x = knownXCoordinate.hexStringToByteArray()
         val y = knownYCoordinate.hexStringToByteArray()
         every { ephemeralKeyProvider.providePublicKeyPoint() } returns byteArrayOf(0x04) + x + y
         every { ephemeralKeyProvider.providePrivateKey() } returns loadPrivateKey(exampleLocalPrivPEM)
 
-        val encrypter = Encrypter(serverPublicKeyProvider, ephemeralKeyProvider)
+        val encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
 
         val plainText = UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").uuidBytes()
 

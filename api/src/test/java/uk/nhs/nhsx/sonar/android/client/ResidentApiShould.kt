@@ -17,11 +17,12 @@ import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
 
 class ResidentApiShould {
 
-    private val encryptionKeyStorage = mockk<EncryptionKeyStorage>(relaxed = true)
+    private val encryptionKeyStorage = mockk<KeyStorage>(relaxed = true)
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
     private val httpClient = HttpClient(requestQueue)
-    private val residentApi = ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
+    private val residentApi =
+        ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
 
     @Test
     fun testRegister_Request() {
@@ -87,7 +88,8 @@ class ResidentApiShould {
         )
         val jsonResponse = jsonObjectOf(
             "id" to "00000000-0000-0000-0000-000000000001",
-            "secretKey" to "some-secret-key-base64-encoded"
+            "secretKey" to "some-secret-key-base64-encoded",
+            "publicKey" to "some-public-key-base64-encoded"
         )
 
         val promise = residentApi.confirmDevice(confirmation)
@@ -95,7 +97,8 @@ class ResidentApiShould {
 
         assertThat(promise.isSuccess).isTrue()
         assertThat(promise.value).isEqualTo(Registration("00000000-0000-0000-0000-000000000001"))
-        verify { encryptionKeyStorage.putBase64Key("some-secret-key-base64-encoded") }
+        verify { encryptionKeyStorage.storeSecretKey("some-secret-key-base64-encoded") }
+        verify { encryptionKeyStorage.storeServerPublicKey("some-public-key-base64-encoded") }
     }
 
     @Test

@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
@@ -18,7 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule.Companion.ERROR_M
 import javax.inject.Named
 
 interface SaveContactWorker {
-    fun createOrUpdateContactEvent(scope: CoroutineScope, id: String, rssi: Int, timestamp: DateTime)
+    fun createOrUpdateContactEvent(scope: CoroutineScope, id: ByteArray, rssi: Int, timestamp: DateTime)
     fun saveContactEvent(scope: CoroutineScope, record: Record)
 
     data class Record(
@@ -32,23 +31,22 @@ interface SaveContactWorker {
 class DefaultSaveContactWorker(
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
     @Named(ERROR_MARGIN) private val errorMargin: Int,
-    private val contactEventDao: ContactEventDao,
-    private val dateProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) }
+    private val contactEventDao: ContactEventDao
 ) : SaveContactWorker {
 
-    override fun createOrUpdateContactEvent(scope: CoroutineScope, id: String, rssi: Int, timestamp: DateTime) {
+    override fun createOrUpdateContactEvent(scope: CoroutineScope, id: ByteArray, rssi: Int, timestamp: DateTime) {
         scope.launch {
             withContext(dispatcher) {
                 try {
                     val contactEvent =
                         ContactEvent(
-                            sonarId = Identifier.fromString(id).asBytes,
+                            sonarId = id,
                             rssiValues = listOf(rssi),
                             timestamp = timestamp.millis,
                             duration = 60
                         )
                     contactEventDao.createOrUpdate(contactEvent, errorMargin)
-                    Timber.i("$TAG event $contactEvent")
+                    Timber.i("$TAG saving event $contactEvent")
                 } catch (e: Exception) {
                     Timber.e("$TAG Failed to save with exception $e")
                 }

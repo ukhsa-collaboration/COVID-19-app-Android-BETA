@@ -18,7 +18,7 @@ class BluetoothCryptogramProvider @Inject constructor(
     private val encrypter: Encrypter
 ) {
 
-    private lateinit var latestDate: DateTime
+    private var latestDate: DateTime? = null
     private var cryptogram: Cryptogram? = null
     private val lock = Object()
 
@@ -29,8 +29,8 @@ class BluetoothCryptogramProvider @Inject constructor(
         synchronized(lock) {
             val currentDate = DateTime.now(DateTimeZone.UTC)
             return if (currentCryptogramExpired(currentDate)) {
-                cryptogram = generateCryptogram()
                 latestDate = currentDate
+                cryptogram = generateCryptogram()
                 cryptogram!!
             } else {
                 cryptogram!!
@@ -44,14 +44,15 @@ class BluetoothCryptogramProvider @Inject constructor(
     }
 
     private fun currentCryptogramExpired(currentDate: DateTime): Boolean {
-        val expiryDate = latestDate.plus(offset)
+        if (latestDate == null) return true
+        val expiryDate = latestDate!!.plus(offset)
         return currentDate.isAfter(expiryDate)
     }
 
     private fun generateCryptogram(): Cryptogram {
-        val encodedStartDate = latestDate.encodeAsSecondsSinceEpoch()
-        val encodedEndDate = latestDate.encodeAsSecondsSinceEpoch(offset.seconds)
+        val encodedStartDate = latestDate!!.encodeAsSecondsSinceEpoch()
+        val encodedEndDate = latestDate!!.encodeAsSecondsSinceEpoch(offset.seconds)
         val residentIdBytes = Identifier.fromString(sonarIdProvider.getSonarId()).asBytes
-        return encrypter.encrypt(encodedStartDate + encodedEndDate + residentIdBytes)
+        return encrypter.encrypt(encodedStartDate + encodedEndDate + residentIdBytes + byteArrayOf(0x00, 0x00))
     }
 }

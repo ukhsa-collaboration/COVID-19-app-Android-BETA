@@ -14,6 +14,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.polidea.rxandroidble2.exceptions.BleException
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
+import net.danlew.android.joda.JodaTimeAndroid
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEvents
@@ -36,6 +37,8 @@ class ColocateApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        JodaTimeAndroid.init(this)
 
         configureBouncyCastleProvider()
 

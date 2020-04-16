@@ -8,6 +8,7 @@ import android.annotation.SuppressLint
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.generators.KDF2BytesGenerator
 import org.bouncycastle.crypto.params.KDFParameters
+import uk.nhs.nhsx.sonar.android.client.KeyStorage
 import java.security.PrivateKey
 import java.security.PublicKey
 import javax.crypto.Cipher
@@ -18,15 +19,15 @@ import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
 class Encrypter @Inject constructor(
-    private val serverKeyProviderServer: ServerPublicKeyProvider,
+    private val keyStorage: KeyStorage,
     private val ephemeralKeyProvider: EphemeralKeyProvider
 ) {
 
     fun encrypt(plainText: ByteArray): Cryptogram {
 
         val localPrivateKey = ephemeralKeyProvider.providePrivateKey()
-        val serverPublicKey = serverKeyProviderServer.providePublicKey()
-        val sharedSecret = generateSharedSecret(localPrivateKey, serverPublicKey)
+        val serverPublicKey = keyStorage.providePublicKey()
+        val sharedSecret = generateSharedSecret(localPrivateKey, serverPublicKey!!)
 
         val sharedInformation = ephemeralKeyProvider.providePublicKeyPoint()
 

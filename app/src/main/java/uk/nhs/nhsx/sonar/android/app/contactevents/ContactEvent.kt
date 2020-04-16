@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
+import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 
 @Entity(tableName = ContactEvent.TABLE_NAME)
 data class ContactEvent(
@@ -47,5 +48,6 @@ data class ContactEvent(
         return "ContactEvent(sonarid=${idAsString()}, rssiValues=${rssiValues.joinToString(",","[","]")}, timestamp=$timestamp, duration=$duration"
     }
 
-    fun idAsString(): String = Identifier.fromBytes(sonarId).asString
+    // TODO: Remove when encryption is mandatory
+    fun idAsString(): String = if (sonarId.size == 16) Identifier.fromBytes(sonarId).asString else Cryptogram.fromBytes(sonarId).asString()
 }

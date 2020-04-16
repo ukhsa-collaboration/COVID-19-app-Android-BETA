@@ -16,8 +16,8 @@ import uk.nhs.nhsx.sonar.android.client.http.TestQueue
 
 class CoLocationApiShould {
 
-    private val encryptionKeyStorage = object : EncryptionKeyStorage by mockk() {
-        override fun provideKey() = ByteArray(0)
+    private val encryptionKeyStorage = object : KeyStorage by mockk() {
+        override fun provideSecretKey() = ByteArray(0)
     }
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
@@ -27,8 +27,8 @@ class CoLocationApiShould {
     @Test
     fun testSave_Request() {
         val events = listOf(
-            CoLocationEvent("001", listOf(-10, 0), "2s ago", 10),
-            CoLocationEvent("002", listOf(-10, -10, 10), "yesterday", 120)
+            CoLocationEvent(sonarId = "001", rssiValues = listOf(-10, 0), timestamp = "2s ago", duration = 10),
+            CoLocationEvent(sonarId = "002", rssiValues = listOf(-10, -10, 10), timestamp = "yesterday", duration = 120)
         )
 
         val promise = coLocationApi.save(CoLocationData("::sonar-id::", events))

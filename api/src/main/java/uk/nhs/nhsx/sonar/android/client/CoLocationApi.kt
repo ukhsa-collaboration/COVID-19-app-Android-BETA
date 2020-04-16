@@ -15,7 +15,7 @@ import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
 
 class CoLocationApi(
     private val baseUrl: String,
-    private val keyStorage: EncryptionKeyStorage,
+    private val keyStorage: KeyStorage,
     private val httpClient: HttpClient
 ) {
 
@@ -24,7 +24,7 @@ class CoLocationApi(
             method = PATCH,
             url = "$baseUrl/api/residents/${coLocationData.sonarId}",
             jsonBody = coLocationData.toJson(),
-            key = keyStorage.provideKey()!!
+            key = keyStorage.provideSecretKey()!!
         )
         Log.i("Sending", "Sending $coLocationData")
 
@@ -38,7 +38,8 @@ data class CoLocationData(
 )
 
 data class CoLocationEvent(
-    val sonarId: String,
+    val sonarId: String? = null,
+    val encryptedRemoteContactId: String? = null,
     val rssiValues: List<Int>,
     val timestamp: String,
     val duration: Int
@@ -47,11 +48,18 @@ data class CoLocationEvent(
 private fun CoLocationData.toJson(): JSONObject =
     jsonObjectOf(
         "contactEvents" to contactEvents.map {
-            mapOf(
-                "sonarId" to it.sonarId,
+            if (it.sonarId != null) mapOf(
+                "sonarId" to it.sonarId, "rssiValues" to it.rssiValues,
+                "timestamp" to it.timestamp,
+                "duration" to it.duration
+
+            )
+            else mapOf(
+                "encryptedRemoteContactId" to it.encryptedRemoteContactId,
                 "rssiValues" to it.rssiValues,
                 "timestamp" to it.timestamp,
                 "duration" to it.duration
+
             )
         }
     )

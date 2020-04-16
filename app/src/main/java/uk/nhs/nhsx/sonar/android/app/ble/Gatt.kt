@@ -31,12 +31,11 @@ class Gatt @Inject constructor(
     @Named(ENCRYPT_SONAR_ID)
     private val encryptSonarId: Boolean
 ) {
-    private val identifier: Identifier
+    private val payload: ByteArray
         get() = if (encryptSonarId) {
-            // TODO: Not actually an identifier
-            Identifier.fromBytes(bluetoothCryptogramProvider.provideBluetoothCryptogram().asBytes())
+            bluetoothCryptogramProvider.provideBluetoothCryptogram().asBytes()
         } else {
-            Identifier.fromString(sonarIdProvider.getSonarId())
+            Identifier.fromString(sonarIdProvider.getSonarId()).asBytes
         }
 
     private val service: BluetoothGattService =
@@ -62,9 +61,8 @@ class Gatt @Inject constructor(
                 offset: Int,
                 characteristic: BluetoothGattCharacteristic
             ) {
-                Timber.d("Bluetooth onCharacteristicReadRequest")
                 if (characteristic.isDeviceIdentifier()) {
-                    server?.sendResponse(device, requestId, GATT_SUCCESS, 0, identifier.asBytes)
+                    server?.sendResponse(device, requestId, GATT_SUCCESS, 0, payload)
                 } else {
                     server?.sendResponse(device, requestId, GATT_FAILURE, 0, byteArrayOf())
                 }

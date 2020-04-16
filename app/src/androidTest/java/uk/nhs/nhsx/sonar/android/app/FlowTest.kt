@@ -156,7 +156,7 @@ class FlowTest {
     @Test
     fun testBluetoothInteractions() {
         setStatus(CovidStatus.OK)
-        setValidSonarIdAndSecretKey()
+        setValidSonarIdAndSecretKeyAndPublicKey()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -308,11 +308,12 @@ class FlowTest {
         sonarIdProvider.setSonarId(TestCoLocateServiceDispatcher.RESIDENT_ID)
     }
 
-    private fun setValidSonarIdAndSecretKey() {
+    private fun setValidSonarIdAndSecretKeyAndPublicKey() {
         setValidSonarId()
 
-        val keyStorage = activityRule.activity.encryptionKeyStorage
-        keyStorage.putBase64Key(TestCoLocateServiceDispatcher.encodedKey)
+        val keyStorage = activityRule.activity.keyStorage
+        keyStorage.storeSecretKey(TestCoLocateServiceDispatcher.encodedSecretKey)
+        keyStorage.storeServerPublicKey(TestCoLocateServiceDispatcher.PUBLIC_KEY)
     }
 
     private fun clearDatabase() {

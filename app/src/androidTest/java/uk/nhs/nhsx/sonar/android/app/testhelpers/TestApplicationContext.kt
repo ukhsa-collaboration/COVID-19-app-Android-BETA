@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.sonar.android.app.testhelpers
 
 import android.content.ContextWrapper
+import android.util.Base64
 import androidx.core.os.bundleOf
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
@@ -9,6 +10,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.runBlocking
+import net.danlew.android.joda.JodaTimeAndroid
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
@@ -68,6 +70,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             dispatcher = testDispatcher
             start()
         }
+        JodaTimeAndroid.init(app)
 
         val mockServerUrl = mockServer.url("").toString().removeSuffix("/")
 
@@ -146,7 +149,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun verifyRegistrationFlow() {
         verifyReceivedRegistrationRequest()
         verifyReceivedActivationRequest()
-        verifySonarIdAndSecretKey()
+        verifySonarIdAndSecretKeyAndPublicKey()
     }
 
     fun verifyReceivedActivationRequest() {
@@ -159,9 +162,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             .contains("""{"activationCode":"test activation code #001","pushToken":"test firebase token #010",""")
     }
 
-    fun verifySonarIdAndSecretKey() {
+    fun verifySonarIdAndSecretKeyAndPublicKey() {
         val idProvider = testActivity.sonarIdProvider
-        val keyStorage = testActivity.encryptionKeyStorage
+        val keyStorage = testActivity.keyStorage
 
         await until {
             idProvider.getSonarId() != ID_NOT_REGISTERED
@@ -169,10 +172,21 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(idProvider.getSonarId()).isEqualTo(TestCoLocateServiceDispatcher.RESIDENT_ID)
 
         await untilNotNull {
-            keyStorage.provideKey()
+            keyStorage.provideSecretKey()
         }
-        val decodedKey = keyStorage.provideKey()?.toString(Charset.defaultCharset())
+        val decodedKey = keyStorage.provideSecretKey()?.toString(Charset.defaultCharset())
         assertThat(decodedKey).isEqualTo(TestCoLocateServiceDispatcher.SECRET_KEY)
+
+        await untilNotNull {
+            keyStorage.providePublicKey()
+        }
+        val publicKey = keyStorage.providePublicKey()?.encoded
+        assertThat(publicKey).isEqualTo(
+            Base64.decode(
+                TestCoLocateServiceDispatcher.PUBLIC_KEY,
+                Base64.DEFAULT
+            )
+        )
     }
 
     fun simulateDeviceInProximity() {

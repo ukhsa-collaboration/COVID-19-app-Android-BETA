@@ -8,7 +8,7 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import uk.nhs.nhsx.sonar.android.client.CoLocationApi
-import uk.nhs.nhsx.sonar.android.client.EncryptionKeyStorage
+import uk.nhs.nhsx.sonar.android.client.KeyStorage
 import uk.nhs.nhsx.sonar.android.client.ResidentApi
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 
@@ -20,10 +20,10 @@ class NetworkModule(private val baseUrl: String) {
         HttpClient(context)
 
     @Provides
-    fun residentApi(encryptionKeyStorage: EncryptionKeyStorage, httpClient: HttpClient): ResidentApi =
-        ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
+    fun residentApi(keyStorage: KeyStorage, httpClient: HttpClient): ResidentApi =
+        ResidentApi(baseUrl, keyStorage, httpClient)
 
     @Provides
-    fun coLocationApi(encryptionKeyStorage: EncryptionKeyStorage, httpClient: HttpClient): CoLocationApi =
-        CoLocationApi(baseUrl, encryptionKeyStorage, httpClient)
+    fun coLocationApi(keyStorage: KeyStorage, httpClient: HttpClient): CoLocationApi =
+        CoLocationApi(baseUrl, keyStorage, httpClient)
 }

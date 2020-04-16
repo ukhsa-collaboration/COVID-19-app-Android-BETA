@@ -38,13 +38,6 @@ interface ContactEventDao {
             if (newEventTime.isBefore(storedEventTimeStart) &&
                 newEventTime.isAfter(storedEventTimeStart.minus(Seconds.seconds(errorMargin)))
             ) {
-                Timber.d(
-                    "Updated event duration is ${event.duration + Seconds.secondsBetween(
-                        storedEventTimeStart,
-                        newEventTime
-                    ).seconds}"
-                )
-
                 event.copy(
                     timestamp = newEvent.timestamp,
                     duration = event.duration + Seconds.secondsBetween(newEventTime, storedEventTimeStart).seconds,
@@ -54,12 +47,6 @@ interface ContactEventDao {
             } else if (newEventTime.isAfter(storedEventTimeEnd) &&
                 newEventTime.isBefore(storedEventTimeEnd.plus(Seconds.seconds(errorMargin)))
             ) {
-                Timber.d(
-                    "Updated event duration is ${event.duration + Seconds.secondsBetween(
-                        newEventTime,
-                        storedEventTimeEnd
-                    ).seconds}"
-                )
                 update(
                     event.copy(
                         duration = event.duration +
@@ -71,8 +58,10 @@ interface ContactEventDao {
             } else if (newEventTime.isAfter(storedEventTimeStart) &&
                 newEventTime.isBefore(storedEventTimeEnd)
             ) {
-                Timber.d("Updated event duration is unaffected")
-                update(event.copy(rssiValues = rssis.plus(newEvent.rssiValues)))
+                update(
+                    event.copy(
+                        rssiValues = rssis.plus(newEvent.rssiValues)
+                    ))
                 return
             }
         }

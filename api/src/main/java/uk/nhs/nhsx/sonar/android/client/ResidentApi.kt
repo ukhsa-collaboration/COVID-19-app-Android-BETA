@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 class ResidentApi @Inject constructor(
     private val baseUrl: String,
-    private val encryptionKeyStorage: EncryptionKeyStorage,
+    private val keyStorage: KeyStorage,
     private val httpClient: HttpClient
 ) {
 
@@ -46,9 +46,10 @@ class ResidentApi @Inject constructor(
             .send(request)
             .map { json: JSONObject ->
                 val key = json.getString("secretKey")
+                val publicKey = json.getString("publicKey")
                 val registrationId = json.getString("id")
-
-                encryptionKeyStorage.putBase64Key(key)
+                keyStorage.storeServerPublicKey(publicKey)
+                keyStorage.storeSecretKey(key)
                 Registration(registrationId)
             }
     }

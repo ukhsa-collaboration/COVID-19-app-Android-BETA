@@ -33,8 +33,8 @@ class DiagnoseReviewViewModelTest {
     fun onUploadContactEvents() {
         runBlocking {
             val events = listOf(
-                CoLocationEvent("001", listOf(-10, 0), "2s ago", 10),
-                CoLocationEvent("002", listOf(-10, -10, 10), "yesterday", 120)
+                CoLocationEvent(sonarId = "001", rssiValues = listOf(-10, 0), timestamp = "2s ago", duration = 10),
+                CoLocationEvent(sonarId = "002", rssiValues = listOf(-10, -10, 10), timestamp = "yesterday", duration = 120)
             )
             val coLocationData = CoLocationData(RESIDENT_ID, events)
             coEvery { coLocationDataProvider.getData() } returns coLocationData

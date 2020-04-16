@@ -16,22 +16,25 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
+import java.security.PublicKey
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.crypto.KeyGenerator
 
 @RunWith(AndroidJUnit4::class)
 class CoLocationApiIT {
     lateinit var server: MockWebServer
-    lateinit var encryptionKeyStorage: EncryptionKeyStorage
+    lateinit var keyStorage: KeyStorage
 
     @Before
     fun setUp() {
         server = MockWebServer()
         server.start(8089)
 
-        encryptionKeyStorage = object : EncryptionKeyStorage {
-            override fun provideKey() = generateKey()
-            override fun putBase64Key(encodedKey: String) = Unit
+        keyStorage = object : KeyStorage {
+            override fun provideSecretKey() = generateKey()
+            override fun storeSecretKey(encodedKey: String) = Unit
+            override fun providePublicKey(): PublicKey? = null
+            override fun storeServerPublicKey(encodedKey: String) = Unit
         }
     }
 
@@ -44,7 +47,7 @@ class CoLocationApiIT {
     fun shouldSendCoLocationData() {
         val ctx = InstrumentationRegistry.getInstrumentation().targetContext
         val httpClient = HttpClient(ctx)
-        val coLocationApi = CoLocationApi("http://localhost:8089", encryptionKeyStorage, httpClient)
+        val coLocationApi = CoLocationApi("http://localhost:8089", keyStorage, httpClient)
 
         server.enqueue(MockResponse().setResponseCode(200))
 

@@ -65,7 +65,8 @@ class TestBluetoothModule(
                 rxBleClient,
                 saveContactWorker,
                 bleEvents,
-                currentTimestampProvider
+                currentTimestampProvider,
+                false
             )
 }
 

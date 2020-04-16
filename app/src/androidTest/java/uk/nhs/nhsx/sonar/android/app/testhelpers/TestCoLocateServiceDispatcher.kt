@@ -14,9 +14,10 @@ class TestCoLocateServiceDispatcher : Dispatcher() {
 
     companion object {
         const val SECRET_KEY: String = "secret key from TestCoLocateServiceDispatcher"
+        const val PUBLIC_KEY: String = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu1f68MqDXbKeTqZMTHsOGToO4rKnPClXe/kE+oWqlaWZQv4J1E98cUNdpzF9JIFRPMCNdGOvTr4UB+BhQv9GWg=="
         const val RESIDENT_ID: String = "1ae5d70d-0c40-4af2-bac0-c2d18d25091f"
 
-        val encodedKey = Base64
+        val encodedSecretKey = Base64
             .encode(SECRET_KEY.toByteArray(), Base64.DEFAULT)
             .toString(Charset.defaultCharset())
     }
@@ -29,7 +30,7 @@ class TestCoLocateServiceDispatcher : Dispatcher() {
                 when (request.path) {
                     "/api/devices/registrations" -> MockResponse()
                     "/api/devices" -> MockResponse().apply {
-                        setBody("""{"id":"$RESIDENT_ID","secretKey":"$encodedKey"}""")
+                        setBody("""{"id":"$RESIDENT_ID","secretKey":"$encodedSecretKey","publicKey":"$PUBLIC_KEY"}""")
                     }
                     "/api/residents/$RESIDENT_ID" -> MockResponse()
                     else -> MockResponse().apply {

@@ -19,21 +19,24 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import timber.log.Timber
-import java.util.concurrent.ConcurrentHashMap
+import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
+import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import javax.inject.Inject
+import javax.inject.Named
 
 class Scan @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val saveContactWorker: SaveContactWorker,
     private val bleEvents: BleEvents,
-    private val currentTimestampeProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) }
+    private val currentTimestampeProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
+    @Named(BluetoothModule.ENCRYPT_SONAR_ID)
+    private val encryptSonarId: Boolean
 ) : Scanner {
 
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
 
-    private val connectedDevices = ConcurrentHashMap<String, String>()
     private var scanDisposable: Disposable? = null
 
     /*
@@ -117,7 +120,13 @@ class Scan @Inject constructor(
                 Timber.d("Disconnecting from $connectionDisposable")
                 connectionDisposable?.dispose()
                 connectionDisposable = null
-                connectedDevices.remove(macAddress)
+            }.flatMapSingle { connection ->
+                // TODO: Only necessary if encryption enabled - Can't be equal to Cryptogram size, seems there's some overhead
+                connection.requestMtu(120)
+                    .doOnSubscribe { Timber.i("Negotiating MTU started") }
+                    .doOnSuccess { Timber.i("Negotiated MTU: $it") }
+                    .ignoreElement()
+                    .andThen(Single.just(connection))
             }
             .flatMapSingle {
                 Timber.d("Reading from - MAC:$macAddress")
@@ -125,7 +134,7 @@ class Scan @Inject constructor(
             }
             .subscribe(
                 { event ->
-                    onReadSuccess(event, macAddress)
+                    onReadSuccess(event)
                 },
                 { e ->
                     Timber.d("failed reading from $macAddress")
@@ -138,8 +147,8 @@ class Scan @Inject constructor(
         return Single.zip(
             connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID),
             connection.readRssi(),
-            BiFunction<ByteArray, Int, Event> { bytes, rssi ->
-                Event(Identifier.fromBytes(bytes), rssi, scope, currentTimestampeProvider())
+            BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
+                Event(characteristicValue, rssi, scope, currentTimestampeProvider())
             }
         )
     }
@@ -150,29 +159,36 @@ class Scan @Inject constructor(
     }
 
     private fun onReadError(e: Throwable) {
-        bleEvents.disconnectDeviceEvent()
         Timber.e("Failed to read from remote device: $e")
     }
 
-    private fun onReadSuccess(event: Event, macAddress: String) {
-        Timber.d("Scanning Saving: $event")
-        bleEvents.connectedDeviceEvent(event.identifier.asString, listOf(event.rssi))
-        connectedDevices[macAddress] = event.identifier.asString
+    private fun onReadSuccess(event: Event) {
+        if (!encryptSonarId) {
+            bleEvents.connectedDeviceEvent(
+                Identifier.fromBytes(event.identifier).asString,
+                listOf(event.rssi)
+            )
+        } else {
+            bleEvents.connectedDeviceEvent(
+                Cryptogram.fromBytes(event.identifier).asString(),
+                listOf(event.rssi)
+            )
+        }
 
         saveContactWorker.createOrUpdateContactEvent(
             event.scope,
-            event.identifier.asString,
+            event.identifier,
             event.rssi,
             event.timestamp
         )
     }
 
+    // We're really just using this as a bundle, and never comparing different events.
+    @Suppress("ArrayInDataClass")
     private data class Event(
-        val identifier: Identifier,
+        val identifier: ByteArray,
         val rssi: Int,
         val scope: CoroutineScope,
         val timestamp: DateTime
-    ) {
-        override fun toString() = "Event[identifier: ${identifier.asString}, rssi: $rssi]"
-    }
+    )
 }
