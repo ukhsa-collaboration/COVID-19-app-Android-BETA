@@ -14,7 +14,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
-import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVISE_URL
+import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
@@ -35,7 +35,7 @@ class AtRiskActivity : BaseActivity() {
         }
 
         latest_advice_amber.setOnClickListener {
-            openUrl(LATEST_ADVISE_URL)
+            openUrl(LATEST_ADVICE_URL)
         }
     }
 
