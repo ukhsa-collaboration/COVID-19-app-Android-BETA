@@ -50,7 +50,7 @@ jobs:
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
 
   publish:
-    needs: build
+    needs: login_to_docker
     runs-on: [ "self-hosted", "linux" ]
     container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
