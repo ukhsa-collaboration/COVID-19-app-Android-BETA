@@ -4,20 +4,20 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.iid.FirebaseInstanceId
-import com.jakewharton.processphoenix.ProcessPhoenix
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import java.io.File
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
+import javax.inject.Inject
 
-class TestViewModel(
+class TestViewModel @Inject constructor(
     private val context: Context,
     private val contactEventDao: ContactEventDao,
     private val eventTracker: BleEvents
@@ -30,7 +30,7 @@ class TestViewModel(
             withContext(Dispatchers.IO) {
                 FirebaseInstanceId.getInstance().deleteInstanceId()
             }
-            ProcessPhoenix.triggerRebirth(context)
+            MainActivity.start(context)
         }
     }
 
@@ -68,21 +68,4 @@ class TestViewModel(
     }
 
     fun observeConnectionEvents() = eventTracker.observeConnectionEvents()
-}
-
-class TestViewModelFactory(
-    private val context: Context,
-    private val contractEventDao: ContactEventDao,
-    private val eventTracker: BleEvents
-) :
-    ViewModelProvider.Factory {
-
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return TestViewModel(
-            context,
-            contractEventDao,
-            eventTracker
-        ) as T
-    }
 }

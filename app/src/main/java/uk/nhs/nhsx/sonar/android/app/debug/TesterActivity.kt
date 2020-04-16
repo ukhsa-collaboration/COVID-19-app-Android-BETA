@@ -16,49 +16,45 @@ import kotlinx.android.synthetic.main.activity_test.reset_button
 import kotlinx.android.synthetic.main.activity_test.sonar_id
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
+import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
 import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
+import javax.inject.Inject
 
 class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
-    private val statusStorage by lazy { StatusStorage(this) }
+    @Inject
+    lateinit var statusStorage: StatusStorage
 
-    private val sonarIdProvider by lazy {
-        SonarIdProvider(
-            this
-        )
-    }
+    @Inject
+    lateinit var sonarIdProvider: SonarIdProvider
 
-    private lateinit var viewModelFactory: TestViewModelFactory
+    @Inject
+    lateinit var onboardingStatusProvider: OnboardingStatusProvider
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory<TestViewModel>
 
     private val viewModel: TestViewModel by viewModels { viewModelFactory }
 
-    private val bleEvents: BleEvents by lazy { appComponent.provideBleEvents() }
-
     override fun onCreate(savedInstanceState: Bundle?) {
+        appComponent.inject(this)
         super.onCreate(savedInstanceState)
         sonar_id.text = "This is ${sonarIdProvider.getSonarId()}"
         val adapter = EventsAdapter()
         events.adapter = adapter
         events.layoutManager = LinearLayoutManager(this)
 
-        viewModelFactory = TestViewModelFactory(
-            this,
-            appComponent.provideEventsV2Dao(),
-            bleEvents
-        )
-
         continue_button.setOnClickListener {
             finish()
         }
 
         reset_button.setOnClickListener {
-            statusStorage.update(CovidStatus.OK)
-
+            statusStorage.clear()
             sonarIdProvider.clear()
+            onboardingStatusProvider.clear()
 
             viewModel.clear()
         }

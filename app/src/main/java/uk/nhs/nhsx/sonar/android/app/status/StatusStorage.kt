@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
+import androidx.core.content.edit
 import javax.inject.Inject
 
 class StatusStorage @Inject constructor(context: Context) {
@@ -14,10 +15,7 @@ class StatusStorage @Inject constructor(context: Context) {
     }
 
     fun update(status: CovidStatus) {
-        sharedPreferences
-            .edit()
-            .putString(PREF_STATUS, status.name)
-            .apply()
+        sharedPreferences.edit { putString(PREF_STATUS, status.name) }
     }
 
     fun get(): CovidStatus =
@@ -26,11 +24,8 @@ class StatusStorage @Inject constructor(context: Context) {
             ?.let { CovidStatus.valueOf(it) }
             ?: CovidStatus.OK
 
-    fun reset() {
-        sharedPreferences
-            .edit()
-            .clear()
-            .apply()
+    fun clear() {
+        sharedPreferences.edit { clear() }
     }
 
     companion object {

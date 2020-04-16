@@ -13,6 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEvents
+import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
@@ -51,6 +52,7 @@ interface ApplicationComponent {
     fun inject(flowTestStartActivity: FlowTestStartActivity)
     fun inject(bootCompletedReceiver: BootCompletedReceiver)
     fun inject(postCodeActivity: PostCodeActivity)
+    fun inject(testerActivity: TesterActivity)
 
     fun registrationUseCase(): RegistrationUseCase
     fun provideEventsV2Dao(): ContactEventDao

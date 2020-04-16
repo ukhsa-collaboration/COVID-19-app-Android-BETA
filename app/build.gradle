@@ -162,8 +162,6 @@ dependencies {
 
     implementation "androidx.browser:browser:1.2.0"
 
-    implementation 'com.jakewharton:process-phoenix:2.0.0'
-
     implementation 'org.bouncycastle:bcprov-jdk15on:1.64'
 
     testImplementation 'junit:junit:4.13'

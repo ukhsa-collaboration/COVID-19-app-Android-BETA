@@ -300,7 +300,7 @@ class FlowTest {
 
     private fun resetStatusStorage() {
         val storage = activityRule.activity.statusStorage
-        storage.reset()
+        storage.clear()
     }
 
     private fun unsetSonarId() {

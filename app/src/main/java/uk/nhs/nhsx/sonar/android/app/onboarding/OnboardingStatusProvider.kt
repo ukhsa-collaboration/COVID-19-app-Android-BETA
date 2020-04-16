@@ -16,6 +16,10 @@ class OnboardingStatusProvider @Inject constructor(context: Context) {
     fun setOnboardingFinished(finished: Boolean) =
         sharedPreferences.edit { putBoolean(KEY, finished) }
 
+    fun clear() {
+        sharedPreferences.edit { clear() }
+    }
+
     companion object {
         private const val KEY = "ONBOARDING_FINISHED"
     }
