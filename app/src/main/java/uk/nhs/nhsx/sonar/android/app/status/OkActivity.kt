@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -20,6 +21,8 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVISE_URL
+import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
 class OkActivity : BaseActivity() {
@@ -53,6 +56,10 @@ class OkActivity : BaseActivity() {
 
         registrationPanel.setRetryListener {
             viewModel.register()
+        }
+
+        latest_advice_ok.setOnClickListener {
+            openUrl(LATEST_ADVISE_URL)
         }
 
         addViewModelListener()

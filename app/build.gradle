@@ -160,6 +160,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.3.0'
     implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta03'
 
+    implementation "androidx.browser:browser:1.2.0"
+
     implementation 'com.jakewharton:process-phoenix:2.0.0'
 
     implementation 'org.bouncycastle:bcprov-jdk15on:1.64'

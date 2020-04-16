@@ -8,11 +8,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.TextView
+import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_amber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVISE_URL
+import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
 class AtRiskActivity : BaseActivity() {
@@ -29,6 +32,10 @@ class AtRiskActivity : BaseActivity() {
 
         findViewById<TextView>(R.id.status_not_feeling_well).setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
+        }
+
+        latest_advice_amber.setOnClickListener {
+            openUrl(LATEST_ADVISE_URL)
         }
     }
 

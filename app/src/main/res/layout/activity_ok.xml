@@ -50,6 +50,7 @@
                     android:text="@string/status_initial_title" />
 
                 <TextView
+                    android:id="@+id/latest_advice_ok"
                     style="@style/TextViewSubStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
