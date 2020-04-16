@@ -1,0 +1,5 @@
+name: 'Run instrumentation tests'
+description: 'Setup Java, Android SDK and GCloud CLI'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
