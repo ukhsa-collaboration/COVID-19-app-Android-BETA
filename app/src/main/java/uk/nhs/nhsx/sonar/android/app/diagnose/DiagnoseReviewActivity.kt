@@ -8,9 +8,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.activity_review_diagnosis.confirm_diagnosis
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submission_error
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -43,10 +43,6 @@ class DiagnoseReviewActivity : BaseActivity() {
         intent.getBooleanExtra(HAS_COUGH, false)
     }
 
-    private val confirmButton: Button by lazy {
-        findViewById<Button>(R.id.confirm_diagnosis)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -69,11 +65,11 @@ class DiagnoseReviewActivity : BaseActivity() {
             } else {
                 submission_error.visibility = View.VISIBLE
                 submission_error.announceForAccessibility(getString(R.string.submission_error))
-                confirmButton.text = getString(R.string.retry)
+                confirm_diagnosis.text = getString(R.string.retry)
             }
         })
 
-        confirmButton.setOnClickListener {
+        confirm_diagnosis.setOnClickListener {
             if (hasCough || hasTemperature) {
                 viewModel.uploadContactEvents()
             } else {
