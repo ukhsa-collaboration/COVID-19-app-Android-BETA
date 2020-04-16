@@ -3,13 +3,13 @@ package uk.nhs.nhsx.sonar.android.client
 import com.android.volley.Request.Method.POST
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.http.volley.TestQueue
-import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
+import uk.nhs.nhsx.sonar.android.client.http.HttpClient
+import uk.nhs.nhsx.sonar.android.client.http.TestQueue
 
 class AcknowledgementsApiTest {
 
     private val requestQueue = TestQueue()
-    private val httpClient = VolleyHttpClient(requestQueue)
+    private val httpClient = HttpClient(requestQueue)
     private val acknowledgementsApi = AcknowledgementsApi(httpClient)
 
     @Test

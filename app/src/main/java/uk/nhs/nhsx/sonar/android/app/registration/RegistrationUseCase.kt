@@ -5,8 +5,8 @@ import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
-import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
+import uk.nhs.nhsx.sonar.android.client.DeviceConfirmation
+import uk.nhs.nhsx.sonar.android.client.ResidentApi
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton

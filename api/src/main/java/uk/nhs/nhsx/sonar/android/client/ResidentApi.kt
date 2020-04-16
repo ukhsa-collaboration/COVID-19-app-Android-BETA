@@ -3,7 +3,7 @@
  *
  */
 
-package uk.nhs.nhsx.sonar.android.client.resident
+package uk.nhs.nhsx.sonar.android.client
 
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
@@ -11,7 +11,6 @@ import uk.nhs.nhsx.sonar.android.client.http.HttpMethod.POST
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.client.http.Promise
 import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
-import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 import javax.inject.Inject
 
 // Register endpoint: POST /api/devices/registrations -d '{ pushToken: "base64(probably)-blabla" }' --> 204 - No Content

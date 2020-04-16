@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.client.http.volley
+package uk.nhs.nhsx.sonar.android.client.http
 
 import com.android.volley.Request
 import com.android.volley.RequestQueue

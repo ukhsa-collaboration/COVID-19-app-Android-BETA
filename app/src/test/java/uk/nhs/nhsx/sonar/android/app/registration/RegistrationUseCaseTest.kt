@@ -16,10 +16,10 @@ import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.client.http.Promise
-import uk.nhs.nhsx.sonar.android.client.resident.DeviceConfirmation
-import uk.nhs.nhsx.sonar.android.client.resident.Registration
-import uk.nhs.nhsx.sonar.android.client.resident.ResidentApi
+import uk.nhs.nhsx.sonar.android.client.DeviceConfirmation
+import uk.nhs.nhsx.sonar.android.client.Registration
+import uk.nhs.nhsx.sonar.android.client.ResidentApi
+import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
 import java.io.IOException
 
 @ExperimentalCoroutinesApi
@@ -65,7 +65,7 @@ class RegistrationUseCaseTest {
         coEvery { tokenRetriever.retrieveToken() } returns TokenRetriever.Result.Success(
             FIREBASE_TOKEN
         )
-        val registrationDeferred = Promise.Deferred<Unit>()
+        val registrationDeferred = Deferred<Unit>()
         registrationDeferred.resolve(Unit)
         every { residentApi.register(FIREBASE_TOKEN) } returns registrationDeferred.promise
 
@@ -77,7 +77,7 @@ class RegistrationUseCaseTest {
             nothing
         }
 
-        val confirmationDeferred = Promise.Deferred<Registration>()
+        val confirmationDeferred = Deferred<Registration>()
         confirmationDeferred.resolve(Registration(RESIDENT_ID))
         every { residentApi.confirmDevice(confirmation) } returns confirmationDeferred.promise
 
@@ -125,7 +125,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun onDeviceRegistrationFailureReturnsFailure() = runBlockingTest {
-        val deferred = Promise.Deferred<Unit>()
+        val deferred = Deferred<Unit>()
         deferred.fail(IOException())
         every { residentApi.register(any()) } returns deferred.promise
 
@@ -173,7 +173,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun onResidentRegistrationFailureReturnsFailure() = runBlockingTest {
-        val deferred = Promise.Deferred<Registration>()
+        val deferred = Deferred<Registration>()
         deferred.fail(IOException())
         every { residentApi.confirmDevice(confirmation) } returns deferred.promise
 

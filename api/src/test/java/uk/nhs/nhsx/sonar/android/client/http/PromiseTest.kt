@@ -2,6 +2,7 @@ package uk.nhs.nhsx.sonar.android.client.http
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
 import java.io.IOException
 
 class PromiseTest {
@@ -11,7 +12,7 @@ class PromiseTest {
         var successValue: String? = null
         var errorValue: Exception? = null
 
-        val deferred = Promise.Deferred<String>()
+        val deferred = Deferred<String>()
         val promise = deferred.promise
 
         assertThat(promise.isInProgress).isTrue()
@@ -33,7 +34,7 @@ class PromiseTest {
         var successValue: String? = null
         var errorValue: Exception? = null
 
-        val deferred = Promise.Deferred<String>()
+        val deferred = Deferred<String>()
         val promise = deferred.promise
 
         assertThat(promise.isInProgress).isTrue()
@@ -55,7 +56,7 @@ class PromiseTest {
         var successValue: String? = null
         var errorValue: Exception? = null
 
-        val deferred = Promise.Deferred<String>()
+        val deferred = Deferred<String>()
         val promise = deferred.promise
 
         assertThat(promise.isInProgress).isTrue()
@@ -79,7 +80,7 @@ class PromiseTest {
         var successValue: String? = null
         var errorValue: Exception? = null
 
-        val deferred = Promise.Deferred<String>()
+        val deferred = Deferred<String>()
         val promise = deferred.promise
 
         assertThat(promise.isInProgress).isTrue()
@@ -102,7 +103,7 @@ class PromiseTest {
     fun testPromiseTriggersOnlyOnce() {
         var count = 0
 
-        val deferred = Promise.Deferred<Int>()
+        val deferred = Deferred<Int>()
         val promise = deferred.promise
 
         deferred.resolve(1)

@@ -15,10 +15,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
-import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
-import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
-import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
+import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.crypto.KeyGenerator
 
@@ -46,12 +43,21 @@ class CoLocationApiIT {
     @Test
     fun shouldSendCoLocationData() {
         val ctx = InstrumentationRegistry.getInstrumentation().targetContext
-        val httpClient = VolleyHttpClient(ctx)
-        val coLocationApi = CoLocationApi("http://localhost:8089", encryptionKeyStorage, httpClient)
+        val httpClient = HttpClient(ctx)
+        val coLocationApi = CoLocationApi(
+            "http://localhost:8089",
+            encryptionKeyStorage,
+            httpClient
+        )
 
         server.enqueue(MockResponse().setResponseCode(200))
 
-        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
+        val promise = coLocationApi.save(
+            CoLocationData(
+                "::sonar-id::",
+                emptyList()
+            )
+        )
 
         val request = server.takeRequest(300, MILLISECONDS)
         assertEquals("/api/residents/::sonar-id::", request?.path)

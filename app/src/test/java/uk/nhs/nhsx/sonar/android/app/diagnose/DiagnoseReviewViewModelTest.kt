@@ -14,9 +14,9 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationApi
-import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
-import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationEvent
+import uk.nhs.nhsx.sonar.android.client.CoLocationApi
+import uk.nhs.nhsx.sonar.android.client.CoLocationData
+import uk.nhs.nhsx.sonar.android.client.CoLocationEvent
 
 class DiagnoseReviewViewModelTest {
 
@@ -37,8 +37,18 @@ class DiagnoseReviewViewModelTest {
     fun onUploadContactEvents() {
         runBlocking {
             val events = listOf(
-                CoLocationEvent("001", listOf(-10, 0), "2s ago", 10),
-                CoLocationEvent("002", listOf(-10, -10, 10), "yesterday", 120)
+                CoLocationEvent(
+                    "001",
+                    listOf(-10, 0),
+                    "2s ago",
+                    10
+                ),
+                CoLocationEvent(
+                    "002",
+                    listOf(-10, -10, 10),
+                    "yesterday",
+                    120
+                )
             )
             val coLocationData = CoLocationData(RESIDENT_ID, events)
             coEvery { coLocationDataProvider.getData() } returns coLocationData

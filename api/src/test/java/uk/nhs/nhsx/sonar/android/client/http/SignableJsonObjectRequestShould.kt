@@ -3,14 +3,12 @@
  *
  */
 
-package uk.nhs.nhsx.sonar.android.client.http.volley
+package uk.nhs.nhsx.sonar.android.client.http
 
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.http.HttpMethod
-import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.client.http.Promise
+import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
 import java.util.Base64
 
 class SignableJsonObjectRequestShould {
@@ -24,7 +22,7 @@ class SignableJsonObjectRequestShould {
                 jsonBody = JSONObject(),
                 key = generateSignatureKey()
             ),
-            Promise.Deferred()
+            Deferred()
         ) { Base64.getEncoder().encodeToString(it) }
 
         assertThat(request.headers).containsKey("Sonar-Message-Signature")

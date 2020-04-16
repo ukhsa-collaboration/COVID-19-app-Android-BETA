@@ -3,7 +3,7 @@
  *
  */
 
-package uk.nhs.nhsx.sonar.android.client.resident
+package uk.nhs.nhsx.sonar.android.client
 
 import com.android.volley.VolleyError
 import io.mockk.mockk
@@ -11,19 +11,18 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.assertBodyHasJson
+import uk.nhs.nhsx.sonar.android.client.http.HttpClient
+import uk.nhs.nhsx.sonar.android.client.http.TestQueue
 import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
-import uk.nhs.nhsx.sonar.android.client.http.volley.TestQueue
-import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
-import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 
 class ResidentApiShould {
 
     private val encryptionKeyStorage = mockk<EncryptionKeyStorage>(relaxed = true)
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
-    private val httpClient = VolleyHttpClient(requestQueue)
-    private val residentApi = ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
+    private val httpClient = HttpClient(requestQueue)
+    private val residentApi =
+        ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
 
     @Test
     fun testRegister_Request() {

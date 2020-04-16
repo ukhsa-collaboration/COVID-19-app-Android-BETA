@@ -12,7 +12,7 @@ import org.jetbrains.annotations.TestOnly
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
-import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
+import uk.nhs.nhsx.sonar.android.client.EncryptionKeyStorage
 import javax.inject.Inject
 
 @TestOnly

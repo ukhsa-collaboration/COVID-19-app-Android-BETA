@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.client.security
+package uk.nhs.nhsx.sonar.android.client
 
 import android.content.Context
 import android.util.Base64

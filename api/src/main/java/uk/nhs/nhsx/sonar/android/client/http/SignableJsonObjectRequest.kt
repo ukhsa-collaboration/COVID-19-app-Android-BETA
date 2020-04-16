@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.client.http.volley
+package uk.nhs.nhsx.sonar.android.client.http
 
 import com.android.volley.NetworkResponse
 import com.android.volley.Request.Method
@@ -8,16 +8,14 @@ import com.android.volley.toolbox.JsonObjectRequest
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDateTime
 import org.json.JSONObject
-import uk.nhs.nhsx.sonar.android.client.http.HttpMethod
-import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.client.http.Promise
+import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
 import javax.crypto.Mac
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
 class SignableJsonObjectRequest(
     private val httpRequest: HttpRequest,
-    deferred: Promise.Deferred<JSONObject>,
+    deferred: Deferred<JSONObject>,
     private val base64enc: (ByteArray) -> String
 ) :
     JsonObjectRequest(

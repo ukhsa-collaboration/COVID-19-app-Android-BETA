@@ -3,23 +3,19 @@
  *
  */
 
-package uk.nhs.nhsx.sonar.android.client.http.volley
+package uk.nhs.nhsx.sonar.android.client.http
 
 import com.android.volley.Request
 import com.android.volley.VolleyError
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.http.HttpMethod
-import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
-import uk.nhs.nhsx.sonar.android.client.http.jsonOf
 import java.util.Base64
 
-class VolleyHttpClientShould {
+class HttpClientShould {
 
     private val queue = TestQueue()
-    private val httpClient = VolleyHttpClient(queue) { Base64.getEncoder().encodeToString(it) }
+    private val httpClient = HttpClient(queue) { Base64.getEncoder().encodeToString(it) }
 
     @Test
     fun testSend_PostRequest_WithoutEncryptionKey() {
@@ -40,7 +36,10 @@ class VolleyHttpClientShould {
     @Test
     fun testSend_PatchRequest_WithEncryptionKey() {
         val inputRequest =
-            HttpRequest(HttpMethod.PATCH, "http://localhost:123/api", JSONObject(), generateSignatureKey())
+            HttpRequest(
+                HttpMethod.PATCH, "http://localhost:123/api", JSONObject(),
+                generateSignatureKey()
+            )
         val promise = httpClient.send(inputRequest)
 
         assertThat(promise.isInProgress).isTrue()

@@ -4,8 +4,8 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
-import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationData
-import uk.nhs.nhsx.sonar.android.client.colocation.CoLocationEvent
+import uk.nhs.nhsx.sonar.android.client.CoLocationData
+import uk.nhs.nhsx.sonar.android.client.CoLocationEvent
 import javax.inject.Inject
 
 class CoLocationDataProvider @Inject constructor(

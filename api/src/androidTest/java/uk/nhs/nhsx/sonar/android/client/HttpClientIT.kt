@@ -10,11 +10,11 @@ import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpMethod
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.client.http.volley.VolleyHttpClient
 
-class VolleyHttpClientIT {
+class HttpClientIT {
 
     private lateinit var server: MockWebServer
 
@@ -32,7 +32,7 @@ class VolleyHttpClientIT {
     @Test
     fun shouldParseCorrectlyJsonResponseWithNoContent() {
         val ctx = InstrumentationRegistry.getInstrumentation().targetContext
-        val client = VolleyHttpClient(ctx)
+        val client = HttpClient(ctx)
 
         server.enqueue(MockResponse().setResponseCode(200))
 

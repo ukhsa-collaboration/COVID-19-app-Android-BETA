@@ -3,7 +3,7 @@
  *
  */
 
-package uk.nhs.nhsx.sonar.android.client.colocation
+package uk.nhs.nhsx.sonar.android.client
 
 import android.util.Log
 import org.json.JSONObject
@@ -12,7 +12,6 @@ import uk.nhs.nhsx.sonar.android.client.http.HttpMethod.PATCH
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.client.http.Promise
 import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
-import uk.nhs.nhsx.sonar.android.client.security.EncryptionKeyStorage
 
 class CoLocationApi(
     private val baseUrl: String,
