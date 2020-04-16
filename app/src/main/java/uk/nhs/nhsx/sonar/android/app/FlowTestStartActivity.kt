@@ -7,7 +7,7 @@ package uk.nhs.nhsx.sonar.android.app
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
+import kotlinx.android.synthetic.main.activity_flow_test_start.start_main_activity
 import org.jetbrains.annotations.TestOnly
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
@@ -38,7 +38,7 @@ class FlowTestStartActivity : AppCompatActivity() {
         appComponent.inject(this)
         setContentView(R.layout.activity_flow_test_start)
 
-        findViewById<AppCompatButton>(R.id.start_main_activity).setOnClickListener {
+        start_main_activity.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
         }
     }

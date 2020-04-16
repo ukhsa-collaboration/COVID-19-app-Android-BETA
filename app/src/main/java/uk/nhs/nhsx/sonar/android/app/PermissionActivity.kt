@@ -12,7 +12,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatButton
+import kotlinx.android.synthetic.main.activity_permission.permission_continue
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
 
 class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
@@ -31,7 +31,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        findViewById<AppCompatButton>(R.id.permission_continue).setOnClickListener {
+        permission_continue.setOnClickListener {
             requestPermissions(
                 arrayOf(
                     Manifest.permission.ACCESS_COARSE_LOCATION,

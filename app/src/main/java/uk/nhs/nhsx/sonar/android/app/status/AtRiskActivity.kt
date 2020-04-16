@@ -7,8 +7,8 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_amber
+import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -30,7 +30,7 @@ class AtRiskActivity : BaseActivity() {
 
         setContentView(R.layout.activity_at_risk)
 
-        findViewById<TextView>(R.id.status_not_feeling_well).setOnClickListener {
+        status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
         }
 

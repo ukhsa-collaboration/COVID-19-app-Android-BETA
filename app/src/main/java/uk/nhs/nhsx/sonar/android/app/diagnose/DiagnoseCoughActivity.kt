@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.RadioGroup
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.confirm_diagnosis
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -31,10 +31,8 @@ class DiagnoseCoughActivity : BaseActivity() {
             onBackPressed()
         }
 
-        val radioGroup = findViewById<RadioGroup>(R.id.cough_diagnosis_answer)
-
-        findViewById<Button>(R.id.confirm_diagnosis).setOnClickListener {
-            when (radioGroup.checkedRadioButtonId) {
+        confirm_diagnosis.setOnClickListener {
+            when (cough_diagnosis_answer.checkedRadioButtonId) {
                 R.id.yes -> {
                     DiagnoseReviewActivity.start(this, hasTemperature, true)
                 }
@@ -48,7 +46,7 @@ class DiagnoseCoughActivity : BaseActivity() {
             }
         }
 
-        radioGroup.setOnCheckedChangeListener { _, _ ->
+        cough_diagnosis_answer.setOnCheckedChangeListener { _, _ ->
             radio_selection_error.visibility = View.GONE
         }
     }

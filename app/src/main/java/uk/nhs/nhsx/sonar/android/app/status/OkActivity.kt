@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
@@ -50,7 +49,7 @@ class OkActivity : BaseActivity() {
 
         setContentView(R.layout.activity_ok)
 
-        findViewById<TextView>(R.id.status_not_feeling_well).setOnClickListener {
+        status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
         }
 

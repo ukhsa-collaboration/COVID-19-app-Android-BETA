@@ -22,7 +22,7 @@ class NotificationHandler @Inject constructor(
         if (!wasHandled) {
             when {
                 isActivation(messageData) -> {
-                    val activationCode = messageData[ACTIVATION_CODE_KEY]!!
+                    val activationCode = messageData.getValue(ACTIVATION_CODE_KEY)
                     activationCodeObserver.onGetActivationCode(activationCode)
                 }
                 isStatusUpdate(messageData) -> {

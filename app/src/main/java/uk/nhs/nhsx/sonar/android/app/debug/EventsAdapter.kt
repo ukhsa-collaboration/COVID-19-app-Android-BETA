@@ -8,10 +8,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.event_error_view_item.view.error_event
 import kotlinx.android.synthetic.main.event_view.view.remote_contact_id
 import kotlinx.android.synthetic.main.event_view.view.rssi
 import kotlinx.android.synthetic.main.event_view.view.time
@@ -33,7 +33,7 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 class EventErrorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bindTo(event: ConnectedDevice) {
-        val errorTextView = itemView.findViewById<TextView>(R.id.error_event)
+        val errorTextView = itemView.error_event
         errorTextView.text = when {
             event.isReadFailure -> {
                 "Read failure"
