@@ -1,6 +1,8 @@
 package uk.nhs.nhsx.sonar.android.app.testhelpers
 
 import android.content.ContextWrapper
+import android.content.Intent
+import androidx.annotation.StringRes
 import android.util.Base64
 import androidx.core.os.bundleOf
 import androidx.test.platform.app.InstrumentationRegistry
@@ -20,12 +22,12 @@ import org.joda.time.DateTime
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ColocateApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
-import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
+import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ID_NOT_REGISTERED
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.client.http.jsonOf
@@ -107,13 +109,16 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         notificationService.onMessageReceived(msg)
     }
 
-    fun clickOnStatusNotification() {
-        val notificationText = testActivity.getString(R.string.notification_text)
-        val notificationTitle = testActivity.getString(R.string.notification_title)
+    fun clickOnNotification(
+        @StringRes notificationTitleRes: Int, @StringRes notificationTextRes: Int,
+        notificationDisplayTimeout: Long = 500
+    ) {
+        val notificationTitle = testActivity.getString(notificationTitleRes)
+        val notificationText = testActivity.getString(notificationTextRes)
 
         device.openNotification()
 
-        device.wait(Until.hasObject(By.text(notificationTitle)), 500)
+        device.wait(Until.hasObject(By.text(notificationTitle)), notificationDisplayTimeout)
 
         // Only title is shown, click on it to toggle notification,
         // on some devices/android version it might trigger the notification action instead
@@ -275,11 +280,22 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun simulateBackendDelay(delayInMillis: Long) {
         testDispatcher.simulateDelay(delayInMillis)
     }
+
+    fun closeNotificationPanel() {
+        val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
+        app.baseContext.sendBroadcast(it)
+    }
 }
 
 class TestTokenRetriever : TokenRetriever {
     override suspend fun retrieveToken() =
         TokenRetriever.Result.Success("test firebase token #010")
+}
+
+class TestReminderTimeProvider : ReminderTimeProvider {
+    override fun provideTime(): Long {
+        return System.currentTimeMillis() + 50
+    }
 }
 
 private fun String.countOccurrences(substring: String): Int =

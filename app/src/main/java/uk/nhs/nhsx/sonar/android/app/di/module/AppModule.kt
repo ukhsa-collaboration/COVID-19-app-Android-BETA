@@ -4,6 +4,7 @@
 
 package uk.nhs.nhsx.sonar.android.app.di.module
 
+import android.app.AlarmManager
 import android.content.Context
 import android.os.Build
 import dagger.Module
@@ -32,6 +33,11 @@ class AppModule(private val applicationContext: Context) {
     @Provides
     @Named(DEVICE_OS_VERSION)
     fun deviceOsVersion(): String = Build.VERSION.SDK_INT.toString()
+
+    @Provides
+    fun provideAlarmManager(context: Context): AlarmManager {
+        return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
 
     companion object {
         const val DISPATCHER_MAIN = "DISPATCHER_MAIN"

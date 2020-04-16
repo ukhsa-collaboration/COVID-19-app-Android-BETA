@@ -17,6 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.TurnBluetoothOnReceiver
 
 const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
 const val NOTIFICATION_ID_LOCATION_IS_DISABLED = 1338
+const val NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED = 1339
 
 fun hideBluetoothIsDisabledNotification(context: Context) {
     NotificationManagerCompat
@@ -28,6 +29,12 @@ fun hideLocationIsDisabledNotification(context: Context) {
     NotificationManagerCompat
         .from(context)
         .cancel(NOTIFICATION_ID_LOCATION_IS_DISABLED)
+}
+
+fun hideRegistrationNotFinishedNotification(context: Context) {
+    NotificationManagerCompat
+        .from(context)
+        .cancel(NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED)
 }
 
 fun showBluetoothIsDisabledNotification(context: Context) {
@@ -64,6 +71,19 @@ fun showLocationIsDisabledNotification(context: Context) {
     )
 }
 
+fun showRegistrationReminderNotification(context: Context) {
+    val notificationId = NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED
+
+    showNotification(
+        context,
+        notificationId,
+        context.getString(R.string.notification_registration_failed_title),
+        context.getString(R.string.notification_registration_failed_text),
+        "",
+        autoCancel = true
+    )
+}
+
 fun Context.notificationBuilder(): NotificationCompat.Builder =
     NotificationCompat.Builder(this, createNotificationChannelReturningId())
         .setSmallIcon(R.mipmap.ic_launcher_round)
@@ -75,19 +95,27 @@ private fun showNotification(
     contentTitle: String,
     contentText: String,
     actionTitle: String,
-    actionPendingIntent: PendingIntent
+    actionPendingIntent: PendingIntent? = null,
+    autoCancel: Boolean = true
 ) {
     val builder = context
         .notificationBuilder()
         .setSmallIcon(R.mipmap.ic_launcher_round)
         .setContentTitle(contentTitle)
-        .setContentText(contentText)
+        .setStyle(
+            NotificationCompat.BigTextStyle()
+                .bigText(contentText)
+        )
         .setPriority(NotificationCompat.PRIORITY_MAX)
         .setContentIntent(mainActivityPendingContent(context))
-        .setAutoCancel(true)
+        .setAutoCancel(autoCancel)
         .setOngoing(true)
         .setColor(context.getColor(R.color.colorAccent))
-        .addAction(0, actionTitle, actionPendingIntent)
+        .apply {
+            if (actionPendingIntent != null) {
+                addAction(0, actionTitle, actionPendingIntent)
+            }
+        }
 
     NotificationManagerCompat
         .from(context)

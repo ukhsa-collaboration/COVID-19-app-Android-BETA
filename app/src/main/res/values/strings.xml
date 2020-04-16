@@ -104,4 +104,6 @@
     <string name="app_rationale">This app can let you know if you may have been near someone with coronavirus symptoms (COVID-19).</string>
     <string name="back">Back</string>
     <string name="explanation_privacy_policy_and_terms_and_conditions">Read our privacy policy and terms and conditions.</string>
+    <string name="notification_registration_failed_title">Your registration has failed</string>
+    <string name="notification_registration_failed_text">Please open the app and select retry to complete your registration.</string>
 </resources>

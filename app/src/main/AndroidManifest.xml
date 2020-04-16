@@ -81,6 +81,9 @@
 
         <receiver android:name=".TurnBluetoothOnReceiver" />
         <receiver android:name=".ServiceRestarterBroadcastReceiver" />
+        <receiver android:name=".notifications.RegistrationReminderBroadcastReceiver">
+
+        </receiver>
 
         <provider
             android:name="androidx.core.content.FileProvider"

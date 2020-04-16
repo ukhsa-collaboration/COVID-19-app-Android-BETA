@@ -21,6 +21,7 @@ import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ViewState
+import uk.nhs.nhsx.sonar.android.app.notifications.ReminderManager
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.status.OkViewModel
 import java.util.concurrent.TimeoutException
@@ -39,8 +40,10 @@ class OkViewModelTest {
     private val registrationUseCase = mockk<RegistrationUseCase>(relaxed = true)
     private val onboardingStatusProvider = mockk<OnboardingStatusProvider>(relaxed = true)
     private val sonarIdProvider = mockk<SonarIdProvider>(relaxed = true)
+    private val reminderManager = mockk<ReminderManager>(relaxed = true)
     private val observer = mockk<Observer<ViewState>>(relaxed = true)
-    private val sut = OkViewModel(registrationUseCase, onboardingStatusProvider, sonarIdProvider)
+    private val sut =
+        OkViewModel(registrationUseCase, onboardingStatusProvider, sonarIdProvider, reminderManager)
 
     @Before
     fun setUp() {
@@ -51,7 +54,6 @@ class OkViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain() // reset main dispatcher to the original Main dispatcher
-        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test
@@ -147,6 +149,33 @@ class OkViewModelTest {
         verifyOrder {
             observer.onChanged(ViewState.Progress)
             observer.onChanged(ViewState.Error)
+        }
+    }
+
+    @Test
+    fun onRegistrationFailureSetReminder() = runBlockingTest {
+        val exception = TimeoutException()
+        coEvery { registrationUseCase.register() } returns RegistrationResult.Failure(exception)
+
+        sut.register()
+
+        verify(exactly = 1) {
+            reminderManager.setupReminder()
+        }
+    }
+
+    @Test
+    fun onRegistrationSuccessCancelReminder() = runBlockingTest {
+        coEvery { registrationUseCase.register() } returns RegistrationResult.Success
+
+        sut.register()
+
+        verify(exactly = 1) {
+            reminderManager.cancelReminder()
+            reminderManager.hideReminderNotification()
+        }
+        verify(exactly = 0) {
+            reminderManager.setupReminder()
         }
     }
 }

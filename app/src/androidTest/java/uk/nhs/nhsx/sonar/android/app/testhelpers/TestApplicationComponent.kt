@@ -17,6 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
+import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import javax.inject.Singleton
 
@@ -76,4 +77,9 @@ class TestModule {
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
         TestTokenRetriever()
+
+    @Provides
+    fun provideReminderTimeProvider(): ReminderTimeProvider =
+        TestReminderTimeProvider()
+
 }

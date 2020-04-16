@@ -59,6 +59,7 @@ class FlowTest {
     fun setup() {
         testAppContext = TestApplicationContext(activityRule)
         ensureBluetoothEnabled()
+        testAppContext.closeNotificationPanel()
 
         clearDatabase()
         resetOnboarding()
@@ -180,7 +181,7 @@ class FlowTest {
 
         testAppContext.apply {
             simulateStatusUpdateReceived()
-            clickOnStatusNotification()
+            clickOnNotification(R.string.notification_title, R.string.notification_text)
         }
 
         checkAtRiskActivityIsShown()
@@ -234,6 +235,28 @@ class FlowTest {
         setFinishedOnboarding()
 
         onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkOkActivityIsShown()
+    }
+
+    @Test
+    fun testReceivingReminderNotification() {
+        setFinishedOnboarding()
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkOkActivityIsShown()
+
+        testAppContext.simulateBackendResponse(error = true)
+
+        onView(withId(R.id.registrationRetryButton)).perform(click())
+
+        testAppContext.apply {
+            clickOnNotification(
+                R.string.notification_registration_failed_title,
+                R.string.notification_registration_failed_text,
+                10_000
+            )
+        }
 
         checkOkActivityIsShown()
     }

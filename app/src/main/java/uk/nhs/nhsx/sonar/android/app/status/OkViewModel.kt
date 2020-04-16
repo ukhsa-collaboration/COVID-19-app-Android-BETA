@@ -6,7 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ViewState
+import uk.nhs.nhsx.sonar.android.app.notifications.ReminderManager
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationResult
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationUseCase
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class OkViewModel @Inject constructor(
     private val registrationUseCase: RegistrationUseCase,
     private val onboardingStatusProvider: OnboardingStatusProvider,
-    private val sonarIdProvider: SonarIdProvider
+    private val sonarIdProvider: SonarIdProvider,
+    private val reminderManager: ReminderManager
 ) : ViewModel() {
 
     private val viewState = MutableLiveData<ViewState>()
@@ -26,13 +29,19 @@ class OkViewModel @Inject constructor(
     }
 
     fun register() {
+        Timber.d("register")
         viewModelScope.launch {
             viewState.value = ViewState.Progress
             val startTime = Date().time
             val registrationResult = registrationUseCase.register()
             viewState.value = when (registrationResult) {
-                RegistrationResult.Success, RegistrationResult.AlreadyRegistered -> ViewState.Success
+                RegistrationResult.Success, RegistrationResult.AlreadyRegistered -> {
+                    reminderManager.cancelReminder()
+                    reminderManager.hideReminderNotification()
+                    ViewState.Success
+                }
                 is RegistrationResult.Failure -> {
+                    reminderManager.setupReminder()
                     waitForReadability(startTime)
                     ViewState.Error
                 }
