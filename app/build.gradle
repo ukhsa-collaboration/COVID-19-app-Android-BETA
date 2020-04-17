@@ -1,9 +1,9 @@
-import org.ccil.cowan.tagsoup.Parser
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-
 /*
  * Copyright © 2020 NHSX. All rights reserved.
  */
+
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.ccil.cowan.tagsoup.Parser
 
 def signingKeyAlias = project.hasProperty('SIGNING_KEY_ALIAS') ? project.SIGNING_KEY_ALIAS : 'dummy-keystore'
 def signingKeyStore = project.hasProperty('SIGNING_KEY_STORE') ? project.SIGNING_KEY_STORE : 'dummy-keystore'

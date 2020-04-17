@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
 def fileFilter = [
     '**/R.class',
     '**/R$*.class',

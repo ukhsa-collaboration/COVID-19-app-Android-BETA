@@ -1,12 +1,16 @@
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:aapt="http://schemas.android.com/aapt"
-    android:width="188dp"
-    android:height="120dp"
-    android:viewportWidth="188"
-    android:viewportHeight="120">
+        xmlns:aapt="http://schemas.android.com/aapt"
+        android:width="188dp"
+        android:height="120dp"
+        android:viewportWidth="188"
+        android:viewportHeight="120">
     <path
         android:pathData="M10,120H58C63.521,119.993 67.993,115.521 68,110V10C67.993,4.479 63.521,0.007 58,0H10C4.479,0.007 0.007,4.479 0,10V110C0.007,115.521 4.479,119.993 10,120ZM4,10C4,6.687 6.687,4 10,4H58C61.313,4 64,6.687 64,10V110C64,113.313 61.313,116 58,116H10C6.687,116 4,113.313 4,110V10Z"
-        android:fillColor="#005EB8" />
+        android:fillColor="#005EB8"/>
     <path
         android:strokeWidth="1"
         android:pathData="M57.5,86.999C57.495,90.584 54.566,93.496 50.941,93.5H17.059C13.434,93.496 10.505,90.584 10.5,87V17C10.505,13.416 13.434,10.505 17.059,10.5H50.941C54.566,10.505 57.495,13.416 57.5,17.001V86.999ZM17.059,12.3C14.448,12.3 12.323,14.401 12.323,17V87C12.323,89.6 14.448,91.7 17.059,91.7H50.941C53.552,91.7 55.676,89.6 55.676,87V17C55.676,14.401 53.552,12.3 50.941,12.3H17.059Z"

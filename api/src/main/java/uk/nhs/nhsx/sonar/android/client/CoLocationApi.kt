@@ -1,6 +1,5 @@
 /*
  * Copyright © 2020 NHSX. All rights reserved.
- *
  */
 
 package uk.nhs.nhsx.sonar.android.client
@@ -49,17 +48,16 @@ private fun CoLocationData.toJson(): JSONObject =
     jsonObjectOf(
         "contactEvents" to contactEvents.map {
             if (it.sonarId != null) mapOf(
-                "sonarId" to it.sonarId, "rssiValues" to it.rssiValues,
+                "sonarId" to it.sonarId,
+                "rssiValues" to it.rssiValues,
                 "timestamp" to it.timestamp,
                 "duration" to it.duration
-
             )
             else mapOf(
                 "encryptedRemoteContactId" to it.encryptedRemoteContactId,
                 "rssiValues" to it.rssiValues,
                 "timestamp" to it.timestamp,
                 "duration" to it.duration
-
             )
         }
     )

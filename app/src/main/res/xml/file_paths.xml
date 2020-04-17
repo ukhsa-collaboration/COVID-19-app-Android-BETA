@@ -1,5 +1,9 @@
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
 <paths>
     <files-path
         name="files"
-        path="." />
+        path="."/>
 </paths>
