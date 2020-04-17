@@ -41,7 +41,7 @@ class OkViewModel @Inject constructor(
                     ViewState.Success
                 }
                 is RegistrationResult.Failure -> {
-                    reminderManager.setupReminder()
+                    reminderManager.scheduleReminder()
                     waitForReadability(startTime)
                     ViewState.Error
                 }

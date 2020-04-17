@@ -4,11 +4,18 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.util.showRegistrationReminderNotification
+import uk.nhs.nhsx.sonar.android.app.appComponent
+import javax.inject.Inject
 
 class RegistrationReminderBroadcastReceiver : BroadcastReceiver() {
+
+    @Inject
+    lateinit var reminderManager: ReminderManager
+
     override fun onReceive(context: Context, intent: Intent) {
         Timber.d("onReceive $intent")
-        showRegistrationReminderNotification(context)
+        context.appComponent.inject(this)
+
+        reminderManager.handleReminderBroadcast()
     }
 }

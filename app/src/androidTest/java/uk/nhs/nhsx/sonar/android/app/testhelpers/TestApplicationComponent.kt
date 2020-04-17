@@ -81,5 +81,4 @@ class TestModule {
     @Provides
     fun provideReminderTimeProvider(): ReminderTimeProvider =
         TestReminderTimeProvider()
-
 }

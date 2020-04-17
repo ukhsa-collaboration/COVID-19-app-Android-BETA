@@ -160,7 +160,7 @@ class OkViewModelTest {
         sut.register()
 
         verify(exactly = 1) {
-            reminderManager.setupReminder()
+            reminderManager.scheduleReminder()
         }
     }
 
@@ -175,7 +175,7 @@ class OkViewModelTest {
             reminderManager.hideReminderNotification()
         }
         verify(exactly = 0) {
-            reminderManager.setupReminder()
+            reminderManager.scheduleReminder()
         }
     }
 }

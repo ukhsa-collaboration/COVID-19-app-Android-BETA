@@ -2,8 +2,8 @@ package uk.nhs.nhsx.sonar.android.app.testhelpers
 
 import android.content.ContextWrapper
 import android.content.Intent
-import androidx.annotation.StringRes
 import android.util.Base64
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
@@ -32,6 +32,7 @@ import uk.nhs.nhsx.sonar.android.app.registration.ID_NOT_REGISTERED
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.client.http.jsonOf
 import java.nio.charset.Charset
+import java.util.Calendar
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -110,7 +111,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun clickOnNotification(
-        @StringRes notificationTitleRes: Int, @StringRes notificationTextRes: Int,
+        @StringRes notificationTitleRes: Int,
+        @StringRes notificationTextRes: Int,
         notificationDisplayTimeout: Long = 500
     ) {
         val notificationTitle = testActivity.getString(notificationTitleRes)
@@ -293,8 +295,11 @@ class TestTokenRetriever : TokenRetriever {
 }
 
 class TestReminderTimeProvider : ReminderTimeProvider {
-    override fun provideTime(): Long {
+    override fun provideNextReminderTime(): Long {
         return System.currentTimeMillis() + 50
+    }
+
+    override fun setLastReminderNotificationTime(time: Calendar) {
     }
 }
 
