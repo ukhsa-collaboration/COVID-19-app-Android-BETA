@@ -64,7 +64,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         viewModel.observeConnectionEvents().observe(this, Observer {
-            Timber.d("<<<< devices are $it")
+            Timber.d("Devices are $it")
             if (it.isEmpty()) no_events.visibility = View.VISIBLE
             else {
                 no_events.visibility = View.GONE

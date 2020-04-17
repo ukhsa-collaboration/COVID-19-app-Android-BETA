@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
+import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import java.io.File
 import java.util.zip.ZipEntry
@@ -25,11 +26,15 @@ class TestViewModel @Inject constructor(
 
     fun clear() {
         viewModelScope.launch {
+
+            context.stopService(Intent(context, BluetoothService::class.java))
+
             contactEventDao.clearEvents()
             eventTracker.clear()
             withContext(Dispatchers.IO) {
                 FirebaseInstanceId.getInstance().deleteInstanceId()
             }
+
             MainActivity.start(context)
         }
     }
