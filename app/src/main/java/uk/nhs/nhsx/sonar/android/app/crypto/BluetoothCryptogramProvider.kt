@@ -53,6 +53,6 @@ class BluetoothCryptogramProvider @Inject constructor(
         val encodedStartDate = latestDate!!.encodeAsSecondsSinceEpoch()
         val encodedEndDate = latestDate!!.encodeAsSecondsSinceEpoch(offset.seconds)
         val residentIdBytes = Identifier.fromString(sonarIdProvider.getSonarId()).asBytes
-        return encrypter.encrypt(encodedStartDate + encodedEndDate + residentIdBytes + byteArrayOf(0x00, 0x00))
+        return encrypter.encrypt(encodedStartDate + encodedEndDate + residentIdBytes + byteArrayOf('G'.toByte(), 'B'.toByte()))
     }
 }
