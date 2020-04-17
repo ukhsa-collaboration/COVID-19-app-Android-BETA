@@ -8,11 +8,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_review_diagnosis.confirm_diagnosis
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submission_error
+import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_prompt
+import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
+import org.joda.time.DateTime
+import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -31,6 +36,9 @@ class DiagnoseReviewActivity : BaseActivity() {
     @Inject
     protected lateinit var viewModelFactory: ViewModelFactory<DiagnoseReviewViewModel>
 
+    @Inject
+    protected lateinit var symptomsStateProvider: SymptomsStateProvider
+
     private val viewModel: DiagnoseReviewViewModel by viewModels {
         viewModelFactory
     }
@@ -43,6 +51,8 @@ class DiagnoseReviewActivity : BaseActivity() {
         intent.getBooleanExtra(HAS_COUGH, false)
     }
 
+    private val symptomsState by lazy { symptomsStateProvider.getOrDefault() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -54,7 +64,12 @@ class DiagnoseReviewActivity : BaseActivity() {
             onBackPressed()
         }
 
-        viewModel.isolationResult.observe(this, Observer { result ->
+        setSymptomsQuestion()
+
+        setDateSpinner()
+
+        viewModel.isolationResult.observe(this, Observer
+        { result ->
             if (result is ViewState.Success) {
                 viewModel.clearContactEvents()
 
@@ -78,10 +93,50 @@ class DiagnoseReviewActivity : BaseActivity() {
         }
     }
 
+    private fun setDateSpinner() {
+        val adapter = SpinnerAdapter(this)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        symptoms_date_spinner.adapter = adapter
+        symptoms_date_spinner.setSelection(0)
+
+        symptoms_date_spinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    symptomsState.dateStarted = DateTime.now().millis
+                }
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    symptomsState.dateStarted = DateTime.now().minusDays(position).millis
+                }
+            }
+    }
+
+    private fun setSymptomsQuestion() {
+        when {
+            hasCough and hasTemperature -> symptoms_date_prompt.text =
+                getString(R.string.symptoms_date_prompt_all)
+            hasTemperature -> symptoms_date_prompt.text =
+                getString(R.string.symptoms_date_prompt_temperature)
+            else -> symptoms_date_prompt.text = getString(R.string.symptoms_date_prompt_cough)
+        }
+    }
+
     private fun updateStatusAndNavigate() {
+        symptomsState.hasCough = hasCough
+        symptomsState.hasTemperature = hasTemperature
         if (hasCough or hasTemperature) {
+            symptomsState.status = CovidStatus.RED
             statusStorage.update(CovidStatus.RED)
         }
+
+        symptomsStateProvider.update(symptomsState)
+
+        Timber.d(symptomsStateProvider.getOrDefault().toString())
 
         navigateTo(statusStorage.get())
     }

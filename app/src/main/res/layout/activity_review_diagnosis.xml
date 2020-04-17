@@ -40,32 +40,50 @@
             android:textColor="@color/text_sub_title"
             android:textSize="16sp" />
 
+        <TextView
+            android:id="@+id/symptoms_date_prompt"
+            style="@style/TextViewSubHead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/review_description"
+            android:layout_marginTop="16dp" />
+
+
+        <Spinner
+            android:id="@+id/symptoms_date_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/symptoms_date_prompt"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/spinner_background" />
+
     </RelativeLayout>
 
     <TextView
         android:id="@+id/submission_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/submission_error"
-        android:textColor="@color/colorDanger"
+        android:layout_above="@id/confirm_diagnosis"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/submission_error"
+        android:textColor="@color/colorDanger"
         android:textSize="16sp"
-        android:layout_above="@id/confirm_diagnosis"
         android:visibility="gone" />
 
 
     <androidx.appcompat.widget.AppCompatButton
-        style="@style/PrimaryButton"
         android:id="@+id/confirm_diagnosis"
+        style="@style/PrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
-        android:text="@string/submit"/>
+        android:text="@string/submit" />
+
 
 </RelativeLayout>
