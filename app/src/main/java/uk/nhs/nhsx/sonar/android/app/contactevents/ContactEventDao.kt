@@ -27,56 +27,10 @@ interface ContactEventDao {
         val sorted = getAll().sortedBy { it.timestamp }
         Timber.d("all events $sorted")
         val eventsById = sorted.filter { it.sonarId.contentEquals(newEvent.sonarId) }
-        for (event in eventsById.subList(0, eventsById.size)) {
-            val newEventTime = DateTime(newEvent.timestamp, DateTimeZone.UTC)
-            val storedEventTimeStart = DateTime(event.timestamp, DateTimeZone.UTC)
-            val storedEventTimeEnd =
-                DateTime(event.timestamp, DateTimeZone.UTC).plus(Seconds.seconds(event.duration))
-
-            val rssis = event.rssiValues
-            val rssiTimestamps = event.rssiTimestamps
-
-            if (newEventTime.isBefore(storedEventTimeStart) &&
-                newEventTime.isAfter(storedEventTimeStart.minus(Seconds.seconds(errorMargin)))
-            ) {
-                event.copy(
-                    timestamp = newEvent.timestamp,
-                    duration = event.duration + Seconds.secondsBetween(
-                        newEventTime,
-                        storedEventTimeStart
-                    ).seconds,
-                    rssiValues = newEvent.rssiValues.plus(rssis),
-                    rssiTimestamps = newEvent.rssiTimestamps.plus(rssiTimestamps)
-                )
-                return
-            } else if (newEventTime.isAfter(storedEventTimeEnd) &&
-                newEventTime.isBefore(storedEventTimeEnd.plus(Seconds.seconds(errorMargin)))
-            ) {
-                update(
-                    event.copy(
-                        duration = event.duration +
-                            Seconds.secondsBetween(storedEventTimeEnd, newEventTime).seconds,
-                        rssiValues = rssis.plus(newEvent.rssiValues),
-                        rssiTimestamps = rssiTimestamps.plus(newEvent.rssiTimestamps)
-                    )
-                )
-                return
-            } else if (newEventTime.isAfter(storedEventTimeStart) &&
-                newEventTime.isBefore(storedEventTimeEnd)
-            ) {
-                val rssisAndTimestamps =
-                    (rssis.zip(rssiTimestamps) + Pair(newEvent.rssiValues.first(), newEvent.rssiTimestamps.first()))
-                        .sortedBy { it.second }
-                update(
-                    event.copy(
-                        duration = event.duration +
-                            Seconds.secondsBetween(storedEventTimeStart, newEventTime).seconds,
-                        rssiValues = rssisAndTimestamps.map { it.first },
-                        rssiTimestamps = rssisAndTimestamps.map { it.second }
-                    )
-                )
-                return
-            }
+        val matchedEvent = aggregate(newEvent, eventsById, errorMargin)
+        if (matchedEvent != null) {
+            update(matchedEvent)
+            return
         }
         // no event within error margin
         Timber.d("saving No matching event; inserting $newEvent")
@@ -91,4 +45,50 @@ interface ContactEventDao {
 
     @Query("DELETE FROM ${ContactEvent.TABLE_NAME} WHERE timestamp < :timestamp")
     suspend fun clearOldEvents(timestamp: Long)
+}
+
+fun aggregate(newEvent: ContactEvent, events: List<ContactEvent>, errorMargin: Int): ContactEvent? {
+    for (event in events) {
+        val newEventTime = DateTime(newEvent.timestamp, DateTimeZone.UTC)
+        val storedEventTimeStart = DateTime(event.timestamp, DateTimeZone.UTC)
+        val storedEventTimeEnd =
+            DateTime(event.timestamp, DateTimeZone.UTC).plus(Seconds.seconds(event.duration))
+
+        val rssis = event.rssiValues
+        val rssiTimestamps = event.rssiTimestamps
+
+        if (newEventTime.isBefore(storedEventTimeStart) &&
+            newEventTime.isAfter(storedEventTimeStart.minus(Seconds.seconds(errorMargin)))
+        ) {
+            return event.copy(
+                timestamp = newEvent.timestamp,
+                duration = Seconds.secondsBetween(newEventTime, storedEventTimeEnd).seconds,
+                rssiValues = newEvent.rssiValues.plus(rssis),
+                rssiTimestamps = newEvent.rssiTimestamps.plus(rssiTimestamps)
+            )
+        } else if (newEventTime.isAfter(storedEventTimeEnd) &&
+            newEventTime.isBefore(storedEventTimeEnd.plus(Seconds.seconds(errorMargin)))
+        ) {
+            return event.copy(
+                duration = Seconds.secondsBetween(storedEventTimeStart, newEventTime).seconds,
+                rssiValues = rssis.plus(newEvent.rssiValues),
+                rssiTimestamps = rssiTimestamps.plus(newEvent.rssiTimestamps)
+            )
+        } else if (newEventTime.isAfter(storedEventTimeStart) &&
+            newEventTime.isBefore(storedEventTimeEnd)
+        ) {
+            val rssisAndTimestamps =
+                (rssis.zip(rssiTimestamps) + Pair(
+                    newEvent.rssiValues.first(),
+                    newEvent.rssiTimestamps.first()
+                ))
+                    .sortedBy { it.second }
+            return event.copy(
+                rssiValues = rssisAndTimestamps.map { it.first },
+                rssiTimestamps = rssisAndTimestamps.map { it.second }
+            )
+        }
+    }
+
+    return null
 }
