@@ -12,7 +12,7 @@ import java.io.IOException
 class PromiseTest {
 
     @Test
-    fun testSuccessHandling_WhenSubscribingBeforeResolution() {
+    fun `test success handling, when subscribing before resolution`() {
         var successValue: String? = null
         var errorValue: Exception? = null
 
@@ -34,7 +34,7 @@ class PromiseTest {
     }
 
     @Test
-    fun testSuccessHandling_WhenSubscribingAfterResolution() {
+    fun `test success handling, when subscribing after resolution`() {
         var successValue: String? = null
         var errorValue: Exception? = null
 
@@ -56,7 +56,7 @@ class PromiseTest {
     }
 
     @Test
-    fun testErrorHandling_WhenSubscribingBeforeResolution() {
+    fun `test error handling, when subscribing before resolution`() {
         var successValue: String? = null
         var errorValue: Exception? = null
 
@@ -80,7 +80,7 @@ class PromiseTest {
     }
 
     @Test
-    fun testErrorHandling_WhenSubscribingAfterResolution() {
+    fun `test error handling, when subscribing after resolution`() {
         var successValue: String? = null
         var errorValue: Exception? = null
 
@@ -104,7 +104,7 @@ class PromiseTest {
     }
 
     @Test
-    fun testPromiseTriggersOnlyOnce() {
+    fun `test promise triggers only once`() {
         var count = 0
 
         val deferred = Deferred<Int>()

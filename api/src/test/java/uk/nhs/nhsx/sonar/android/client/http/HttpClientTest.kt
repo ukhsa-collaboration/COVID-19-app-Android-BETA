@@ -11,13 +11,13 @@ import org.json.JSONObject
 import org.junit.Test
 import java.util.Base64
 
-class HttpClientShould {
+class HttpClientTest {
 
     private val queue = TestQueue()
     private val httpClient = HttpClient(queue) { Base64.getEncoder().encodeToString(it) }
 
     @Test
-    fun testSend_PostRequest_WithoutEncryptionKey() {
+    fun `test send() POST request, without encryption key`() {
         val inputRequest = HttpRequest(HttpMethod.POST, "http://localhost:123/api", jsonObjectOf("foo" to "bar"))
         val promise = httpClient.send(inputRequest)
 
@@ -33,7 +33,7 @@ class HttpClientShould {
     }
 
     @Test
-    fun testSend_PatchRequest_WithEncryptionKey() {
+    fun `test send() PATCH request, with encryption key`() {
         val inputRequest =
             HttpRequest(
                 method = HttpMethod.PATCH,
@@ -55,7 +55,7 @@ class HttpClientShould {
     }
 
     @Test
-    fun testSend_OnSuccess() {
+    fun `test send() on success`() {
         val inputRequest = HttpRequest(HttpMethod.GET, "http://localhost:123/api")
         val promise = httpClient.send(inputRequest)
 
@@ -68,7 +68,7 @@ class HttpClientShould {
     }
 
     @Test
-    fun testSend_OnFailure() {
+    fun `test send() on failure`() {
         val inputRequest = HttpRequest(HttpMethod.GET, "http://localhost:123/api")
         val promise = httpClient.send(inputRequest)
 

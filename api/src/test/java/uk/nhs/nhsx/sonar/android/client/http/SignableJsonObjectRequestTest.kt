@@ -10,10 +10,10 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
 import java.util.Base64
 
-class SignableJsonObjectRequestShould {
+class SignableJsonObjectRequestTest {
 
     @Test
-    fun testHeaders() {
+    fun `test getHeaders() for a signed request`() {
         val request = SignableJsonObjectRequest(
             HttpRequest(
                 method = HttpMethod.POST,

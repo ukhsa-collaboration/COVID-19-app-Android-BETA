@@ -14,7 +14,7 @@ import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.TestQueue
 import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
 
-class ResidentApiShould {
+class ResidentApiTest {
 
     private val encryptionKeyStorage = mockk<KeyStorage>(relaxed = true)
     private val requestQueue = TestQueue()
@@ -23,7 +23,7 @@ class ResidentApiShould {
     private val residentApi = ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
 
     @Test
-    fun testRegister_Request() {
+    fun `test register() request`() {
         val promise = residentApi.register("some-token")
 
         assertThat(promise.isInProgress).isTrue()
@@ -34,7 +34,7 @@ class ResidentApiShould {
     }
 
     @Test
-    fun testRegister_OnSuccess() {
+    fun `test register() on success`() {
         val promise = residentApi.register("some-token")
         requestQueue.returnSuccess(JSONObject())
 
@@ -42,7 +42,7 @@ class ResidentApiShould {
     }
 
     @Test
-    fun testRegister_OnError() {
+    fun `test register() on error`() {
         val promise = residentApi.register("some-token")
         requestQueue.returnError(VolleyError("boom"))
 
@@ -52,7 +52,7 @@ class ResidentApiShould {
     }
 
     @Test
-    fun testConfirmDevice_Request() {
+    fun `test confirmDevice() request`() {
         val confirmation = DeviceConfirmation(
             activationCode = "::activation code::",
             pushToken = "::push token::",
@@ -76,7 +76,7 @@ class ResidentApiShould {
     }
 
     @Test
-    fun testConfirmDevice_OnSuccess() {
+    fun `test confirmDevice() on success`() {
         val confirmation = DeviceConfirmation(
             activationCode = "::activation code::",
             pushToken = "::push token::",
@@ -100,7 +100,7 @@ class ResidentApiShould {
     }
 
     @Test
-    fun testConfirmDevice_OnError() {
+    fun `test confirmDevice() on error`() {
         val confirmation = DeviceConfirmation(
             activationCode = "::activation code::",
             pushToken = "::push token::",

@@ -17,7 +17,7 @@ class AcknowledgementsApiTest {
     private val acknowledgementsApi = AcknowledgementsApi(httpClient)
 
     @Test
-    fun testSend() {
+    fun `test send()`() {
         acknowledgementsApi.send("https://api.example.com/ack/10012")
 
         val request = requestQueue.lastRequest

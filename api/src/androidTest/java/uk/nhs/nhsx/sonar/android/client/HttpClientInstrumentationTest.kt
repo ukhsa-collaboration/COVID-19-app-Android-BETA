@@ -18,7 +18,7 @@ import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpMethod
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 
-class HttpClientIT {
+class HttpClientInstrumentationTest {
 
     private lateinit var server: MockWebServer
 
@@ -34,7 +34,7 @@ class HttpClientIT {
     }
 
     @Test
-    fun shouldParseCorrectlyJsonResponseWithNoContent() {
+    fun testSend_WhenResponseHasNoContent() {
         val ctx = InstrumentationRegistry.getInstrumentation().targetContext
         val client = HttpClient(ctx)
 

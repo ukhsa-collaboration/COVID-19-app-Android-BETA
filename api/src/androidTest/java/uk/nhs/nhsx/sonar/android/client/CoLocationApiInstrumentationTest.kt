@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.crypto.KeyGenerator
 
 @RunWith(AndroidJUnit4::class)
-class CoLocationApiIT {
+class CoLocationApiInstrumentationTest {
     lateinit var server: MockWebServer
     lateinit var keyStorage: KeyStorage
 
@@ -44,7 +44,7 @@ class CoLocationApiIT {
     }
 
     @Test
-    fun shouldSendCoLocationData() {
+    fun testSave() {
         val ctx = InstrumentationRegistry.getInstrumentation().targetContext
         val httpClient = HttpClient(ctx)
         val coLocationApi = CoLocationApi("http://localhost:8089", keyStorage, httpClient)
