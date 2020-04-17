@@ -21,6 +21,7 @@ import org.joda.time.DateTimeZone
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -82,7 +83,7 @@ class Scan @Inject constructor(
     override fun start(coroutineScope: CoroutineScope) {
         coroutineScope.launch {
             Timber.d("scan - Kicking off delay")
-            delay(2 * 60_000)
+            delay(5 * 60_000)
             Timber.d("scan - Restarting")
             stop()
             delay(10_000)
@@ -95,6 +96,9 @@ class Scan @Inject constructor(
                 coLocateBackgroundedIPhoneFilter,
                 coLocateServiceUuidFilter
             )
+            .filter {
+                it.bleDevice.connectionState == RxBleConnection.RxBleConnectionState.DISCONNECTED
+            }
             .subscribe(
                 {
                     Timber.d("Scan found = ${it.bleDevice}")
@@ -111,7 +115,8 @@ class Scan @Inject constructor(
 
     private fun connectToDevice(scanResult: ScanResult, coroutineScope: CoroutineScope) {
         val macAddress = scanResult.bleDevice.macAddress
-        Timber.d("Connectiing to $macAddress")
+
+        Timber.d("Connecting to $macAddress")
         var connectionDisposable: Disposable? = null
         scanResult
             .bleDevice
@@ -120,25 +125,33 @@ class Scan @Inject constructor(
                 Timber.d("Disconnecting from $connectionDisposable")
                 connectionDisposable?.dispose()
                 connectionDisposable = null
-            }.flatMapSingle { connection ->
-                // TODO: Only necessary if encryption enabled - Can't be equal to Cryptogram size, seems there's some overhead
+            }
+            .flatMapSingle { connection ->
+                // TODO: Figure out appropriate size - Can't be equal to Cryptogram size, seems there's some overhead
+                // If not negotiated we get 600 bytes back, go figure.
                 connection.requestMtu(120)
                     .doOnSubscribe { Timber.i("Negotiating MTU started") }
+                    .doOnError { e ->
+                        Timber.e("Failed to negotiate MTU: $e")
+                        throw e
+                    }
                     .doOnSuccess { Timber.i("Negotiated MTU: $it") }
                     .ignoreElement()
                     .andThen(Single.just(connection))
             }
             .flatMapSingle {
-                Timber.d("Reading from - MAC:$macAddress")
                 read(it, coroutineScope)
+            }
+            .retryWhen {
+                Timber.e("Failed to read, retrying")
+                it.delay(3, TimeUnit.SECONDS)
             }
             .subscribe(
                 { event ->
                     onReadSuccess(event)
                 },
                 { e ->
-                    Timber.d("failed reading from $macAddress")
-                    onReadError(e)
+                    Timber.e("failed reading from $macAddress - $e")
                 }
             ).let { connectionDisposable = it }
     }
@@ -156,10 +169,6 @@ class Scan @Inject constructor(
     private fun onConnectionError(e: Throwable) {
         bleEvents.scanFailureEvent()
         Timber.e("Connection failed with: $e")
-    }
-
-    private fun onReadError(e: Throwable) {
-        Timber.e("Failed to read from remote device: $e")
     }
 
     private fun onReadSuccess(event: Event) {

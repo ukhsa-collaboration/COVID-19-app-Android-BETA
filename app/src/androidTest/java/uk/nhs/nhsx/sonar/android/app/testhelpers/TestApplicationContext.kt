@@ -203,7 +203,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             )
         )
 
-        val dao = testActivity.appDatabase.contactEventV2Dao()
+        val dao = testActivity.appDatabase.contactEventDao()
         await until {
             runBlocking { dao.getAll().size } == 2
         }
@@ -232,7 +232,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             )
         )
         await until {
-            runBlocking { dao.getAll().size } == 4
+            runBlocking { dao.getAll().size } > 3
         }
     }
 

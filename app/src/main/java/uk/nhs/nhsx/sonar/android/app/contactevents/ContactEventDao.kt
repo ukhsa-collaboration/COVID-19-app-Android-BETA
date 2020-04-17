@@ -34,14 +34,19 @@ interface ContactEventDao {
                 DateTime(event.timestamp, DateTimeZone.UTC).plus(Seconds.seconds(event.duration))
 
             val rssis = event.rssiValues
+            val rssiTimestamps = event.rssiTimestamps
 
             if (newEventTime.isBefore(storedEventTimeStart) &&
                 newEventTime.isAfter(storedEventTimeStart.minus(Seconds.seconds(errorMargin)))
             ) {
                 event.copy(
                     timestamp = newEvent.timestamp,
-                    duration = event.duration + Seconds.secondsBetween(newEventTime, storedEventTimeStart).seconds,
-                    rssiValues = newEvent.rssiValues.plus(rssis)
+                    duration = event.duration + Seconds.secondsBetween(
+                        newEventTime,
+                        storedEventTimeStart
+                    ).seconds,
+                    rssiValues = newEvent.rssiValues.plus(rssis),
+                    rssiTimestamps = newEvent.rssiTimestamps.plus(rssiTimestamps)
                 )
                 return
             } else if (newEventTime.isAfter(storedEventTimeEnd) &&
@@ -51,17 +56,25 @@ interface ContactEventDao {
                     event.copy(
                         duration = event.duration +
                             Seconds.secondsBetween(storedEventTimeEnd, newEventTime).seconds,
-                        rssiValues = rssis.plus(newEvent.rssiValues)
+                        rssiValues = rssis.plus(newEvent.rssiValues),
+                        rssiTimestamps = rssiTimestamps.plus(newEvent.rssiTimestamps)
                     )
                 )
                 return
             } else if (newEventTime.isAfter(storedEventTimeStart) &&
                 newEventTime.isBefore(storedEventTimeEnd)
             ) {
+                val rssisAndTimestamps =
+                    (rssis.zip(rssiTimestamps) + Pair(newEvent.rssiValues.first(), newEvent.rssiTimestamps.first()))
+                        .sortedBy { it.second }
                 update(
                     event.copy(
-                        rssiValues = rssis.plus(newEvent.rssiValues)
-                    ))
+                        duration = event.duration +
+                            Seconds.secondsBetween(storedEventTimeStart, newEventTime).seconds,
+                        rssiValues = rssisAndTimestamps.map { it.first },
+                        rssiTimestamps = rssisAndTimestamps.map { it.second }
+                    )
+                )
                 return
             }
         }

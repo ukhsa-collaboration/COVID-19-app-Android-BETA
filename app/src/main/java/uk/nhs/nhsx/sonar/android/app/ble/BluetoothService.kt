@@ -40,7 +40,10 @@ class BluetoothService : Service() {
         const val FOREGROUND_NOTIFICATION_ID = 1235
 
         fun start(context: Context) =
-            ContextCompat.startForegroundService(context, Intent(context, BluetoothService::class.java))
+            ContextCompat.startForegroundService(
+                context,
+                Intent(context, BluetoothService::class.java)
+            )
     }
 
     private var stateChangeDisposable: Disposable? = null
@@ -81,6 +84,7 @@ class BluetoothService : Service() {
             locationProviderChangedReceiver.getLocationStatus(),
             BiFunction<RxBleClient.State, Boolean, CombinedStatus> { bleClientState, isLocationEnabled ->
                 val isBleClientInReadyState = bleClientState == RxBleClient.State.READY
+                Timber.d("RxClientBleState = $bleClientState}")
                 val isBluetoothEnabled = isBluetoothEnabled()
                 CombinedStatus(isBleClientInReadyState, isBluetoothEnabled, isLocationEnabled)
             })

@@ -15,20 +15,26 @@ import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgementsDao
 
 @Database(
     entities = [ContactEvent::class, Acknowledgement::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun contactEventV2Dao(): ContactEventDao
+    abstract fun contactEventDao(): ContactEventDao
     abstract fun acknowledgementsDao(): AcknowledgementsDao
 }
 
 class Converters {
 
     @TypeConverter
-    fun listToString(value: List<Int>) = value.joinToString(separator = ",")
+    fun intListToString(value: List<Int>) = value.joinToString(separator = ",")
 
     @TypeConverter
-    fun stringToList(value: String) = value.split(",").map { it.toInt() }
+    fun longListToString(value: List<Long>) = value.joinToString(separator = ",")
+
+    @TypeConverter
+    fun stringToIntList(value: String) = value.split(",").map { it.toInt() }
+
+    @TypeConverter
+    fun stringToLongList(value: String) = value.split(",").map { it.toLong() }
 }

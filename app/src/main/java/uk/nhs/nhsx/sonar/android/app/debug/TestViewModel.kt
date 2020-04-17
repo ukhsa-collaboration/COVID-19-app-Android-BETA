@@ -9,10 +9,13 @@ import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.joda.time.DateTime
+import org.joda.time.Seconds
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
+import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.io.File
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -43,7 +46,8 @@ class TestViewModel @Inject constructor(
         viewModelScope.launch {
             val events = contactEventDao.getAll()
             val text = events.joinToString("\n") {
-                "${it.idAsString()},${it.timestamp},${it.duration},${it.rssiValues.joinToString(":")}"
+                val eventTime = DateTime(it.timestamp)
+                "${it.idAsString()},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},${it.rssiTimestamps.map{ Seconds.secondsBetween(eventTime, DateTime(it)).seconds}.joinToString(":")}}"
             }
 
             val zipFile = "contact-events-exports.zip"

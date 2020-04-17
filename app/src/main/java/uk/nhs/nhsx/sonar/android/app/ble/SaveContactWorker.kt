@@ -42,6 +42,7 @@ class DefaultSaveContactWorker(
                         ContactEvent(
                             sonarId = id,
                             rssiValues = listOf(rssi),
+                            rssiTimestamps = listOf(timestamp.millis),
                             timestamp = timestamp.millis,
                             duration = 60
                         )
@@ -64,6 +65,7 @@ class DefaultSaveContactWorker(
                         ContactEvent(
                             sonarId = record.sonarId.asBytes,
                             rssiValues = record.rssiValues,
+                            rssiTimestamps = listOf(timestamp),
                             timestamp = timestamp,
                             duration = record.duration
                         )

@@ -13,6 +13,7 @@ data class ContactEvent(
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     val sonarId: ByteArray,
     val rssiValues: List<Int>,
+    val rssiTimestamps: List<Long>,
     val timestamp: Long,
     val duration: Int
 ) {
@@ -29,6 +30,7 @@ data class ContactEvent(
         if (id != other.id) return false
         if (!sonarId.contentEquals(other.sonarId)) return false
         if (rssiValues != other.rssiValues) return false
+        if (rssiTimestamps != other.rssiTimestamps) return false
         if (timestamp != other.timestamp) return false
         if (duration != other.duration) return false
 
@@ -39,6 +41,7 @@ data class ContactEvent(
         var result = id.hashCode()
         result = 31 * result + sonarId.contentHashCode()
         result = 31 * result + rssiValues.hashCode()
+        result = 31 * result + rssiTimestamps.hashCode()
         result = 31 * result + timestamp.hashCode()
         result = 31 * result + duration.hashCode()
         return result
