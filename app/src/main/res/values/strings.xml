@@ -119,4 +119,7 @@
         <item>Yesterday</item>
         <item>Other Day</item>
     </string-array>
+    <string name="close">Close</string>
+    <string name="dont_have_symptoms">You don’t have the primary coronavirus symptoms at this time</string>
+    <string name="if_showing_symptoms">If you are showing other symptoms, or think you may have coronavirus, please visit</string>
 </resources>

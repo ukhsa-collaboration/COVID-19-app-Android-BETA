@@ -20,6 +20,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.RegistrationReminderBroadcastReceiver
@@ -48,6 +49,7 @@ interface ApplicationComponent {
     fun inject(okActivity: OkActivity)
     fun inject(atRiskActivity: AtRiskActivity)
     fun inject(diagnoseReviewActivity: DiagnoseReviewActivity)
+    fun inject(diagnoseCloseActivity: DiagnoseCloseActivity)
     fun inject(mainActivity: MainActivity)
     fun inject(notificationService: NotificationService)
     fun inject(flowTestStartActivity: FlowTestStartActivity)

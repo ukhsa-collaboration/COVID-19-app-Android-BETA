@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_nhsuk_grey_5">
+
+    <include layout="@layout/symptom_banner" />
+
+    <LinearLayout
+        android:id="@+id/status_feeling_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="72dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/roboto_medium"
+            android:letterSpacing="0.1"
+            android:text="@string/progress_three_thirds"
+            android:textColor="@color/text_sub_title"
+            android:textSize="12sp" />
+
+        <TextView
+            style="@style/TextViewSubHead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="@string/dont_have_symptoms" />
+
+        <TextView
+            style="@style/TextViewActionSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/if_showing_symptoms"
+            android:textSize="16sp" />
+
+        <TextView
+            style="@style/TextViewActionTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_chevron_right"
+            android:drawablePadding="8dp"
+            android:text="@string/nhs_online_service" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/close_review"
+        style="@style/PrimaryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/close" />
+
+</RelativeLayout>

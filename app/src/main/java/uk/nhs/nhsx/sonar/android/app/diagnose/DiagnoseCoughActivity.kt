@@ -37,7 +37,10 @@ class DiagnoseCoughActivity : BaseActivity() {
                     DiagnoseReviewActivity.start(this, hasTemperature, true)
                 }
                 R.id.no -> {
-                    DiagnoseReviewActivity.start(this, hasTemperature, false)
+                    if (hasTemperature)
+                        DiagnoseReviewActivity.start(this, hasTemperature, false)
+                    else
+                        DiagnoseCloseActivity.start(this)
                 }
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
