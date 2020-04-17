@@ -42,7 +42,7 @@ class TestViewModel @Inject constructor(
         }
     }
 
-    fun storeEvents() {
+    fun storeEvents(activityContext: Context) {
         viewModelScope.launch {
             val events = contactEventDao.getAll()
             val text = events.joinToString("\n") {
@@ -52,7 +52,7 @@ class TestViewModel @Inject constructor(
 
             val zipFile = "contact-events-exports.zip"
 
-            context.openFileOutput(zipFile, Context.MODE_PRIVATE).use {
+            activityContext.openFileOutput(zipFile, Context.MODE_PRIVATE).use {
                 ZipOutputStream(it).use { zip ->
                     zip.putNextEntry(ZipEntry("contact-events.csv"))
                     zip.write(text.toByteArray())
@@ -64,7 +64,7 @@ class TestViewModel @Inject constructor(
                 putExtra(
                     Intent.EXTRA_STREAM,
                     FileProvider.getUriForFile(
-                        context,
+                        activityContext,
                         "uk.nhs.nhsx.sonar.android.app.exports",
                         File(context.filesDir, zipFile)
                     )
@@ -72,7 +72,7 @@ class TestViewModel @Inject constructor(
                 type = "application/zip"
             }
 
-            context.startActivity(Intent.createChooser(sendIntent, "Export events"))
+            activityContext.startActivity(Intent.createChooser(sendIntent, "Export events"))
         }
     }
 

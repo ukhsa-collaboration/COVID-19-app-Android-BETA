@@ -60,7 +60,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         exportButton.setOnClickListener {
-            viewModel.storeEvents()
+            viewModel.storeEvents(this)
         }
 
         viewModel.observeConnectionEvents().observe(this, Observer {
