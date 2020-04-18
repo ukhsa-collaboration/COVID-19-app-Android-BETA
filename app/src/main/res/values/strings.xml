@@ -113,12 +113,8 @@
     <string name="symptoms_date_prompt_temperature">When did your high temperature start?</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+    <string name="before_day">Before above dates</string>
 
-    <string-array name="symptom_dates">
-        <item>Today</item>
-        <item>Yesterday</item>
-        <item>Other Day</item>
-    </string-array>
     <string name="close">Close</string>
     <string name="you_do_not_have_symptoms">You don’t have the primary coronavirus symptoms at this time</string>
     <string name="if_showing_other_symptoms">If you are showing other symptoms, or think you may have coronavirus, please visit</string>

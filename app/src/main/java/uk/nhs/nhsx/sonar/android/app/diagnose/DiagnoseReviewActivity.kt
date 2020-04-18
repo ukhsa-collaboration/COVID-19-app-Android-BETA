@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_pr
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone.UTC
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -24,20 +25,18 @@ import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.showToast
-import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
-import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
+import uk.nhs.nhsx.sonar.android.app.status.RedState
+import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
 class DiagnoseReviewActivity : BaseActivity() {
     @Inject
-    protected lateinit var statusStorage: StatusStorage
+    protected lateinit var stateStorage: StateStorage
 
     @Inject
     protected lateinit var viewModelFactory: ViewModelFactory<DiagnoseReviewViewModel>
-
-    @Inject
-    protected lateinit var symptomsStateProvider: SymptomsStateProvider
 
     private val viewModel: DiagnoseReviewViewModel by viewModels {
         viewModelFactory
@@ -51,7 +50,7 @@ class DiagnoseReviewActivity : BaseActivity() {
         intent.getBooleanExtra(HAS_COUGH, false)
     }
 
-    private val symptomsState by lazy { symptomsStateProvider.getOrDefault() }
+    private var symptomsDate: DateTime? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,15 +93,17 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     private fun setDateSpinner() {
-        val adapter = SpinnerAdapter(this)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = SpinnerAdapter(this).apply {
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+
         symptoms_date_spinner.adapter = adapter
         symptoms_date_spinner.setSelection(0)
 
         symptoms_date_spinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
-                    symptomsState.dateStarted = DateTime.now().millis
+                    symptomsDate = DateTime.now(UTC)
                 }
 
                 override fun onItemSelected(
@@ -111,34 +112,36 @@ class DiagnoseReviewActivity : BaseActivity() {
                     position: Int,
                     id: Long
                 ) {
-                    symptomsState.dateStarted = DateTime.now().minusDays(position).millis
+                    symptomsDate = DateTime.now(UTC).minusDays(position)
                 }
             }
     }
 
     private fun setSymptomsQuestion() {
-        when {
-            hasCough and hasTemperature -> symptoms_date_prompt.text =
-                getString(R.string.symptoms_date_prompt_all)
-            hasTemperature -> symptoms_date_prompt.text =
-                getString(R.string.symptoms_date_prompt_temperature)
-            else -> symptoms_date_prompt.text = getString(R.string.symptoms_date_prompt_cough)
+        symptoms_date_prompt.text = when {
+            hasCough and hasTemperature -> getString(R.string.symptoms_date_prompt_all)
+            hasTemperature -> getString(R.string.symptoms_date_prompt_temperature)
+            else -> getString(R.string.symptoms_date_prompt_cough)
         }
     }
 
     private fun updateStatusAndNavigate() {
-        symptomsState.hasCough = hasCough
-        symptomsState.hasTemperature = hasTemperature
-        if (hasCough or hasTemperature) {
-            symptomsState.status = CovidStatus.RED
-            statusStorage.update(CovidStatus.RED)
-        }
+        val symptoms = setOf(
+            if (hasCough) Symptom.COUGH else null,
+            if (hasTemperature) Symptom.TEMPERATURE else null
+        ).filterNotNull()
+            .toSet()
 
-        symptomsStateProvider.update(symptomsState)
+        stateStorage.update(
+            RedState(
+                symptomsDate!!.plus(7),
+                symptoms
+            )
+        )
 
-        Timber.d(symptomsStateProvider.getOrDefault().toString())
+        Timber.d(stateStorage.get().toString())
 
-        navigateTo(statusStorage.get())
+        navigateTo(stateStorage.get())
     }
 
     companion object {

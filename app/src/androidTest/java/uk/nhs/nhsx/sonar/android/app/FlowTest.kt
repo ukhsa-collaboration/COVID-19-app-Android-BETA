@@ -31,12 +31,18 @@ import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.status.EmberState
+import uk.nhs.nhsx.sonar.android.app.status.RedState
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
 import uk.nhs.nhsx.sonar.android.app.testhelpers.hasTextInputLayoutErrorText
@@ -102,7 +108,10 @@ class FlowTest {
         checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
 
         testAppContext.verifyRegistrationFlow()
-        checkViewHasText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
+        checkViewHasText(
+            R.id.registrationStatusText,
+            R.string.registration_everything_is_working_ok
+        )
         verifyCheckMySymptomsButton(isEnabled())
     }
 
@@ -145,7 +154,10 @@ class FlowTest {
         testAppContext.simulateActivationCodeReceived()
 
         testAppContext.verifyRegistrationFlow()
-        checkViewHasText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
+        checkViewHasText(
+            R.id.registrationStatusText,
+            R.string.registration_everything_is_working_ok
+        )
         onView(withId(R.id.registrationRetryButton)).check(matches(not(isDisplayed())))
         verifyCheckMySymptomsButton(isEnabled())
     }
@@ -156,7 +168,7 @@ class FlowTest {
 
     @Test
     fun testBluetoothInteractions() {
-        setStatus(CovidStatus.OK)
+        setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarIdAndSecretKeyAndPublicKey()
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -174,7 +186,7 @@ class FlowTest {
 
     @Test
     fun testReceivingStatusUpdateNotification() {
-        setStatus(CovidStatus.OK)
+        setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -201,8 +213,8 @@ class FlowTest {
     }
 
     @Test
-    fun testLaunchWhenStateIsOk() {
-        setStatus(CovidStatus.OK)
+    fun testLaunchWhenStateIsDefault() {
+        setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -211,8 +223,8 @@ class FlowTest {
     }
 
     @Test
-    fun testLaunchWhenStateIsPotential() {
-        setStatus(CovidStatus.POTENTIAL)
+    fun testLaunchWhenStateIsEmber() {
+        setUserState(EmberState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -222,7 +234,7 @@ class FlowTest {
 
     @Test
     fun testLaunchWhenStateIsRed() {
-        setStatus(CovidStatus.RED)
+        setUserState(RedState(DateTime.now(DateTimeZone.UTC), setOf(Symptom.TEMPERATURE)))
         setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -301,13 +313,12 @@ class FlowTest {
         onView(withId(R.id.status_red)).check(matches(isDisplayed()))
     }
 
-    private fun setStatus(covidStatus: CovidStatus) {
-        val storage = activityRule.activity.statusStorage
-        storage.update(covidStatus)
+    private fun setUserState(state: UserState) {
+        activityRule.activity.stateStorage.update(state)
     }
 
     private fun resetStatusStorage() {
-        val storage = activityRule.activity.statusStorage
+        val storage = activityRule.activity.stateStorage
         storage.clear()
     }
 

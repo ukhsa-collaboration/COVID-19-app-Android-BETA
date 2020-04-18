@@ -20,7 +20,7 @@ import javax.inject.Inject
 class IsolateActivity : BaseActivity() {
 
     @Inject
-    protected lateinit var statusStorage: StatusStorage
+    protected lateinit var stateStorage: StateStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class IsolateActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        navigateTo(statusStorage.get())
+        navigateTo(stateStorage.get())
     }
 
     companion object {

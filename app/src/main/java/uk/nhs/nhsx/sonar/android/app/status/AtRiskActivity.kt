@@ -21,7 +21,7 @@ import javax.inject.Inject
 class AtRiskActivity : BaseActivity() {
 
     @Inject
-    protected lateinit var statusStorage: StatusStorage
+    protected lateinit var stateStorage: StateStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +42,7 @@ class AtRiskActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        navigateTo(statusStorage.get())
+        navigateTo(stateStorage.get())
     }
 
     companion object {

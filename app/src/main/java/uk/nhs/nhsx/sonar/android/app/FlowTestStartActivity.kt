@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.activity_flow_test_start.start_main_activi
 import org.jetbrains.annotations.TestOnly
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
+import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.client.KeyStorage
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class FlowTestStartActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var statusStorage: StatusStorage
+    lateinit var stateStorage: StateStorage
 
     @Inject
     lateinit var keyStorage: KeyStorage

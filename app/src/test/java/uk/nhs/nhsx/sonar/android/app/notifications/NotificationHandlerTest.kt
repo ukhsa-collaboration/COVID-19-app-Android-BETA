@@ -12,14 +12,14 @@ import io.mockk.verifyAll
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeObserver
-import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
-import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
+import uk.nhs.nhsx.sonar.android.app.status.EmberState
+import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.client.AcknowledgementsApi
 
 class NotificationHandlerTest {
 
     private val sender = mockk<NotificationSender>(relaxUnitFun = true)
-    private val statusStorage = mockk<StatusStorage>(relaxUnitFun = true)
+    private val statusStorage = mockk<StateStorage>(relaxUnitFun = true)
     private val activationCodeObserver = mockk<ActivationCodeObserver>(relaxUnitFun = true)
     private val ackDao = mockk<AcknowledgementsDao>(relaxUnitFun = true)
     private val ackApi = mockk<AcknowledgementsApi>(relaxUnitFun = true)
@@ -54,7 +54,7 @@ class NotificationHandlerTest {
         handler.handle(messageData)
 
         verifyAll {
-            statusStorage.update(CovidStatus.POTENTIAL)
+            statusStorage.update(any<EmberState>())
             sender.send(10001, R.string.notification_title, R.string.notification_text, any())
         }
     }
@@ -68,7 +68,7 @@ class NotificationHandlerTest {
         handler.handle(messageData)
 
         verifyAll {
-            statusStorage.update(CovidStatus.POTENTIAL)
+            statusStorage.update(any<EmberState>())
             sender.send(10001, R.string.notification_title, R.string.notification_text, any())
             ackApi.send("https://api.example.com/ack/100")
             ackDao.tryFind("https://api.example.com/ack/100")

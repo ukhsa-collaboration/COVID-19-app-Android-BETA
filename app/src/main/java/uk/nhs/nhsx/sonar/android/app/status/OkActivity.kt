@@ -27,7 +27,7 @@ import javax.inject.Inject
 class OkActivity : BaseActivity() {
 
     @Inject
-    lateinit var statusStorage: StatusStorage
+    lateinit var stateStorage: StateStorage
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<OkViewModel>
@@ -88,7 +88,7 @@ class OkActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        navigateTo(statusStorage.get())
+        navigateTo(stateStorage.get())
     }
 
     companion object {

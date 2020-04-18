@@ -6,18 +6,25 @@ package uk.nhs.nhsx.sonar.android.app.diagnose
 
 import android.content.Context
 import android.widget.ArrayAdapter
-import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 
 class SpinnerAdapter(context: Context) :
     ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, getLastSevenDays(context))
 
-private fun getLastSevenDays(context: Context): List<String> =
-    mutableListOf<String>().apply {
-        add(context.getString(R.string.today))
-        add(context.getString(R.string.yesterday))
-        (2..7).forEach {
-            add(DateTime.now().minusDays(it).toUiSpinnerFormat())
-        }
-    }.toList()
+private fun getLastSevenDays(context: Context): List<String> {
+    val today = LocalDate.now()
+
+    return listOf(
+        context.getString(R.string.today),
+        context.getString(R.string.yesterday),
+        today.minusDays(2).toUiSpinnerFormat(),
+        today.minusDays(3).toUiSpinnerFormat(),
+        today.minusDays(4).toUiSpinnerFormat(),
+        today.minusDays(5).toUiSpinnerFormat(),
+        today.minusDays(6).toUiSpinnerFormat(),
+        today.minusDays(7).toUiSpinnerFormat(),
+        context.getString(R.string.before_day)
+    )
+}

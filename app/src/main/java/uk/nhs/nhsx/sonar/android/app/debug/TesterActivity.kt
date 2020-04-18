@@ -22,25 +22,21 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.diagnose.SymptomsStateProvider
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
+import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import javax.inject.Inject
 
 class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     @Inject
-    lateinit var statusStorage: StatusStorage
+    lateinit var stateStorage: StateStorage
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider
 
     @Inject
     lateinit var onboardingStatusProvider: OnboardingStatusProvider
-
-    @Inject
-    protected lateinit var symptomsStateProvider: SymptomsStateProvider
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<TestViewModel>
@@ -60,10 +56,9 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         reset_button.setOnClickListener {
-            statusStorage.clear()
+            stateStorage.clear()
             sonarIdProvider.clear()
             onboardingStatusProvider.clear()
-            symptomsStateProvider.clear()
             viewModel.clear()
         }
 

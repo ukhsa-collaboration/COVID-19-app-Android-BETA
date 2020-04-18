@@ -4,17 +4,19 @@
 
 package uk.nhs.nhsx.sonar.android.app.notifications
 
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeObserver
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
-import uk.nhs.nhsx.sonar.android.app.status.CovidStatus
-import uk.nhs.nhsx.sonar.android.app.status.StatusStorage
+import uk.nhs.nhsx.sonar.android.app.status.EmberState
+import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.client.AcknowledgementsApi
 import javax.inject.Inject
 
 class NotificationHandler @Inject constructor(
     private val sender: NotificationSender,
-    private val statusStorage: StatusStorage,
+    private val stateStorage: StateStorage,
     private val activationCodeObserver: ActivationCodeObserver,
     private val acknowledgementsDao: AcknowledgementsDao,
     private val acknowledgementsApi: AcknowledgementsApi
@@ -30,7 +32,7 @@ class NotificationHandler @Inject constructor(
                     activationCodeObserver.onGetActivationCode(activationCode)
                 }
                 isStatusUpdate(messageData) -> {
-                    statusStorage.update(CovidStatus.POTENTIAL)
+                    stateStorage.update(EmberState(DateTime.now(DateTimeZone.UTC).plusDays(14)))
                     showStatusNotification()
                 }
             }
