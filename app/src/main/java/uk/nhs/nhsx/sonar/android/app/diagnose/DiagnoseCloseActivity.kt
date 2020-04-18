@@ -7,7 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.diagnose
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_review_close.close_review
+import kotlinx.android.synthetic.main.activity_review_close.close_review_btn
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -31,13 +31,9 @@ class DiagnoseCloseActivity : BaseActivity() {
             onBackPressed()
         }
 
-        close_review.setOnClickListener {
-            updateStatusAndNavigate()
+        close_review_btn.setOnClickListener {
+            navigateTo(statusStorage.get())
         }
-    }
-
-    private fun updateStatusAndNavigate() {
-        navigateTo(statusStorage.get())
     }
 
     companion object {

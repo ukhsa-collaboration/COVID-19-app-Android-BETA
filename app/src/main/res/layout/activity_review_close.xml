@@ -11,7 +11,6 @@
     <include layout="@layout/symptom_banner" />
 
     <LinearLayout
-        android:id="@+id/status_feeling_ok"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/logo"
@@ -37,14 +36,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="@string/dont_have_symptoms" />
+            android:text="@string/you_do_not_have_symptoms" />
 
         <TextView
             style="@style/TextViewActionSubTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@string/if_showing_symptoms"
+            android:text="@string/if_showing_other_symptoms"
             android:textSize="16sp" />
 
         <TextView
@@ -58,7 +57,7 @@
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/close_review"
+        android:id="@+id/close_review_btn"
         style="@style/PrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
