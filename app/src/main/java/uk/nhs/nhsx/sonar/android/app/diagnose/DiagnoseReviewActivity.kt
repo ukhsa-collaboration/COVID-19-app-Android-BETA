@@ -28,6 +28,8 @@ import uk.nhs.nhsx.sonar.android.app.showToast
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
@@ -42,15 +44,14 @@ class DiagnoseReviewActivity : BaseActivity() {
         viewModelFactory
     }
 
-    private val hasTemperature: Boolean by lazy {
-        intent.getBooleanExtra(HAS_TEMPERATURE, false)
+    private val symptoms: Set<Symptom> by lazy {
+        setOf(
+            if (intent.getBooleanExtra(HAS_COUGH, false)) COUGH else null,
+            if (intent.getBooleanExtra(HAS_TEMPERATURE, false)) TEMPERATURE else null
+        ).filterNotNull().toSet()
     }
 
-    private val hasCough: Boolean by lazy {
-        intent.getBooleanExtra(HAS_COUGH, false)
-    }
-
-    private var symptomsDate: DateTime? = null
+    private var symptomsDate: DateTime = DateTime.now(UTC)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,11 +85,7 @@ class DiagnoseReviewActivity : BaseActivity() {
         })
 
         confirm_diagnosis.setOnClickListener {
-            if (hasCough || hasTemperature) {
-                viewModel.uploadContactEvents()
-            } else {
-                updateStatusAndNavigate()
-            }
+            viewModel.uploadContactEvents()
         }
     }
 
@@ -118,30 +115,21 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     private fun setSymptomsQuestion() {
-        symptoms_date_prompt.text = when {
-            hasCough and hasTemperature -> getString(R.string.symptoms_date_prompt_all)
-            hasTemperature -> getString(R.string.symptoms_date_prompt_temperature)
-            else -> getString(R.string.symptoms_date_prompt_cough)
-        }
+        symptoms_date_prompt.text =
+            when (symptoms) {
+                setOf(TEMPERATURE) -> getString(R.string.symptoms_date_prompt_temperature)
+                setOf(COUGH) -> getString(R.string.symptoms_date_prompt_cough)
+                else -> getString(R.string.symptoms_date_prompt_all)
+            }
     }
 
     private fun updateStatusAndNavigate() {
-        val symptoms = setOf(
-            if (hasCough) Symptom.COUGH else null,
-            if (hasTemperature) Symptom.TEMPERATURE else null
-        ).filterNotNull()
-            .toSet()
+        val state = RedState(symptomsDate.plusDays(7), symptoms)
+        stateStorage.update(state)
 
-        stateStorage.update(
-            RedState(
-                symptomsDate!!.plus(7),
-                symptoms
-            )
-        )
+        Timber.d("Updated the state to: $state")
 
-        Timber.d(stateStorage.get().toString())
-
-        navigateTo(stateStorage.get())
+        navigateTo(state)
     }
 
     companion object {
