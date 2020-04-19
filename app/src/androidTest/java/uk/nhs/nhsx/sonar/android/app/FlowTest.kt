@@ -203,7 +203,7 @@ class FlowTest {
     fun testExplanation() {
         onView(withId(R.id.start_main_activity)).perform(click())
 
-        onView(withId(R.id.explanation_link)).perform(click())
+        onView(withId(R.id.explanation_link)).perform(scrollTo(), click())
 
         checkExplanationActivityIsShown()
 

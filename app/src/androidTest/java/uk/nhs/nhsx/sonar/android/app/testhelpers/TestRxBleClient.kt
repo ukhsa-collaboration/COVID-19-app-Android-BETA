@@ -22,9 +22,9 @@ import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Emitter
 import io.reactivex.Observable
 import org.assertj.core.api.Assertions.fail
+import org.joda.time.Instant
 import uk.nhs.nhsx.sonar.android.app.ble.DEVICE_CHARACTERISTIC_UUID
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
-import java.time.Instant
 import java.util.UUID
 
 class TestRxBleClient(context: Context) : RxBleClient() {
@@ -83,7 +83,7 @@ class TestRxBleClient(context: Context) : RxBleClient() {
         services.bluetoothGattServices.add(service)
 
         val rxBleDevice = TestBluetoothDevice(args.macAddress, services, args.rssiList)
-        val timestamp = Instant.now().toEpochMilli() * 1000
+        val timestamp = Instant.now().millis * 1000
 
         return ScanResult(rxBleDevice, -1, timestamp, CALLBACK_TYPE_ALL_MATCHES, scanRecord)
     }
