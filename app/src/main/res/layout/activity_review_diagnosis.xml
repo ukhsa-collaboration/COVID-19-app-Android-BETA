@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
@@ -10,61 +9,102 @@
 
     <include layout="@layout/symptom_banner" />
 
-
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/logo"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="72dp">
+        android:layout_marginBottom="120dp"
+        android:paddingStart="16dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="16dp">
 
-        <TextView
-            android:id="@+id/progress"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:fontFamily="@font/roboto_medium"
-            android:letterSpacing="0.1"
-            android:text="@string/progress_three_thirds"
-            android:textColor="@color/text_sub_title"
-            android:textSize="12sp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/review_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/progress"
-            android:layout_marginTop="16dp"
-            android:text="@string/diagnosis_review_description"
-            android:textColor="@color/text_sub_title"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto_medium"
+                android:letterSpacing="0.1"
+                android:text="@string/progress_three_thirds"
+                android:textColor="@color/text_sub_title"
+                android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/symptoms_date_prompt"
-            style="@style/TextViewSubHead"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/review_description"
-            android:layout_marginTop="16dp" />
+            <TextView
+                style="@style/TextViewSubHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/check_answers" />
 
+            <View
+                style="@style/HorizontalDivider"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
 
-        <Spinner
-            android:id="@+id/symptoms_date_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/symptoms_date_prompt"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/spinner_background" />
+            <TextView
+                android:id="@+id/review_answer_temperature"
+                style="@style/TextViewSubHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/i_do_not_temperature"
+                android:textSize="16sp" />
 
-    </RelativeLayout>
+            <View
+                style="@style/HorizontalDivider"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/review_answer_cough"
+                style="@style/TextViewSubHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/i_do_cough"
+                android:textSize="16sp" />
+
+            <View
+                style="@style/HorizontalDivider"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="48dp" />
+
+            <TextView
+                android:id="@+id/symptoms_date_prompt"
+                style="@style/TextViewSubHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/symptoms_date_prompt_cough" />
+
+            <Spinner
+                android:id="@+id/symptoms_date_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/spinner_background" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="96dp"
+                android:text="@string/diagnosis_review_description"
+                android:textColor="@color/text_sub_title"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <TextView
         android:id="@+id/submission_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/confirm_diagnosis"
+        android:layout_above="@id/submit_diagnosis"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
@@ -76,7 +116,7 @@
 
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/confirm_diagnosis"
+        android:id="@+id/submit_diagnosis"
         style="@style/PrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

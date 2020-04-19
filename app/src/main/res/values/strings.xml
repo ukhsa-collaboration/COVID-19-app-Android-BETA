@@ -118,4 +118,9 @@
     <string name="close">Close</string>
     <string name="you_do_not_have_symptoms">You don’t have the primary coronavirus symptoms at this time</string>
     <string name="if_showing_other_symptoms">If you are showing other symptoms, or think you may have coronavirus, please visit</string>
+    <string name="check_answers">Check your answers</string>
+    <string name="i_do_temperature">I have a high temperature</string>
+    <string name="i_do_not_temperature">I don\'t have a high temperature</string>
+    <string name="i_do_cough">I have a new continues cough</string>
+    <string name="i_do_not_cough">I don\'t have a new continues cough</string>
 </resources>

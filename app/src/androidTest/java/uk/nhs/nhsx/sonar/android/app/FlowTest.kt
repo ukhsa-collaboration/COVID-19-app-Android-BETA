@@ -384,8 +384,8 @@ class FlowTest {
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
         // Review Step
-        onView(withId(R.id.review_description)).check(matches(isDisplayed()))
-        onView(withId(R.id.confirm_diagnosis)).perform(click())
+        onView(withId(R.id.submit_diagnosis)).check(matches(isDisplayed()))
+        onView(withId(R.id.submit_diagnosis)).perform(click())
 
         onView(withId(R.id.status_red)).check(matches(isDisplayed()))
     }

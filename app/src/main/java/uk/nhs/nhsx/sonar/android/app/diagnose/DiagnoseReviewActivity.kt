@@ -11,8 +11,10 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.activity_review_diagnosis.confirm_diagnosis
+import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_cough
+import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_temperature
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submission_error
+import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_prompt
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
@@ -64,7 +66,8 @@ class DiagnoseReviewActivity : BaseActivity() {
             onBackPressed()
         }
 
-        setSymptomsQuestion()
+        setSymptomsReviewAnswers()
+        setSymptomsDateQuestion()
 
         setDateSpinner()
 
@@ -80,11 +83,12 @@ class DiagnoseReviewActivity : BaseActivity() {
             } else {
                 submission_error.visibility = View.VISIBLE
                 submission_error.announceForAccessibility(getString(R.string.submission_error))
-                confirm_diagnosis.text = getString(R.string.retry)
+                submit_diagnosis.text = getString(R.string.retry)
+
             }
         })
 
-        confirm_diagnosis.setOnClickListener {
+        submit_diagnosis.setOnClickListener {
             viewModel.uploadContactEvents()
         }
     }
@@ -114,7 +118,21 @@ class DiagnoseReviewActivity : BaseActivity() {
             }
     }
 
-    private fun setSymptomsQuestion() {
+    private fun setSymptomsReviewAnswers() {
+        review_answer_temperature.text =
+            when (TEMPERATURE in symptoms) {
+                true -> getString(R.string.i_do_temperature)
+                false -> getString(R.string.i_do_not_temperature)
+            }
+
+        review_answer_cough.text =
+            when (COUGH in symptoms) {
+                true -> getString(R.string.i_do_cough)
+                false -> getString(R.string.i_do_not_cough)
+            }
+    }
+
+    private fun setSymptomsDateQuestion() {
         symptoms_date_prompt.text =
             when (symptoms) {
                 setOf(TEMPERATURE) -> getString(R.string.symptoms_date_prompt_temperature)
