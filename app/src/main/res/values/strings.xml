@@ -114,6 +114,7 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="before_day">More than 7 days ago</string>
+    <string name="start_date">Start date</string>
 
     <string name="close">Close</string>
     <string name="you_do_not_have_symptoms">You don’t have the primary coronavirus symptoms at this time</string>
@@ -123,4 +124,5 @@
     <string name="i_do_not_temperature">I don\'t have a high temperature</string>
     <string name="i_do_cough">I have a new continues cough</string>
     <string name="i_do_not_cough">I don\'t have a new continues cough</string>
+    <string name="date_selection_error">Select the date from the dropdown</string>
 </resources>

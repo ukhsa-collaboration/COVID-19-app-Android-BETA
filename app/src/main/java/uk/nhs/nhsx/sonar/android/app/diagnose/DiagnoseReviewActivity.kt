@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.activity_review_diagnosis.date_selection_error
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_cough
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_temperature
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submission_error
@@ -53,7 +54,7 @@ class DiagnoseReviewActivity : BaseActivity() {
         ).filterNotNull().toSet()
     }
 
-    private var symptomsDate: DateTime = DateTime.now(UTC)
+    private var symptomsDate: DateTime? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +89,12 @@ class DiagnoseReviewActivity : BaseActivity() {
         })
 
         submit_diagnosis.setOnClickListener {
-            viewModel.uploadContactEvents()
+            if (symptomsDate == null) {
+                date_selection_error.visibility = View.VISIBLE
+                date_selection_error.announceForAccessibility(getString(R.string.date_selection_error))
+            } else {
+                viewModel.uploadContactEvents()
+            }
         }
     }
 
@@ -98,12 +104,12 @@ class DiagnoseReviewActivity : BaseActivity() {
         }
 
         symptoms_date_spinner.adapter = adapter
-        symptoms_date_spinner.setSelection(0)
+        symptoms_date_spinner.setSelection(adapter.count)
 
         symptoms_date_spinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {
-                    symptomsDate = DateTime.now(UTC)
+                    symptomsDate = null
                 }
 
                 override fun onItemSelected(
@@ -112,7 +118,10 @@ class DiagnoseReviewActivity : BaseActivity() {
                     position: Int,
                     id: Long
                 ) {
-                    symptomsDate = DateTime.now(UTC).minusDays(position)
+                    if (position < adapter.count) {
+                        date_selection_error.visibility = View.GONE
+                        symptomsDate = DateTime.now(UTC).minusDays(position)
+                    }
                 }
             }
     }
@@ -141,12 +150,14 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     private fun updateStatusAndNavigate() {
-        val state = RedState(symptomsDate.plusDays(7), symptoms)
-        stateStorage.update(state)
+        symptomsDate?.let {
+            val state = RedState(it.plusDays(7), symptoms)
+            stateStorage.update(state)
 
-        Timber.d("Updated the state to: $state")
+            Timber.d("Updated the state to: $state")
 
-        navigateTo(state)
+            navigateTo(state)
+        }
     }
 
     companion object {

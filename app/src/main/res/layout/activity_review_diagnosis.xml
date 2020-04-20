@@ -82,6 +82,18 @@
                 android:layout_height="wrap_content"
                 android:text="@string/symptoms_date_prompt_cough" />
 
+            <TextView
+                android:id="@+id/date_selection_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_medium"
+                android:text="@string/date_selection_error"
+                android:textColor="@color/colorDanger"
+                android:labelFor="@+id/symptoms_date_spinner"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
             <Spinner
                 android:id="@+id/symptoms_date_spinner"
                 android:layout_width="match_parent"
@@ -92,7 +104,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="96dp"
+                android:layout_marginTop="64dp"
                 android:text="@string/diagnosis_review_description"
                 android:textColor="@color/text_sub_title"
                 android:textSize="16sp" />
