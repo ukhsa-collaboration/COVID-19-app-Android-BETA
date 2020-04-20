@@ -184,8 +184,7 @@ dependencies {
     testImplementation 'net.lachlanmckee:timber-junit-rule:1.0.1'
     testImplementation 'org.assertj:assertj-core:3.15.0'
     testImplementation 'org.awaitility:awaitility-kotlin:3.1.6'
-    testImplementation 'io.mockk:mockk:1.9.3'
-    testRuntimeOnly 'net.bytebuddy:byte-buddy:1.10.8' // https://github.com/mockk/mockk/issues/397
+    testImplementation 'io.mockk:mockk:1.10.0'
 
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestUtil 'androidx.test:orchestrator:1.2.0'
