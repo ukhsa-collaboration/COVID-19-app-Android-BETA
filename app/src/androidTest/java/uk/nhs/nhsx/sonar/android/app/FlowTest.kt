@@ -10,6 +10,7 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.closeSoftKeyboard
+import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
@@ -29,6 +30,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
+import org.hamcrest.CoreMatchers.anything
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
 import org.joda.time.DateTime
@@ -384,7 +386,10 @@ class FlowTest {
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
         // Review Step
-        onView(withId(R.id.submit_diagnosis)).check(matches(isDisplayed()))
+        onView(withId(R.id.review_answer_temperature)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.symptoms_date_spinner)).perform(scrollTo(), click())
+        onData(anything()).atPosition(1).perform(click())
         onView(withId(R.id.submit_diagnosis)).perform(click())
 
         onView(withId(R.id.status_red)).check(matches(isDisplayed()))
