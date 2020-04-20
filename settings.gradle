@@ -3,5 +3,4 @@
  */
 
 rootProject.name = 'sonar-colocate-android'
-include ':api'
 include ':app'
