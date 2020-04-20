@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app.diagnose
+package uk.nhs.nhsx.sonar.android.app.diagnose.review
 
 import android.content.Context
 import android.content.Intent
@@ -99,7 +99,8 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     private fun setDateSpinner() {
-        val adapter = SpinnerAdapter(this)
+        val adapter =
+            SpinnerAdapter(this)
 
         symptoms_date_spinner.adapter = adapter
         symptoms_date_spinner.setSelection(adapter.count)
@@ -165,7 +166,13 @@ class DiagnoseReviewActivity : BaseActivity() {
         const val HAS_COUGH = "HAS_COUGH"
 
         fun start(context: Context, hasTemperature: Boolean = false, hasCough: Boolean = false) =
-            context.startActivity(getIntent(context, hasTemperature, hasCough))
+            context.startActivity(
+                getIntent(
+                    context,
+                    hasTemperature,
+                    hasCough
+                )
+            )
 
         private fun getIntent(context: Context, hasTemperature: Boolean, hasCough: Boolean) =
             Intent(context, DiagnoseReviewActivity::class.java).apply {

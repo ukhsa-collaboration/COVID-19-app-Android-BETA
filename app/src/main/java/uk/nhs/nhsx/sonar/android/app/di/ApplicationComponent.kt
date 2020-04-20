@@ -21,7 +21,8 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseActivity
-import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivity
+import uk.nhs.nhsx.sonar.android.app.diagnose.SimpleDiagnoseCoughActivity
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.RegistrationReminderBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
@@ -56,6 +57,7 @@ interface ApplicationComponent {
     fun inject(bootCompletedReceiver: BootCompletedReceiver)
     fun inject(postCodeActivity: PostCodeActivity)
     fun inject(testerActivity: TesterActivity)
+    fun inject(simpleDiagnoseCoughActivity: SimpleDiagnoseCoughActivity)
     fun inject(registrationReminderBroadcastReceiver: RegistrationReminderBroadcastReceiver)
 
     fun registrationUseCase(): RegistrationUseCase

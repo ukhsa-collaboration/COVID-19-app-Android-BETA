@@ -77,7 +77,7 @@
             android:name=".debug.TesterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".diagnose.DiagnoseReviewActivity"
+            android:name=".diagnose.review.DiagnoseReviewActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".diagnose.DiagnoseCoughActivity"
@@ -89,6 +89,8 @@
         <activity
             android:name=".diagnose.DiagnoseCloseActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".diagnose.SimpleDiagnoseTemperatureActivity" />
+        <activity android:name=".diagnose.SimpleDiagnoseCoughActivity" />
 
         <service
             android:name=".ble.BluetoothService"

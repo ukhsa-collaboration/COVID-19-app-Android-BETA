@@ -17,7 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.diagnose.SimpleDiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL_RED_STATE
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -64,7 +64,7 @@ class IsolateActivity : BaseActivity() {
         }
 
         dialog.findViewById<Button>(R.id.have_symptoms)?.setOnClickListener {
-            DiagnoseTemperatureActivity.start(this)
+            SimpleDiagnoseTemperatureActivity.start(this)
         }
     }
 
@@ -77,7 +77,7 @@ class IsolateActivity : BaseActivity() {
         if (state.hasExpired()) {
             dialog.show()
         } else {
-            dialog.cancel()
+            dialog.dismiss()
         }
     }
 

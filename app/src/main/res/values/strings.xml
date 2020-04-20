@@ -82,6 +82,8 @@
     <string name="no_cough">No, I don’t have a new continuous cough</string>
     <string name="progress_one_third">1/3</string>
     <string name="progress_two_thirds">2/3</string>
+    <string name="progress_half">1/2</string>
+    <string name="progress_two_out_of_two">2/2</string>
     <string name="progress_three_thirds">3/3</string>
     <string name="submission_error">Submission failed. Please try again</string>
     <string name="status_latest_advice">Read latest advice</string>

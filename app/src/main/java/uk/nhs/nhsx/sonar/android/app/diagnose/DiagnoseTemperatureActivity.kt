@@ -9,13 +9,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.confirm_diagnosis
+import kotlinx.android.synthetic.main.activity_temperature_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_diagnosis_answer
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 
-class DiagnoseTemperatureActivity : BaseActivity() {
+open class DiagnoseTemperatureActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +26,10 @@ class DiagnoseTemperatureActivity : BaseActivity() {
         confirm_diagnosis.setOnClickListener {
             when (temperature_diagnosis_answer.checkedRadioButtonId) {
                 R.id.yes -> {
-                    DiagnoseCoughActivity.start(this, true)
+                    nextStep(true)
                 }
                 R.id.no -> {
-                    DiagnoseCoughActivity.start(this, false)
+                    nextStep(false)
                 }
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
@@ -44,6 +45,14 @@ class DiagnoseTemperatureActivity : BaseActivity() {
         close_btn.setOnClickListener {
             onBackPressed()
         }
+    }
+
+    protected open fun nextStep(hasTemperature: Boolean) {
+        DiagnoseCoughActivity.start(this, hasTemperature)
+    }
+
+    protected fun setProgress(data: String) {
+        progress.text = data
     }
 
     companion object {

@@ -9,11 +9,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.confirm_diagnosis
-import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_diagnosis_answer
-import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.cough_questionnaire_layout.cough_diagnosis_answer
+import kotlinx.android.synthetic.main.cough_questionnaire_layout.progress
+import kotlinx.android.synthetic.main.cough_questionnaire_layout.radio_selection_error
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 
 class DiagnoseCoughActivity : BaseActivity() {
 
@@ -25,6 +27,8 @@ class DiagnoseCoughActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_cough_diagnosis)
+
+        progress.text = getString(R.string.progress_two_thirds)
 
         close_btn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
         close_btn.setOnClickListener {

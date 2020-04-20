@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app.diagnose
+package uk.nhs.nhsx.sonar.android.app.diagnose.review
 
 import android.content.Context
 import android.view.View
@@ -14,7 +14,11 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 
 class SpinnerAdapter(context: Context) :
-    ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, getLastSevenDays(context)) {
+    ArrayAdapter<String>(context, android.R.layout.simple_spinner_item,
+        getLastSevenDays(
+            context
+        )
+    ) {
 
     init {
         setDropDownViewResource(R.layout.item_date_spinner)

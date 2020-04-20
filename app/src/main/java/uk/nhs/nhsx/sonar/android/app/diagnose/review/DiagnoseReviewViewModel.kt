@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app.diagnose
+package uk.nhs.nhsx.sonar.android.app.diagnose.review
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

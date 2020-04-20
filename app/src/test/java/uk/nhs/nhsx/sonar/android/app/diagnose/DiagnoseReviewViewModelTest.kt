@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewViewModel
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.client.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.CoLocationData
@@ -23,7 +24,12 @@ class DiagnoseReviewViewModelTest {
     private val coLocationApi = mockk<CoLocationApi>(relaxed = true)
     private val coLocationDataProvider = mockk<CoLocationDataProvider>()
     private val sonarIdProvider = mockk<SonarIdProvider>()
-    private val testSubject = DiagnoseReviewViewModel(coLocationApi, Dispatchers.Unconfined, coLocationDataProvider)
+    private val testSubject =
+        DiagnoseReviewViewModel(
+            coLocationApi,
+            Dispatchers.Unconfined,
+            coLocationDataProvider
+        )
 
     companion object {
         private const val RESIDENT_ID = "80baf81b-8afd-47e9-9915-50691525c910"

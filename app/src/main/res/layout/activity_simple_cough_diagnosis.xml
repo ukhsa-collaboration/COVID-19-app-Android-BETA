@@ -9,7 +9,7 @@
 
     <include layout="@layout/symptom_banner" />
 
-    <include layout="@layout/cough_questionnaire_layout"/>
+    <include layout="@layout/cough_questionnaire_layout" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/confirm_diagnosis"
@@ -20,6 +20,6 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
-        android:text="@string/next" />
+        android:text="@string/submit" />
 
 </RelativeLayout>
