@@ -84,14 +84,12 @@
 
             <TextView
                 android:id="@+id/date_selection_error"
+                style="@style/TextViewError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:fontFamily="@font/roboto_medium"
-                android:text="@string/date_selection_error"
-                android:textColor="@color/colorDanger"
                 android:labelFor="@+id/symptoms_date_spinner"
-                android:textSize="16sp"
+                android:text="@string/date_selection_error"
                 android:visibility="gone" />
 
             <Spinner

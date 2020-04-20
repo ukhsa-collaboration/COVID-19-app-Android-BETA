@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
@@ -52,15 +51,13 @@
 
         <TextView
             android:id="@+id/radio_selection_error"
+            style="@style/TextViewError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/temperature_description"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/roboto_medium"
-            android:text="@string/radio_button_temperature_error"
-            android:textColor="@color/colorDanger"
             android:labelFor="@+id/temperature_diagnosis_answer"
-            android:textSize="16sp"
+            android:text="@string/radio_button_temperature_error"
             android:visibility="gone" />
 
 
@@ -77,9 +74,9 @@
                 android:layout_height="88dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/radio_button_background_selector"
+                android:button="@drawable/radio_button_inset"
                 android:fontFamily="@font/roboto_medium"
                 android:paddingStart="16dp"
-                android:button="@drawable/radio_button_inset"
                 android:paddingEnd="16dp"
                 android:text="@string/yes_temperature"
                 android:textSize="16sp" />
@@ -90,10 +87,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="88dp"
                 android:background="@drawable/radio_button_background_selector"
+                android:button="@drawable/radio_button_inset"
                 android:fontFamily="@font/roboto_medium"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:button="@drawable/radio_button_inset"
                 android:text="@string/no_temperature"
                 android:textSize="16sp" />
         </RadioGroup>
