@@ -125,7 +125,7 @@
     <string name="i_do_temperature">I have a high temperature</string>
     <string name="i_do_not_temperature">I don\'t have a high temperature</string>
     <string name="i_do_cough">I have a new continues cough</string>
-    <string name="i_do_not_cough">I don\'t have a new continues cough</string>
+    <string name="i_do_not_cough">I don\'t have a new continuous cough</string>
     <string name="date_selection_error">Select the date from the dropdown</string>
     <string name="update_symptoms_promt">7 days ago your cough started. Please update your symptoms to view latest advice.</string>
     <string name="update_my_symptoms">Update my symptoms</string>
