@@ -35,4 +35,10 @@ task("clean", type: Delete) {
     delete rootProject.buildDir
 }
 
+task("localBuild") {
+    dependsOn(":app:ktlint")
+    dependsOn(":app:testDebugUnitTest")
+    dependsOn(":app:connectedDebugAndroidTest")
+}
+
 defaultTasks("build", "connectedAndroidTest")
