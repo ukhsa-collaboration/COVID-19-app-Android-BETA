@@ -18,14 +18,14 @@ class StateStorage @Inject constructor(context: Context) {
 
     fun update(state: UserState) {
         storage.edit {
-            putString(PREF_USER_STATE, state.serialize())
+            putString(PREF_USER_STATE, UserStateSerialization.serialize(state))
         }
     }
 
     fun get(): UserState =
-        storage.getString(PREF_USER_STATE, null)?.let {
-            UserState.deserialize(it)
-        } ?: DefaultState(DateTime.now(UTC))
+        storage.getString(PREF_USER_STATE, null)
+            ?.let { UserStateSerialization.deserialize(it) }
+            ?: DefaultState(DateTime.now(UTC))
 
     fun clear() {
         storage.edit { clear() }

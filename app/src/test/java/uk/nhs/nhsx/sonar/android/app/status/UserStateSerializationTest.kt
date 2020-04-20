@@ -9,38 +9,44 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.junit.Test
 
-class UserStateTest {
+class UserStateSerializationTest {
+
+    val serialize = UserStateSerialization::serialize
+    val deserialize = UserStateSerialization::deserialize
 
     @Test
     fun `serialize default state`() {
         val until = DateTime(1587241302261L, UTC)
+        val defaultState = DefaultState(until)
 
-        assertThat(DefaultState(until).serialize())
-            .isEqualTo("""{"until":1587241302261,"type":"DefaultState"}""")
+        assertThat(serialize(defaultState))
+            .isEqualTo("""{"type":"DefaultState","until":1587241302261}""")
     }
 
     @Test
     fun `serialize ember state`() {
         val until = DateTime(1587241302262L, UTC)
+        val emberState = EmberState(until)
 
-        assertThat(EmberState(until).serialize())
-            .isEqualTo("""{"until":1587241302262,"type":"EmberState"}""")
+        assertThat(serialize(emberState))
+            .isEqualTo("""{"type":"EmberState","until":1587241302262}""")
     }
 
     @Test
     fun `serialize red state`() {
         val until = DateTime(1587241302263L, UTC)
         val symptoms = setOf(Symptom.COUGH, Symptom.TEMPERATURE)
+        val redState = RedState(until, symptoms)
 
-        assertThat(RedState(until, symptoms).serialize())
-            .isEqualTo("""{"until":1587241302263,"symptoms":["COUGH","TEMPERATURE"],"type":"RedState"}""")
+        assertThat(serialize(redState))
+            .isEqualTo("""{"type":"RedState","symptoms":["COUGH","TEMPERATURE"],"until":1587241302263}""")
     }
 
     @Test
     fun `deserialize default state`() {
         val until = DateTime(1587241302261L, UTC)
 
-        assertThat(UserState.deserialize("""{"until":1587241302261,"type":"DefaultState"}"""))
+        assertThat(deserialize("""{"until":1587241302261,"type":"DefaultState"}"""))
             .isEqualTo(DefaultState(until))
     }
 
@@ -48,7 +54,7 @@ class UserStateTest {
     fun `deserialize ember state`() {
         val until = DateTime(1587241302262L, UTC)
 
-        assertThat(UserState.deserialize("""{"until":1587241302262,"type":"EmberState"}"""))
+        assertThat(deserialize("""{"until":1587241302262,"type":"EmberState"}"""))
             .isEqualTo(EmberState(until))
     }
 
@@ -56,7 +62,7 @@ class UserStateTest {
     fun `deserialize red state`() {
         val until = DateTime(1587241302262L, UTC)
 
-        assertThat(UserState.deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"RedState"}"""))
+        assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"RedState"}"""))
             .isEqualTo(RedState(until, setOf(Symptom.COUGH)))
     }
 }
