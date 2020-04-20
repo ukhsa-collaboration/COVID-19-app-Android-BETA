@@ -21,6 +21,10 @@ sealed class UserState(private val type: String, @Transient open val until: Date
 
     fun serialize(): String = gSon.toJson(this)
 
+    fun hasExpired(): Boolean = until.isBeforeNow
+
+    override fun toString(): String = "UserState($type)"
+
     companion object {
         private val userStateTypeAdapterFactory: RuntimeTypeAdapterFactory<UserState> =
             RuntimeTypeAdapterFactory.of(UserState::class.java, "type")
@@ -35,8 +39,6 @@ sealed class UserState(private val type: String, @Transient open val until: Date
 
         fun deserialize(json: String): UserState = gSon.fromJson(json, UserState::class.java)
     }
-
-    override fun toString(): String = "UserState($type)"
 }
 
 data class DefaultState(override val until: DateTime) :

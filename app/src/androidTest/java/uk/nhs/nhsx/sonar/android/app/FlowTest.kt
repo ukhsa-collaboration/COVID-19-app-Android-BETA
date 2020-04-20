@@ -236,7 +236,7 @@ class FlowTest {
 
     @Test
     fun testLaunchWhenStateIsRed() {
-        setUserState(RedState(DateTime.now(DateTimeZone.UTC), setOf(Symptom.TEMPERATURE)))
+        setUserState(RedState(DateTime.now(DateTimeZone.UTC).plusDays(1), setOf(Symptom.TEMPERATURE)))
         setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())

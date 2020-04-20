@@ -16,6 +16,16 @@ import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 class SpinnerAdapter(context: Context) :
     ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, getLastSevenDays(context)) {
 
+    init {
+        setDropDownViewResource(R.layout.item_date_spinner)
+    }
+
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View =
+        super.getDropDownView(position, convertView, parent)
+            .apply {
+                if (position == count - 1) background = null
+            }
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val v: View = super.getView(position, convertView, parent)
 

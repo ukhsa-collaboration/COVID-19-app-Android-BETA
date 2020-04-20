@@ -99,9 +99,7 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     private fun setDateSpinner() {
-        val adapter = SpinnerAdapter(this).apply {
-            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        }
+        val adapter = SpinnerAdapter(this)
 
         symptoms_date_spinner.adapter = adapter
         symptoms_date_spinner.setSelection(adapter.count)
