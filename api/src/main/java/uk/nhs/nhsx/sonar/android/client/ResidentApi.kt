@@ -12,12 +12,6 @@ import uk.nhs.nhsx.sonar.android.client.http.Promise
 import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
 import javax.inject.Inject
 
-// Register endpoint: POST /api/devices/registrations -d '{ pushToken: "base64(probably)-blabla" }' --> 204 - No Content
-// Confirm registration endpoint:
-// POST /api/devices
-// -d '{ "activationCode": "uuid-blabla..." }'
-// -> 200 { "id": "uuid-blabalabla", "secretKey": "base 64 encoded hmac compatible key" }
-
 class ResidentApi @Inject constructor(
     private val baseUrl: String,
     private val keyStorage: KeyStorage,
