@@ -28,10 +28,13 @@ class IsolateActivity : BaseActivity() {
     @Inject
     protected lateinit var stateStorage: StateStorage
 
+    private lateinit var dialog: BottomSheetDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_isolate)
-        appComponent.inject(this)
         BluetoothService.start(this)
 
         latest_advice_red.setOnClickListener {
@@ -42,38 +45,40 @@ class IsolateActivity : BaseActivity() {
             openUrl(NHS_SUPPORT_PAGE)
         }
 
-        if (stateStorage.get().hasExpired()) {
-            showBottomSheet()
-        }
+        setBottomSheet()
     }
 
-    private fun showBottomSheet() {
-        val bottomSheetDialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
-        val bottomSheetLayout = layoutInflater.inflate(R.layout.bottom_sheet_isolate, null)
-        bottomSheetDialog.setContentView(bottomSheetLayout)
-        bottomSheetDialog.behavior.isHideable = false
+    private fun setBottomSheet() {
+        dialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
+        dialog.setContentView(layoutInflater.inflate(R.layout.bottom_sheet_isolate, null))
+        dialog.behavior.isHideable = false
 
-        bottomSheetDialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {
+        dialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {
             stateStorage.update(DefaultState(DateTime.now(DateTimeZone.UTC)))
             navigateTo(stateStorage.get())
-            bottomSheetDialog.cancel()
+            dialog.cancel()
         }
 
-        bottomSheetDialog.setOnCancelListener {
+        dialog.setOnCancelListener {
             finish()
         }
 
-        bottomSheetDialog.findViewById<Button>(R.id.have_symptoms)?.setOnClickListener {
+        dialog.findViewById<Button>(R.id.have_symptoms)?.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
         }
-
-        bottomSheetDialog.show()
     }
 
     override fun onResume() {
         super.onResume()
 
-        navigateTo(stateStorage.get())
+        val state = stateStorage.get()
+        navigateTo(state)
+
+        if (state.hasExpired()) {
+            dialog.show()
+        } else {
+            dialog.cancel()
+        }
     }
 
     companion object {
