@@ -10,11 +10,7 @@ sealed class UserState {
 
     abstract val until: DateTime
 
-    fun hasExpired(): Boolean =
-        until.isBeforeNow
-
-    override fun toString(): String =
-        "UserState(${javaClass.simpleName})"
+    fun hasExpired(): Boolean = until.isBeforeNow
 }
 
 data class DefaultState(override val until: DateTime) : UserState()

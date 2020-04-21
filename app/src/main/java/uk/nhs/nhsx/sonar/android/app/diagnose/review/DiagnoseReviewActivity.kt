@@ -79,7 +79,7 @@ class DiagnoseReviewActivity : BaseActivity() {
 
                 showToast(R.string.successfull_data_upload)
 
-                updateStatusAndNavigate()
+                updateStateAndNavigate()
                 submission_error.visibility = View.GONE
             } else {
                 submission_error.visibility = View.VISIBLE
@@ -148,7 +148,7 @@ class DiagnoseReviewActivity : BaseActivity() {
             }
     }
 
-    private fun updateStatusAndNavigate() {
+    private fun updateStateAndNavigate() {
         symptomsDate?.let {
             val state = RedState(it.plusDays(7), symptoms)
             stateStorage.update(state)
