@@ -86,11 +86,13 @@ class DiagnoseReviewActivity : BaseActivity() {
         })
 
         submit_diagnosis.setOnClickListener {
-            if (symptomsDate == null) {
+            val selectedSymptomsDate = this.symptomsDate
+
+            if (selectedSymptomsDate == null) {
                 date_selection_error.visibility = View.VISIBLE
                 date_selection_error.announceForAccessibility(getString(R.string.date_selection_error))
             } else {
-                viewModel.uploadContactEvents()
+                viewModel.uploadContactEvents(selectedSymptomsDate)
             }
         }
     }

@@ -48,7 +48,6 @@ import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
 import uk.nhs.nhsx.sonar.android.app.testhelpers.hasTextInputLayoutErrorText
-import uk.nhs.nhsx.sonar.android.app.testhelpers.isToast
 
 @RunWith(AndroidJUnit4::class)
 class FlowTest {
@@ -181,9 +180,7 @@ class FlowTest {
 
         testAppContext.verifyReceivedProximityRequest()
 
-        onView(withText(R.string.successfull_data_upload))
-            .inRoot(isToast())
-            .check(matches(isDisplayed()))
+        checkIsolateActivityIsShown()
     }
 
     @Test
@@ -236,7 +233,12 @@ class FlowTest {
 
     @Test
     fun testLaunchWhenStateIsRed() {
-        setUserState(RedState(DateTime.now(DateTimeZone.UTC).plusDays(1), setOf(Symptom.TEMPERATURE)))
+        setUserState(
+            RedState(
+                DateTime.now(DateTimeZone.UTC).plusDays(1),
+                setOf(Symptom.TEMPERATURE)
+            )
+        )
         setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())

@@ -11,10 +11,13 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewViewModel
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import uk.nhs.nhsx.sonar.android.client.CoLocationApi
 import uk.nhs.nhsx.sonar.android.client.CoLocationData
 import uk.nhs.nhsx.sonar.android.client.CoLocationEvent
@@ -26,9 +29,10 @@ class DiagnoseReviewViewModelTest {
     private val sonarIdProvider = mockk<SonarIdProvider>()
     private val testSubject =
         DiagnoseReviewViewModel(
-            coLocationApi,
             Dispatchers.Unconfined,
-            coLocationDataProvider
+            coLocationApi,
+            coLocationDataProvider,
+            sonarIdProvider
         )
 
     companion object {
@@ -37,16 +41,18 @@ class DiagnoseReviewViewModelTest {
 
     @Test
     fun onUploadContactEvents() {
+        val symptomsDate = DateTime.now(DateTimeZone.UTC)
+
         runBlocking {
             val events = listOf(
                 CoLocationEvent(sonarId = "001", rssiValues = listOf(-10, 0), timestamp = "2s ago", duration = 10),
                 CoLocationEvent(sonarId = "002", rssiValues = listOf(-10, -10, 10), timestamp = "yesterday", duration = 120)
             )
-            val coLocationData = CoLocationData(RESIDENT_ID, events)
-            coEvery { coLocationDataProvider.getData() } returns coLocationData
+            val coLocationData = CoLocationData(RESIDENT_ID, symptomsDate.toUtcIsoFormat(), events)
+            coEvery { coLocationDataProvider.getEvents() } returns events
             every { sonarIdProvider.getSonarId() } returns RESIDENT_ID
 
-            testSubject.uploadContactEvents()
+            testSubject.uploadContactEvents(symptomsDate)
 
             verify {
                 coLocationApi.save(eq(coLocationData))

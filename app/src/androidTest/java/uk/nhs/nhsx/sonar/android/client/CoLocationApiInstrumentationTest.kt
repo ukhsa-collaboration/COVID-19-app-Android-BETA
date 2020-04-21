@@ -51,7 +51,13 @@ class CoLocationApiInstrumentationTest {
 
         server.enqueue(MockResponse().setResponseCode(200))
 
-        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
+        val promise = coLocationApi.save(
+            CoLocationData(
+                sonarId = "::sonar-id::",
+                symptomsTimestamp = "::timestamp::",
+                contactEvents = emptyList()
+            )
+        )
 
         val request = server.takeRequest(300, MILLISECONDS)
         assertEquals("/api/residents/::sonar-id::", request?.path)

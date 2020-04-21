@@ -255,7 +255,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(lastRequest?.path).isEqualTo("/api/residents/${TestCoLocateServiceDispatcher.RESIDENT_ID}")
 
         val body = lastRequest?.body?.readUtf8() ?: ""
-        assertThat(body).startsWith("""{"contactEvents":[""")
+        assertThat(body).contains(""""symptomsTimestamp":""")
+        assertThat(body).contains(""""contactEvents":[""")
         assertThat(body).contains(
             jsonOf(
                 "sonarId" to "04330a56-ad45-4b0f-81ee-dd414910e1f5",

@@ -8,23 +8,19 @@ import android.util.Base64
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
-import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
-import uk.nhs.nhsx.sonar.android.client.CoLocationData
 import uk.nhs.nhsx.sonar.android.client.CoLocationEvent
 import javax.inject.Inject
 import javax.inject.Named
 
 class CoLocationDataProvider @Inject constructor(
     private val contactEventDao: ContactEventDao,
-    private val sonarIdProvider: SonarIdProvider,
     @Named(BluetoothModule.ENCRYPT_SONAR_ID)
     private val encryptSonarId: Boolean
 ) {
 
-    suspend fun getData(): CoLocationData {
-        val events = contactEventDao.getAll().map(::convert)
-        return CoLocationData(sonarIdProvider.getSonarId(), events)
+    suspend fun getEvents(): List<CoLocationEvent> {
+        return contactEventDao.getAll().map(::convert)
     }
 
     private fun convert(contactEvent: ContactEvent): CoLocationEvent {

@@ -26,11 +26,21 @@ class CoLocationApiTest {
     @Test
     fun `test save() request`() {
         val events = listOf(
-            CoLocationEvent(sonarId = "001", rssiValues = listOf(-10, 0), timestamp = "2s ago", duration = 10),
-            CoLocationEvent(sonarId = "002", rssiValues = listOf(-10, -10, 10), timestamp = "yesterday", duration = 120)
+            CoLocationEvent(
+                sonarId = "001",
+                rssiValues = listOf(-10, 0),
+                timestamp = "2s ago",
+                duration = 10
+            ),
+            CoLocationEvent(
+                sonarId = "002",
+                rssiValues = listOf(-10, -10, 10),
+                timestamp = "yesterday",
+                duration = 120
+            )
         )
 
-        val promise = coLocationApi.save(CoLocationData("::sonar-id::", events))
+        val promise = coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", events))
 
         assertThat(promise.isInProgress).isTrue()
 
@@ -38,6 +48,7 @@ class CoLocationApiTest {
         assertThat(request.method).isEqualTo(PATCH)
         assertThat(request.url).isEqualTo("$baseUrl/api/residents/::sonar-id::")
         request.assertBodyHasJson(
+            "symptomsTimestamp" to "::timestamp::",
             "contactEvents" to listOf(
                 mapOf(
                     "sonarId" to "001",
@@ -57,7 +68,8 @@ class CoLocationApiTest {
 
     @Test
     fun `test save() on success`() {
-        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
+        val promise =
+            coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", emptyList()))
 
         requestQueue.returnSuccess(JSONObject())
         assertThat(promise.isSuccess).isTrue()
@@ -65,7 +77,8 @@ class CoLocationApiTest {
 
     @Test
     fun `test save() on error`() {
-        val promise = coLocationApi.save(CoLocationData("::sonar-id::", emptyList()))
+        val promise =
+            coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", emptyList()))
 
         requestQueue.returnError(VolleyError())
         assertThat(promise.isFailed).isTrue()

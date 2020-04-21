@@ -4,8 +4,8 @@
 
 package uk.nhs.nhsx.sonar.android.client
 
-import android.util.Log
 import org.json.JSONObject
+import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.HttpMethod.PATCH
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
@@ -25,7 +25,7 @@ class CoLocationApi(
             jsonBody = coLocationData.toJson(),
             key = keyStorage.provideSecretKey()!!
         )
-        Log.i("Sending", "Sending $coLocationData")
+        Timber.i("Sending $coLocationData")
 
         return httpClient.send(request).mapToUnit()
     }
@@ -33,6 +33,7 @@ class CoLocationApi(
 
 data class CoLocationData(
     val sonarId: String,
+    val symptomsTimestamp: String,
     val contactEvents: List<CoLocationEvent>
 )
 
@@ -46,6 +47,7 @@ data class CoLocationEvent(
 
 private fun CoLocationData.toJson(): JSONObject =
     jsonObjectOf(
+        "symptomsTimestamp" to symptomsTimestamp,
         "contactEvents" to contactEvents.map {
             if (it.sonarId != null) mapOf(
                 "sonarId" to it.sonarId,
