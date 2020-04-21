@@ -27,7 +27,6 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.showToast
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
@@ -76,8 +75,6 @@ class DiagnoseReviewActivity : BaseActivity() {
         { result ->
             if (result is ViewState.Success) {
                 viewModel.clearContactEvents()
-
-                showToast(R.string.successfull_data_upload)
 
                 updateStateAndNavigate()
                 submission_error.visibility = View.GONE

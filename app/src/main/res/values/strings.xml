@@ -36,7 +36,6 @@
     <string name="start_main_activity">Start main activity</string>
     <string name="notification_title">NHS Coronavirus</string>
     <string name="notification_text">"Someone you've been nearby recently was just diagnosed with coronavirus.\n\nYou should isolate yourself and get tested."</string>
-    <string name="successfull_data_upload">You have successfully shared you contact data with NHS.</string>
     <string name="erro_data_submission">Something went wrong, please try again later.</string>
     <string name="main_notification_channel_name">NHS Colocate</string>
     <string name="registration_title">Your app is set up and ready to go</string>
