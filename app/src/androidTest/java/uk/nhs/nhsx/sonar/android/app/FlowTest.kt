@@ -4,6 +4,7 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
+import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.bluetooth.BluetoothManager
 import android.view.View
@@ -58,7 +59,7 @@ class FlowTest {
 
     @get:Rule
     val permissionRule: GrantPermissionRule =
-        GrantPermissionRule.grant(ACCESS_FINE_LOCATION)
+        GrantPermissionRule.grant(ACCESS_FINE_LOCATION, ACCESS_BACKGROUND_LOCATION)
 
     private lateinit var testAppContext: TestApplicationContext
 

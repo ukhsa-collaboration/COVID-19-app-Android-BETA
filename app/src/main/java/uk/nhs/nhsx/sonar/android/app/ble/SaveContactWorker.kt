@@ -47,7 +47,6 @@ class DefaultSaveContactWorker(
                             duration = 60
                         )
                     contactEventDao.createOrUpdate(contactEvent, errorMargin)
-                    Timber.i("$TAG saving event $contactEvent")
                 } catch (e: Exception) {
                     Timber.e("$TAG Failed to save with exception $e")
                 }

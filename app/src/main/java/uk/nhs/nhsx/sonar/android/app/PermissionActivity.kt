@@ -4,13 +4,14 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
+import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_permission.permission_continue
@@ -33,10 +34,17 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
         super.onCreate(savedInstanceState)
 
         permission_continue.setOnClickListener {
-            requestPermissions(
-                arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION),
-                REQUEST_LOCATION
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                requestPermissions(
+                    arrayOf(ACCESS_FINE_LOCATION, ACCESS_BACKGROUND_LOCATION),
+                    REQUEST_LOCATION
+                )
+            } else {
+                requestPermissions(
+                    arrayOf(ACCESS_FINE_LOCATION),
+                    REQUEST_LOCATION
+                )
+            }
         }
     }
 
@@ -47,9 +55,9 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
     ) {
         if (
             requestCode == REQUEST_LOCATION &&
-            grantResults.size == 2 &&
-            grantResults.first() == PackageManager.PERMISSION_GRANTED &&
-            grantResults.last() == PackageManager.PERMISSION_GRANTED
+            (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && grantResults.size == 2 ||
+                Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && grantResults.size == 1) &&
+            grantResults.all { it == PackageManager.PERMISSION_GRANTED }
         ) {
             if (isBluetoothEnabled()) {
                 startOkActivity()

@@ -25,10 +25,10 @@ interface ContactEventDao {
     @Transaction
     suspend fun createOrUpdate(newEvent: ContactEvent, errorMargin: Int) {
         val sorted = getAll().sortedBy { it.timestamp }
-        Timber.d("all events $sorted")
         val eventsById = sorted.filter { it.sonarId.contentEquals(newEvent.sonarId) }
         val matchedEvent = aggregate(newEvent, eventsById, errorMargin)
         if (matchedEvent != null) {
+            Timber.d("saving Updated event; $matchedEvent")
             update(matchedEvent)
             return
         }
