@@ -22,6 +22,10 @@ object UserStateSerialization {
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.toString() }
             )
+            is RecoveryState -> jsonOf(
+                "type" to state.type(),
+                "until" to state.until.millis
+            )
         }
 
     fun deserialize(json: String): UserState {
@@ -32,6 +36,7 @@ object UserStateSerialization {
         return when (type) {
             "EmberState" -> EmberState(until)
             "RedState" -> RedState(until, jsonObj.getSymptoms())
+            "RecoveryState" -> RecoveryState(until)
             else -> DefaultState(until)
         }
     }

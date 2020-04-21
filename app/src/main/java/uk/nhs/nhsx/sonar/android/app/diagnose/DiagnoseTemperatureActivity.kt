@@ -15,13 +15,23 @@ import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import javax.inject.Inject
 
 open class DiagnoseTemperatureActivity : BaseActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    @Inject
+    lateinit var stateStorage: StateStorage
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        appComponent.inject(this)
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_temperature_diagnosis)
+
+        if (stateStorage.get().hasExpired()) {
+            progress.text = getString(R.string.progress_half)
+        }
 
         confirm_diagnosis.setOnClickListener {
             when (temperature_diagnosis_answer.checkedRadioButtonId) {

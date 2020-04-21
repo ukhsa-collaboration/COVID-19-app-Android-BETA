@@ -24,6 +24,15 @@ class UserStateSerializationTest {
     }
 
     @Test
+    fun `serialize recovery state`() {
+        val until = DateTime(1587241302261L, UTC)
+        val defaultState = RecoveryState(until)
+
+        assertThat(serialize(defaultState))
+            .isEqualTo("""{"type":"RecoveryState","until":1587241302261}""")
+    }
+
+    @Test
     fun `serialize ember state`() {
         val until = DateTime(1587241302262L, UTC)
         val emberState = EmberState(until)
@@ -48,6 +57,14 @@ class UserStateSerializationTest {
 
         assertThat(deserialize("""{"until":1587241302261,"type":"DefaultState"}"""))
             .isEqualTo(DefaultState(until))
+    }
+
+    @Test
+    fun `deserialize recovery state`() {
+        val until = DateTime(1587241302262L, UTC)
+
+        assertThat(deserialize("""{"until":1587241302262,"type":"RecoveryState"}"""))
+            .isEqualTo(RecoveryState(until))
     }
 
     @Test

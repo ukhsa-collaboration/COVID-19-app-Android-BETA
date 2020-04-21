@@ -185,6 +185,7 @@ dependencies {
     testImplementation 'org.awaitility:awaitility-kotlin:3.1.6'
     testImplementation 'io.mockk:mockk:1.10.0'
     testImplementation 'org.json:json:20190722'
+    testImplementation 'joda-time:joda-time:2.10.3'
 
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestUtil 'androidx.test:orchestrator:1.2.0'

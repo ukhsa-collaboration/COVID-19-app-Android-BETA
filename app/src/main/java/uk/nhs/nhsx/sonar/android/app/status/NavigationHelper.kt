@@ -24,4 +24,10 @@ fun Activity.navigateTo(state: UserState) {
         finish()
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }
+
+    if (state is RecoveryState && this !is OkActivity) {
+        OkActivity.start(this)
+        finish()
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+    }
 }
