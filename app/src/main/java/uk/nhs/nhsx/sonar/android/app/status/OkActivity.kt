@@ -61,8 +61,18 @@ class OkActivity : BaseActivity() {
             openUrl(LATEST_ADVICE_URL)
         }
 
+        toggleNotFeelingCard(false)
+
         addViewModelListener()
         viewModel.onStart()
+    }
+
+    private fun toggleNotFeelingCard(enabled: Boolean) {
+        status_not_feeling_well.let {
+            it.isClickable = enabled
+            it.isFocusable = enabled
+            it.isEnabled = enabled
+        }
     }
 
     private fun addViewModelListener() {
@@ -71,15 +81,15 @@ class OkActivity : BaseActivity() {
                 ViewState.Success -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.REGISTERED)
                     BluetoothService.start(this)
-                    status_not_feeling_well.isClickable = true
-                    status_not_feeling_well.isFocusable = true
-                    status_not_feeling_well.isEnabled = true
+                    toggleNotFeelingCard(true)
                 }
                 ViewState.Progress -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.IN_PROGRESS)
+                    toggleNotFeelingCard(false)
                 }
                 is ViewState.Error -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.FAILED)
+                    toggleNotFeelingCard(false)
                 }
             }
         })
