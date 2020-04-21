@@ -80,7 +80,8 @@ class ColocateApplication : Application() {
                     this,
                     connectionV2 = false,
                     errorMarginInSeconds = 60,
-                    encryptSonarId = false
+                    encryptSonarId = false,
+                    scanIntervalLength = 8
                 )
             )
             .cryptoModule(CryptoModule())

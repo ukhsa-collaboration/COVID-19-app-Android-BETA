@@ -7,6 +7,8 @@ package uk.nhs.nhsx.sonar.android.client
 import android.content.Context
 import android.util.Base64
 import android.util.Log
+import uk.nhs.nhsx.sonar.android.app.crypto.ELLIPTIC_CURVE
+import uk.nhs.nhsx.sonar.android.app.crypto.PROVIDER_NAME
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.spec.X509EncodedKeySpec
@@ -48,7 +50,7 @@ class SharedPreferencesKeyStorage @Inject constructor(
             .getString(PREF_PUBLIC_KEY, null)
             ?: return null
 
-        val ecKeyFactory = KeyFactory.getInstance("EC", "BC")
+        val ecKeyFactory = KeyFactory.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME)
         val decoded = Base64.decode(keyAsString, Base64.DEFAULT)
         val pubKeySpec = X509EncodedKeySpec(decoded)
         return ecKeyFactory.generatePublic(pubKeySpec)

@@ -5,11 +5,14 @@
 package uk.nhs.nhsx.sonar.android.app.ble
 
 import android.os.ParcelUuid
+import com.polidea.rxandroidble2.LogConstants
+import com.polidea.rxandroidble2.LogOptions
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.scan.ScanFilter
 import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
@@ -21,7 +24,6 @@ import org.joda.time.DateTimeZone
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -31,9 +33,13 @@ class Scan @Inject constructor(
     private val bleEvents: BleEvents,
     private val currentTimestampeProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
     @Named(BluetoothModule.ENCRYPT_SONAR_ID)
-    private val encryptSonarId: Boolean
+    private val encryptSonarId: Boolean,
+    @Named(BluetoothModule.SCAN_INTERVAL_LENGTH)
+    private val scanIntervalLength: Int
 ) : Scanner {
 
+    private var running = true
+    private var devices: MutableList<ScanResult> = mutableListOf()
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
@@ -81,37 +87,58 @@ class Scan @Inject constructor(
         .build()
 
     override fun start(coroutineScope: CoroutineScope) {
+        val logOptions = LogOptions.Builder()
+            .setLogLevel(LogConstants.DEBUG)
+            .setLogger { level, tag, msg -> Timber.tag(tag).log(level, msg) }
+            .build()
+        RxBleClient.updateLogOptions(logOptions)
         coroutineScope.launch {
-            Timber.d("scan - Kicking off delay")
-            delay(5 * 60_000)
-            Timber.d("scan - Restarting")
-            stop()
-            delay(10_000)
-            start(this)
-        }
+            while (running) {
+                Timber.d("scan - Starting")
+                scanDisposable = scan()
+                delay(scanIntervalLength.toLong() * 1_000)
 
-        scanDisposable = rxBleClient
+                Timber.d("scan - Stopping")
+                scanDisposable?.dispose()
+                scanDisposable = null
+
+                // Some devices are unable to connect while a scan is running
+                // or just after it finished
+                delay(1_000)
+
+                devices.distinctBy { it.bleDevice }.forEach {
+                    Timber.d("scan - Connecting to $it")
+                    connectToDevice(it, coroutineScope)
+                }
+                devices.clear()
+            }
+        }
+    }
+
+    private fun scan(): Disposable? {
+        Timber.d("Starting scan!")
+        return rxBleClient
             .scanBleDevices(
                 settings,
                 coLocateBackgroundedIPhoneFilter,
                 coLocateServiceUuidFilter
             )
-            .filter {
-                it.bleDevice.connectionState == RxBleConnection.RxBleConnectionState.DISCONNECTED
-            }
             .subscribe(
                 {
                     Timber.d("Scan found = ${it.bleDevice}")
-                    connectToDevice(it, coroutineScope)
+                    devices.add(it)
                 },
                 ::onConnectionError
             )
     }
 
     override fun stop() {
+        running = false
         scanDisposable?.dispose()
         scanDisposable = null
     }
+
+    private val connections: MutableList<Disposable?> = mutableListOf()
 
     private fun connectToDevice(scanResult: ScanResult, coroutineScope: CoroutineScope) {
         val macAddress = scanResult.bleDevice.macAddress
@@ -121,39 +148,39 @@ class Scan @Inject constructor(
         scanResult
             .bleDevice
             .establishConnection(false)
-            .doFinally {
-                Timber.d("Disconnecting from $connectionDisposable")
-                connectionDisposable?.dispose()
-                connectionDisposable = null
-            }
             .flatMapSingle { connection ->
-                // TODO: Figure out appropriate size - Can't be equal to Cryptogram size, seems there's some overhead
-                // If not negotiated we get 600 bytes back, go figure.
-                connection.requestMtu(120)
+                // the overhead appears to be 2 bytes
+                connection.requestMtu(2 + Cryptogram.SIZE)
                     .doOnSubscribe { Timber.i("Negotiating MTU started") }
-                    .doOnError { e ->
+                    .doOnError { e: Throwable? ->
                         Timber.e("Failed to negotiate MTU: $e")
-                        throw e
+                        Observable.error<Throwable?>(e)
                     }
                     .doOnSuccess { Timber.i("Negotiated MTU: $it") }
                     .ignoreElement()
                     .andThen(Single.just(connection))
             }
-            .flatMapSingle {
-                read(it, coroutineScope)
+            .flatMapSingle { connection ->
+                read(connection, coroutineScope)
             }
-            .retryWhen {
-                Timber.e("Failed to read, retrying")
-                it.delay(3, TimeUnit.SECONDS)
+            .doOnSubscribe {
+                connectionDisposable = it
+                connections.add(it)
             }
-            .subscribe(
+            .take(1)
+            .blockingSubscribe(
                 { event ->
                     onReadSuccess(event)
                 },
                 { e ->
                     Timber.e("failed reading from $macAddress - $e")
+                },
+                {
+                    Timber.d("Disconnecting from $connectionDisposable")
+                    connectionDisposable?.dispose()
+                    connectionDisposable = null
                 }
-            ).let { connectionDisposable = it }
+            )
     }
 
     private fun read(connection: RxBleConnection, scope: CoroutineScope): Single<Event> {

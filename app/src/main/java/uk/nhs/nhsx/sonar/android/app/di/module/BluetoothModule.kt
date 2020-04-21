@@ -22,6 +22,7 @@ import javax.inject.Named
 open class BluetoothModule(
     private val applicationContext: Context,
     private val errorMarginInSeconds: Int,
+    private val scanIntervalLength: Int,
     private val connectionV2: Boolean,
     private val encryptSonarId: Boolean
 ) {
@@ -46,7 +47,13 @@ open class BluetoothModule(
         if (connectionV2)
             LongLiveConnectionScan(rxBleClient, saveContactWorker, bleEvents = bleEvents)
         else
-            Scan(rxBleClient, saveContactWorker, bleEvents, encryptSonarId = encryptSonarId)
+            Scan(
+                rxBleClient,
+                saveContactWorker,
+                bleEvents,
+                scanIntervalLength = scanIntervalLength,
+                encryptSonarId = encryptSonarId
+            )
 
     @Provides
     @Named(USE_CONNECTION_V2)
@@ -60,9 +67,14 @@ open class BluetoothModule(
     @Named(ERROR_MARGIN)
     fun provideErrorMarginInSeconds() = errorMarginInSeconds
 
+    @Provides
+    @Named(SCAN_INTERVAL_LENGTH)
+    fun provideScanIntervalLength() = scanIntervalLength
+
     companion object {
         const val USE_CONNECTION_V2 = "USE_CONNECTION_V2"
         const val ERROR_MARGIN = "ERROR_MARGIN"
         const val ENCRYPT_SONAR_ID = "ENCRYPT_SONAR_ID"
+        const val SCAN_INTERVAL_LENGTH = "SCAN_INTERVAL_LENGTH"
     }
 }

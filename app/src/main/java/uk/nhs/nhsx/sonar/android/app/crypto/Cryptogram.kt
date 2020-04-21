@@ -19,6 +19,8 @@ class Cryptogram(
                 bytes.sliceArray(64 until bytes.size - 16),
                 bytes.sliceArray(bytes.size - 16 until bytes.size)
             )
+
+        const val SIZE = 106
     }
 
     fun asBytes(): ByteArray =
