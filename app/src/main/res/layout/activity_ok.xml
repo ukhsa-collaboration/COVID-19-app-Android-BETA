@@ -3,6 +3,7 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/color_nhsuk_grey_5"
@@ -31,32 +32,38 @@
             android:paddingTop="32dp"
             android:paddingEnd="16dp">
 
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/status_initial"
+                style="@style/PrimaryCard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/initial_card_background"
-                android:orientation="vertical"
-                android:paddingStart="24dp"
-                android:paddingTop="32dp"
-                android:paddingEnd="24dp"
-                android:paddingBottom="32dp">
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/status_initial_title"
-                    style="@style/TextViewStatus"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/status_initial_title" />
+                    android:background="@drawable/initial_card_background"
+                    android:orientation="vertical"
+                    android:paddingStart="24dp"
+                    android:paddingTop="32dp"
+                    android:paddingEnd="24dp"
+                    android:paddingBottom="32dp">
 
-                <TextView
-                    android:id="@+id/latest_advice_ok"
-                    style="@style/TextViewSubStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="@string/status_latest_advice" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/status_initial_title"
+                        style="@style/TextViewStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_initial_title" />
+
+                    <TextView
+                        android:id="@+id/latest_advice_ok"
+                        style="@style/TextViewSubStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:text="@string/status_latest_advice" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:id="@+id/status_today_feeling"
@@ -69,61 +76,68 @@
                 android:paddingEnd="8dp"
                 android:text="@string/status_today_feeling" />
 
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/status_feeling_ok_layout"
+                style="@style/PrimaryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/card_background"
-                android:orientation="vertical"
-                android:paddingStart="24dp"
-                android:paddingTop="24dp"
-                android:paddingEnd="24dp"
-                android:paddingBottom="24dp">
+                android:clickable="false"
+                android:enabled="false"
+                android:focusable="false">
 
-                <TextView
-                    android:id="@+id/status_feeling_ok"
-                    style="@style/TextViewActionTitle"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/status_feeling_ok" />
+                    android:orientation="vertical"
+                    android:padding="24dp">
 
-                <TextView
-                    style="@style/TextViewActionSubTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status_feeling_ok_desc" />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/status_feeling_ok"
+                        style="@style/TextViewActionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="@string/status_feeling_ok" />
 
-            <LinearLayout
+                    <TextView
+                        style="@style/TextViewActionSubTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_feeling_ok_desc" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/status_not_feeling_well"
+                style="@style/PrimaryCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
-                android:background="@drawable/card_background"
                 android:clickable="false"
                 android:enabled="false"
-                android:focusable="false"
-                android:orientation="vertical"
-                android:paddingStart="24dp"
-                android:paddingTop="24dp"
-                android:paddingEnd="24dp"
-                android:paddingBottom="24dp">
+                android:focusable="false">
 
-                <TextView
-                    style="@style/TextViewActionTitle"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/status_not_feeling_well" />
+                    android:orientation="vertical"
+                    android:padding="24dp">
 
-                <TextView
-                    style="@style/TextViewActionSubTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/status_not_feeling_well_desc" />
-            </LinearLayout>
+                    <TextView
+                        style="@style/TextViewActionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:text="@string/status_not_feeling_well" />
+
+                    <TextView
+                        style="@style/TextViewActionSubTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_not_feeling_well_desc" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
 

@@ -18,6 +18,11 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="PrimaryCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">4dp</item>
+        <item name="cardElevation">1dp</item>
+    </style>
+
     <style name="TextViewError" parent="Widget.AppCompat.TextView">
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:lineSpacingMultiplier">1.18</item>
