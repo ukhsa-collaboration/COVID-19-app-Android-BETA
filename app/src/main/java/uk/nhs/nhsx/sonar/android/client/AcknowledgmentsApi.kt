@@ -5,13 +5,13 @@
 package uk.nhs.nhsx.sonar.android.client
 
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
-import uk.nhs.nhsx.sonar.android.client.http.HttpMethod.POST
+import uk.nhs.nhsx.sonar.android.client.http.HttpMethod
 import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
 import javax.inject.Inject
 
-class AcknowledgementsApi @Inject constructor(private val httpClient: HttpClient) {
+class AcknowledgmentsApi @Inject constructor(private val httpClient: HttpClient) {
 
     fun send(url: String) {
-        httpClient.send(HttpRequest(POST, url, null))
+        httpClient.send(HttpRequest(HttpMethod.PUT, url, null))
     }
 }

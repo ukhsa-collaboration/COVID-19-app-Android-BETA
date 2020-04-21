@@ -11,15 +11,15 @@ import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeObserver
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
-import uk.nhs.nhsx.sonar.android.client.AcknowledgementsApi
+import uk.nhs.nhsx.sonar.android.client.AcknowledgmentsApi
 import javax.inject.Inject
 
 class NotificationHandler @Inject constructor(
     private val sender: NotificationSender,
     private val stateStorage: StateStorage,
     private val activationCodeObserver: ActivationCodeObserver,
-    private val acknowledgementsDao: AcknowledgementsDao,
-    private val acknowledgementsApi: AcknowledgementsApi
+    private val acknowledgmentsDao: AcknowledgmentsDao,
+    private val acknowledgmentsApi: AcknowledgmentsApi
 ) {
 
     fun handle(messageData: Map<String, String>) {
@@ -51,16 +51,16 @@ class NotificationHandler @Inject constructor(
     }
 
     private fun hasBeenAcknowledged(data: Map<String, String>) =
-        data[ACKNOWLEDGEMENT_URL]
-            ?.let { url -> acknowledgementsDao.tryFind(url) != null }
+        data[ACKNOWLEDGMENT_URL]
+            ?.let { url -> acknowledgmentsDao.tryFind(url) != null }
             ?: false
 
     private fun acknowledgeIfNecessary(data: Map<String, String>) =
-        data[ACKNOWLEDGEMENT_URL]
+        data[ACKNOWLEDGMENT_URL]
             ?.let { url ->
-                val acknowledgement = Acknowledgement(url)
-                acknowledgementsApi.send(acknowledgement.url)
-                acknowledgementsDao.insert(acknowledgement)
+                val acknowledgment = Acknowledgment(url)
+                acknowledgmentsApi.send(acknowledgment.url)
+                acknowledgmentsDao.insert(acknowledgment)
             }
 
     private fun isStatusUpdate(data: Map<String, String>) =
@@ -72,7 +72,7 @@ class NotificationHandler @Inject constructor(
     companion object {
         private const val STATUS_KEY = "status"
         private const val ACTIVATION_CODE_KEY = "activationCode"
-        private const val ACKNOWLEDGEMENT_URL = "acknowledgementUrl"
+        private const val ACKNOWLEDGMENT_URL = "acknowledgmentUrl"
         private const val NOTIFICATION_SERVICE_ID = 10001
     }
 }

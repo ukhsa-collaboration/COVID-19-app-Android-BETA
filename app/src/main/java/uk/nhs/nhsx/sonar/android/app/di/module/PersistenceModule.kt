@@ -13,7 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.ble.DefaultSaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
-import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgementsDao
+import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgmentsDao
 import javax.inject.Named
 
 @Module
@@ -31,8 +31,8 @@ class PersistenceModule(private val appContext: Context) {
         database.contactEventDao()
 
     @Provides
-    fun provideAcknowledgementsDao(database: AppDatabase): AcknowledgementsDao =
-        database.acknowledgementsDao()
+    fun provideAcknowledgmentsDao(database: AppDatabase): AcknowledgmentsDao =
+        database.acknowledgmentsDao()
 
     @Provides
     fun provideSaveContactWorker(

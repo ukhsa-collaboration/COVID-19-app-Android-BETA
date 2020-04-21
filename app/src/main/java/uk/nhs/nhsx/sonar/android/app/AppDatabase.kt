@@ -10,18 +10,18 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
-import uk.nhs.nhsx.sonar.android.app.notifications.Acknowledgement
-import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgementsDao
+import uk.nhs.nhsx.sonar.android.app.notifications.Acknowledgment
+import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgmentsDao
 
 @Database(
-    entities = [ContactEvent::class, Acknowledgement::class],
-    version = 5,
+    entities = [ContactEvent::class, Acknowledgment::class],
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun contactEventDao(): ContactEventDao
-    abstract fun acknowledgementsDao(): AcknowledgementsDao
+    abstract fun acknowledgmentsDao(): AcknowledgmentsDao
 }
 
 class Converters {

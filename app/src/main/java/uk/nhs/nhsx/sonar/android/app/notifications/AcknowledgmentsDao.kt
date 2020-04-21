@@ -10,11 +10,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface AcknowledgementsDao {
+interface AcknowledgmentsDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(acknowledgement: Acknowledgement)
+    fun insert(acknowledgment: Acknowledgment)
 
-    @Query("SELECT * FROM ${Acknowledgement.TABLE_NAME} WHERE url = :url")
-    fun tryFind(url: String): Acknowledgement?
+    @Query("SELECT * FROM ${Acknowledgment.TABLE_NAME} WHERE url = :url")
+    fun tryFind(url: String): Acknowledgment?
 }

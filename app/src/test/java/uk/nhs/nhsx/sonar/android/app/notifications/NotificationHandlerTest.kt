@@ -14,15 +14,15 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeObserver
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
-import uk.nhs.nhsx.sonar.android.client.AcknowledgementsApi
+import uk.nhs.nhsx.sonar.android.client.AcknowledgmentsApi
 
 class NotificationHandlerTest {
 
     private val sender = mockk<NotificationSender>(relaxUnitFun = true)
     private val statusStorage = mockk<StateStorage>(relaxUnitFun = true)
     private val activationCodeObserver = mockk<ActivationCodeObserver>(relaxUnitFun = true)
-    private val ackDao = mockk<AcknowledgementsDao>(relaxUnitFun = true)
-    private val ackApi = mockk<AcknowledgementsApi>(relaxUnitFun = true)
+    private val ackDao = mockk<AcknowledgmentsDao>(relaxUnitFun = true)
+    private val ackApi = mockk<AcknowledgmentsApi>(relaxUnitFun = true)
     private val handler = NotificationHandler(sender, statusStorage, activationCodeObserver, ackDao, ackApi)
 
     @Test
@@ -60,10 +60,10 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun testOnMessageReceived_WithAcknowledgementUrl() {
+    fun testOnMessageReceived_WithAcknowledgmentUrl() {
         every { ackDao.tryFind(any()) } returns null
 
-        val messageData = mapOf("status" to "POTENTIAL", "acknowledgementUrl" to "https://api.example.com/ack/100")
+        val messageData = mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/100")
 
         handler.handle(messageData)
 
@@ -72,15 +72,15 @@ class NotificationHandlerTest {
             sender.send(10001, R.string.notification_title, R.string.notification_text, any())
             ackApi.send("https://api.example.com/ack/100")
             ackDao.tryFind("https://api.example.com/ack/100")
-            ackDao.insert(Acknowledgement("https://api.example.com/ack/100"))
+            ackDao.insert(Acknowledgment("https://api.example.com/ack/100"))
         }
     }
 
     @Test
     fun testOnMessageReceived_WhenItHasAlreadyBeenReceived() {
-        every { ackDao.tryFind(any()) } returns Acknowledgement("https://api.example.com/ack/101")
+        every { ackDao.tryFind(any()) } returns Acknowledgment("https://api.example.com/ack/101")
 
-        val messageData = mapOf("status" to "POTENTIAL", "acknowledgementUrl" to "https://api.example.com/ack/101")
+        val messageData = mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/101")
 
         handler.handle(messageData)
 
@@ -89,7 +89,7 @@ class NotificationHandlerTest {
             sender wasNot Called
             ackApi.send("https://api.example.com/ack/101")
             ackDao.tryFind("https://api.example.com/ack/101")
-            ackDao.insert(Acknowledgement("https://api.example.com/ack/101"))
+            ackDao.insert(Acknowledgment("https://api.example.com/ack/101"))
         }
     }
 }
