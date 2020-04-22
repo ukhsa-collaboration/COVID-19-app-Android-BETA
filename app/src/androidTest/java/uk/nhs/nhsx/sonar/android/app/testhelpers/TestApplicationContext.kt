@@ -32,7 +32,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
-import uk.nhs.nhsx.sonar.android.app.registration.ID_NOT_REGISTERED
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.client.http.jsonOf
 import java.nio.charset.Charset
@@ -181,7 +180,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val keyStorage = component.getKeyStorage()
 
         await until {
-            idProvider.getSonarId() != ID_NOT_REGISTERED
+            idProvider.getSonarId().isNotEmpty()
         }
         assertThat(idProvider.getSonarId()).isEqualTo(TestCoLocateServiceDispatcher.RESIDENT_ID)
 

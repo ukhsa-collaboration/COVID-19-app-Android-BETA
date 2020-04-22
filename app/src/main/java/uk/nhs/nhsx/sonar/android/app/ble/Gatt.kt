@@ -38,6 +38,13 @@ class Gatt @Inject constructor(
             Identifier.fromString(sonarIdProvider.getSonarId()).asBytes
         }
 
+    private val payloadIsValid: Boolean
+        get() = if (encryptSonarId) {
+            bluetoothCryptogramProvider.canProvideCryptogram()
+        } else {
+            sonarIdProvider.hasProperSonarId()
+        }
+
     private val service: BluetoothGattService =
         BluetoothGattService(COLOCATE_SERVICE_UUID, SERVICE_TYPE_PRIMARY)
             .also {
@@ -61,7 +68,7 @@ class Gatt @Inject constructor(
                 offset: Int,
                 characteristic: BluetoothGattCharacteristic
             ) {
-                if (characteristic.isDeviceIdentifier()) {
+                if (characteristic.isDeviceIdentifier() && payloadIsValid) {
                     server?.sendResponse(device, requestId, GATT_SUCCESS, 0, payload)
                 } else {
                     server?.sendResponse(device, requestId, GATT_FAILURE, 0, byteArrayOf())

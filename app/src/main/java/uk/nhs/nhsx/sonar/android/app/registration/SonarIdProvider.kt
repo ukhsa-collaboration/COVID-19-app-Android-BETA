@@ -8,8 +8,6 @@ import android.content.Context
 import androidx.core.content.edit
 import javax.inject.Inject
 
-const val ID_NOT_REGISTERED = "00000000-0000-0000-0000-000000000000"
-
 class SonarIdProvider @Inject constructor(context: Context) {
 
     private val sharedPreferences by lazy {
@@ -17,11 +15,11 @@ class SonarIdProvider @Inject constructor(context: Context) {
     }
 
     fun getSonarId(): String =
-        sharedPreferences.getString(KEY, ID_NOT_REGISTERED)!!
+        sharedPreferences.getString(KEY, "")!!
 
     fun hasProperSonarId(): Boolean {
         val sonarId = getSonarId()
-        return sonarId.isNotEmpty() && sonarId != ID_NOT_REGISTERED
+        return sonarId.isNotEmpty()
     }
 
     fun setSonarId(sonarId: String) {

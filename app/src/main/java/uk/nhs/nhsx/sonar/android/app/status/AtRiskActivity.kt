@@ -27,7 +27,6 @@ class AtRiskActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
         BluetoothService.start(this)
-
         setContentView(R.layout.activity_at_risk)
 
         status_not_feeling_well.setOnClickListener {

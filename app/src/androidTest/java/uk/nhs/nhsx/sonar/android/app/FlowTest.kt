@@ -66,7 +66,7 @@ class FlowTest {
     val permissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(*permissions().toTypedArray())
 
-    fun permissions() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    private fun permissions() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         listOf(ACCESS_BACKGROUND_LOCATION, ACCESS_FINE_LOCATION)
     } else {
         listOf(ACCESS_COARSE_LOCATION)

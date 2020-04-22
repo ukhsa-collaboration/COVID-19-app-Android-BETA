@@ -64,7 +64,7 @@ class RegistrationUseCaseTest {
     fun setUp() {
         Timber.plant(Timber.DebugTree())
 
-        every { sonarIdProvider.getSonarId() } returns ID_NOT_REGISTERED
+        every { sonarIdProvider.getSonarId() } returns ""
         every { sonarIdProvider.hasProperSonarId() } returns false
         every { sonarIdProvider.setSonarId(any()) } returns Unit
         coEvery { tokenRetriever.retrieveToken() } returns Success(FIREBASE_TOKEN)

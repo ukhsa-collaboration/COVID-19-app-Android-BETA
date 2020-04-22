@@ -121,7 +121,6 @@ class Scan @Inject constructor(
     }
 
     private fun scan(): Disposable? {
-        Timber.d("Starting scan!")
         return rxBleClient
             .scanBleDevices(
                 settings,
@@ -154,7 +153,6 @@ class Scan @Inject constructor(
             .bleDevice
             .establishConnection(false)
             .flatMapSingle { connection ->
-                // the overhead appears to be 2 bytes
                 negotiatieMTU(connection)
             }
             .flatMapSingle { connection ->
@@ -175,6 +173,7 @@ class Scan @Inject constructor(
     }
 
     private fun negotiatieMTU(connection: RxBleConnection): Single<RxBleConnection> {
+        // the overhead appears to be 2 bytes
         return connection.requestMtu(2 + Cryptogram.SIZE)
             .doOnSubscribe { Timber.i("Negotiating MTU started") }
             .doOnError { e: Throwable? ->
