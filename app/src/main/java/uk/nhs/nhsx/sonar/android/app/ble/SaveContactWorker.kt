@@ -34,7 +34,12 @@ class DefaultSaveContactWorker(
     private val contactEventDao: ContactEventDao
 ) : SaveContactWorker {
 
-    override fun createOrUpdateContactEvent(scope: CoroutineScope, id: ByteArray, rssi: Int, timestamp: DateTime) {
+    override fun createOrUpdateContactEvent(
+        scope: CoroutineScope,
+        id: ByteArray,
+        rssi: Int,
+        timestamp: DateTime
+    ) {
         scope.launch {
             withContext(dispatcher) {
                 try {

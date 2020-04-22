@@ -40,6 +40,8 @@ class Scan @Inject constructor(
 
     private var running = true
     private var devices: MutableList<ScanResult> = mutableListOf()
+    private val connections: MutableList<Disposable?> = mutableListOf()
+
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
         .build()
@@ -106,10 +108,13 @@ class Scan @Inject constructor(
                 // or just after it finished
                 delay(1_000)
 
-                devices.distinctBy { it.bleDevice }.forEach {
+                devices.distinctBy { it.bleDevice }.map {
                     Timber.d("scan - Connecting to $it")
                     connectToDevice(it, coroutineScope)
                 }
+
+                connections.map { it?.dispose() }
+                connections.clear()
                 devices.clear()
             }
         }
@@ -138,33 +143,24 @@ class Scan @Inject constructor(
         scanDisposable = null
     }
 
-    private val connections: MutableList<Disposable?> = mutableListOf()
-
-    private fun connectToDevice(scanResult: ScanResult, coroutineScope: CoroutineScope) {
+    private fun connectToDevice(
+        scanResult: ScanResult,
+        coroutineScope: CoroutineScope
+    ) {
         val macAddress = scanResult.bleDevice.macAddress
 
         Timber.d("Connecting to $macAddress")
-        var connectionDisposable: Disposable? = null
         scanResult
             .bleDevice
             .establishConnection(false)
             .flatMapSingle { connection ->
                 // the overhead appears to be 2 bytes
-                connection.requestMtu(2 + Cryptogram.SIZE)
-                    .doOnSubscribe { Timber.i("Negotiating MTU started") }
-                    .doOnError { e: Throwable? ->
-                        Timber.e("Failed to negotiate MTU: $e")
-                        Observable.error<Throwable?>(e)
-                    }
-                    .doOnSuccess { Timber.i("Negotiated MTU: $it") }
-                    .ignoreElement()
-                    .andThen(Single.just(connection))
+                negotiatieMTU(connection)
             }
             .flatMapSingle { connection ->
                 read(connection, coroutineScope)
             }
             .doOnSubscribe {
-                connectionDisposable = it
                 connections.add(it)
             }
             .take(1)
@@ -174,13 +170,20 @@ class Scan @Inject constructor(
                 },
                 { e ->
                     Timber.e("failed reading from $macAddress - $e")
-                },
-                {
-                    Timber.d("Disconnecting from $connectionDisposable")
-                    connectionDisposable?.dispose()
-                    connectionDisposable = null
                 }
             )
+    }
+
+    private fun negotiatieMTU(connection: RxBleConnection): Single<RxBleConnection> {
+        return connection.requestMtu(2 + Cryptogram.SIZE)
+            .doOnSubscribe { Timber.i("Negotiating MTU started") }
+            .doOnError { e: Throwable? ->
+                Timber.e("Failed to negotiate MTU: $e")
+                Observable.error<Throwable?>(e)
+            }
+            .doOnSuccess { Timber.i("Negotiated MTU: $it") }
+            .ignoreElement()
+            .andThen(Single.just(connection))
     }
 
     private fun read(connection: RxBleConnection, scope: CoroutineScope): Single<Event> {

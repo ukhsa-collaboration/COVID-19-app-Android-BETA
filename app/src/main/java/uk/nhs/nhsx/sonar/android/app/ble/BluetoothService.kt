@@ -58,7 +58,7 @@ class BluetoothService : Service() {
     lateinit var gatt: Gatt
 
     @Inject
-    @Named(AppModule.DISPATCHER_MAIN)
+    @Named(AppModule.DISPATCHER_DEFAULT)
     lateinit var coroutineDispatcher: CoroutineDispatcher
 
     private lateinit var coroutineScope: CoroutineScope

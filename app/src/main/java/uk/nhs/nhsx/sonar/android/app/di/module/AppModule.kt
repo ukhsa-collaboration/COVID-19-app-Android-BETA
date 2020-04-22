@@ -19,8 +19,8 @@ class AppModule(private val applicationContext: Context) {
     fun provideContext() = applicationContext
 
     @Provides
-    @Named(DISPATCHER_MAIN)
-    fun mainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+    @Named(DISPATCHER_DEFAULT)
+    fun defaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
     @Provides
     @Named(DISPATCHER_IO)
@@ -40,7 +40,7 @@ class AppModule(private val applicationContext: Context) {
     }
 
     companion object {
-        const val DISPATCHER_MAIN = "DISPATCHER_MAIN"
+        const val DISPATCHER_DEFAULT = "DISPATCHER_DEFAULT"
         const val DISPATCHER_IO = "DISPATCHER_IO"
         const val DEVICE_MODEL = "DEVICE_MODEL"
         const val DEVICE_OS_VERSION = "DEVICE_OS_MODEL"
