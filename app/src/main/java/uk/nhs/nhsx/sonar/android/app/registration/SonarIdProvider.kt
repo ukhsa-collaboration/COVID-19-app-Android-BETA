@@ -17,18 +17,14 @@ class SonarIdProvider @Inject constructor(context: Context) {
     fun getSonarId(): String =
         sharedPreferences.getString(KEY, "")!!
 
-    fun hasProperSonarId(): Boolean {
-        val sonarId = getSonarId()
-        return sonarId.isNotEmpty()
-    }
+    fun hasProperSonarId(): Boolean =
+        getSonarId().isNotEmpty()
 
-    fun setSonarId(sonarId: String) {
+    fun setSonarId(sonarId: String) =
         sharedPreferences.edit { putString(KEY, sonarId) }
-    }
 
-    fun clear() {
+    fun clear() =
         sharedPreferences.edit { clear() }
-    }
 
     companion object {
         private const val KEY = "RESIDENT_ID"
