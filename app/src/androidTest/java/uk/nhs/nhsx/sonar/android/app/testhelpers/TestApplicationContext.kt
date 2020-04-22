@@ -195,12 +195,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             keyStorage.providePublicKey()
         }
         val publicKey = keyStorage.providePublicKey()?.encoded
-        assertThat(publicKey).isEqualTo(
-            Base64.decode(
-                TestCoLocateServiceDispatcher.PUBLIC_KEY,
-                Base64.DEFAULT
-            )
-        )
+        val decodedPublicKey = Base64.decode(TestCoLocateServiceDispatcher.PUBLIC_KEY, Base64.DEFAULT)
+        assertThat(publicKey).isEqualTo(decodedPublicKey)
     }
 
     fun simulateDeviceInProximity() {

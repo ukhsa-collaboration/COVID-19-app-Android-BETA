@@ -4,7 +4,6 @@
 
 package uk.nhs.nhsx.sonar.android.app.ble
 
-import android.util.Base64
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleDevice
@@ -13,8 +12,6 @@ import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.slot
 import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.coroutines.CoroutineScope
@@ -77,30 +74,10 @@ class LongLiveConnectionScanTest {
         )
         every { connection.readRssi() } returnsMany rssiValues.map { Single.just(it) }
 
-        `bypass android_util_Base64 to java_util_Base64`()
         identifier = Identifier.fromBytes(ByteArray(64) { 1 })
         every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(
             identifier.asBytes
         )
-    }
-
-    @Test
-    fun `bypass android_util_Base64 to java_util_Base64`() {
-        mockkStatic(Base64::class)
-        val arraySlot = slot<ByteArray>()
-
-        every {
-            Base64.encodeToString(capture(arraySlot), Base64.DEFAULT)
-        } answers {
-            java.util.Base64.getEncoder().encodeToString(arraySlot.captured)
-        }
-
-        val stringSlot = slot<String>()
-        every {
-            Base64.decode(capture(stringSlot), Base64.DEFAULT)
-        } answers {
-            java.util.Base64.getDecoder().decode(stringSlot.captured)
-        }
     }
 
     @Test
