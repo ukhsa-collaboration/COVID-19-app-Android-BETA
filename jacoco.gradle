@@ -42,10 +42,6 @@ subprojects {
     tasks.withType(Test) {
         jacoco.includeNoLocationClasses = true
         jacoco.excludes = ["jdk.internal.*"]
-
-        if (project.name == "app") {
-            jacoco.excludes += "uk.nhs.nhsx.sonar.android.client.*"
-        }
     }
 }
 
@@ -61,8 +57,8 @@ project.afterEvaluate {
         def executions = []
 
         subprojects.each { prj ->
-            dependsOn(prj.testDebugUnitTest)
-            dependsOn(prj.connectedAndroidTest)
+            mustRunAfter(prj.testDebugUnitTest)
+            mustRunAfter(prj.connectedAndroidTest)
 
             classDirs += fileTree(dir: "$prj.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
             sourceDirs += files("$prj.projectDir/src/main/java")
