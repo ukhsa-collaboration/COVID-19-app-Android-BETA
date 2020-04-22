@@ -24,6 +24,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
+import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
@@ -47,6 +48,7 @@ interface TestAppComponent : ApplicationComponent {
     fun getAppDatabase(): AppDatabase
     fun getStateStorage(): StateStorage
     fun getOnboardingStatusProvider(): OnboardingStatusProvider
+    fun getActivationCodeProvider(): ActivationCodeProvider
 }
 
 class TestBluetoothModule(

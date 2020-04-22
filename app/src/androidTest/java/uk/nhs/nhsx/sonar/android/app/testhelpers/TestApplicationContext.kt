@@ -106,7 +106,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         mockServer.shutdown()
     }
 
-    fun simulateActivationCodeReceived() {
+    private fun simulateActivationCodeReceived() {
         val msg = RemoteMessage(bundleOf("activationCode" to "test activation code #001"))
         notificationService.onMessageReceived(msg)
     }
@@ -151,7 +151,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun verifyReceivedRegistrationRequest() {
-        val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
+        val lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.method).isEqualTo("POST")
@@ -161,12 +161,13 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
     fun verifyRegistrationFlow() {
         verifyReceivedRegistrationRequest()
+        simulateActivationCodeReceived()
         verifyReceivedActivationRequest()
         verifySonarIdAndSecretKeyAndPublicKey()
     }
 
     fun verifyReceivedActivationRequest() {
-        val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
+        val lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.method).isEqualTo("POST")

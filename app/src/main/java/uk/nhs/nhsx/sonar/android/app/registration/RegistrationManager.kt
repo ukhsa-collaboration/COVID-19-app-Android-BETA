@@ -9,6 +9,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import androidx.work.WorkRequest.MIN_BACKOFF_MILLIS
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import kotlinx.coroutines.CoroutineDispatcher
@@ -40,7 +41,11 @@ class RegistrationManager @Inject constructor(
         val registrationWorkRequest = OneTimeWorkRequestBuilder<RegistrationWorker>()
             .setConstraints(constraints)
             .setInitialDelay(initialDelaySeconds, TimeUnit.SECONDS)
-            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30_000, TimeUnit.SECONDS)
+            .setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS
+            )
             .build()
 
         WorkManager.getInstance(context)

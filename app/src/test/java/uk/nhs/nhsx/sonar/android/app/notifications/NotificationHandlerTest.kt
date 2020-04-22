@@ -11,6 +11,8 @@ import io.mockk.verify
 import io.mockk.verifyAll
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
+import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.client.AcknowledgmentsApi
@@ -19,10 +21,18 @@ class NotificationHandlerTest {
 
     private val sender = mockk<NotificationSender>(relaxUnitFun = true)
     private val statusStorage = mockk<StateStorage>(relaxUnitFun = true)
-    private val activationCodeObserver = mockk<ActivationCodeObserver>(relaxUnitFun = true)
+    private val activationCodeProvider = mockk<ActivationCodeProvider>(relaxUnitFun = true)
+    private val registrationManager = mockk<RegistrationManager>(relaxUnitFun = true)
     private val ackDao = mockk<AcknowledgmentsDao>(relaxUnitFun = true)
     private val ackApi = mockk<AcknowledgmentsApi>(relaxUnitFun = true)
-    private val handler = NotificationHandler(sender, statusStorage, activationCodeObserver, ackDao, ackApi)
+    private val handler = NotificationHandler(
+        sender,
+        statusStorage,
+        activationCodeProvider,
+        registrationManager,
+        ackDao,
+        ackApi
+    )
 
     @Test
     fun testOnMessageReceived_UnrecognizedNotification() {
@@ -33,7 +43,8 @@ class NotificationHandlerTest {
         verifyAll {
             sender wasNot Called
             statusStorage wasNot Called
-            activationCodeObserver wasNot Called
+            activationCodeProvider wasNot Called
+            registrationManager wasNot Called
         }
     }
 
@@ -43,7 +54,10 @@ class NotificationHandlerTest {
 
         handler.handle(messageData)
 
-        verify { activationCodeObserver.onGetActivationCode("code-023") }
+        verify {
+            activationCodeProvider.setActivationCode("code-023")
+            registrationManager.tryRegister()
+        }
     }
 
     @Test
@@ -62,7 +76,8 @@ class NotificationHandlerTest {
     fun testOnMessageReceived_WithAcknowledgmentUrl() {
         every { ackDao.tryFind(any()) } returns null
 
-        val messageData = mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/100")
+        val messageData =
+            mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/100")
 
         handler.handle(messageData)
 
@@ -79,7 +94,8 @@ class NotificationHandlerTest {
     fun testOnMessageReceived_WhenItHasAlreadyBeenReceived() {
         every { ackDao.tryFind(any()) } returns Acknowledgment("https://api.example.com/ack/101")
 
-        val messageData = mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/101")
+        val messageData =
+            mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/101")
 
         handler.handle(messageData)
 

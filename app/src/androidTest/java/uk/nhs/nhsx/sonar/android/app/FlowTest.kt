@@ -89,6 +89,7 @@ class FlowTest {
             getOnboardingStatusProvider().setOnboardingFinished(false)
             getStateStorage().clear()
             getSonarIdProvider().clear()
+            getActivationCodeProvider().clear()
         }
 
         val instrumentation = InstrumentationRegistry.getInstrumentation()
@@ -114,8 +115,7 @@ class FlowTest {
             ::testLaunchWhenStateIsDefault,
             ::testLaunchWhenStateIsEmber,
             ::testLaunchWhenStateIsRed,
-            ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
-            ::testReceivingReminderNotification
+            ::testLaunchWhenOnboardingIsFinishedButNotRegistered
         )
 
         tests.forEach {
@@ -147,8 +147,6 @@ class FlowTest {
         onView(withId(R.id.permission_continue)).perform(click())
 
         checkOkActivityIsShown()
-
-        testAppContext.simulateActivationCodeReceived()
 
         checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
 
@@ -182,30 +180,20 @@ class FlowTest {
         checkOkActivityIsShown()
 
         testAppContext.verifyReceivedRegistrationRequest()
-        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
-        verifyCheckMySymptomsButton(not(isEnabled()))
-
-        waitForText(R.string.registration_app_setup_failed, timeoutInMs = 2_000)
-
-        checkViewHasText(R.id.registrationStatusText, R.string.registration_app_setup_failed)
-        onView(withId(R.id.registrationRetryButton)).check(matches(isDisplayed()))
-        verifyCheckMySymptomsButton(not(isEnabled()))
-
         testAppContext.simulateBackendResponse(error = false)
 
-        onView(withId(R.id.registrationRetryButton)).perform(click())
-
-        testAppContext.simulateActivationCodeReceived()
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
+        verifyCheckMySymptomsButton(not(isEnabled()))
 
         testAppContext.verifyRegistrationFlow()
         checkViewHasText(
             R.id.registrationStatusText,
             R.string.registration_everything_is_working_ok
         )
-        onView(withId(R.id.registrationRetryButton)).check(matches(not(isDisplayed())))
         verifyCheckMySymptomsButton(isEnabled())
     }
 
+    @Test
     fun testBluetoothInteractions() {
         setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarIdAndSecretKeyAndPublicKey()
@@ -283,27 +271,6 @@ class FlowTest {
         setFinishedOnboarding()
 
         onView(withId(R.id.start_main_activity)).perform(click())
-
-        checkOkActivityIsShown()
-    }
-
-    fun testReceivingReminderNotification() {
-        setFinishedOnboarding()
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        checkOkActivityIsShown()
-
-        testAppContext.simulateBackendResponse(error = true)
-
-        onView(withId(R.id.registrationRetryButton)).perform(click())
-
-        testAppContext.apply {
-            clickOnNotification(
-                R.string.notification_registration_failed_title,
-                R.string.notification_registration_failed_text,
-                10_000
-            )
-        }
 
         checkOkActivityIsShown()
     }

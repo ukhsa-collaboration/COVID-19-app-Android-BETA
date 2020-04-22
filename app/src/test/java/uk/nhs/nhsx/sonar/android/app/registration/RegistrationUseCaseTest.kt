@@ -8,10 +8,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.test.runBlockingTest
 import net.lachlanmckee.timberjunit.TimberTestRule
 import org.assertj.core.api.Assertions.assertThat
@@ -32,7 +30,7 @@ class RegistrationUseCaseTest {
 
     private val tokenRetriever = mockk<TokenRetriever>()
     private val residentApi = mockk<ResidentApi>()
-    private val activationCodeObserver = mockk<ActivationCodeObserver>()
+    private val activationCodeProvider = mockk<ActivationCodeProvider>()
     private val sonarIdProvider = mockk<SonarIdProvider>()
     private val postCodeProvider = mockk<PostCodeProvider>()
 
@@ -49,9 +47,9 @@ class RegistrationUseCaseTest {
         RegistrationUseCase(
             tokenRetriever,
             residentApi,
-            activationCodeObserver,
             sonarIdProvider,
             postCodeProvider,
+            activationCodeProvider,
             DEVICE_MODEL,
             DEVICE_OS_VERSION
         )
@@ -72,13 +70,7 @@ class RegistrationUseCaseTest {
         registrationDeferred.resolve(Unit)
         every { residentApi.register(FIREBASE_TOKEN) } returns registrationDeferred.promise
 
-        val slot = slot<(String) -> Unit>()
-        every { activationCodeObserver.setListener(capture(slot)) } answers {
-            slot.captured(ACTIVATION_CODE)
-        }
-        every { activationCodeObserver.removeListener() } answers {
-            nothing
-        }
+        every { activationCodeProvider.getActivationCode() } returns ""
 
         val confirmationDeferred = Deferred<Registration>()
         confirmationDeferred.resolve(Registration(RESIDENT_ID))
@@ -89,6 +81,8 @@ class RegistrationUseCaseTest {
 
     @Test
     fun onSuccessReturnsSuccess() = runBlockingTest {
+        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+
         val result = registrationUseCase.register()
 
         assertThat(RegistrationResult.Success).isEqualTo(result)
@@ -138,37 +132,16 @@ class RegistrationUseCaseTest {
     }
 
     @Test
-    fun listensActivationCodeObserver() = runBlockingTest {
+    fun callsActivationCodeObserver() = runBlockingTest {
         registrationUseCase.register()
 
-        verify { activationCodeObserver.setListener(any()) }
-    }
-
-    @Test
-    fun onActivationCodeTimeoutReturnsFailure() = runBlockingTest {
-        every { activationCodeObserver.setListener(any()) } returns Unit
-
-        val result = async {
-            registrationUseCase.register()
-        }
-        advanceTimeBy(25_000)
-
-        assertThat(result.getCompleted()).isInstanceOf(RegistrationResult.Failure::class.java)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun onActivationCodeTimeoutShouldWaitFor20seconds() = runBlockingTest {
-        every { activationCodeObserver.setListener(any()) } returns Unit
-
-        val result = async {
-            registrationUseCase.register()
-        }
-        advanceTimeBy(19_000)
-        result.getCompleted()
+        verify { activationCodeProvider.getActivationCode() }
     }
 
     @Test
     fun registersResident() = runBlockingTest {
+        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+
         registrationUseCase.register()
 
         verify { residentApi.confirmDevice(confirmation) }
@@ -179,14 +152,18 @@ class RegistrationUseCaseTest {
         val deferred = Deferred<Registration>()
         deferred.fail(IOException())
         every { residentApi.confirmDevice(confirmation) } returns deferred.promise
+        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
 
         val result = registrationUseCase.register()
 
+        verify { residentApi.confirmDevice(confirmation) }
         assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
     }
 
     @Test
     fun onSuccessSavesSonarId() = runBlockingTest {
+        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+
         registrationUseCase.register()
 
         verify { sonarIdProvider.setSonarId(RESIDENT_ID) }
