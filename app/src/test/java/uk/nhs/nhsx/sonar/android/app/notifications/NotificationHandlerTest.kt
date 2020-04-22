@@ -11,7 +11,6 @@ import io.mockk.verify
 import io.mockk.verifyAll
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeObserver
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.client.AcknowledgmentsApi

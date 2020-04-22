@@ -6,8 +6,13 @@ package uk.nhs.nhsx.sonar.android.app.registration
 
 import android.content.Context
 import androidx.core.content.edit
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceStringLiveData
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SonarIdProvider @Inject constructor(context: Context) {
 
     private val sharedPreferences by lazy {
@@ -25,6 +30,18 @@ class SonarIdProvider @Inject constructor(context: Context) {
 
     fun clear() =
         sharedPreferences.edit { clear() }
+
+    fun hasProperSonarIdLiveData(): LiveData<Boolean> {
+        return Transformations.map(
+            SharedPreferenceStringLiveData(
+                sharedPreferences,
+                KEY,
+                ""
+            )
+        ) { sonarId ->
+            sonarId.isNotEmpty()
+        }
+    }
 
     companion object {
         private const val KEY = "RESIDENT_ID"

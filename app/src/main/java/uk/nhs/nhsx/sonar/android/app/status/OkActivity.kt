@@ -59,10 +59,6 @@ class OkActivity : BaseActivity() {
             DiagnoseTemperatureActivity.start(this)
         }
 
-        registrationPanel.setRetryListener {
-            viewModel.register()
-        }
-
         latest_advice_ok.setOnClickListener {
             openUrl(LATEST_ADVICE_URL)
         }

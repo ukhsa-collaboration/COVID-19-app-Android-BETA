@@ -4,8 +4,7 @@
 
 package uk.nhs.nhsx.sonar.android.app.registration
 
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlinx.coroutines.withTimeout
+import com.android.volley.ClientError
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
@@ -14,7 +13,6 @@ import uk.nhs.nhsx.sonar.android.client.ResidentApi
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 typealias Token = String
@@ -23,33 +21,37 @@ typealias Token = String
 class RegistrationUseCase @Inject constructor(
     private val tokenRetriever: TokenRetriever,
     private val residentApi: ResidentApi,
-    private val activationCodeObserver: ActivationCodeObserver,
     private val sonarIdProvider: SonarIdProvider,
     private val postCodeProvider: PostCodeProvider,
+    private val activationCodeProvider: ActivationCodeProvider,
     @Named(AppModule.DEVICE_MODEL) private val deviceModel: String,
     @Named(AppModule.DEVICE_OS_VERSION) private val deviceOsVersion: String
 ) {
 
     suspend fun register(): RegistrationResult {
         try {
-            return withTimeout(20_000) {
-                if (sonarIdProvider.hasProperSonarId()) {
-                    Timber.d("Already registered")
-                    return@withTimeout RegistrationResult.AlreadyRegistered
-                }
-                val firebaseToken = getFirebaseToken()
-                Timber.d("RegistrationUseCase firebaseToken = $firebaseToken")
-                registerDevice(firebaseToken)
-                Timber.d("RegistrationUseCase registered device")
-                val activationCode = waitForActivationCode()
-                Timber.d("RegistrationUseCase activationCode = $activationCode")
-                val sonarId =
-                    registerResident(activationCode, firebaseToken, postCodeProvider.getPostCode())
-                Timber.d("RegistrationUseCase sonarId = $sonarId")
-                storeSonarId(sonarId)
-                Timber.d("RegistrationUseCase sonarId stored")
-                return@withTimeout RegistrationResult.Success
+            if (sonarIdProvider.hasProperSonarId()) {
+                Timber.d("Already registered")
+                return RegistrationResult.AlreadyRegistered
             }
+            val activationCode = activationCodeProvider.getActivationCode()
+            if (activationCode.isEmpty()) {
+                val firebaseToken = getFirebaseToken()
+                Timber.d("firebaseToken = $firebaseToken")
+                registerDevice(firebaseToken)
+                Timber.d("registered device")
+                return RegistrationResult.WaitingForActivationCode
+            }
+            val firebaseToken = getFirebaseToken()
+            val sonarId =
+                registerResident(activationCode, firebaseToken, postCodeProvider.getPostCode())
+            Timber.d("sonarId = $sonarId")
+            storeSonarId(sonarId)
+            Timber.d("sonarId stored")
+            return RegistrationResult.Success
+        } catch (e: ClientError) {
+            activationCodeProvider.clear()
+            return RegistrationResult.ActivationCodeNotValidFailure(e)
         } catch (e: Exception) {
             Timber.e(e, "RegistrationUseCase exception")
             return RegistrationResult.Failure(e)
@@ -77,15 +79,6 @@ class RegistrationUseCase @Inject constructor(
                 .register(firebaseToken)
                 .onSuccess { continuation.resumeWith(Result.success(Unit)) }
                 .onError { continuation.resumeWith(Result.failure(it)) }
-        }
-    }
-
-    private suspend fun waitForActivationCode(): String {
-        return suspendCancellableCoroutine { continuation ->
-            activationCodeObserver.setListener { activationCode ->
-                activationCodeObserver.removeListener()
-                continuation.resume(activationCode)
-            }
         }
     }
 
