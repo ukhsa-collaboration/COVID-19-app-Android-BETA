@@ -34,7 +34,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
         super.onCreate(savedInstanceState)
 
         permission_continue.setOnClickListener {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 requestPermissions(
                     arrayOf(ACCESS_FINE_LOCATION, ACCESS_BACKGROUND_LOCATION),
                     REQUEST_LOCATION

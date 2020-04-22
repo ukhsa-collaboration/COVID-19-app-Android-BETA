@@ -78,7 +78,7 @@ class ColocateApplication : Application() {
             .bluetoothModule(
                 BluetoothModule(
                     this,
-                    connectionV2 = false,
+                    connectionV2 = true,
                     errorMarginInSeconds = 60,
                     encryptSonarId = false,
                     scanIntervalLength = 8
