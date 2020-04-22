@@ -9,9 +9,7 @@ import dagger.Component
 import uk.nhs.nhsx.sonar.android.app.BootCompletedReceiver
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.MainActivity
-import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEvents
 import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
@@ -27,7 +25,6 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.RegistrationReminderBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
-import uk.nhs.nhsx.sonar.android.app.registration.RegistrationUseCase
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
@@ -62,8 +59,5 @@ interface ApplicationComponent {
     fun inject(diagnoseTemperatureActivity: DiagnoseTemperatureActivity)
     fun inject(registrationReminderBroadcastReceiver: RegistrationReminderBroadcastReceiver)
 
-    fun registrationUseCase(): RegistrationUseCase
-    fun provideEventsV2Dao(): ContactEventDao
-    fun provideBleEvents(): BleEvents
     fun provideRxBleClient(): RxBleClient
 }

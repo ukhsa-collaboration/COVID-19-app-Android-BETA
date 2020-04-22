@@ -33,7 +33,7 @@ import javax.inject.Singleton
         BluetoothModule::class,
         CryptoModule::class,
         NetworkModule::class,
-        TestModule::class
+        TestNotificationsModule::class
     ]
 )
 interface TestAppComponent : ApplicationComponent
@@ -78,7 +78,7 @@ class TestBluetoothModule(
 }
 
 @Module
-class TestModule {
+class TestNotificationsModule {
 
     @Provides
     fun provideTokenRetriever(): TokenRetriever =

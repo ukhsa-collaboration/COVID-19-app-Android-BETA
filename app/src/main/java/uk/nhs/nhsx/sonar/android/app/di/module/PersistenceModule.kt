@@ -27,7 +27,7 @@ class PersistenceModule(private val appContext: Context) {
             .build()
 
     @Provides
-    fun provideContactEventV2Dao(database: AppDatabase): ContactEventDao =
+    fun provideContactEventDao(database: AppDatabase): ContactEventDao =
         database.contactEventDao()
 
     @Provides

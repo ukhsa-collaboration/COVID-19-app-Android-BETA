@@ -88,7 +88,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 .bluetoothModule(testBluetoothModule)
                 .cryptoModule(CryptoModule())
                 .networkModule(NetworkModule(mockServerUrl))
-                .testModule(TestModule())
+                .testNotificationsModule(TestNotificationsModule())
                 .build()
 
         notificationService.let {

@@ -23,8 +23,7 @@ class TestBluetoothDevice(macAddress: String, services: RxBleDeviceServices, rss
     RxBleDeviceMock("Fake device", macAddress, ByteArray(0), -1, services, mutableMapOf(), null) {
 
     private val isConnected = AtomicBoolean(false)
-    private val connection =
-        TestBluetoothConnection(services, rssiList)
+    private val connection = TestBluetoothConnection(services, rssiList)
     private val connectionStateBehaviorSubject = BehaviorSubject.createDefault(DISCONNECTED)
 
     override fun establishConnection(autoConnect: Boolean): Observable<RxBleConnection> {
