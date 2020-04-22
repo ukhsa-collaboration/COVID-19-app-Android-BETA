@@ -129,4 +129,7 @@
     <string name="update_symptoms_promt">7 days ago your cough started. Please update your symptoms to view latest advice.</string>
     <string name="update_my_symptoms">Update my symptoms</string>
     <string name="no_symptoms">I no longer have symptoms</string>
+    <string name="recovery_dialog_title">Start following general advice</string>
+    <string name="recovery_dialog_description">Although you still have a continuous cough, you no longer need to self-isolate and can begin following general advice.</string>
+    <string name="okay">Okay</string>
 </resources>

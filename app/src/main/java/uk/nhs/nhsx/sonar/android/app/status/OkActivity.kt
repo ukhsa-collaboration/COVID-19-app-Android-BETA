@@ -7,11 +7,15 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -39,6 +43,8 @@ class OkActivity : BaseActivity() {
         viewModelFactory
     }
 
+    private lateinit var dialog: BottomSheetDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
@@ -65,6 +71,8 @@ class OkActivity : BaseActivity() {
 
         addViewModelListener()
         viewModel.onStart()
+
+        setBottomSheet()
     }
 
     private fun toggleNotFeelingCard(enabled: Boolean) {
@@ -95,10 +103,29 @@ class OkActivity : BaseActivity() {
         })
     }
 
+    private fun setBottomSheet() {
+        dialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
+        dialog.setContentView(layoutInflater.inflate(R.layout.bottom_sheet_recovery, null))
+        dialog.behavior.isHideable = false
+
+        dialog.findViewById<Button>(R.id.ok)?.setOnClickListener {
+            stateStorage.update(DefaultState(DateTime.now(DateTimeZone.UTC)))
+            dialog.dismiss()
+        }
+        dialog.setOnCancelListener {
+            finish()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
-
         navigateTo(stateStorage.get())
+
+        if (stateStorage.get() is RecoveryState) {
+            dialog.show()
+        } else {
+            dialog.dismiss()
+        }
     }
 
     companion object {

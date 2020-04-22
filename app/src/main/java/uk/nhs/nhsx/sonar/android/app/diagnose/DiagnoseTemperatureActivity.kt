@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import javax.inject.Inject
 
@@ -29,7 +30,7 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_temperature_diagnosis)
 
-        if (stateStorage.get().hasExpired()) {
+        if (stateStorage.get() is RedState) {
             progress.text = getString(R.string.progress_half)
         }
 

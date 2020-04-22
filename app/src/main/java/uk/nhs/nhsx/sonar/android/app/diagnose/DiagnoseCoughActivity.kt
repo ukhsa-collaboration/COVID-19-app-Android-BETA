@@ -11,15 +11,16 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.confirm_diagnosis
-import kotlinx.android.synthetic.main.cough_questionnaire_layout.cough_diagnosis_answer
-import kotlinx.android.synthetic.main.cough_questionnaire_layout.progress
-import kotlinx.android.synthetic.main.cough_questionnaire_layout.radio_selection_error
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_diagnosis_answer
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.progress
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
+import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
@@ -44,7 +45,7 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         setContentView(R.layout.activity_cough_diagnosis)
 
-        if (stateStorage.get().hasExpired()) {
+        if (stateStorage.get() is RedState) {
             progress.text = getString(R.string.progress_two_out_of_two)
             confirm_diagnosis.text = getString(R.string.submit)
         } else {
