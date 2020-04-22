@@ -22,7 +22,9 @@ buildscript {
     }
 }
 
-apply from: "$project.rootDir/jacoco.gradle"
+if (project.hasProperty("coverage")) {
+    apply from: "$project.rootDir/jacoco.gradle"
+}
 
 allprojects {
     repositories {
