@@ -11,6 +11,8 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.activity_review_diagnosis.date_selection_error
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_cough
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_temperature
@@ -33,6 +35,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 import javax.inject.Inject
 
 class DiagnoseReviewActivity : BaseActivity() {
@@ -98,11 +101,20 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     private fun setDateSpinner() {
-        val adapter =
-            SpinnerAdapter(this)
+        val picker = MaterialDatePicker.Builder.datePicker().apply {
+            setSelection(DateTime.now(UTC).millis)
+            CalendarConstraints.Builder()
+                .setStart(DateTime.now(UTC).minusDays(28).millis)
+                .setEnd(DateTime.now(UTC).millis)
+                .build().let {
+                    setCalendarConstraints(it)
+                }
+        }.build()
+
+        val adapter = SpinnerAdapter(this)
 
         symptoms_date_spinner.adapter = adapter
-        symptoms_date_spinner.setSelection(adapter.count)
+        symptoms_date_spinner.setSelection(adapter.count - 1)
 
         symptoms_date_spinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -116,7 +128,17 @@ class DiagnoseReviewActivity : BaseActivity() {
                     position: Int,
                     id: Long
                 ) {
-                    if (position < adapter.count) {
+                    if (position == SpinnerAdapter.MAX_VISIBLE_POSITION) {
+                        picker.addOnPositiveButtonClickListener {
+                            val selectedDate = DateTime(it, UTC)
+                            adapter.update(
+                                selectedDate.toUiSpinnerFormat()
+                            )
+                            symptoms_date_spinner.setSelection(SpinnerAdapter.MAX_VISIBLE_POSITION + 1)
+                            symptomsDate = selectedDate
+                        }
+                        picker.show(supportFragmentManager, null)
+                    } else if (position < adapter.count - 1) {
                         date_selection_error.visibility = View.GONE
                         symptomsDate = DateTime.now(UTC).minusDays(position)
                     }

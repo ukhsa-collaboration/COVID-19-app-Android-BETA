@@ -13,3 +13,4 @@ private const val SPINNER_DATE_TIME_FORMAT = "EEEE, MMMM dd"
 fun DateTime.toUtcIsoFormat(): String = toString(DATE_TIME_FORMAT)
 
 fun LocalDate.toUiSpinnerFormat(): String = toString(SPINNER_DATE_TIME_FORMAT)
+fun DateTime.toUiSpinnerFormat(): String = toString(SPINNER_DATE_TIME_FORMAT)

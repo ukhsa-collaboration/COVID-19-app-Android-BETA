@@ -128,6 +128,11 @@ class OkActivity : BaseActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        dialog.dismiss()
+    }
+
     companion object {
         fun start(context: Context) =
             context.startActivity(getIntent(context))

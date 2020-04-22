@@ -114,7 +114,7 @@
     <string name="symptoms_date_prompt_temperature">When did your high temperature start?</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
-    <string name="before_day">More than 7 days ago</string>
+    <string name="other_date">Select a different date...</string>
     <string name="start_date">Start date</string>
 
     <string name="close">Close</string>
