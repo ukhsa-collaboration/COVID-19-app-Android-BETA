@@ -23,56 +23,57 @@ const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
 const val NOTIFICATION_ID_LOCATION_IS_DISABLED = 1338
 const val NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED = 1339
 
-fun hideBluetoothIsDisabledNotification(context: Context) {
-    NotificationManagerCompat
-        .from(context)
-        .cancel(NOTIFICATION_ID_BLUETOOTH_IS_DISABLED)
-}
+class BluetoothNotificationHelper(val context: Context) {
 
-fun hideLocationIsDisabledNotification(context: Context) {
-    NotificationManagerCompat
-        .from(context)
-        .cancel(NOTIFICATION_ID_LOCATION_IS_DISABLED)
+    fun hideBluetoothIsDisabled() {
+        NotificationManagerCompat
+            .from(context)
+            .cancel(NOTIFICATION_ID_BLUETOOTH_IS_DISABLED)
+    }
+
+    fun hideLocationIsDisabled() {
+        NotificationManagerCompat
+            .from(context)
+            .cancel(NOTIFICATION_ID_LOCATION_IS_DISABLED)
+    }
+
+    fun showBluetoothIsDisabled() {
+        val notificationId = NOTIFICATION_ID_BLUETOOTH_IS_DISABLED
+        val turnBluetoothOnIntent = Intent(context, TurnBluetoothOnReceiver::class.java).apply {
+            action = TurnBluetoothOnReceiver.ACTION_TURN_BLUETOOTH_ON
+        }
+        val actionPendingIntent = PendingIntent.getBroadcast(context, 0, turnBluetoothOnIntent, FLAG_UPDATE_CURRENT)
+
+        showNotification(
+            context,
+            notificationId,
+            context.getString(R.string.notification_bluetooth_disabled_title),
+            context.getString(R.string.notification_bluetooth_disabled_text),
+            context.getString(R.string.notification_bluetooth_disabled_action),
+            actionPendingIntent
+        )
+    }
+
+    fun showLocationIsDisabled() {
+        val notificationId = NOTIFICATION_ID_LOCATION_IS_DISABLED
+        val turnLocationOnIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        val actionPendingIntent = PendingIntent.getActivity(context, 0, turnLocationOnIntent, FLAG_UPDATE_CURRENT)
+
+        showNotification(
+            context,
+            notificationId,
+            context.getString(R.string.notification_location_disabled_title),
+            context.getString(R.string.notification_location_disabled_text),
+            context.getString(R.string.notification_location_disabled_action),
+            actionPendingIntent
+        )
+    }
 }
 
 fun hideRegistrationNotFinishedNotification(context: Context) {
     NotificationManagerCompat
         .from(context)
         .cancel(NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED)
-}
-
-fun showBluetoothIsDisabledNotification(context: Context) {
-    val notificationId = NOTIFICATION_ID_BLUETOOTH_IS_DISABLED
-    val turnBluetoothOnIntent = Intent(context, TurnBluetoothOnReceiver::class.java).apply {
-        action = TurnBluetoothOnReceiver.ACTION_TURN_BLUETOOTH_ON
-    }
-    val actionPendingIntent: PendingIntent =
-        PendingIntent.getBroadcast(context, 0, turnBluetoothOnIntent, FLAG_UPDATE_CURRENT)
-
-    showNotification(
-        context,
-        notificationId,
-        context.getString(R.string.notification_bluetooth_disabled_title),
-        context.getString(R.string.notification_bluetooth_disabled_text),
-        context.getString(R.string.notification_bluetooth_disabled_action),
-        actionPendingIntent
-    )
-}
-
-fun showLocationIsDisabledNotification(context: Context) {
-    val notificationId = NOTIFICATION_ID_LOCATION_IS_DISABLED
-    val turnLocationOnIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-    val actionPendingIntent: PendingIntent =
-        PendingIntent.getActivity(context, 0, turnLocationOnIntent, FLAG_UPDATE_CURRENT)
-
-    showNotification(
-        context,
-        notificationId,
-        context.getString(R.string.notification_location_disabled_title),
-        context.getString(R.string.notification_location_disabled_text),
-        context.getString(R.string.notification_location_disabled_action),
-        actionPendingIntent
-    )
 }
 
 fun showRegistrationReminderNotification(context: Context) {
