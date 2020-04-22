@@ -10,6 +10,7 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import org.joda.time.DateTime
+import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.LongLiveConnectionScan
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
@@ -22,7 +23,11 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
+import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
+import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import uk.nhs.nhsx.sonar.android.client.KeyStorage
 import javax.inject.Singleton
 
 @Singleton
@@ -36,7 +41,13 @@ import javax.inject.Singleton
         TestNotificationsModule::class
     ]
 )
-interface TestAppComponent : ApplicationComponent
+interface TestAppComponent : ApplicationComponent {
+    fun getSonarIdProvider(): SonarIdProvider
+    fun getKeyStorage(): KeyStorage
+    fun getAppDatabase(): AppDatabase
+    fun getStateStorage(): StateStorage
+    fun getOnboardingStatusProvider(): OnboardingStatusProvider
+}
 
 class TestBluetoothModule(
     private val appContext: Context,

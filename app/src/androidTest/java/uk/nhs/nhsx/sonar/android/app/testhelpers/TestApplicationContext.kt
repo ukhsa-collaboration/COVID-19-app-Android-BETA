@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit
 class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
     private val testActivity = rule.activity
-    private val app = rule.activity.application as ColocateApplication
+    val app = rule.activity.application as ColocateApplication
     private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     private val notificationService = NotificationService()
@@ -72,6 +72,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     )
     private val mockServer = MockWebServer()
 
+    val component: TestAppComponent
+
     init {
         mockServer.apply {
             dispatcher = testDispatcher
@@ -81,15 +83,16 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
         val mockServerUrl = mockServer.url("").toString().removeSuffix("/")
 
-        app.appComponent =
-            DaggerTestAppComponent.builder()
-                .appModule(AppModule(app))
-                .persistenceModule(PersistenceModule(app))
-                .bluetoothModule(testBluetoothModule)
-                .cryptoModule(CryptoModule())
-                .networkModule(NetworkModule(mockServerUrl))
-                .testNotificationsModule(TestNotificationsModule())
-                .build()
+        component = DaggerTestAppComponent.builder()
+            .appModule(AppModule(app))
+            .persistenceModule(PersistenceModule(app))
+            .bluetoothModule(testBluetoothModule)
+            .cryptoModule(CryptoModule())
+            .networkModule(NetworkModule(mockServerUrl))
+            .testNotificationsModule(TestNotificationsModule())
+            .build()
+
+        app.appComponent = component
 
         notificationService.let {
             val contextField = ContextWrapper::class.java.getDeclaredField("mBase")
@@ -174,8 +177,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun verifySonarIdAndSecretKeyAndPublicKey() {
-        val idProvider = testActivity.sonarIdProvider
-        val keyStorage = testActivity.keyStorage
+        val idProvider = component.getSonarIdProvider()
+        val keyStorage = component.getKeyStorage()
 
         await until {
             idProvider.getSonarId() != ID_NOT_REGISTERED
@@ -214,7 +217,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             )
         )
 
-        val dao = testActivity.appDatabase.contactEventDao()
+        val dao = component.getAppDatabase().contactEventDao()
         await until {
             runBlocking { dao.getAll().size } == 2
         }

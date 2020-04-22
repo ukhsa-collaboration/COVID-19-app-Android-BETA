@@ -9,29 +9,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_flow_test_start.start_main_activity
 import org.jetbrains.annotations.TestOnly
-import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
-import uk.nhs.nhsx.sonar.android.client.KeyStorage
-import javax.inject.Inject
 
 @TestOnly
 class FlowTestStartActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var stateStorage: StateStorage
-
-    @Inject
-    lateinit var keyStorage: KeyStorage
-
-    @Inject
-    lateinit var sonarIdProvider: SonarIdProvider
-
-    @Inject
-    lateinit var appDatabase: AppDatabase
-
-    @Inject
-    lateinit var onboardingStatusProvider: OnboardingStatusProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

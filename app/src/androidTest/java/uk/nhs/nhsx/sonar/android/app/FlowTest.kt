@@ -8,6 +8,8 @@ import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.bluetooth.BluetoothManager
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Build
 import android.view.View
 import androidx.annotation.IdRes
@@ -48,6 +50,7 @@ import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserState
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestAppComponent
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
 import uk.nhs.nhsx.sonar.android.app.testhelpers.hasTextInputLayoutErrorText
@@ -70,17 +73,29 @@ class FlowTest {
     }
 
     private lateinit var testAppContext: TestApplicationContext
+    private val component: TestAppComponent
+        get() = testAppContext.component
 
     @Before
     fun setup() {
         testAppContext = TestApplicationContext(activityRule)
         ensureBluetoothEnabled()
         testAppContext.closeNotificationPanel()
+    }
 
-        clearDatabase()
-        resetOnboarding()
-        resetStatusStorage()
-        unsetSonarId()
+    private fun resetApp() {
+        component.apply {
+            getAppDatabase().clearAllTables()
+            getOnboardingStatusProvider().setOnboardingFinished(false)
+            getStateStorage().clear()
+            getSonarIdProvider().clear()
+        }
+
+        val instrumentation = InstrumentationRegistry.getInstrumentation()
+        val intent = Intent(testAppContext.app, FlowTestStartActivity::class.java).apply {
+            addFlags(FLAG_ACTIVITY_NEW_TASK)
+        }
+        instrumentation.startActivitySync(intent)
     }
 
     @After
@@ -89,6 +104,26 @@ class FlowTest {
     }
 
     @Test
+    fun testRunner() {
+        val tests = listOf(
+            ::testRegistration,
+            ::testRegistrationRetry,
+            ::testBluetoothInteractions,
+            ::testReceivingStatusUpdateNotification,
+            ::testExplanation,
+            ::testLaunchWhenStateIsDefault,
+            ::testLaunchWhenStateIsEmber,
+            ::testLaunchWhenStateIsRed,
+            ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
+            ::testReceivingReminderNotification
+        )
+
+        tests.forEach {
+            resetApp()
+            it()
+        }
+    }
+
     fun testRegistration() {
         testAppContext.simulateBackendDelay(400)
 
@@ -125,7 +160,6 @@ class FlowTest {
         verifyCheckMySymptomsButton(isEnabled())
     }
 
-    @Test
     fun testRegistrationRetry() {
         testAppContext.simulateBackendResponse(error = true)
         testAppContext.simulateBackendDelay(0)
@@ -172,11 +206,6 @@ class FlowTest {
         verifyCheckMySymptomsButton(isEnabled())
     }
 
-    private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
-        onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
-    }
-
-    @Test
     fun testBluetoothInteractions() {
         setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarIdAndSecretKeyAndPublicKey()
@@ -192,7 +221,6 @@ class FlowTest {
         checkIsolateActivityIsShown()
     }
 
-    @Test
     fun testReceivingStatusUpdateNotification() {
         setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarId()
@@ -207,7 +235,6 @@ class FlowTest {
         checkAtRiskActivityIsShown()
     }
 
-    @Test
     fun testExplanation() {
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -220,7 +247,6 @@ class FlowTest {
         checkMainActivityIsShown()
     }
 
-    @Test
     fun testLaunchWhenStateIsDefault() {
         setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarId()
@@ -230,7 +256,6 @@ class FlowTest {
         checkOkActivityIsShown()
     }
 
-    @Test
     fun testLaunchWhenStateIsEmber() {
         setUserState(EmberState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarId()
@@ -240,7 +265,6 @@ class FlowTest {
         checkAtRiskActivityIsShown()
     }
 
-    @Test
     fun testLaunchWhenStateIsRed() {
         setUserState(
             RedState(
@@ -255,7 +279,6 @@ class FlowTest {
         checkIsolateActivityIsShown()
     }
 
-    @Test
     fun testLaunchWhenOnboardingIsFinishedButNotRegistered() {
         setFinishedOnboarding()
 
@@ -264,7 +287,6 @@ class FlowTest {
         checkOkActivityIsShown()
     }
 
-    @Test
     fun testReceivingReminderNotification() {
         setFinishedOnboarding()
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -284,6 +306,10 @@ class FlowTest {
         }
 
         checkOkActivityIsShown()
+    }
+
+    private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
+        onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
     }
 
     private fun waitForText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
@@ -327,45 +353,25 @@ class FlowTest {
     }
 
     private fun setUserState(state: UserState) {
-        activityRule.activity.stateStorage.update(state)
-    }
-
-    private fun resetStatusStorage() {
-        val storage = activityRule.activity.stateStorage
-        storage.clear()
-    }
-
-    private fun unsetSonarId() {
-        val sonarIdProvider = activityRule.activity.sonarIdProvider
-        sonarIdProvider.clear()
+        component.getStateStorage().update(state)
     }
 
     private fun setFinishedOnboarding() {
-        val storage = activityRule.activity.onboardingStatusProvider
+        val storage = component.getOnboardingStatusProvider()
         storage.setOnboardingFinished(true)
     }
 
-    private fun resetOnboarding() {
-        val storage = activityRule.activity.onboardingStatusProvider
-        storage.setOnboardingFinished(false)
-    }
-
     private fun setValidSonarId() {
-        val sonarIdProvider = activityRule.activity.sonarIdProvider
+        val sonarIdProvider = component.getSonarIdProvider()
         sonarIdProvider.setSonarId(TestCoLocateServiceDispatcher.RESIDENT_ID)
     }
 
     private fun setValidSonarIdAndSecretKeyAndPublicKey() {
         setValidSonarId()
 
-        val keyStorage = activityRule.activity.keyStorage
+        val keyStorage = component.getKeyStorage()
         keyStorage.storeSecretKey(TestCoLocateServiceDispatcher.encodedSecretKey)
         keyStorage.storeServerPublicKey(TestCoLocateServiceDispatcher.PUBLIC_KEY)
-    }
-
-    private fun clearDatabase() {
-        val appDb = activityRule.activity.appDatabase
-        appDb.clearAllTables()
     }
 
     private fun ensureBluetoothEnabled() {
