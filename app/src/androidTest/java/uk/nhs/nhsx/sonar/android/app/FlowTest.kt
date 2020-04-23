@@ -180,6 +180,7 @@ class FlowTest {
         checkOkActivityIsShown()
 
         testAppContext.verifyReceivedRegistrationRequest()
+
         testAppContext.simulateBackendResponse(error = false)
 
         checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
@@ -193,7 +194,6 @@ class FlowTest {
         verifyCheckMySymptomsButton(isEnabled())
     }
 
-    @Test
     fun testBluetoothInteractions() {
         setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
         setValidSonarIdAndSecretKeyAndPublicKey()

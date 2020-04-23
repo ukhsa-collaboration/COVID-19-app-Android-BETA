@@ -1,9 +1,9 @@
 package uk.nhs.nhsx.sonar.android.app.registration
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
-import androidx.work.CoroutineWorker
 import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
@@ -11,14 +11,11 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkRequest.MIN_BACKOFF_MILLIS
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker.Companion.WAITING_FOR_ACTIVATION_CODE
@@ -75,11 +72,13 @@ class RegistrationManager @Inject constructor(
         }
     }
 
-    private fun scheduleRegisterRetryInOneHour() {
-        register(60 * 60)
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun scheduleRegisterRetryInOneHour() {
+        register(ONE_HOUR_IN_SECONDS)
     }
 
-    private fun createWorkRequest(initialDelaySeconds: Long): OneTimeWorkRequest {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun createWorkRequest(initialDelaySeconds: Long): OneTimeWorkRequest {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
@@ -100,30 +99,6 @@ class RegistrationManager @Inject constructor(
 
     companion object {
         const val WORK_NAME = "registration"
-    }
-}
-
-class RegistrationWorker(appContext: Context, workerParams: WorkerParameters) :
-    CoroutineWorker(appContext, workerParams) {
-
-    @Inject
-    lateinit var registrationUseCase: RegistrationUseCase
-
-    override suspend fun doWork(): Result {
-        appComponent.inject(this)
-        val result = registrationUseCase.register()
-        Timber.tag("RegistrationUseCase").d("doWork result = $result")
-        return when (result) {
-            RegistrationResult.Success -> Result.success()
-            RegistrationResult.Error -> Result.retry()
-            RegistrationResult.WaitingForActivationCode -> {
-                val outputData = workDataOf(WAITING_FOR_ACTIVATION_CODE to true)
-                Result.success(outputData)
-            }
-        }
-    }
-
-    companion object {
-        const val WAITING_FOR_ACTIVATION_CODE = "WAITING_FOR_ACTIVATION_CODE"
+        const val ONE_HOUR_IN_SECONDS = 60L * 60
     }
 }

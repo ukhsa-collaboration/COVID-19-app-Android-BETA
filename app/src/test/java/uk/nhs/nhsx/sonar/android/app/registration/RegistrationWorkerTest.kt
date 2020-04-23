@@ -44,16 +44,7 @@ class RegistrationWorkerTest {
     }
 
     @Test
-    fun onAlreadyRegisteredReturnsSuccess() = runBlockingTest {
-        coEvery { registrationUseCase.register() } returns RegistrationResult.Success
-
-        val result = sut.doWork()
-
-        assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
-    }
-
-    @Test
-    fun onFailureReturnsRetry() = runBlockingTest {
+    fun onErrorReturnsRetry() = runBlockingTest {
         coEvery { registrationUseCase.register() } returns RegistrationResult.Error
 
         val result = sut.doWork()
@@ -62,12 +53,13 @@ class RegistrationWorkerTest {
     }
 
     @Test
-    fun onWaitingForActivationCodeReturnsSuccess() = runBlockingTest {
+    fun onWaitingForActivationCodeReturnsSuccessWithFlag() = runBlockingTest {
         coEvery { registrationUseCase.register() } returns RegistrationResult.WaitingForActivationCode
 
         val result = sut.doWork()
 
         assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
+
         val success = result as ListenableWorker.Result.Success
         val isWaitingForActivationCode =
             success.outputData.getBoolean(WAITING_FOR_ACTIVATION_CODE, false)
