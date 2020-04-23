@@ -153,7 +153,7 @@ class Scan @Inject constructor(
             .bleDevice
             .establishConnection(false)
             .flatMapSingle { connection ->
-                negotiatieMTU(connection)
+                negotiateMTU(connection)
             }
             .flatMapSingle { connection ->
                 read(connection, coroutineScope)
@@ -172,7 +172,7 @@ class Scan @Inject constructor(
             )
     }
 
-    private fun negotiatieMTU(connection: RxBleConnection): Single<RxBleConnection> {
+    private fun negotiateMTU(connection: RxBleConnection): Single<RxBleConnection> {
         // the overhead appears to be 2 bytes
         return connection.requestMtu(2 + Cryptogram.SIZE)
             .doOnSubscribe { Timber.i("Negotiating MTU started") }
