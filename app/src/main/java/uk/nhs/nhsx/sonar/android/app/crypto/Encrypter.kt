@@ -31,8 +31,8 @@ class Encrypter @Inject constructor(
 
         val sharedInformation = ephemeralKeyProvider.providePublicKeyPoint()
 
-        val derivedKey = deriveSecretKey(sharedSecret, sharedInformation)
-        val encryptionResult = aesGcmEncrypt(derivedKey.secretKey, derivedKey.iv, plainText)
+        val derivedKeyAndIV = deriveSecretKeyAndIV(sharedSecret, sharedInformation)
+        val encryptionResult = aesGcmEncrypt(derivedKeyAndIV.secretKey, derivedKeyAndIV.iv, plainText)
 
         return Cryptogram(
             sharedInformation.sliceArray(1 until sharedInformation.size),
@@ -41,7 +41,7 @@ class Encrypter @Inject constructor(
         )
     }
 
-    class DerivedKey(keyDerivationOutput: ByteArray) {
+    class DerivedKeyAndIV(keyDerivationOutput: ByteArray) {
         init {
             if (keyDerivationOutput.size != 32) {
                 throw IllegalArgumentException("X9.63 should generate 32 bytes of data")
@@ -76,10 +76,10 @@ class Encrypter @Inject constructor(
         return secret
     }
 
-    private fun deriveSecretKey(
+    private fun deriveSecretKeyAndIV(
         sharedSecret: ByteArray,
         sharedInformation: ByteArray
-    ): DerivedKey {
+    ): DerivedKeyAndIV {
         val kdfParams = KDFParameters(sharedSecret, sharedInformation)
         // https://www.bouncycastle.org/docs/docs1.5on/org/bouncycastle/crypto/generators/KDF2BytesGenerator.html
         // Based on the ISO18033 KDF which turns out to derived from ANSI-X9.63-KDF
@@ -87,7 +87,7 @@ class Encrypter @Inject constructor(
         keyDerivationFunctionGenerator.init(kdfParams)
         val keyDerivationOutput = ByteArray(32)
         keyDerivationFunctionGenerator.generateBytes(keyDerivationOutput, 0, 32)
-        return DerivedKey(keyDerivationOutput)
+        return DerivedKeyAndIV(keyDerivationOutput)
     }
 
     @SuppressLint("GetInstance")
