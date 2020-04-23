@@ -75,7 +75,6 @@ class DiagnoseReviewActivity : BaseActivity() {
 
         setSymptomsReviewAnswers()
         setSymptomsDateQuestion()
-
         setDateSpinner()
 
         viewModel.isolationResult.observe(this, Observer
@@ -105,33 +104,49 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     private fun setDateSpinner() {
-        val picker = MaterialDatePicker.Builder.datePicker().apply {
-            setSelection(DateTime.now(UTC).millis)
+        val now = DateTime.now()
+        val adapter = SpinnerAdapter(this)
+
+        val dateValidator = object : CalendarConstraints.DateValidator {
+            override fun isValid(timestamp: Long): Boolean {
+                val selectedDate = localDateFromMidnightUtcTimestamp(timestamp)
+                val tomorrow = LocalDate.now().plusDays(1)
+                val minimum = tomorrow.minusDays(28)
+                return selectedDate.isAfter(minimum) && selectedDate.isBefore(tomorrow)
+            }
+
+            override fun writeToParcel(dest: Parcel?, flags: Int) = Unit
+            override fun describeContents(): Int = 0
+        }
+
+        val calendarConstraints =
             CalendarConstraints.Builder()
-                .setStart(DateTime.now(UTC).minusDays(28).millis)
-                .setEnd(DateTime.now(UTC).millis)
-                .setValidator(object : CalendarConstraints.DateValidator {
+                .setStart(now.minusDays(28).millis)
+                .setEnd(now.millis)
+                .setValidator(dateValidator)
+                .build()
 
-                    override fun isValid(date: Long): Boolean {
-                        val selectedDate = LocalDate(date)
-                        val tomorrow = LocalDate.now().plusDays(1)
-                        val minimum = tomorrow.minusDays(28)
-                        return selectedDate.isAfter(minimum) && selectedDate.isBefore(tomorrow)
-                    }
+        val picker = MaterialDatePicker.Builder.datePicker()
+            .setSelection(now.millis)
+            .setCalendarConstraints(calendarConstraints)
+            .build()
 
-                    override fun writeToParcel(dest: Parcel?, flags: Int) = Unit
+        picker.addOnPositiveButtonClickListener { timestamp ->
+            val selectedDate = localDateFromMidnightUtcTimestamp(timestamp)
+            adapter.update(selectedDate.toUiSpinnerFormat())
+            symptoms_date_spinner.setSelection(SpinnerAdapter.MAX_VISIBLE_POSITION + 1)
+            symptomsDate = selectedDate
+        }
 
-                    override fun describeContents(): Int = 0
-                })
-                .build().let {
-                    setCalendarConstraints(it)
-                }
-        }.build()
+        picker.addOnCancelListener {
+            symptoms_date_spinner.setSelection(adapter.count - 1)
+            symptomsDate = null
+        }
 
-        val adapter =
-            SpinnerAdapter(
-                this
-            )
+        picker.addOnNegativeButtonClickListener {
+            symptoms_date_spinner.setSelection(adapter.count - 1)
+            symptomsDate = null
+        }
 
         symptoms_date_spinner.adapter = adapter
         symptoms_date_spinner.setSelection(adapter.count - 1)
@@ -142,35 +157,15 @@ class DiagnoseReviewActivity : BaseActivity() {
                     symptomsDate = null
                 }
 
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    if (position == SpinnerAdapter.MAX_VISIBLE_POSITION) {
-                        picker.addOnPositiveButtonClickListener {
-                            val selectedDate = LocalDate(it)
-                            adapter.update(
-                                selectedDate.toUiSpinnerFormat()
-                            )
-                            symptoms_date_spinner.setSelection(SpinnerAdapter.MAX_VISIBLE_POSITION + 1)
-                            symptomsDate = selectedDate
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    when {
+                        position == SpinnerAdapter.MAX_VISIBLE_POSITION -> {
+                            picker.show(supportFragmentManager, null)
                         }
-
-                        picker.addOnCancelListener {
-                            symptoms_date_spinner.setSelection(adapter.count - 1)
-                            symptomsDate = null
+                        position < adapter.count - 1 -> {
+                            date_selection_error.visibility = View.GONE
+                            symptomsDate = LocalDate.now().minusDays(position)
                         }
-
-                        picker.addOnNegativeButtonClickListener {
-                            symptoms_date_spinner.setSelection(adapter.count - 1)
-                            symptomsDate = null
-                        }
-                        picker.show(supportFragmentManager, null)
-                    } else if (position < adapter.count - 1) {
-                        date_selection_error.visibility = View.GONE
-                        symptomsDate = LocalDate.now().minusDays(position)
                     }
                 }
             }
