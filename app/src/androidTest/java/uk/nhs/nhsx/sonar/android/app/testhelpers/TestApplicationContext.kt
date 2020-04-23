@@ -166,7 +166,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         verifySonarIdAndSecretKeyAndPublicKey()
     }
 
-    fun verifyReceivedActivationRequest() {
+    private fun verifyReceivedActivationRequest() {
         val lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
@@ -176,7 +176,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             .contains("""{"activationCode":"test activation code #001","pushToken":"test firebase token #010",""")
     }
 
-    fun verifySonarIdAndSecretKeyAndPublicKey() {
+    private fun verifySonarIdAndSecretKeyAndPublicKey() {
         val idProvider = component.getSonarIdProvider()
         val keyStorage = component.getKeyStorage()
 
@@ -298,8 +298,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 }
 
 class TestTokenRetriever : TokenRetriever {
-    override suspend fun retrieveToken() =
-        TokenRetriever.Result.Success("test firebase token #010")
+    override suspend fun retrieveToken() = "test firebase token #010"
 }
 
 class TestReminderTimeProvider : ReminderTimeProvider {

@@ -15,8 +15,6 @@ import javax.inject.Named
 import javax.inject.Singleton
 import kotlin.coroutines.suspendCoroutine
 
-typealias Token = String
-
 @Singleton
 class RegistrationUseCase @Inject constructor(
     private val tokenRetriever: TokenRetriever,
@@ -59,18 +57,7 @@ class RegistrationUseCase @Inject constructor(
     }
 
     private suspend fun getFirebaseToken(): Token {
-        when (val result = tokenRetriever.retrieveToken()) {
-            is TokenRetriever.Result.Success -> {
-                return result.token
-            }
-            is TokenRetriever.Result.Failure -> {
-                if (result.exception != null) {
-                    throw result.exception
-                } else {
-                    throw RuntimeException("Cannot get Firebase token")
-                }
-            }
-        }
+        return tokenRetriever.retrieveToken()
     }
 
     private suspend fun registerDevice(firebaseToken: String) {

@@ -7,29 +7,30 @@ package uk.nhs.nhsx.sonar.android.app.registration
 import com.google.firebase.iid.FirebaseInstanceId
 import timber.log.Timber
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-interface TokenRetriever {
-    sealed class Result {
-        data class Success(val token: String) : Result()
-        data class Failure(val exception: Exception?) : Result()
-    }
+typealias Token = String
 
-    suspend fun retrieveToken(): Result
+interface TokenRetriever {
+    suspend fun retrieveToken(): Token
 }
 
 class FirebaseTokenRetriever @Inject constructor() : TokenRetriever {
-    override suspend fun retrieveToken(): TokenRetriever.Result {
+    override suspend fun retrieveToken(): Token {
         return suspendCoroutine { cont ->
             FirebaseInstanceId.getInstance().instanceId
                 .addOnCompleteListener { task ->
                     if (!task.isSuccessful) {
                         Timber.w(task.exception, "getInstanceId failed")
-                        cont.resumeWith(Result.success(TokenRetriever.Result.Failure(task.exception)))
+                        cont.resumeWithException(
+                            task.exception ?: RuntimeException("Cannot retrieve Firebase Id")
+                        )
                         return@addOnCompleteListener
                     }
                     val token = task.result?.token!!
-                    cont.resumeWith(Result.success(TokenRetriever.Result.Success(token)))
+                    cont.resume(token)
                 }
         }
     }
