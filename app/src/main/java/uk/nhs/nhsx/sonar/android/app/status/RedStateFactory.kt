@@ -5,37 +5,31 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
+import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 
 object RedStateFactory {
     private const val SEVEN_AM = "7:00:00"
 
-    fun normal(symptomsDate: LocalDate, symptoms: Set<Symptom>): RedState {
+    fun normal(symptomsDate: LocalDate, symptoms: Set<Symptom>, today: LocalDate = LocalDate.now()): RedState {
         val suggested = sixDaysAfter(symptomsDate)
-        val tomorrow = tomorrow()
+        val tomorrow = tomorrow(today)
+        val redStateUntil = latest(suggested, tomorrow)
 
-        return RedState(
-            latest(
-                suggested,
-                tomorrow
-            ).toDateTime(DateTimeZone.UTC), symptoms
-        )
+        return RedState(redStateUntil.toDateTime(UTC), symptoms)
     }
 
-    fun extended(vararg symptoms: Symptom): RedState =
+    fun extended(vararg symptoms: Symptom, today: LocalDate = LocalDate.now()): RedState =
         RedState(
-            tomorrow().toDateTime(
-                DateTimeZone.UTC
-            ), symptoms.toSet()
+            tomorrow(today).toDateTime(UTC), symptoms.toSet()
         )
 
     private fun latest(a: DateTime, b: DateTime) =
         if (a.isAfter(b)) a else b
 
-    private fun tomorrow() =
-        LocalDate.now()
+    private fun tomorrow(today: LocalDate) =
+        today
             .plusDays(1)
             .toDateTime(LocalTime.parse(SEVEN_AM))
 
