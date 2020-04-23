@@ -9,7 +9,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.confirm_diagnosis
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.progress
@@ -58,17 +57,17 @@ class DiagnoseCoughActivity : BaseActivity() {
             onBackPressed()
         }
 
-        viewModel.observeUserState().observe(this, Observer { statusResult ->
-            when (statusResult) {
+        viewModel.observeUserState().observe({ this.lifecycle }) { result ->
+            when (result) {
                 is StateResult.Review -> DiagnoseReviewActivity.start(
                     this,
                     hasTemperature = hasTemperature,
-                    hasCough = statusResult.hasCough
+                    hasCough = result.hasCough
                 )
                 StateResult.Close -> DiagnoseCloseActivity.start(this)
-                is StateResult.Main -> navigateTo(statusResult.userState)
+                is StateResult.Main -> navigateTo(result.userState)
             }
-        })
+        }
 
         confirm_diagnosis.setOnClickListener {
             when (cough_diagnosis_answer.checkedRadioButtonId) {

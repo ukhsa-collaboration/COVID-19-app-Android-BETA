@@ -50,7 +50,7 @@ class DiagnoseCoughViewModelTest {
 
     @Test
     fun `initial state is blue then final state is blue`() {
-        every { stateStorage.get() } returns DefaultState(DateTime.now())
+        every { stateStorage.get() } returns DefaultState(DateTime.now(UTC))
         testSubject.update(hasTemperature = false, hasCough = false)
 
         verify {
@@ -60,7 +60,7 @@ class DiagnoseCoughViewModelTest {
 
     @Test
     fun `initial state is blue then final state is red`() {
-        every { stateStorage.get() } returns DefaultState(DateTime.now())
+        every { stateStorage.get() } returns DefaultState(DateTime.now(UTC))
         testSubject.update(hasTemperature = true, hasCough = false)
 
         verify {
@@ -123,7 +123,7 @@ class DiagnoseCoughViewModelTest {
 
         verify {
             testObserver.onChanged(
-                StateResult.Main(expected)
+                StateResult.Review(false)
             )
         }
     }
@@ -135,9 +135,7 @@ class DiagnoseCoughViewModelTest {
         testSubject.update(hasTemperature = false, hasCough = false)
 
         verify {
-            testObserver.onChanged(
-                StateResult.Main(expected)
-            )
+            testObserver.onChanged(StateResult.Close)
         }
     }
 
