@@ -1,10 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="uk.nhs.nhsx.sonar.android.app">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -33,8 +31,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        tools:ignore="LockedOrientationActivity">
+        android:theme="@style/AppTheme">
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
@@ -53,45 +50,24 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".diagnose.DiagnoseTemperatureActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".status.AtRiskActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".status.OkActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".status.IsolateActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".FlowTestStartActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".PermissionActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".onboarding.ExplanationActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".debug.TesterActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".diagnose.review.DiagnoseReviewActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".diagnose.DiagnoseCoughActivity"
-            android:screenOrientation="portrait" />
+        <activity android:name=".diagnose.DiagnoseTemperatureActivity" />
+        <activity android:name=".status.AtRiskActivity" />
+        <activity android:name=".status.OkActivity" />
+        <activity android:name=".status.IsolateActivity" />
+        <activity android:name=".FlowTestStartActivity" />
+        <activity android:name=".onboarding.PermissionActivity" />
+        <activity android:name=".onboarding.ExplanationActivity" />
+        <activity android:name=".debug.TesterActivity" />
+        <activity android:name=".diagnose.review.DiagnoseReviewActivity" />
+        <activity android:name=".diagnose.DiagnoseCoughActivity" />
         <activity
             android:name=".onboarding.PostCodeActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity
-            android:name=".diagnose.DiagnoseCloseActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".diagnose.SimpleDiagnoseTemperatureActivity" />
-        <activity android:name=".diagnose.SimpleDiagnoseCoughActivity" />
+        <activity android:name=".diagnose.DiagnoseCloseActivity" />
+        <activity android:name=".onboarding.EnableBluetoothActivity" />
+        <activity android:name=".onboarding.GrantLocationPermissionActivity" />
+        <activity android:name=".onboarding.EnableLocationServicesActivity" />
 
         <service
             android:name=".ble.BluetoothService"

@@ -13,7 +13,6 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_post_code.postCodeContinue
 import kotlinx.android.synthetic.main.activity_post_code.postCodeEditText
 import kotlinx.android.synthetic.main.activity_post_code.postCodeTextInputLayout
-import uk.nhs.nhsx.sonar.android.app.PermissionActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent

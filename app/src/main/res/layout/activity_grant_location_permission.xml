@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
@@ -18,8 +17,10 @@
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="24dp"
         android:baselineAlignBottom="true"
+        android:paddingVertical="4dp"
+        android:scaleType="center"
         android:src="@drawable/nhs_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,10 +30,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginBottom="0dp"
         android:text="@string/coronavirus"
         android:textColor="?attr/colorAccent"
         android:textSize="20sp"
-        app:layout_constraintBaseline_toBaselineOf="@id/logo"
+        app:layout_constraintBottom_toBottomOf="@id/logo"
         app:layout_constraintStart_toEndOf="@id/logo" />
 
     <ScrollView
@@ -41,7 +43,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="80dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/postCodeContinue"
+        app:layout_constraintBottom_toTopOf="@id/goToSettingsButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -50,66 +52,35 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="148dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/introMarker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:src="@drawable/ic_onboarding_postcode_marker" />
-
-            </FrameLayout>
-
             <TextView
-                android:id="@+id/postCodeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/post_code_title"
-                android:textSize="32sp"
+                android:text="@string/grant_location_permission_title"
+                android:textSize="28sp"
                 android:textStyle="bold" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/postCodeTextInputLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="@string/post_code">
-
-                <EditText
-                    android:id="@+id/postCodeEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress|textCapCharacters"
-                    android:maxLength="4" />
-            </com.google.android.material.textfield.TextInputLayout>
-
             <TextView
-                android:id="@+id/postCodeRationale"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:lineSpacingMultiplier="1.2"
-                android:text="@string/post_code_rationale"
-                android:textColor="@color/text_sub_title"
-                android:textSize="14sp" />
+                android:text="@string/grant_location_permission_rationale"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
     </ScrollView>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/postCodeContinue"
+        android:id="@+id/goToSettingsButton"
         style="@style/PrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="32dp"
         android:minHeight="54dp"
-        android:text="@string/submit"
+        android:text="@string/go_to_your_settings"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
