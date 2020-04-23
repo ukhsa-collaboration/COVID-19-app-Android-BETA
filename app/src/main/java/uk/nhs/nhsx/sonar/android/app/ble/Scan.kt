@@ -31,7 +31,7 @@ class Scan @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val saveContactWorker: SaveContactWorker,
     private val bleEvents: BleEvents,
-    private val currentTimestampeProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
+    private val currentTimestampProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
     @Named(BluetoothModule.ENCRYPT_SONAR_ID)
     private val encryptSonarId: Boolean,
     @Named(BluetoothModule.SCAN_INTERVAL_LENGTH)
@@ -190,7 +190,7 @@ class Scan @Inject constructor(
             connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID),
             connection.readRssi(),
             BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
-                Event(characteristicValue, rssi, scope, currentTimestampeProvider())
+                Event(characteristicValue, rssi, scope, currentTimestampProvider())
             }
         )
     }
