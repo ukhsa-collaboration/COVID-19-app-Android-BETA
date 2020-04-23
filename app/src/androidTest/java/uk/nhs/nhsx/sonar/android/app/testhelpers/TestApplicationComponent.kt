@@ -56,6 +56,7 @@ class TestBluetoothModule(
     private val endTimestampProvider: () -> DateTime,
     private val currentTimestampProvider: () -> DateTime,
     private val connectionV2: Boolean = false,
+    // TODO: Flip this switch - requires more known cryptograms. Needs alignment on source of truth
     private val encryptSonarId: Boolean = false,
     private val scanIntervalLength: Int = 1
 ) : BluetoothModule(appContext, 60, scanIntervalLength, connectionV2, encryptSonarId) {

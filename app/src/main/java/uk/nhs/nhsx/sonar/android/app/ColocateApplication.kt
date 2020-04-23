@@ -80,7 +80,7 @@ class ColocateApplication : Application() {
                     this,
                     connectionV2 = false,
                     errorMarginInSeconds = 60,
-                    encryptSonarId = false,
+                    encryptSonarId = true,
                     scanIntervalLength = 8
                 )
             )
