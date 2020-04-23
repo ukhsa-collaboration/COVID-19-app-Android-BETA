@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.di.module
 import android.app.AlarmManager
 import android.content.Context
 import android.os.Build
+import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
@@ -41,6 +42,11 @@ class AppModule(private val applicationContext: Context) {
     @Provides
     fun provideAlarmManager(context: Context): AlarmManager {
         return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    }
+
+    @Provides
+    fun provideWorkManager(context: Context): WorkManager {
+        return WorkManager.getInstance(context)
     }
 
     companion object {

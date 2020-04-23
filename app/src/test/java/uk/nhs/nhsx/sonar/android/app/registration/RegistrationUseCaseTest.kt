@@ -59,13 +59,14 @@ class RegistrationUseCaseTest {
     val logAllOnFailuresRule: TimberTestRule = TimberTestRule.logAllWhenTestFails()
 
     @Before
-    fun setUp() {
+    fun setupFirstEntry() {
         Timber.plant(Timber.DebugTree())
 
         every { sonarIdProvider.getSonarId() } returns ""
         every { sonarIdProvider.hasProperSonarId() } returns false
         every { sonarIdProvider.setSonarId(any()) } returns Unit
         coEvery { tokenRetriever.retrieveToken() } returns FIREBASE_TOKEN
+
         val registrationDeferred = Deferred<Unit>()
         registrationDeferred.resolve(Unit)
         every { residentApi.register(FIREBASE_TOKEN) } returns registrationDeferred.promise
@@ -80,8 +81,8 @@ class RegistrationUseCaseTest {
     }
 
     @Test
-    fun returnsSuccess() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+    fun ifAlreadyRegisteredReturnsSuccess() = runBlockingTest {
+        every { sonarIdProvider.hasProperSonarId() } returns true
 
         val result = registrationUseCase.register()
 
@@ -89,12 +90,12 @@ class RegistrationUseCaseTest {
     }
 
     @Test
-    fun returnsAlreadyRegistered() = runBlockingTest {
-        every { sonarIdProvider.hasProperSonarId() } returns true
+    fun returnsSuccess() = runBlockingTest {
+        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
 
         val result = registrationUseCase.register()
 
-        assertThat(RegistrationResult.AlreadyRegistered).isEqualTo(result)
+        assertThat(RegistrationResult.Success).isEqualTo(result)
     }
 
     @Test
@@ -115,43 +116,41 @@ class RegistrationUseCaseTest {
 
     @Test
     fun ifActivationCodeIsAbsentReturnsWaitingForActivationCode() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ""
-
         val result = registrationUseCase.register()
 
-        assertThat(RegistrationResult.WaitingForActivationCode).isEqualTo(result)
+        assertThat(result).isEqualTo(RegistrationResult.WaitingForActivationCode)
     }
 
     @Test
     fun ifActivationCodeIsAbsentAndTokenRetrievalFailedReturnsFailure() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ""
         coEvery { tokenRetriever.retrieveToken() } throws RuntimeException("Firebase is not available")
 
         val result = registrationUseCase.register()
 
-        assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
+        assertThat(result).isEqualTo(RegistrationResult.Error)
     }
 
     @Test
     fun onDeviceRegistrationFailureReturnsFailure() = runBlockingTest {
-        residentApiCallFails()
+        registerDeviceFails()
 
         val result = registrationUseCase.register()
 
-        assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
+        assertThat(result).isEqualTo(RegistrationResult.Error)
     }
 
     @Test
     fun ifActivationCodeIsPresentAndTokenRetrievalFailedReturnsFailure() = runBlockingTest {
+        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
         coEvery { tokenRetriever.retrieveToken() } throws RuntimeException("Firebase is not available")
 
         val result = registrationUseCase.register()
 
-        assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
+        assertThat(result).isEqualTo(RegistrationResult.Error)
     }
 
     @Test
-    fun registersResident() = runBlockingTest {
+    fun ifActivationCodeIsPresentRegistersResident() = runBlockingTest {
         every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
         registrationUseCase.register()
 
@@ -159,27 +158,36 @@ class RegistrationUseCaseTest {
     }
 
     @Test
-    fun onResidentRegistrationClientErrorReturnsActivationCodeNotValidFailure() = runBlockingTest {
+    fun onResidentRegistrationClientErrorClearsActivationCode() = runBlockingTest {
         every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
-        confirmDeviceApiCallFails(ClientError())
+        confirmDeviceFails(ClientError())
 
-        val result = registrationUseCase.register()
+        registrationUseCase.register()
 
         verify { activationCodeProvider.clear() }
-        assertThat(result).isInstanceOf(RegistrationResult.ActivationCodeNotValidFailure::class.java)
     }
 
     @Test
-    fun onResidentRegistrationOtherErrorReturnsFailure() = runBlockingTest {
+    fun onResidentRegistrationClientErrorReturnsError() = runBlockingTest {
         every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
-        confirmDeviceApiCallFails(IOException())
+        confirmDeviceFails(ClientError())
+
+        val result = registrationUseCase.register()
+
+        assertThat(result).isEqualTo(RegistrationResult.Error)
+    }
+
+    @Test
+    fun onResidentRegistrationAllOtherErrorsReturnsFailure() = runBlockingTest {
+        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        confirmDeviceFails(IOException())
 
         val result = registrationUseCase.register()
 
         verify(exactly = 0) {
             activationCodeProvider.clear()
         }
-        assertThat(result).isInstanceOf(RegistrationResult.Failure::class.java)
+        assertThat(result).isEqualTo(RegistrationResult.Error)
     }
 
     @Test
@@ -191,13 +199,13 @@ class RegistrationUseCaseTest {
         verify { sonarIdProvider.setSonarId(RESIDENT_ID) }
     }
 
-    private fun confirmDeviceApiCallFails(exception: Exception) {
+    private fun confirmDeviceFails(exception: Exception) {
         val deferred = Deferred<Registration>()
         deferred.fail(exception)
         every { residentApi.confirmDevice(confirmation) } returns deferred.promise
     }
 
-    private fun residentApiCallFails() {
+    private fun registerDeviceFails() {
         val deferred = Deferred<Unit>()
         deferred.fail(IOException())
         every { residentApi.register(any()) } returns deferred.promise

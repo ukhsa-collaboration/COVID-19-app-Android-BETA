@@ -32,7 +32,7 @@ class NotificationHandler @Inject constructor(
                 isActivation(messageData) -> {
                     val activationCode = messageData.getValue(ACTIVATION_CODE_KEY)
                     activationCodeProvider.setActivationCode(activationCode)
-                    registrationManager.tryRegister()
+                    registrationManager.register()
                 }
                 isStatusUpdate(messageData) -> {
                     stateStorage.update(EmberState(DateTime.now(DateTimeZone.UTC).plusDays(14)))

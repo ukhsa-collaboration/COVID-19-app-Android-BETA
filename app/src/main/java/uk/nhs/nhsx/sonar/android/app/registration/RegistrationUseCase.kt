@@ -30,7 +30,7 @@ class RegistrationUseCase @Inject constructor(
         try {
             if (sonarIdProvider.hasProperSonarId()) {
                 Timber.d("Already registered")
-                return RegistrationResult.AlreadyRegistered
+                return RegistrationResult.Success
             }
             val activationCode = activationCodeProvider.getActivationCode()
             if (activationCode.isEmpty()) {
@@ -48,11 +48,12 @@ class RegistrationUseCase @Inject constructor(
             Timber.d("sonarId stored")
             return RegistrationResult.Success
         } catch (e: ClientError) {
+            // TODO: delete firebase token?
             activationCodeProvider.clear()
-            return RegistrationResult.ActivationCodeNotValidFailure(e)
+            return RegistrationResult.Error
         } catch (e: Exception) {
             Timber.e(e, "RegistrationUseCase exception")
-            return RegistrationResult.Failure(e)
+            return RegistrationResult.Error
         }
     }
 

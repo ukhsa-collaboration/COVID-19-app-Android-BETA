@@ -56,7 +56,7 @@ class NotificationHandlerTest {
 
         verify {
             activationCodeProvider.setActivationCode("code-023")
-            registrationManager.tryRegister()
+            registrationManager.register()
         }
     }
 

@@ -31,6 +31,6 @@ class OkViewModel @Inject constructor(
 
     fun onStart() {
         onboardingStatusProvider.setOnboardingFinished(true)
-        registrationManager.tryRegister()
+        registrationManager.register()
     }
 }

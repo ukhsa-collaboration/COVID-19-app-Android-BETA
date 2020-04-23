@@ -74,7 +74,7 @@ class OkViewModelTest {
         sut.onStart()
 
         coVerify(exactly = 1) {
-            registrationManager.tryRegister()
+            registrationManager.register()
         }
     }
 }

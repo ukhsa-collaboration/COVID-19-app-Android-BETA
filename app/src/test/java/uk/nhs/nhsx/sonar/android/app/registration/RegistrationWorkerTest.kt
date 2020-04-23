@@ -3,7 +3,6 @@ package uk.nhs.nhsx.sonar.android.app.registration
 import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
-import com.android.volley.ClientError
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -15,7 +14,6 @@ import org.junit.Before
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
-import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker.Companion.ACTIVATION_CODE_NOT_VALID
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker.Companion.WAITING_FOR_ACTIVATION_CODE
 import kotlin.test.assertTrue
 
@@ -47,7 +45,7 @@ class RegistrationWorkerTest {
 
     @Test
     fun onAlreadyRegisteredReturnsSuccess() = runBlockingTest {
-        coEvery { registrationUseCase.register() } returns RegistrationResult.AlreadyRegistered
+        coEvery { registrationUseCase.register() } returns RegistrationResult.Success
 
         val result = sut.doWork()
 
@@ -56,28 +54,11 @@ class RegistrationWorkerTest {
 
     @Test
     fun onFailureReturnsRetry() = runBlockingTest {
-        coEvery { registrationUseCase.register() } returns RegistrationResult.Failure(
-            RuntimeException()
-        )
+        coEvery { registrationUseCase.register() } returns RegistrationResult.Error
 
         val result = sut.doWork()
 
         assertThat(result).isInstanceOf(ListenableWorker.Result.Retry::class.java)
-    }
-
-    @Test
-    fun onActivationCodeNotValidFailureReturnsFailure() = runBlockingTest {
-        coEvery { registrationUseCase.register() } returns RegistrationResult.ActivationCodeNotValidFailure(
-            ClientError()
-        )
-
-        val result = sut.doWork()
-
-        assertThat(result).isInstanceOf(ListenableWorker.Result.Failure::class.java)
-        val failure = result as ListenableWorker.Result.Failure
-        val isActivationCodeNotValid =
-            failure.outputData.getBoolean(ACTIVATION_CODE_NOT_VALID, false)
-        assertTrue(isActivationCodeNotValid, "Output should contain ACTIVATION_CODE_NOT_VALID")
     }
 
     @Test
