@@ -152,7 +152,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun verifyReceivedRegistrationRequest() {
-        val lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
+        val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.method).isEqualTo("POST")
@@ -168,7 +168,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     private fun verifyReceivedActivationRequest() {
-        val lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
+        val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.method).isEqualTo("POST")

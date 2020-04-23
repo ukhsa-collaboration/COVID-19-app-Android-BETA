@@ -161,7 +161,6 @@ class FlowTest {
 
     fun testRegistrationRetry() {
         testAppContext.simulateBackendResponse(error = true)
-        testAppContext.simulateBackendDelay(0)
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -182,12 +181,16 @@ class FlowTest {
 
         testAppContext.verifyReceivedRegistrationRequest()
 
-        testAppContext.simulateBackendResponse(error = false)
-
         checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
         verifyCheckMySymptomsButton(not(isEnabled()))
 
+        testAppContext.simulateBackendResponse(error = false)
+
+        // job retries after at least 10 seconds
+        waitForText(R.string.registration_everything_is_working_ok, timeoutInMs = 12000)
+
         testAppContext.verifyRegistrationFlow()
+
         checkViewHasText(
             R.id.registrationStatusText,
             R.string.registration_everything_is_working_ok
