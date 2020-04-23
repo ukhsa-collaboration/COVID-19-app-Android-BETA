@@ -102,7 +102,7 @@ class DiagnoseCoughViewModelTest {
     fun `initial state is red then final state is red`() {
         val tomorrowSevenAm = LocalDate.now()
             .plusDays(1)
-            .toLocalDateTime(LocalTime("7:00:00"))
+            .toDateTime(LocalTime("7:00:00"))
             .toDateTime(UTC)
 
         val expected = RedState(tomorrowSevenAm, setOf(Symptom.TEMPERATURE))

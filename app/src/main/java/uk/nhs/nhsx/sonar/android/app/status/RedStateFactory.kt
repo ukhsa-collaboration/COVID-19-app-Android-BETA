@@ -4,9 +4,9 @@
 
 package uk.nhs.nhsx.sonar.android.app.status
 
+import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
-import org.joda.time.LocalDateTime
 import org.joda.time.LocalTime
 
 object RedStateFactory {
@@ -31,16 +31,16 @@ object RedStateFactory {
             ), symptoms.toSet()
         )
 
-    private fun latest(a: LocalDateTime, b: LocalDateTime) =
+    private fun latest(a: DateTime, b: DateTime) =
         if (a.isAfter(b)) a else b
 
     private fun tomorrow() =
         LocalDate.now()
             .plusDays(1)
-            .toLocalDateTime(LocalTime.parse(SEVEN_AM))
+            .toDateTime(LocalTime.parse(SEVEN_AM))
 
     private fun sevenDaysAfter(symptomsDate: LocalDate) =
         symptomsDate
             .plusDays(7)
-            .toLocalDateTime(LocalTime.parse(SEVEN_AM))
+            .toDateTime(LocalTime.parse(SEVEN_AM))
 }
