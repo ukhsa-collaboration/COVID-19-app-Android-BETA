@@ -32,7 +32,7 @@ class Encrypter @Inject constructor(
         val sharedInformation = ephemeralKeyProvider.providePublicKeyPoint()
 
         val derivedKey = deriveSecretKey(sharedSecret, sharedInformation)
-        val encryptionResult = AES256GCMEncrypt(derivedKey.secretKey, derivedKey.iv, plainText)
+        val encryptionResult = aesGcmEncrypt(derivedKey.secretKey, derivedKey.iv, plainText)
 
         return Cryptogram(
             sharedInformation.sliceArray(1 until sharedInformation.size),
@@ -72,7 +72,7 @@ class Encrypter @Inject constructor(
         keyAgreement.doPhase(publicKey, true)
         val secret = keyAgreement.generateSecret()
         if (secret.size != 32)
-            throw IllegalArgumentException("AES 256 key should be 256 bits (32 bytes)")
+            throw IllegalArgumentException("Shared secret should be 256 bits (32 bytes)")
         return secret
     }
 
@@ -91,7 +91,7 @@ class Encrypter @Inject constructor(
     }
 
     @SuppressLint("GetInstance")
-    private fun AES256GCMEncrypt(
+    private fun aesGcmEncrypt(
         encryptionKey: SecretKey,
         iv: ByteArray,
         data: ByteArray
