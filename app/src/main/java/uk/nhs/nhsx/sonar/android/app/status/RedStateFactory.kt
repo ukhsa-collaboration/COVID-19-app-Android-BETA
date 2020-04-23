@@ -13,7 +13,7 @@ object RedStateFactory {
     private const val SEVEN_AM = "7:00:00"
 
     fun normal(symptomsDate: LocalDate, symptoms: Set<Symptom>): RedState {
-        val suggested = sevenDaysAfter(symptomsDate)
+        val suggested = sixDaysAfter(symptomsDate)
         val tomorrow = tomorrow()
 
         return RedState(
@@ -39,8 +39,8 @@ object RedStateFactory {
             .plusDays(1)
             .toDateTime(LocalTime.parse(SEVEN_AM))
 
-    private fun sevenDaysAfter(symptomsDate: LocalDate) =
+    private fun sixDaysAfter(symptomsDate: LocalDate) =
         symptomsDate
-            .plusDays(7)
+            .plusDays(6)
             .toDateTime(LocalTime.parse(SEVEN_AM))
 }
