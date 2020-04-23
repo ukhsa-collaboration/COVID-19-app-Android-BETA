@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app.diagnose.review
+package uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner
 
 import android.content.Context
 import android.view.View
@@ -15,7 +15,9 @@ import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 class SpinnerAdapter(context: Context) :
     ArrayAdapter<String>(
         context, android.R.layout.simple_spinner_item,
-        getDates(context)
+        getDates(
+            context
+        )
     ) {
 
     init {
@@ -36,7 +38,11 @@ class SpinnerAdapter(context: Context) :
 
     fun update(data: String) {
         clear()
-        addAll(getDates(context))
+        addAll(
+            getDates(
+                context
+            )
+        )
         insert(data, count - 1)
     }
 

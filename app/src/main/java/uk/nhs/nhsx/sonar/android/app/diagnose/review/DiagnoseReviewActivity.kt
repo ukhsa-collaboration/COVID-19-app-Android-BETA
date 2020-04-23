@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.diagnose.review
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcel
 import android.view.View
 import android.widget.AdapterView
 import androidx.activity.viewModels
@@ -31,6 +32,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.SpinnerAdapter
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
@@ -108,12 +110,28 @@ class DiagnoseReviewActivity : BaseActivity() {
             CalendarConstraints.Builder()
                 .setStart(DateTime.now(UTC).minusDays(28).millis)
                 .setEnd(DateTime.now(UTC).millis)
+                .setValidator(object : CalendarConstraints.DateValidator {
+
+                    override fun isValid(date: Long): Boolean {
+                        val selectedDate = LocalDate(date)
+                        val tomorrow = LocalDate.now().plusDays(1)
+                        val minimum = tomorrow.minusDays(28)
+                        return selectedDate.isAfter(minimum) && selectedDate.isBefore(tomorrow)
+                    }
+
+                    override fun writeToParcel(dest: Parcel?, flags: Int) = Unit
+
+                    override fun describeContents(): Int = 0
+                })
                 .build().let {
                     setCalendarConstraints(it)
                 }
         }.build()
 
-        val adapter = SpinnerAdapter(this)
+        val adapter =
+            SpinnerAdapter(
+                this
+            )
 
         symptoms_date_spinner.adapter = adapter
         symptoms_date_spinner.setSelection(adapter.count - 1)
@@ -138,6 +156,16 @@ class DiagnoseReviewActivity : BaseActivity() {
                             )
                             symptoms_date_spinner.setSelection(SpinnerAdapter.MAX_VISIBLE_POSITION + 1)
                             symptomsDate = selectedDate
+                        }
+
+                        picker.addOnCancelListener {
+                            symptoms_date_spinner.setSelection(adapter.count - 1)
+                            symptomsDate = null
+                        }
+
+                        picker.addOnNegativeButtonClickListener {
+                            symptoms_date_spinner.setSelection(adapter.count - 1)
+                            symptomsDate = null
                         }
                         picker.show(supportFragmentManager, null)
                     } else if (position < adapter.count - 1) {
