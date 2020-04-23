@@ -29,7 +29,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import java.security.Security
 
-const val BASE_URL = "https://sonar-colocate-services-test.apps.cp.data.england.nhs.uk"
+const val BASE_URL = "https://test.route.cp.data.england.nhs.uk"
 
 class ColocateApplication : Application() {
 
