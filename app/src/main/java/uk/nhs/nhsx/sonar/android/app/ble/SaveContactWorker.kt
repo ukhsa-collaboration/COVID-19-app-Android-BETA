@@ -13,7 +13,6 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
-import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule.Companion.ERROR_MARGIN
 import javax.inject.Named
 
 interface SaveContactWorker {
@@ -30,7 +29,6 @@ interface SaveContactWorker {
 
 class DefaultSaveContactWorker(
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
-    @Named(ERROR_MARGIN) private val errorMargin: Int,
     private val contactEventDao: ContactEventDao
 ) : SaveContactWorker {
 
@@ -51,7 +49,7 @@ class DefaultSaveContactWorker(
                             timestamp = timestamp.millis,
                             duration = 60
                         )
-                    contactEventDao.createOrUpdate(contactEvent, errorMargin)
+                    contactEventDao.createOrUpdate(contactEvent)
                 } catch (e: Exception) {
                     Timber.e("$TAG Failed to save with exception $e")
                 }

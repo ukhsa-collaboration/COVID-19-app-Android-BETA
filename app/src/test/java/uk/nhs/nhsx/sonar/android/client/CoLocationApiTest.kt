@@ -29,12 +29,14 @@ class CoLocationApiTest {
             CoLocationEvent(
                 sonarId = "001",
                 rssiValues = listOf(-10, 0),
+                rssiOffsets = listOf(0, 6),
                 timestamp = "2s ago",
                 duration = 10
             ),
             CoLocationEvent(
                 sonarId = "002",
                 rssiValues = listOf(-10, -10, 10),
+                rssiOffsets = listOf(0, 5, 20),
                 timestamp = "yesterday",
                 duration = 120
             )
@@ -53,12 +55,14 @@ class CoLocationApiTest {
                 mapOf(
                     "sonarId" to "001",
                     "rssiValues" to listOf(-10, 0),
+                    "rssiOffsets" to listOf(0, 6),
                     "timestamp" to "2s ago",
                     "duration" to 10
                 ),
                 mapOf(
                     "sonarId" to "002",
                     "rssiValues" to listOf(-10, -10, 10),
+                    "rssiOffsets" to listOf(0, 5, 20),
                     "timestamp" to "yesterday",
                     "duration" to 120
                 )

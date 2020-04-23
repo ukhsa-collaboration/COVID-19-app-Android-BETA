@@ -23,19 +23,20 @@ interface ContactEventDao {
     fun update(contactEvent: ContactEvent)
 
     @Transaction
-    suspend fun createOrUpdate(newEvent: ContactEvent, errorMargin: Int) {
-        val sorted = getAll().sortedBy { it.timestamp }
-        val eventsById = sorted.filter { it.sonarId.contentEquals(newEvent.sonarId) }
-        val matchedEvent = aggregate(newEvent, eventsById, errorMargin)
-        if (matchedEvent != null) {
-            Timber.d("saving Updated event; $matchedEvent")
-            update(matchedEvent)
+    suspend fun createOrUpdate(newEvent: ContactEvent) {
+        val storedEvent = get(newEvent.sonarId)
+        if (storedEvent == null) {
+            Timber.d("saving No matching event; inserting $newEvent")
+            insert(newEvent)
             return
         }
-        // no event within error margin
-        Timber.d("saving No matching event; inserting $newEvent")
-        insert(newEvent)
+        val mergedEvent = merge(newEvent, storedEvent)
+        Timber.d("saving Updated event; $mergedEvent")
+        update(mergedEvent)
     }
+
+    @Query("SELECT * FROM ${ContactEvent.TABLE_NAME} WHERE sonarId=:sonarId")
+    suspend fun get(sonarId: ByteArray): ContactEvent?
 
     @Query("SELECT * FROM ${ContactEvent.TABLE_NAME}")
     suspend fun getAll(): List<ContactEvent>
@@ -47,48 +48,33 @@ interface ContactEventDao {
     suspend fun clearOldEvents(timestamp: Long)
 }
 
-fun aggregate(newEvent: ContactEvent, events: List<ContactEvent>, errorMargin: Int): ContactEvent? {
-    for (event in events) {
-        val newEventTime = DateTime(newEvent.timestamp, DateTimeZone.UTC)
-        val storedEventTimeStart = DateTime(event.timestamp, DateTimeZone.UTC)
-        val storedEventTimeEnd =
-            DateTime(event.timestamp, DateTimeZone.UTC).plus(Seconds.seconds(event.duration))
+fun merge(
+    newEvent: ContactEvent,
+    storedEvent: ContactEvent
+): ContactEvent {
+    val newEventTime = DateTime(newEvent.timestamp, DateTimeZone.UTC)
+    val storedEventTimeStart = DateTime(storedEvent.timestamp, DateTimeZone.UTC)
 
-        val rssis = event.rssiValues
-        val rssiTimestamps = event.rssiTimestamps
+    val rssis = storedEvent.rssiValues
+    val rssiTimestamps = storedEvent.rssiTimestamps
 
-        if (newEventTime.isBefore(storedEventTimeStart) &&
-            newEventTime.isAfter(storedEventTimeStart.minus(Seconds.seconds(errorMargin)))
-        ) {
-            return event.copy(
-                timestamp = newEvent.timestamp,
-                duration = Seconds.secondsBetween(newEventTime, storedEventTimeEnd).seconds,
-                rssiValues = newEvent.rssiValues.plus(rssis),
-                rssiTimestamps = newEvent.rssiTimestamps.plus(rssiTimestamps)
-            )
-        } else if (newEventTime.isAfter(storedEventTimeEnd) &&
-            newEventTime.isBefore(storedEventTimeEnd.plus(Seconds.seconds(errorMargin)))
-        ) {
-            return event.copy(
-                duration = Seconds.secondsBetween(storedEventTimeStart, newEventTime).seconds,
-                rssiValues = rssis.plus(newEvent.rssiValues),
-                rssiTimestamps = rssiTimestamps.plus(newEvent.rssiTimestamps)
-            )
-        } else if (newEventTime.isAfter(storedEventTimeStart) &&
-            newEventTime.isBefore(storedEventTimeEnd)
-        ) {
-            val rssisAndTimestamps =
-                (rssis.zip(rssiTimestamps) + Pair(
-                    newEvent.rssiValues.first(),
-                    newEvent.rssiTimestamps.first()
-                ))
-                    .sortedBy { it.second }
-            return event.copy(
-                rssiValues = rssisAndTimestamps.map { it.first },
-                rssiTimestamps = rssisAndTimestamps.map { it.second }
-            )
-        }
-    }
-
-    return null
+    val mergedRssisAndTimestamps =
+        (rssis.zip(rssiTimestamps) +
+            newEvent.rssiValues.zip(newEvent.rssiTimestamps))
+            .sortedBy { it.second }
+    val updatedStartTime = earliest(storedEventTimeStart, newEventTime)
+    val lastTimestamp = DateTime(mergedRssisAndTimestamps.last().second)
+    return storedEvent.copy(
+        timestamp = updatedStartTime.millis,
+        rssiValues = mergedRssisAndTimestamps.map { it.first },
+        rssiTimestamps = mergedRssisAndTimestamps.map { it.second },
+        duration = Seconds.secondsBetween(updatedStartTime, lastTimestamp).seconds
+    )
 }
+
+fun earliest(first: DateTime, second: DateTime): DateTime =
+    if (first.isBefore(second)) {
+        first
+    } else {
+        second
+    }

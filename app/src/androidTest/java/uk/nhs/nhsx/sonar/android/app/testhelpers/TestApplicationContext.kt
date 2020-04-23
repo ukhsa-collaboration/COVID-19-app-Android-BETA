@@ -26,6 +26,7 @@ import org.joda.time.DateTime
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ColocateApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
+import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
@@ -55,9 +56,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         eventNumber++
         Timber.d("Sending event nr $eventNumber")
         when (eventNumber) {
-            1, 2 -> DateTime.parse("2020-04-01T14:33:13Z")
-            3, 4 -> DateTime.parse("2020-04-01T14:34:43Z") // +90 seconds
-            5, 6 -> DateTime.parse("2020-04-01T14:44:53Z") // +610 seconds
+            1 -> DateTime.parse("2020-04-01T14:33:13Z")
+            2, 3 -> DateTime.parse("2020-04-01T14:34:43Z") // +90 seconds
+            4 -> DateTime.parse("2020-04-01T14:44:53Z") // +610 seconds
             else -> throw IllegalStateException()
         }
     }
@@ -206,49 +207,50 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun simulateDeviceInProximity() {
+        val firstDeviceId = "04330a56-ad45-4b0f-81ee-dd414910e1f5"
+        val firstDeviceIdBytes = Identifier.fromString(firstDeviceId).asBytes
+        val secondDeviceId = "984c61e2-0d66-44eb-beea-fbd8f2991de3"
+        val dao = component.getAppDatabase().contactEventDao()
+
         testRxBleClient.emitScanResults(
             ScanResultArgs(
-                sonarId = UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
+                sonarId = UUID.fromString(firstDeviceId),
                 macAddress = "06-00-00-00-00-00",
                 rssiList = listOf(10)
             ),
             ScanResultArgs(
-                sonarId = UUID.fromString("984c61e2-0d66-44eb-beea-fbd8f2991de3"),
+                sonarId = UUID.fromString(secondDeviceId),
                 macAddress = "07-00-00-00-00-00",
                 rssiList = listOf(40)
             )
         )
 
-        val dao = component.getAppDatabase().contactEventDao()
         await until {
             runBlocking { dao.getAll().size } == 2
         }
 
         testRxBleClient.emitScanResults(
             ScanResultArgs(
-                sonarId = UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
+                sonarId = UUID.fromString(firstDeviceId),
                 macAddress = "06-00-00-00-00-00",
                 rssiList = listOf(20)
-            ),
-            ScanResultArgs(
-                sonarId = UUID.fromString("98155054-72cc-4437-b8fc-82ea33ef683c"),
-                macAddress = "09-00-00-00-00-00",
-                rssiList = listOf(80)
             )
         )
+
         await until {
-            runBlocking { dao.getAll().size } == 3
+            runBlocking { dao.get(firstDeviceIdBytes)!!.rssiValues.size } == 2
         }
 
         testRxBleClient.emitScanResults(
             ScanResultArgs(
-                sonarId = UUID.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5"),
+                sonarId = UUID.fromString(firstDeviceId),
                 macAddress = "06-00-00-00-00-00",
                 rssiList = listOf(15)
             )
         )
+
         await until {
-            runBlocking { dao.getAll().size } > 3
+            runBlocking { dao.get(firstDeviceIdBytes)!!.rssiValues.size } == 3
         }
     }
 
@@ -265,28 +267,22 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(body).contains(
             jsonOf(
                 "sonarId" to "04330a56-ad45-4b0f-81ee-dd414910e1f5",
-                "rssiValues" to listOf(10, 20),
+                "rssiValues" to listOf(10, 20, 15),
+                "rssiOffsets" to listOf(0, 90, 700),
                 "timestamp" to "2020-04-01T14:33:13Z",
-                "duration" to 90
+                "duration" to 700
             )
         )
         assertThat(body).contains(
             jsonOf(
-                "sonarId" to "04330a56-ad45-4b0f-81ee-dd414910e1f5",
-                "rssiValues" to listOf(15),
-                "timestamp" to "2020-04-01T14:44:53Z",
-                "duration" to 60
-            )
-        )
-        assertThat(body).contains(
-            jsonOf(
-                "sonarId" to "98155054-72cc-4437-b8fc-82ea33ef683c",
-                "rssiValues" to listOf(80),
+                "sonarId" to "984c61e2-0d66-44eb-beea-fbd8f2991de3",
+                "rssiValues" to listOf(40),
+                "rssiOffsets" to listOf(0),
                 "timestamp" to "2020-04-01T14:34:43Z",
                 "duration" to 60
             )
         )
-        assertThat(body.countOccurrences("""{"sonarId":""")).isEqualTo(4)
+        assertThat(body.countOccurrences("""{"sonarId":""")).isEqualTo(2)
     }
 
     fun simulateBackendDelay(delayInMillis: Long) {

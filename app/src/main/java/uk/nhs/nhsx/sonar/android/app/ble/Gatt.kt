@@ -133,7 +133,7 @@ class Gatt @Inject constructor(
                     return
                 }
                 Timber.d("Device $device has subscribed to keep alive.")
-                subscribedDevices.add(device!!)
+                subscribedDevices.add(device)
                 notifyKeepAliveSubscribers()
             }
 

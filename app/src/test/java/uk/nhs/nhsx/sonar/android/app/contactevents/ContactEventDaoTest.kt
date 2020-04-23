@@ -14,14 +14,14 @@ import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 
 class ContactEventDaoTest {
     private val contactEventDao = mockk<ContactEventDao>(relaxed = true)
-    val uuid = Identifier.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5").asBytes
+    private val uuid = Identifier.fromString("04330a56-ad45-4b0f-81ee-dd414910e1f5").asBytes
 
     @Before
     fun setUp() {
-        coEvery { contactEventDao.getAll() } returns events
+        coEvery { contactEventDao.get(uuid) } returns storedEvent
     }
 
-    val events = listOf(
+    private val storedEvent =
         ContactEvent(
             sonarId = uuid,
             rssiValues = listOf(1, 2, 3),
@@ -29,7 +29,6 @@ class ContactEventDaoTest {
             duration = 61,
             timestamp = 2000
         )
-    )
 
     @Test
     fun `extends an existing event into the past`() {
@@ -42,7 +41,7 @@ class ContactEventDaoTest {
                 timestamp = 1000
             )
 
-            assertThat(aggregate(pastEvent, events, 60)).isEqualTo(
+            assertThat(merge(pastEvent, storedEvent)).isEqualTo(
                 ContactEvent(
                     sonarId = uuid,
                     rssiValues = listOf(4, 1, 2, 3),
@@ -56,7 +55,6 @@ class ContactEventDaoTest {
 
     @Test
     fun `extends an existing into the future`() {
-
         runBlocking {
             val futureEvent = ContactEvent(
                 sonarId = uuid,
@@ -66,7 +64,7 @@ class ContactEventDaoTest {
                 timestamp = 64_000
             )
 
-            assertThat(aggregate(futureEvent, events, 60)).isEqualTo(
+            assertThat(merge(futureEvent, storedEvent)).isEqualTo(
                 ContactEvent(
                     sonarId = uuid,
                     rssiValues = listOf(1, 2, 3, 4),
@@ -89,13 +87,36 @@ class ContactEventDaoTest {
                 timestamp = 4000
             )
 
-            assertThat(aggregate(futureEvent, events, 60)).isEqualTo(
+            assertThat(merge(futureEvent, storedEvent)).isEqualTo(
                 ContactEvent(
                     sonarId = uuid,
                     rssiValues = listOf(1, 2, 4, 3),
                     rssiTimestamps = listOf(2000, 3000, 4000, 63_000),
                     duration = 61,
                     timestamp = 2000
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `merges an event with multiple readings correctly`() {
+        runBlocking {
+            val longerEvent = ContactEvent(
+                sonarId = uuid,
+                rssiValues = listOf(4, 5, 6),
+                rssiTimestamps = listOf(1000, 4000, 64_000),
+                duration = 63,
+                timestamp = 1000
+            )
+
+            assertThat(merge(longerEvent, storedEvent)).isEqualTo(
+                ContactEvent(
+                    sonarId = uuid,
+                    rssiValues = listOf(4, 1, 2, 5, 3, 6),
+                    rssiTimestamps = listOf(1000, 2000, 3000, 4000, 63_000, 64_000),
+                    duration = 63,
+                    timestamp = 1000
                 )
             )
         }

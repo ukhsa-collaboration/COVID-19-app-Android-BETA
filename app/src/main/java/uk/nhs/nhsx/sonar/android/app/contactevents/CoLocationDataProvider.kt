@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.contactevents
 import android.util.Base64
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.Seconds
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import uk.nhs.nhsx.sonar.android.client.CoLocationEvent
@@ -24,9 +25,13 @@ class CoLocationDataProvider @Inject constructor(
     }
 
     private fun convert(contactEvent: ContactEvent): CoLocationEvent {
+        val startTime = DateTime(contactEvent.timestamp, DateTimeZone.UTC)
         val event = CoLocationEvent(
             rssiValues = contactEvent.rssiValues,
-            timestamp = DateTime(contactEvent.timestamp, DateTimeZone.UTC).toUtcIsoFormat(),
+            rssiOffsets = contactEvent.rssiTimestamps.map {
+                Seconds.secondsBetween(startTime, DateTime(it, DateTimeZone.UTC)).seconds
+            },
+            timestamp = startTime.toUtcIsoFormat(),
             duration = contactEvent.duration
         )
 

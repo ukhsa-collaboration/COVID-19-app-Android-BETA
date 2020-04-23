@@ -37,8 +37,7 @@ class PersistenceModule(private val appContext: Context) {
     @Provides
     fun provideSaveContactWorker(
         contactEventDao: ContactEventDao,
-        @Named(BluetoothModule.ERROR_MARGIN) errorMargin: Int,
         @Named(AppModule.DISPATCHER_IO) ioDispatcher: CoroutineDispatcher
     ): SaveContactWorker =
-        DefaultSaveContactWorker(ioDispatcher, errorMargin, contactEventDao)
+        DefaultSaveContactWorker(ioDispatcher, contactEventDao)
 }

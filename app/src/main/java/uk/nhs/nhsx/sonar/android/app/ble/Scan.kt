@@ -98,8 +98,10 @@ class Scan @Inject constructor(
             while (running) {
                 Timber.d("scan - Starting")
                 scanDisposable = scan()
-                delay(scanIntervalLength.toLong() * 1_000)
-
+                var attempts = 0
+                while (attempts++ < 10 && devices.isEmpty()) {
+                    delay(scanIntervalLength.toLong() * 1_000)
+                }
                 Timber.d("scan - Stopping")
                 scanDisposable?.dispose()
                 scanDisposable = null
