@@ -67,7 +67,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         testRxBleClient,
         startTimestampProvider,
         endTimestampProvider,
-        currentTimestampProvider
+        currentTimestampProvider,
+        scanIntervalLength = 2
     )
     private val mockServer = MockWebServer()
 
