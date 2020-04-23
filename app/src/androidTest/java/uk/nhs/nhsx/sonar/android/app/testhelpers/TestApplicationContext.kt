@@ -69,14 +69,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         endTimestampProvider,
         currentTimestampProvider
     )
-    private val mockServer = MockWebServer()
+    private var mockServer = MockWebServer()
 
     val component: TestAppComponent
 
     init {
         mockServer.apply {
             dispatcher = testDispatcher
-            start()
+            start(43239)
         }
         JodaTimeAndroid.init(app)
 
@@ -294,6 +294,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun closeNotificationPanel() {
         val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
         app.baseContext.sendBroadcast(it)
+    }
+
+    fun startServer() {
+        mockServer = MockWebServer()
+        mockServer.apply {
+            dispatcher = testDispatcher
+            start(43239)
+        }
     }
 }
 

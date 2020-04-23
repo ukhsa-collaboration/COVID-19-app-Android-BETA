@@ -77,4 +77,16 @@ class OkViewModelTest {
             registrationManager.register()
         }
     }
+
+    @Test
+    fun onStartIfAlreadyRegisteredSkipsRegistration() {
+        every { sonarIdProvider.hasProperSonarId() } returns true
+        every { onboardingStatusProvider.isOnboardingFinished() } returns false
+
+        sut.onStart()
+
+        coVerify(exactly = 0) {
+            registrationManager.register()
+        }
+    }
 }

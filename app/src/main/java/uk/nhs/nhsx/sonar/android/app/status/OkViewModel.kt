@@ -31,6 +31,8 @@ class OkViewModel @Inject constructor(
 
     fun onStart() {
         onboardingStatusProvider.setOnboardingFinished(true)
-        registrationManager.register()
+        if (!sonarIdProvider.hasProperSonarId()) {
+            registrationManager.register()
+        }
     }
 }
