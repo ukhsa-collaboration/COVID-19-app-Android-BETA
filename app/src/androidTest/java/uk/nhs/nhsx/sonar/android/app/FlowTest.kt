@@ -91,8 +91,7 @@ class FlowTest {
             getSonarIdProvider().clear()
             getActivationCodeProvider().clear()
         }
-        testAppContext.shutdownMockServer()
-        testAppContext.startServer()
+        testAppContext.resetTestDispatcher()
 
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val intent = Intent(testAppContext.app, FlowTestStartActivity::class.java).apply {
@@ -109,18 +108,15 @@ class FlowTest {
     @Test
     fun testRunner() {
         val tests = listOf(
+            ::testRegistration,
+            ::testRegistrationRetry,
             ::testBluetoothInteractions,
             ::testReceivingStatusUpdateNotification,
             ::testExplanation,
             ::testLaunchWhenStateIsDefault,
             ::testLaunchWhenStateIsEmber,
             ::testLaunchWhenStateIsRed,
-            ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
-            // TODO: move these two tests to the top after fixing test leakage
-            // fixed MockWebServer test leakage by restarting it between each test
-            // but still there are other leakages that fail testBluetoothInteractions
-            ::testRegistration,
-            ::testRegistrationRetry
+            ::testLaunchWhenOnboardingIsFinishedButNotRegistered
         )
 
         tests.forEach {

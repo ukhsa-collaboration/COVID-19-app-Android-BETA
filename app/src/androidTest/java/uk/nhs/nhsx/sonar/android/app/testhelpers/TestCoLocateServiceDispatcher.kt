@@ -49,6 +49,11 @@ class TestCoLocateServiceDispatcher : Dispatcher() {
         return response
     }
 
+    fun reset() {
+        delay = 0L
+        shouldSimulateError = false
+    }
+
     fun simulateResponse(error: Boolean) {
         shouldSimulateError = error
     }

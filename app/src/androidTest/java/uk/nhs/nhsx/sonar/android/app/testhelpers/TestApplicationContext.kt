@@ -69,14 +69,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         endTimestampProvider,
         currentTimestampProvider
     )
-    private var mockServer = MockWebServer()
+    private val mockServer = MockWebServer()
 
     val component: TestAppComponent
 
     init {
         mockServer.apply {
             dispatcher = testDispatcher
-            start(43239)
+            start()
         }
         JodaTimeAndroid.init(app)
 
@@ -292,12 +292,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         app.baseContext.sendBroadcast(it)
     }
 
-    fun startServer() {
-        mockServer = MockWebServer()
-        mockServer.apply {
-            dispatcher = testDispatcher
-            start(43239)
-        }
+    fun resetTestDispatcher() {
+        testDispatcher.reset()
     }
 }
 
