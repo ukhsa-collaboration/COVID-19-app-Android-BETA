@@ -38,10 +38,10 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
     private fun handleSimplified(hasTemperature: Boolean, hasCough: Boolean): StateResult {
         return when {
             hasTemperature and hasCough ->
-                RedState(inOneDay(), setOf(Symptom.COUGH, Symptom.TEMPERATURE))
+                RedState.extended(Symptom.COUGH, Symptom.TEMPERATURE)
 
             hasTemperature ->
-                RedState(inOneDay(), setOf(Symptom.TEMPERATURE))
+                RedState.extended(Symptom.TEMPERATURE)
 
             hasCough ->
                 RecoveryState(inOneDay())

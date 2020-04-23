@@ -149,7 +149,7 @@ dependencies {
 
     // Client
     implementation 'com.android.volley:volley:1.1.1'
-    api 'net.danlew:android.joda:2.10.3'
+    implementation 'net.danlew:android.joda:2.10.3'
 
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-runtime:$room_version"

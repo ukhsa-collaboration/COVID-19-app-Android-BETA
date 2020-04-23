@@ -23,6 +23,8 @@ import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_sp
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
+import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -56,7 +58,7 @@ class DiagnoseReviewActivity : BaseActivity() {
         ).filterNotNull().toSet()
     }
 
-    private var symptomsDate: DateTime? = null
+    private var symptomsDate: LocalDate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +97,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                 date_selection_error.visibility = View.VISIBLE
                 date_selection_error.announceForAccessibility(getString(R.string.date_selection_error))
             } else {
-                viewModel.uploadContactEvents(selectedSymptomsDate)
+                viewModel.uploadContactEvents(selectedSymptomsDate.toDateTime(LocalTime.now(), UTC))
             }
         }
     }
@@ -130,7 +132,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                 ) {
                     if (position == SpinnerAdapter.MAX_VISIBLE_POSITION) {
                         picker.addOnPositiveButtonClickListener {
-                            val selectedDate = DateTime(it, UTC)
+                            val selectedDate = LocalDate(it)
                             adapter.update(
                                 selectedDate.toUiSpinnerFormat()
                             )
@@ -140,7 +142,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                         picker.show(supportFragmentManager, null)
                     } else if (position < adapter.count - 1) {
                         date_selection_error.visibility = View.GONE
-                        symptomsDate = DateTime.now(UTC).minusDays(position)
+                        symptomsDate = LocalDate.now().minusDays(position)
                     }
                 }
             }
@@ -171,7 +173,7 @@ class DiagnoseReviewActivity : BaseActivity() {
 
     private fun updateStateAndNavigate() {
         symptomsDate?.let {
-            val state = RedState(it.plusDays(7), symptoms)
+            val state = RedState.normal(it, symptoms)
             stateStorage.update(state)
 
             Timber.d("Updated the state to: $state")
