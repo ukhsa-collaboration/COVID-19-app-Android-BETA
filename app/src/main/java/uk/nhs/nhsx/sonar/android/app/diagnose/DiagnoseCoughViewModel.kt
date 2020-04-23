@@ -10,6 +10,7 @@ import org.joda.time.DateTimeZone.UTC
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
+import uk.nhs.nhsx.sonar.android.app.status.RedStateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserState
@@ -38,10 +39,10 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
     private fun handleSimplified(hasTemperature: Boolean, hasCough: Boolean): StateResult {
         return when {
             hasTemperature and hasCough ->
-                RedState.extended(Symptom.COUGH, Symptom.TEMPERATURE)
+                RedStateFactory.extended(Symptom.COUGH, Symptom.TEMPERATURE)
 
             hasTemperature ->
-                RedState.extended(Symptom.TEMPERATURE)
+                RedStateFactory.extended(Symptom.TEMPERATURE)
 
             hasCough ->
                 RecoveryState(inOneDay())

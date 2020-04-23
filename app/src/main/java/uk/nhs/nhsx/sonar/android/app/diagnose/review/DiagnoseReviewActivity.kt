@@ -33,7 +33,7 @@ import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.SpinnerAdapter
-import uk.nhs.nhsx.sonar.android.app.status.RedState
+import uk.nhs.nhsx.sonar.android.app.status.RedStateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
@@ -201,7 +201,7 @@ class DiagnoseReviewActivity : BaseActivity() {
 
     private fun updateStateAndNavigate() {
         symptomsDate?.let {
-            val state = RedState.normal(it, symptoms)
+            val state = RedStateFactory.normal(it, symptoms)
             stateStorage.update(state)
 
             Timber.d("Updated the state to: $state")
