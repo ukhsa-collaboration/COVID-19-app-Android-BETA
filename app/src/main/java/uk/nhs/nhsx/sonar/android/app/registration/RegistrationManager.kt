@@ -109,7 +109,7 @@ class RegistrationWorker(appContext: Context, workerParams: WorkerParameters) :
     }
 
     companion object {
-        const val WAITING_FOR_ACTIVATION_CODE = "WAITING_FOR_ACTIVATION_CODE"
         const val ACTIVATION_CODE_NOT_VALID = "ACTIVATION_CODE_NOT_VALID"
+        const val WAITING_FOR_ACTIVATION_CODE = "WAITING_FOR_ACTIVATION_CODE"
     }
 }
