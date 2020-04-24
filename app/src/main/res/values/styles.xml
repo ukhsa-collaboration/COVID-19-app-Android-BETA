@@ -53,6 +53,14 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TextViewCardSubTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:lineSpacingMultiplier">1.18</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text_sub_title</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+    </style>
+
     <style name="TextViewActionTitle" parent="Widget.AppCompat.TextView">
         <item name="android:lineSpacingMultiplier">1.18</item>
         <item name="android:textSize">16sp</item>
@@ -63,6 +71,14 @@
     <style name="TextViewActionSubTitle" parent="Widget.AppCompat.TextView">
         <item name="android:lineSpacingMultiplier">1.18</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/text_sub_title</item>
+    </style>
+
+
+    <style name="TextViewStatusSubTittle" parent="Widget.AppCompat.TextView">
+        <item name="android:lineSpacingMultiplier">1.18</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/text_sub_title</item>
     </style>

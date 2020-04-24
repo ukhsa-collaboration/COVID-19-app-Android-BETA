@@ -8,6 +8,8 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.StateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.client.AcknowledgmentsApi
@@ -33,8 +35,11 @@ class NotificationHandler @Inject constructor(
                     registrationManager.register()
                 }
                 isStatusUpdate(messageData) -> {
-                    stateStorage.update(StateFactory.ember())
-                    showStatusNotification()
+                    val currentState = stateStorage.get()
+                    if (currentState is DefaultState || currentState is RecoveryState) {
+                        stateStorage.update(StateFactory.ember())
+                        showStatusNotification()
+                    }
                 }
             }
         }

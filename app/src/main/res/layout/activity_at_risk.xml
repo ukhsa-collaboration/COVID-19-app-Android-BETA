@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/amber_card_background"
                     android:orientation="vertical"
-                    android:paddingStart="24dp"
+                    android:paddingStart="28dp"
                     android:paddingTop="32dp"
                     android:paddingEnd="24dp"
                     android:paddingBottom="32dp">
@@ -53,6 +53,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:text="@string/status_latest_advice" />
+
+                    <TextView
+                        android:id="@+id/follow_until"
+                        style="@style/TextViewCardSubTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -66,35 +73,6 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:text="@string/status_today_feeling" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/status_feeling_ok_layout"
-                style="@style/PrimaryCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_background"
-                    android:orientation="vertical"
-                    android:padding="24dp">
-
-                    <TextView
-                        android:id="@+id/status_feeling_ok"
-                        style="@style/TextViewActionTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:text="@string/status_feeling_ok" />
-
-                    <TextView
-                        style="@style/TextViewActionSubTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/status_feeling_ok_desc" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/status_not_feeling_well"
@@ -118,6 +96,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
+                        android:textSize="18sp"
                         android:text="@string/status_not_feeling_well" />
 
                     <TextView
@@ -128,6 +107,58 @@
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                style="@style/TextViewStatusSubTittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/status_description_01"/>
+
+            <TextView
+                style="@style/TextViewStatusSubTittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/status_description_02"/>
+
+
+            <TextView
+                style="@style/TextViewStatusSubTittle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/status_description_03" />
+
+
+            <View
+                style="@style/HorizontalDivider"
+                android:layout_marginTop="36dp"
+                android:layout_marginBottom="24dp" />
+
+            <TextView
+                android:id="@+id/need_medical_advice"
+                style="@style/TextViewActionSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/need_medical_advice"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/nhs_service"
+                style="@style/TextViewActionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:text="@string/nhs_online_service" />
+
+            <View
+                style="@style/HorizontalDivider"
+                android:layout_marginTop="36dp"
+                android:layout_marginBottom="8dp"/>
+
+
         </LinearLayout>
     </ScrollView>
 

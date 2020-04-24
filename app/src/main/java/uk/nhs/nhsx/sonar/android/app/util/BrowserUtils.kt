@@ -22,4 +22,6 @@ const val LATEST_ADVICE_URL =
 const val LATEST_ADVICE_URL_RED_STATE =
     "https://www.gov.uk/government/publications/covid-19-stay-at-home-guidance/stay-at-home-guidance-for-households-with-possible-coronavirus-covid-19-infection"
 
-const val NHS_SUPPORT_PAGE = "https://111.nhs.uk/covid-19/"
+const val NHS_SYMPTOM_CHECKER = "https://111.nhs.uk/covid-19/"
+
+const val NHS_SUPPORT_PAGE = "https://www.nhs.uk/conditions/coronavirus-covid-19/"

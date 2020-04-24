@@ -7,7 +7,9 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import kotlinx.android.synthetic.main.activity_at_risk.follow_until
 import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_amber
+import kotlinx.android.synthetic.main.activity_at_risk.nhs_service
 import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -15,7 +17,9 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
+import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
+import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 import javax.inject.Inject
 
 class AtRiskActivity : BaseActivity() {
@@ -29,12 +33,18 @@ class AtRiskActivity : BaseActivity() {
         BluetoothService.start(this)
         setContentView(R.layout.activity_at_risk)
 
+        follow_until.text = getString(R.string.follow_until, stateStorage.get().until.toUiFormat())
+
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
         }
 
         latest_advice_amber.setOnClickListener {
             openUrl(LATEST_ADVICE_URL)
+        }
+
+        nhs_service.setOnClickListener {
+            openUrl(NHS_SUPPORT_PAGE)
         }
     }
 
