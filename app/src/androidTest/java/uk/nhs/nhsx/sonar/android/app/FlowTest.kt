@@ -251,7 +251,7 @@ class FlowTest {
     }
 
     fun testLaunchWhenStateIsEmber() {
-        setUserState(EmberState(DateTime.now(DateTimeZone.UTC)))
+        setUserState(EmberState(DateTime.now(DateTimeZone.UTC).plusDays(1)))
         setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
