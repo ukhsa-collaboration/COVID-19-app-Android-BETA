@@ -138,7 +138,8 @@
     <string name="enable_bluetooth">Enable Bluetooth</string>
     <string name="grant_location_permission_title">Your permission is needed to allow access to your location</string>
     <string name="grant_location_permission_rationale">This app is not using Bluetooth or your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nIf you do not allow access to your location this app will not work.\n\nTo enable this app to work, please go to Settings and allow access:</string>
-    <string name="go_to_your_settings">Go to App Settings</string>
+    <string name="go_to_app_settings">Go to App Settings</string>
+    <string name="go_to_your_settings">Go to your Settings</string>
     <string name="enable_location_service_title">You need to enable location services on your phone</string>
     <string name="enable_location_service_rationale">To make Bluetooth work, we need you to turn on location services on your phone.\n\nThis app is not using Bluetooth or your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nIf you do not enable location services on your phone this app will not work.\n\nTo enable this app to work, please go to Settings and enable location services:</string>
     <string name="follow_until">Follow this advice until %1$s</string>

@@ -64,9 +64,10 @@
         <activity android:name=".diagnose.DiagnoseCloseActivity" />
         <activity android:name=".onboarding.EnableBluetoothActivity" />
         <activity android:name=".onboarding.GrantLocationPermissionActivity" />
-        <activity android:name=".onboarding.EnableLocationServicesActivity" />
+        <activity android:name=".onboarding.EnableLocationActivity" />
         <activity android:name=".edgecases.EnableBluetoothAfterRegistrationActivity" />
         <activity android:name=".edgecases.GrantLocationPermissionAfterRegistrationActivity" />
+        <activity android:name=".edgecases.EnableLocationAfterRegistrationActivity" />
 
         <service
             android:name=".ble.BluetoothService"

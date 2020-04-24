@@ -90,7 +90,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
     }
 
     private fun startEnableLocationServicesActivity() {
-        EnableLocationServicesActivity.start(this)
+        EnableLocationActivity.start(this)
     }
 
     companion object {
