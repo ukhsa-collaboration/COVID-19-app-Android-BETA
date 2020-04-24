@@ -101,6 +101,4 @@
 
     </RelativeLayout>
 
-    <!--    <include layout="@layout/bottom_sheet_isolate" />-->
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

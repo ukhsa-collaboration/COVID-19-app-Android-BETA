@@ -116,6 +116,8 @@ class FlowTest {
             ::testLaunchWhenStateIsDefault,
             ::testLaunchWhenStateIsEmber,
             ::testLaunchWhenStateIsRed,
+            ::testLaunchWhenStateIsRedAndExpired,
+            ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
             ::testLaunchWhenOnboardingIsFinishedButNotRegistered
         )
 
@@ -271,6 +273,38 @@ class FlowTest {
         checkIsolateActivityIsShown()
     }
 
+    fun testLaunchWhenStateIsRedAndExpired() {
+        setUserState(
+            RedState(
+                DateTime.now(DateTimeZone.UTC).minusDays(1),
+                setOf(Symptom.TEMPERATURE)
+            )
+        )
+        setValidSonarId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkIsolateActivityPopUpIsShown()
+    }
+
+    fun testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState() {
+        setUserState(
+            RedState(
+                DateTime.now(DateTimeZone.UTC).minusDays(1),
+                setOf(Symptom.TEMPERATURE)
+            )
+        )
+        setValidSonarId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkIsolateActivityPopUpIsShown()
+
+        onView(withId(R.id.have_symptoms)).perform(click())
+
+        checkCanTransitionToIsolateActivitySimplified()
+    }
+
     fun testLaunchWhenOnboardingIsFinishedButNotRegistered() {
         setFinishedOnboarding()
 
@@ -323,6 +357,10 @@ class FlowTest {
         onView(withId(R.id.status_red)).check(matches(isDisplayed()))
     }
 
+    private fun checkIsolateActivityPopUpIsShown() {
+        onView(withId(R.id.bottom_sheet_isolate)).check(matches(isDisplayed()))
+    }
+
     private fun setUserState(state: UserState) {
         component.getStateStorage().update(state)
     }
@@ -356,6 +394,21 @@ class FlowTest {
         await until {
             adapter.isEnabled
         }
+    }
+
+    private fun checkCanTransitionToIsolateActivitySimplified() {
+
+        // Temperature Step
+        checkViewHasText(R.id.progress, R.string.progress_half)
+        onView(withId(R.id.yes)).perform(click())
+        onView(withId(R.id.confirm_diagnosis)).perform(click())
+
+        // Cough Step
+        checkViewHasText(R.id.progress, R.string.progress_two_out_of_two)
+        onView(withId(R.id.no)).perform(click())
+        onView(withId(R.id.confirm_diagnosis)).perform(click())
+
+        checkIsolateActivityIsShown()
     }
 
     private fun checkCanTransitionToIsolateActivity() {
