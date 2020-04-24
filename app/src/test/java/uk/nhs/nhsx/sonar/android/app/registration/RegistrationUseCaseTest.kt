@@ -19,9 +19,6 @@ import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.client.DeviceConfirmation
-import uk.nhs.nhsx.sonar.android.client.Registration
-import uk.nhs.nhsx.sonar.android.client.ResidentApi
 import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
 import java.io.IOException
 

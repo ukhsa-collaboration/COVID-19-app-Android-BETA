@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.client
+package uk.nhs.nhsx.sonar.android.app.diagnose
 
 import com.android.volley.Request.Method.PATCH
 import com.android.volley.VolleyError
@@ -10,6 +10,11 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
+import uk.nhs.nhsx.sonar.android.client.KeyStorage
+import uk.nhs.nhsx.sonar.android.client.assertBodyHasJson
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 import uk.nhs.nhsx.sonar.android.client.http.TestQueue
 

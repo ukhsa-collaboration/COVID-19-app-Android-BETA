@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.client
+package uk.nhs.nhsx.sonar.android.app.notifications
 
 import com.android.volley.Request.Method.PUT
 import org.assertj.core.api.Assertions.assertThat

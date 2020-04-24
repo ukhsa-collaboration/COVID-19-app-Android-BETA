@@ -18,8 +18,6 @@ import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
-import uk.nhs.nhsx.sonar.android.client.CoLocationApi
-import uk.nhs.nhsx.sonar.android.client.CoLocationData
 import javax.inject.Inject
 import javax.inject.Named
 

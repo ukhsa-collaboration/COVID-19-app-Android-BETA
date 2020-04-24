@@ -15,12 +15,12 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewViewModel
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
-import uk.nhs.nhsx.sonar.android.client.CoLocationApi
-import uk.nhs.nhsx.sonar.android.client.CoLocationData
-import uk.nhs.nhsx.sonar.android.client.CoLocationEvent
 
 class DiagnoseReviewViewModelTest {
 

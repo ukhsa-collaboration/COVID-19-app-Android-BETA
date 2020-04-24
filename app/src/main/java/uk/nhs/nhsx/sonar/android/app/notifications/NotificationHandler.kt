@@ -12,7 +12,6 @@ import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.StateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
-import uk.nhs.nhsx.sonar.android.client.AcknowledgmentsApi
 import javax.inject.Inject
 
 class NotificationHandler @Inject constructor(

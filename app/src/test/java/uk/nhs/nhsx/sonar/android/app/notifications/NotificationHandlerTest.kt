@@ -19,7 +19,6 @@ import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.client.AcknowledgmentsApi
 
 class NotificationHandlerTest {
 
