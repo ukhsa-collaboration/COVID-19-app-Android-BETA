@@ -15,7 +15,9 @@ import io.mockk.mockk
 import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import net.lachlanmckee.timberjunit.TimberTestRule
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
@@ -28,7 +30,7 @@ import org.junit.Test
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
-class LongLiveConnectionScanTest {
+class ScanTest {
 
     private val bleClient = mockk<RxBleClient>()
     private val scanResult = mockk<ScanResult>()
@@ -37,10 +39,9 @@ class LongLiveConnectionScanTest {
     private val saveContactWorker = FakeSaveContactWorker()
 
     private val timestamp = DateTime.now(DateTimeZone.UTC)
-    private val rssiValues = listOf(-50, -49)
-    private val duration = 5
+    private val rssi = -50
     private val period = 50L
-    private lateinit var identifier: Identifier
+    private lateinit var identifier: ByteArray
 
     @Rule
     @JvmField
@@ -72,36 +73,39 @@ class LongLiveConnectionScanTest {
                     Observable.error<RxBleConnection>(disconnectException)
                 }
         )
-        every { connection.readRssi() } returnsMany rssiValues.map { Single.just(it) }
+        every { connection.requestMtu(108) } returns Single.just(108)
+        every { connection.readRssi() } returns Single.just(rssi)
 
-        identifier = Identifier.fromBytes(ByteArray(64) { 1 })
+        identifier = ByteArray(64) { 1 }
         every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(
-            identifier.asBytes
+            ByteArray(64) { 1 }
         )
     }
 
+    // TODO: Speed up - probably by making scan extension configurable
     @Test
     fun connectionWithSingularDevice() {
         runBlocking {
-            val sut = LongLiveConnectionScan(
+            val sut = Scan(
                 bleClient,
                 saveContactWorker,
-                startTimestampProvider = { timestamp },
-                endTimestampProvider = { timestamp.plusSeconds(duration) },
-                periodInMilliseconds = period,
-                bleEvents = BleEvents()
+                currentTimestampProvider = { timestamp },
+                bleEvents = BleEvents(),
+                encryptSonarId = false,
+                scanIntervalLength = 1
             )
             sut.start(this)
 
-            await untilNotNull { saveContactWorker.savedRecord }
+            withContext(Dispatchers.Default) {
+                await untilNotNull { saveContactWorker.savedId }
+            }
 
-            val record = saveContactWorker.savedRecord!!
-            assertThat(record.sonarId.asBytes).isEqualTo(identifier.asBytes)
-            assertThat(record.duration).isEqualTo(duration.toLong())
-            assertThat(record.timestamp).isEqualTo(timestamp)
-            assertThat(record.rssiValues).containsAll(rssiValues)
+            assertThat(saveContactWorker.savedId).isEqualTo(identifier)
+            assertThat(saveContactWorker.savedRssi).isEqualTo(rssi)
+            assertThat(saveContactWorker.savedTimestamp).isEqualTo(timestamp)
 
             assertThat(saveContactWorker.saveScope).isEqualTo(this)
+            sut.stop()
         }
     }
 }
@@ -109,11 +113,22 @@ class LongLiveConnectionScanTest {
 private class FakeSaveContactWorker : SaveContactWorker by mockk() {
     var saveScope: CoroutineScope? = null
         private set
-    var savedRecord: SaveContactWorker.Record? = null
+    var savedId: ByteArray? = null
+        private set
+    var savedRssi: Int? = null
+        private set
+    var savedTimestamp: DateTime? = null
         private set
 
-    override fun saveContactEvent(scope: CoroutineScope, record: SaveContactWorker.Record) {
+    override fun createOrUpdateContactEvent(
+        scope: CoroutineScope,
+        id: ByteArray,
+        rssi: Int,
+        timestamp: DateTime
+    ) {
         saveScope = scope
-        savedRecord = record
+        savedId = id
+        savedRssi = rssi
+        savedTimestamp = timestamp
     }
 }

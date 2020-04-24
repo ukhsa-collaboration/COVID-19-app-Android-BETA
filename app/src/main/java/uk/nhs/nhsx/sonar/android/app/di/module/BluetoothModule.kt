@@ -12,7 +12,6 @@ import com.polidea.rxandroidble2.RxBleClient
 import dagger.Module
 import dagger.Provides
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
-import uk.nhs.nhsx.sonar.android.app.ble.LongLiveConnectionScan
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.Scan
 import uk.nhs.nhsx.sonar.android.app.ble.Scanner
@@ -22,7 +21,6 @@ import javax.inject.Named
 open class BluetoothModule(
     private val applicationContext: Context,
     private val scanIntervalLength: Int,
-    private val connectionV2: Boolean,
     private val encryptSonarId: Boolean
 ) {
     @Provides
@@ -43,20 +41,13 @@ open class BluetoothModule(
         saveContactWorker: SaveContactWorker,
         bleEvents: BleEvents
     ): Scanner =
-        if (connectionV2)
-            LongLiveConnectionScan(rxBleClient, saveContactWorker, bleEvents = bleEvents)
-        else
-            Scan(
-                rxBleClient,
-                saveContactWorker,
-                bleEvents,
-                scanIntervalLength = scanIntervalLength,
-                encryptSonarId = encryptSonarId
-            )
-
-    @Provides
-    @Named(USE_CONNECTION_V2)
-    fun provideUseConnectionV2() = connectionV2
+        Scan(
+            rxBleClient,
+            saveContactWorker,
+            bleEvents,
+            scanIntervalLength = scanIntervalLength,
+            encryptSonarId = encryptSonarId
+        )
 
     @Provides
     @Named(ENCRYPT_SONAR_ID)
@@ -67,7 +58,6 @@ open class BluetoothModule(
     fun provideScanIntervalLength() = scanIntervalLength
 
     companion object {
-        const val USE_CONNECTION_V2 = "USE_CONNECTION_V2"
         const val ENCRYPT_SONAR_ID = "ENCRYPT_SONAR_ID"
         const val SCAN_INTERVAL_LENGTH = "SCAN_INTERVAL_LENGTH"
     }

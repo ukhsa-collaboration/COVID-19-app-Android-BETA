@@ -12,7 +12,6 @@ import dagger.Provides
 import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
-import uk.nhs.nhsx.sonar.android.app.ble.LongLiveConnectionScan
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.Scan
 import uk.nhs.nhsx.sonar.android.app.ble.Scanner
@@ -57,11 +56,10 @@ class TestBluetoothModule(
     private val startTimestampProvider: () -> DateTime,
     private val endTimestampProvider: () -> DateTime,
     private val currentTimestampProvider: () -> DateTime,
-    private val connectionV2: Boolean = false,
     // TODO: Flip this switch - requires more known cryptograms. Needs alignment on source of truth
     private val encryptSonarId: Boolean = false,
     private val scanIntervalLength: Int = 2
-) : BluetoothModule(appContext, scanIntervalLength, connectionV2, encryptSonarId) {
+) : BluetoothModule(appContext, scanIntervalLength, encryptSonarId) {
 
     override fun provideRxBleClient(): RxBleClient =
         rxBleClient
@@ -71,24 +69,14 @@ class TestBluetoothModule(
         saveContactWorker: SaveContactWorker,
         bleEvents: BleEvents
     ): Scanner =
-        if (connectionV2)
-            LongLiveConnectionScan(
-                rxBleClient,
-                saveContactWorker,
-                startTimestampProvider,
-                endTimestampProvider,
-                periodInMilliseconds = 50,
-                bleEvents = bleEvents
-            )
-        else
-            Scan(
-                rxBleClient,
-                saveContactWorker,
-                bleEvents,
-                currentTimestampProvider,
-                encryptSonarId,
-                scanIntervalLength
-            )
+        Scan(
+            rxBleClient,
+            saveContactWorker,
+            bleEvents,
+            currentTimestampProvider,
+            encryptSonarId,
+            scanIntervalLength
+        )
 }
 
 @Module

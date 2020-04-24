@@ -16,14 +16,11 @@ import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import javax.inject.Named
 
 interface SaveContactWorker {
-    fun createOrUpdateContactEvent(scope: CoroutineScope, id: ByteArray, rssi: Int, timestamp: DateTime)
-    fun saveContactEvent(scope: CoroutineScope, record: Record)
-
-    data class Record(
-        val timestamp: DateTime,
-        val sonarId: Identifier,
-        val rssiValues: MutableList<Int> = mutableListOf(),
-        val duration: Int = 0
+    fun createOrUpdateContactEvent(
+        scope: CoroutineScope,
+        id: ByteArray,
+        rssi: Int,
+        timestamp: DateTime
     )
 }
 
@@ -52,29 +49,6 @@ class DefaultSaveContactWorker(
                     contactEventDao.createOrUpdate(contactEvent)
                 } catch (e: Exception) {
                     Timber.e("$TAG Failed to save with exception $e")
-                }
-            }
-        }
-    }
-
-    override fun saveContactEvent(scope: CoroutineScope, record: SaveContactWorker.Record) {
-        scope.launch {
-            withContext(dispatcher) {
-                try {
-                    val timestamp = record.timestamp.millis
-
-                    val contactEvent =
-                        ContactEvent(
-                            sonarId = record.sonarId.asBytes,
-                            rssiValues = record.rssiValues,
-                            rssiTimestamps = listOf(timestamp),
-                            timestamp = timestamp,
-                            duration = record.duration
-                        )
-                    contactEventDao.insert(contactEvent)
-                    Timber.i("$TAG eventV2 $contactEvent")
-                } catch (e: Exception) {
-                    Timber.e("$TAG Failed to save eventV2 with exception $e")
                 }
             }
         }
