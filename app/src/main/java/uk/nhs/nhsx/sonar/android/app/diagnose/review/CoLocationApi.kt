@@ -6,12 +6,12 @@ package uk.nhs.nhsx.sonar.android.app.diagnose.review
 
 import org.json.JSONObject
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.client.KeyStorage
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
-import uk.nhs.nhsx.sonar.android.client.http.HttpMethod.PATCH
-import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.client.http.Promise
-import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
+import uk.nhs.nhsx.sonar.android.app.http.HttpClient
+import uk.nhs.nhsx.sonar.android.app.http.HttpMethod.PATCH
+import uk.nhs.nhsx.sonar.android.app.http.HttpRequest
+import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.Promise
+import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
 
 class CoLocationApi(
     private val baseUrl: String,

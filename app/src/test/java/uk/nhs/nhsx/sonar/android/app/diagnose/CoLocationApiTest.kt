@@ -13,10 +13,10 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
-import uk.nhs.nhsx.sonar.android.client.KeyStorage
-import uk.nhs.nhsx.sonar.android.client.assertBodyHasJson
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
-import uk.nhs.nhsx.sonar.android.client.http.TestQueue
+import uk.nhs.nhsx.sonar.android.app.http.HttpClient
+import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.TestQueue
+import uk.nhs.nhsx.sonar.android.app.http.assertBodyHasJson
 
 class CoLocationApiTest {
 

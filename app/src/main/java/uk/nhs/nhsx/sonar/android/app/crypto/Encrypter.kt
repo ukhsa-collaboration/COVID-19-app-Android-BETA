@@ -8,7 +8,7 @@ import android.annotation.SuppressLint
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.generators.KDF2BytesGenerator
 import org.bouncycastle.crypto.params.KDFParameters
-import uk.nhs.nhsx.sonar.android.client.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import java.security.PrivateKey
 import java.security.PublicKey
 import javax.crypto.Cipher

@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.client.http
+package uk.nhs.nhsx.sonar.android.app.http
 
 import com.android.volley.NetworkResponse
 import com.android.volley.Request.Method
@@ -12,7 +12,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDateTime
 import org.json.JSONObject
-import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
 import javax.crypto.Mac
 import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec

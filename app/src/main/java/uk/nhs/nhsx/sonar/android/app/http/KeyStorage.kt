@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.client
+package uk.nhs.nhsx.sonar.android.app.http
 
 import android.content.Context
 import android.util.Base64

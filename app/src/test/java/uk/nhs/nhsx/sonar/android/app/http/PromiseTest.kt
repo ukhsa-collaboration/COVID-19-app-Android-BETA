@@ -2,11 +2,11 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.client.http
+package uk.nhs.nhsx.sonar.android.app.http
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
 import java.io.IOException
 
 class PromiseTest {

@@ -6,8 +6,8 @@ package uk.nhs.nhsx.sonar.android.app.di.module
 
 import dagger.Module
 import dagger.Provides
-import uk.nhs.nhsx.sonar.android.client.KeyStorage
-import uk.nhs.nhsx.sonar.android.client.SharedPreferencesKeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.SharedPreferencesKeyStorage
 
 @Module
 class CryptoModule {

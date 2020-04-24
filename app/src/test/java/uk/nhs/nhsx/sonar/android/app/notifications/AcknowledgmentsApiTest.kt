@@ -7,8 +7,8 @@ package uk.nhs.nhsx.sonar.android.app.notifications
 import com.android.volley.Request.Method.PUT
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
-import uk.nhs.nhsx.sonar.android.client.http.TestQueue
+import uk.nhs.nhsx.sonar.android.app.http.HttpClient
+import uk.nhs.nhsx.sonar.android.app.http.TestQueue
 
 class AcknowledgmentsApiTest {
 

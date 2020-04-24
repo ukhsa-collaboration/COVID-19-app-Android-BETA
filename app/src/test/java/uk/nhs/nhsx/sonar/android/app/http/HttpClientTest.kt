@@ -2,13 +2,14 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.client.http
+package uk.nhs.nhsx.sonar.android.app.http
 
 import com.android.volley.Request
 import com.android.volley.VolleyError
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.http.HttpMethod.POST
 import java.util.Base64
 
 class HttpClientTest {
@@ -18,7 +19,7 @@ class HttpClientTest {
 
     @Test
     fun `test send() POST request, without encryption key`() {
-        val inputRequest = HttpRequest(HttpMethod.POST, "http://localhost:123/api", jsonObjectOf("foo" to "bar"))
+        val inputRequest = HttpRequest(POST, "http://localhost:123/api", jsonObjectOf("foo" to "bar"))
         val promise = httpClient.send(inputRequest)
 
         assertThat(promise.isInProgress).isTrue()

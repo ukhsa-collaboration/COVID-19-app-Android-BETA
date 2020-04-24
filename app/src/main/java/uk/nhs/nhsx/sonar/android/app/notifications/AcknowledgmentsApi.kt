@@ -4,9 +4,9 @@
 
 package uk.nhs.nhsx.sonar.android.app.notifications
 
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
-import uk.nhs.nhsx.sonar.android.client.http.HttpMethod
-import uk.nhs.nhsx.sonar.android.client.http.HttpRequest
+import uk.nhs.nhsx.sonar.android.app.http.HttpClient
+import uk.nhs.nhsx.sonar.android.app.http.HttpMethod
+import uk.nhs.nhsx.sonar.android.app.http.HttpRequest
 import javax.inject.Inject
 
 class AcknowledgmentsApi @Inject constructor(private val httpClient: HttpClient) {

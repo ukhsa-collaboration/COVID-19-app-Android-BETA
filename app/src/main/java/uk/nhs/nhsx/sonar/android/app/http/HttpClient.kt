@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.client.http
+package uk.nhs.nhsx.sonar.android.app.http
 
 import android.content.Context
 import android.util.Base64
@@ -11,7 +11,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
-import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
 
 class HttpClient(
     private val queue: RequestQueue,

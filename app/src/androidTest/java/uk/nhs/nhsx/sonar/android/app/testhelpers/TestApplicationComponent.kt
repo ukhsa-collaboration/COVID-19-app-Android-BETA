@@ -21,13 +21,13 @@ import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
+import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
-import uk.nhs.nhsx.sonar.android.client.KeyStorage
 import javax.inject.Singleton
 
 @Singleton

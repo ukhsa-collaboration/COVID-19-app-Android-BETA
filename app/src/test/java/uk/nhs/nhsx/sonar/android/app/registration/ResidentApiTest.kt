@@ -10,11 +10,11 @@ import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.KeyStorage
-import uk.nhs.nhsx.sonar.android.client.assertBodyHasJson
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
-import uk.nhs.nhsx.sonar.android.client.http.TestQueue
-import uk.nhs.nhsx.sonar.android.client.http.jsonObjectOf
+import uk.nhs.nhsx.sonar.android.app.http.HttpClient
+import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.TestQueue
+import uk.nhs.nhsx.sonar.android.app.http.assertBodyHasJson
+import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
 
 class ResidentApiTest {
 

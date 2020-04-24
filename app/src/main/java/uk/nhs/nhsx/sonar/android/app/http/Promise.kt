@@ -2,11 +2,11 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.client.http
+package uk.nhs.nhsx.sonar.android.app.http
 
-import uk.nhs.nhsx.sonar.android.client.http.Promise.State.Failed
-import uk.nhs.nhsx.sonar.android.client.http.Promise.State.InProgress
-import uk.nhs.nhsx.sonar.android.client.http.Promise.State.Succeeded
+import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Failed
+import uk.nhs.nhsx.sonar.android.app.http.Promise.State.InProgress
+import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Succeeded
 
 class Promise<T : Any?> private constructor() {
 

@@ -8,9 +8,9 @@ import android.content.Context
 import dagger.Module
 import dagger.Provides
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
+import uk.nhs.nhsx.sonar.android.app.http.HttpClient
+import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.registration.ResidentApi
-import uk.nhs.nhsx.sonar.android.client.KeyStorage
-import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 
 @Module
 class NetworkModule(

@@ -16,7 +16,7 @@ import org.bouncycastle.jce.ECPointUtil
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
 import org.junit.Before
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.client.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import java.nio.ByteBuffer
 import java.security.KeyFactory
 import java.security.PrivateKey
