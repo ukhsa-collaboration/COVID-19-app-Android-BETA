@@ -43,6 +43,27 @@ class StateFactoryTest {
     }
 
     @Test
+    fun `when symptoms date is 7 days ago without temperature, state should be recovery`() {
+        val state = StateFactory.decide(today.minusDays(7), setOf(Symptom.COUGH), today)
+
+        assertThat(state).isInstanceOf(RecoveryState::class.java)
+    }
+
+    @Test
+    fun `when symptoms date is 8 days ago without temperature, state should be recovery`() {
+        val state = StateFactory.decide(today.minusDays(8), setOf(Symptom.COUGH), today)
+
+        assertThat(state).isInstanceOf(RecoveryState::class.java)
+    }
+
+    @Test
+    fun `when symptoms date is 7 days ago with temperature, state should be red`() {
+        val state = StateFactory.decide(today.minusDays(7), setOf(Symptom.TEMPERATURE), today)
+
+        assertThat(state).isInstanceOf(RedState::class.java)
+    }
+
+    @Test
     fun `ember state is valid until 13 days after  today`() {
         val state = StateFactory.ember(today = today)
 

@@ -157,7 +157,12 @@ class DiagnoseReviewActivity : BaseActivity() {
                     symptomsDate = null
                 }
 
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
                     when {
                         position == SpinnerAdapter.MAX_VISIBLE_POSITION -> {
                             picker.show(supportFragmentManager, null)
@@ -196,7 +201,7 @@ class DiagnoseReviewActivity : BaseActivity() {
 
     private fun updateStateAndNavigate() {
         symptomsDate?.let {
-            val state = StateFactory.red(it, symptoms)
+            val state = StateFactory.decide(it, symptoms)
             stateStorage.update(state)
 
             Timber.d("Updated the state to: $state")
