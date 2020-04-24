@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_enable_bluetooth.enableBluetoothButton
 import uk.nhs.nhsx.sonar.android.app.R
 
-class EnableBluetoothActivity : AppCompatActivity(R.layout.activity_enable_bluetooth) {
+open class EnableBluetoothActivity : AppCompatActivity(R.layout.activity_enable_bluetooth) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

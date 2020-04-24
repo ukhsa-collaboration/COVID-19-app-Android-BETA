@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_permission.permission_continue
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
+import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
 import uk.nhs.nhsx.sonar.android.app.util.isLocationEnabled
 
 class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
@@ -75,9 +76,6 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
     private fun requestLocationPermissions() {
         requestPermissions(locationPermissions, REQUEST_LOCATION)
     }
-
-    private fun isBluetoothEnabled() =
-        BluetoothAdapter.getDefaultAdapter().isEnabled
 
     private fun locationPermissionsGranted(): Boolean {
         return locationPermissions.all { permission ->

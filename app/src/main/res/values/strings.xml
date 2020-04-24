@@ -37,7 +37,7 @@
     <string name="notification_title">NHS Coronavirus</string>
     <string name="notification_text">"Someone you've been nearby recently was just diagnosed with coronavirus.\n\nYou should isolate yourself and get tested."</string>
     <string name="erro_data_submission">Something went wrong, please try again later.</string>
-    <string name="main_notification_channel_name">NHS Colocate</string>
+    <string name="main_notification_channel_name">General</string>
     <string name="registration_title">Your app is set up and ready to go</string>
     <string name="register_rationale">Keep Bluetooth and push notifications enabled for the duration of the outbreak, to help protect yourself from coronavirus.\n\nOnce the outbreak ends, you can turn off these permissions, or delete the app.</string>
     <string name="start_using_the_app">Start using the app</string>
@@ -104,7 +104,7 @@
     <string name="post_code">Post code</string>
     <string name="post_code_rationale">Your post code will not be used to track your location.</string>
     <string name="valid_post_code_is_required">Valid post code is required</string>
-    <string name="coronavirus">Stop the spread</string>
+    <string name="coronavirus">Stop the Spread</string>
     <string name="app_rationale">This app can let you know if you may have been near someone with coronavirus symptoms (COVID-19).</string>
     <string name="back">Back</string>
     <string name="explanation_privacy_policy_and_terms_and_conditions">Read our privacy policy and terms and conditions.</string>

@@ -10,13 +10,20 @@
     android:layout_height="match_parent"
     android:background="@color/color_nhsuk_grey_5"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp"
     tools:context="uk.nhs.nhsx.sonar.android.app.MainActivity">
 
+    <include
+        android:id="@+id/banner"
+        layout="@layout/banner"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/logo"
+        android:id="@+id/nhsLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:baselineAlignBottom="true"
         android:paddingVertical="4dp"
@@ -34,14 +41,14 @@
         android:text="@string/coronavirus"
         android:textColor="?attr/colorAccent"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@id/logo"
-        app:layout_constraintStart_toEndOf="@id/logo" />
+        app:layout_constraintBottom_toBottomOf="@id/nhsLogo"
+        app:layout_constraintStart_toEndOf="@id/nhsLogo" />
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="56dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/enableBluetoothButton"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,11 +57,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingTop="24dp"
                 android:text="@string/bluetooth_disabled_title"
                 android:textSize="28sp"
                 android:textStyle="bold" />
@@ -78,10 +87,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="32dp"
         android:minHeight="54dp"
         android:text="@string/enable_bluetooth"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/nhsPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="nhsLogo,name" />
 </androidx.constraintlayout.widget.ConstraintLayout>
