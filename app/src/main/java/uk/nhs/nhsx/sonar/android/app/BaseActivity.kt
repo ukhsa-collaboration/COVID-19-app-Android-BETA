@@ -15,9 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.Disposable
 import uk.nhs.nhsx.sonar.android.app.ble.LocationProviderChangedReceiver
 import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
-import uk.nhs.nhsx.sonar.android.app.edgecases.EnableBluetoothAfterRegistrationActivity
-import uk.nhs.nhsx.sonar.android.app.edgecases.EnableLocationAfterRegistrationActivity
-import uk.nhs.nhsx.sonar.android.app.edgecases.GrantLocationPermissionAfterRegistrationActivity
+import uk.nhs.nhsx.sonar.android.app.edgecases.ReAllowGrantLocationPermissionActivity
+import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableBluetoothActivity
+import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableLocationActivity
 import uk.nhs.nhsx.sonar.android.app.util.ShakeListener
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
 import uk.nhs.nhsx.sonar.android.app.util.locationPermissionsGranted
@@ -58,7 +58,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun checkLocationPermission() {
         if (!locationPermissionsGranted()) {
-            GrantLocationPermissionAfterRegistrationActivity.start(this)
+            ReAllowGrantLocationPermissionActivity.start(this)
         }
     }
 
@@ -71,7 +71,7 @@ abstract class BaseActivity : AppCompatActivity() {
         locationSubscription =
             locationProviderChangedReceiver.getLocationStatus().subscribe { isLocationEnabled ->
                 if (!isLocationEnabled) {
-                    EnableLocationAfterRegistrationActivity.start(this)
+                    ReEnableLocationActivity.start(this)
                 }
             }
     }
@@ -85,7 +85,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun bluetoothHasBeenDisabled() {
-        EnableBluetoothAfterRegistrationActivity.start(this)
+        ReEnableBluetoothActivity.start(this)
     }
 
     private val bluetoothStateBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {

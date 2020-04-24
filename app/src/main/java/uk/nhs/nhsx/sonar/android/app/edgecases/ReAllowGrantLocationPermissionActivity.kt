@@ -5,15 +5,23 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_edge_case.banner
+import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
+import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.nhsPanel
-import uk.nhs.nhsx.sonar.android.app.onboarding.EnableBluetoothActivity
+import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.onboarding.GrantLocationPermissionActivity
 
-class EnableBluetoothAfterRegistrationActivity : EnableBluetoothActivity() {
+class ReAllowGrantLocationPermissionActivity : GrantLocationPermissionActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         banner.isVisible = true
         nhsPanel.isVisible = false
+
+        edgeCaseTitle.setText(R.string.re_allow_location_permission_title)
+        val appName = getString(R.string.app_name)
+        val rationale = getString(R.string.re_allow_location_permission_rationale, appName)
+        edgeCaseText.text = rationale
     }
 
     override fun onBackPressed() {
@@ -26,6 +34,6 @@ class EnableBluetoothAfterRegistrationActivity : EnableBluetoothActivity() {
             context.startActivity(getIntent(context))
 
         private fun getIntent(context: Context) =
-            Intent(context, EnableBluetoothAfterRegistrationActivity::class.java)
+            Intent(context, ReAllowGrantLocationPermissionActivity::class.java)
     }
 }
