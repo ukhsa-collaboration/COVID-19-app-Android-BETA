@@ -2,6 +2,8 @@ package uk.nhs.nhsx.sonar.android.app.registration
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingWorkPolicy
@@ -19,7 +21,6 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker.Companion.WAITING_FOR_ACTIVATION_CODE
-import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
@@ -32,27 +33,28 @@ class RegistrationManager @Inject constructor(
     private val workManager: WorkManager,
     @Named(AppModule.DISPATCHER_MAIN) private val dispatcher: CoroutineDispatcher
 ) : CoroutineScope {
+
+    private var previousWorkInfoLiveData: LiveData<WorkInfo>? = null
+    private val observer = Observer<WorkInfo> { workInfo -> handleWorkInfo(workInfo) }
+
     fun register(initialDelaySeconds: Long = 0) {
-        Timber.tag("RegistrationUseCase")
-            .d("register initialDelaySeconds = $initialDelaySeconds")
-
-        val registrationWorkRequest = createWorkRequest(initialDelaySeconds)
-
-        workManager.enqueueUniqueWork(
-            WORK_NAME,
-            ExistingWorkPolicy.REPLACE,
-            registrationWorkRequest
-        )
-
-        handleResult(registrationWorkRequest.id)
-    }
-
-    private fun handleResult(workRequestId: UUID) {
+        // Need it for the thread confinement and LiveData can be observed on the Main Thread only
         launch {
-            workManager.getWorkInfoByIdLiveData(workRequestId)
-                .observeForever { workInfo ->
-                    handleWorkInfo(workInfo)
-                }
+            Timber.tag("RegistrationUseCase")
+                .d("register initialDelaySeconds = $initialDelaySeconds")
+
+            val registrationWorkRequest = createWorkRequest(initialDelaySeconds)
+
+            workManager.enqueueUniqueWork(
+                WORK_NAME,
+                ExistingWorkPolicy.REPLACE,
+                registrationWorkRequest
+            )
+
+            previousWorkInfoLiveData?.removeObserver(observer)
+            val workInfoLiveData = workManager.getWorkInfoByIdLiveData(registrationWorkRequest.id)
+            workInfoLiveData.observeForever(observer)
+            previousWorkInfoLiveData = workInfoLiveData
         }
     }
 
@@ -72,8 +74,7 @@ class RegistrationManager @Inject constructor(
         }
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun scheduleRegisterRetryInOneHour() {
+    private fun scheduleRegisterRetryInOneHour() {
         register(ONE_HOUR_IN_SECONDS)
     }
 

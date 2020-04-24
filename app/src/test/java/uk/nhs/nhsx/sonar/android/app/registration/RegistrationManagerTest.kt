@@ -11,6 +11,7 @@ import androidx.work.WorkManager
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,7 @@ import org.junit.Rule
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.WORK_NAME
+import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class RegistrationManagerTest {
@@ -28,7 +30,6 @@ class RegistrationManagerTest {
     private val context = mockk<Context>(relaxed = true)
     private val workManager = mockk<WorkManager>(relaxed = true)
     private val dispatcher = Dispatchers.Unconfined
-    private val workInfoLiveData = MutableLiveData<WorkInfo>()
     private val workInfo = mockk<WorkInfo>()
 
     @get:Rule
@@ -63,6 +64,7 @@ class RegistrationManagerTest {
 
     @Test
     fun onSuccessWithoutDataStartsBluetoothService() = runBlockingTest {
+        val workInfoLiveData = MutableLiveData<WorkInfo>()
         every { workManager.getWorkInfoByIdLiveData(any()) } returns workInfoLiveData
         every { workInfo.state } returns WorkInfo.State.SUCCEEDED
         every { workInfo.outputData } returns Data.EMPTY
@@ -78,20 +80,43 @@ class RegistrationManagerTest {
 
     @Test
     fun onSuccessWithDataSchedulesRegisterRetryInOneHour() = runBlockingTest {
-        every { workManager.getWorkInfoByIdLiveData(any()) } returns workInfoLiveData
+        val workInfoLiveData = MutableLiveData<WorkInfo>()
+        every { workManager.getWorkInfoByIdLiveData(any()) } returnsMany listOf(
+            workInfoLiveData,
+            MutableLiveData()
+        )
         every { workInfo.state } returns WorkInfo.State.SUCCEEDED
         every { workInfo.outputData } returns Data.Builder()
             .putBoolean(RegistrationWorker.WAITING_FOR_ACTIVATION_CODE, true).build()
-        every { sut.scheduleRegisterRetryInOneHour() } returns Unit
         workInfoLiveData.value = workInfo
+        val workRequest = slot<OneTimeWorkRequest>()
+        every {
+            workManager.enqueueUniqueWork(
+                WORK_NAME,
+                ExistingWorkPolicy.REPLACE,
+                capture(workRequest)
+            )
+        } returns mockk(relaxed = true)
 
         sut.register()
 
-        verify { sut.scheduleRegisterRetryInOneHour() }
+        verify(exactly = 2) {
+            workManager.enqueueUniqueWork(
+                WORK_NAME,
+                ExistingWorkPolicy.REPLACE,
+                any<OneTimeWorkRequest>()
+            )
+        }
+        assertEquals(
+            ONE_HOUR_IN_MILLIS,
+            workRequest.captured.workSpec.initialDelay,
+            "WorkRequest initial delay is not one hour"
+        )
     }
 
     companion object {
         const val INITIAL_DELAY_IN_SECONDS = 500L
         const val INITIAL_DELAY_IN_MILLISECONDS = INITIAL_DELAY_IN_SECONDS * 1_000
+        const val ONE_HOUR_IN_MILLIS = 60L * 60 * 1_000
     }
 }
