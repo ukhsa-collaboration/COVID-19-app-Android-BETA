@@ -24,7 +24,6 @@ import io.reactivex.Observable
 import org.assertj.core.api.Assertions.fail
 import org.joda.time.Instant
 import uk.nhs.nhsx.sonar.android.app.ble.DEVICE_CHARACTERISTIC_UUID
-import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 import java.util.UUID
 
 class TestRxBleClient(context: Context) : RxBleClient() {
@@ -74,7 +73,7 @@ class TestRxBleClient(context: Context) : RxBleClient() {
 
         val characteristic =
             BluetoothGattCharacteristic(characteristicUuid, PROPERTY_READ, PERMISSION_READ)
-        characteristic.value = Identifier.fromString(args.sonarId.toString()).asBytes
+        characteristic.value = args.encryptedId
 
         val service = BluetoothGattService(characteristicUuid, 0)
         service.addCharacteristic(characteristic)
@@ -90,7 +89,27 @@ class TestRxBleClient(context: Context) : RxBleClient() {
 }
 
 data class ScanResultArgs(
-    val sonarId: UUID,
+    val encryptedId: ByteArray,
     val macAddress: String,
     val rssiList: List<Int>
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as ScanResultArgs
+
+        if (!encryptedId.contentEquals(other.encryptedId)) return false
+        if (macAddress != other.macAddress) return false
+        if (rssiList != other.rssiList) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = encryptedId.contentHashCode()
+        result = 31 * result + macAddress.hashCode()
+        result = 31 * result + rssiList.hashCode()
+        return result
+    }
+}

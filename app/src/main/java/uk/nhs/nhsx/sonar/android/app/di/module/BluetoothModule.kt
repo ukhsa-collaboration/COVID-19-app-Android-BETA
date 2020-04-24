@@ -20,8 +20,7 @@ import javax.inject.Named
 @Module
 open class BluetoothModule(
     private val applicationContext: Context,
-    private val scanIntervalLength: Int,
-    private val encryptSonarId: Boolean
+    private val scanIntervalLength: Int
 ) {
     @Provides
     fun provideBluetoothManager(): BluetoothManager =
@@ -45,20 +44,14 @@ open class BluetoothModule(
             rxBleClient,
             saveContactWorker,
             bleEvents,
-            scanIntervalLength = scanIntervalLength,
-            encryptSonarId = encryptSonarId
+            scanIntervalLength = scanIntervalLength
         )
-
-    @Provides
-    @Named(ENCRYPT_SONAR_ID)
-    fun provideEncryptSonarId() = encryptSonarId
 
     @Provides
     @Named(SCAN_INTERVAL_LENGTH)
     fun provideScanIntervalLength() = scanIntervalLength
 
     companion object {
-        const val ENCRYPT_SONAR_ID = "ENCRYPT_SONAR_ID"
         const val SCAN_INTERVAL_LENGTH = "SCAN_INTERVAL_LENGTH"
     }
 }

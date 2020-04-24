@@ -24,35 +24,23 @@ import android.bluetooth.BluetoothProfile.GATT
 import android.content.Context
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothCryptogramProvider
-import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule.Companion.ENCRYPT_SONAR_ID
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import javax.inject.Inject
-import javax.inject.Named
 
 class Gatt @Inject constructor(
     private val context: Context,
     private val bluetoothManager: BluetoothManager,
     private val sonarIdProvider: SonarIdProvider,
-    private val bluetoothCryptogramProvider: BluetoothCryptogramProvider,
-    @Named(ENCRYPT_SONAR_ID)
-    private val encryptSonarId: Boolean
+    private val bluetoothCryptogramProvider: BluetoothCryptogramProvider
 ) {
     // No semantic value, just to avoid caching.
     private var keepAliveValue: Byte = 0x00
 
     private val payload: ByteArray
-        get() = if (encryptSonarId) {
-            bluetoothCryptogramProvider.provideBluetoothCryptogram().asBytes()
-        } else {
-            Identifier.fromString(sonarIdProvider.getSonarId()).asBytes
-        }
+        get() = bluetoothCryptogramProvider.provideBluetoothCryptogram().asBytes()
 
     private val payloadIsValid: Boolean
-        get() = if (encryptSonarId) {
-            bluetoothCryptogramProvider.canProvideCryptogram()
-        } else {
-            sonarIdProvider.hasProperSonarId()
-        }
+        get() = bluetoothCryptogramProvider.canProvideCryptogram()
 
     private val keepAliveCharacteristic = BluetoothGattCharacteristic(
         COLOCATE_KEEPALIVE_CHARACTERISTIC_UUID,

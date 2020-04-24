@@ -38,8 +38,7 @@ data class CoLocationData(
 )
 
 data class CoLocationEvent(
-    val sonarId: String? = null,
-    val encryptedRemoteContactId: String? = null,
+    val encryptedRemoteContactId: String,
     val rssiValues: List<Int>,
     val rssiOffsets: List<Int>,
     val timestamp: String,
@@ -50,14 +49,7 @@ private fun CoLocationData.toJson(): JSONObject =
     jsonObjectOf(
         "symptomsTimestamp" to symptomsTimestamp,
         "contactEvents" to contactEvents.map {
-            if (it.sonarId != null) mapOf(
-                "sonarId" to it.sonarId,
-                "rssiValues" to it.rssiValues,
-                "rssiOffsets" to it.rssiOffsets,
-                "timestamp" to it.timestamp,
-                "duration" to it.duration
-            )
-            else mapOf(
+            mapOf(
                 "encryptedRemoteContactId" to it.encryptedRemoteContactId,
                 "rssiValues" to it.rssiValues,
                 "rssiOffsets" to it.rssiOffsets,

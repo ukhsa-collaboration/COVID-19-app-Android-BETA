@@ -32,8 +32,6 @@ class Scan @Inject constructor(
     private val saveContactWorker: SaveContactWorker,
     private val bleEvents: BleEvents,
     private val currentTimestampProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
-    @Named(BluetoothModule.ENCRYPT_SONAR_ID)
-    private val encryptSonarId: Boolean,
     @Named(BluetoothModule.SCAN_INTERVAL_LENGTH)
     private val scanIntervalLength: Int
 ) : Scanner {
@@ -203,17 +201,11 @@ class Scan @Inject constructor(
     }
 
     private fun onReadSuccess(event: Event) {
-        if (!encryptSonarId) {
-            bleEvents.connectedDeviceEvent(
-                Identifier.fromBytes(event.identifier).asString,
-                listOf(event.rssi)
-            )
-        } else {
-            bleEvents.connectedDeviceEvent(
-                Cryptogram.fromBytes(event.identifier).asString(),
-                listOf(event.rssi)
-            )
-        }
+        Timber.d("Event $event")
+        bleEvents.connectedDeviceEvent(
+            event.identifier,
+            listOf(event.rssi)
+        )
 
         saveContactWorker.createOrUpdateContactEvent(
             event.scope,

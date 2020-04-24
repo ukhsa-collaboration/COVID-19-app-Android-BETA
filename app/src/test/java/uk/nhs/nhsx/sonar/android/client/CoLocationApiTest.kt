@@ -27,14 +27,14 @@ class CoLocationApiTest {
     fun `test save() request`() {
         val events = listOf(
             CoLocationEvent(
-                sonarId = "001",
+                encryptedRemoteContactId = "001",
                 rssiValues = listOf(-10, 0),
                 rssiOffsets = listOf(0, 6),
                 timestamp = "2s ago",
                 duration = 10
             ),
             CoLocationEvent(
-                sonarId = "002",
+                encryptedRemoteContactId = "002",
                 rssiValues = listOf(-10, -10, 10),
                 rssiOffsets = listOf(0, 5, 20),
                 timestamp = "yesterday",
@@ -53,14 +53,14 @@ class CoLocationApiTest {
             "symptomsTimestamp" to "::timestamp::",
             "contactEvents" to listOf(
                 mapOf(
-                    "sonarId" to "001",
+                    "encryptedRemoteContactId" to "001",
                     "rssiValues" to listOf(-10, 0),
                     "rssiOffsets" to listOf(0, 6),
                     "timestamp" to "2s ago",
                     "duration" to 10
                 ),
                 mapOf(
-                    "sonarId" to "002",
+                    "encryptedRemoteContactId" to "002",
                     "rssiValues" to listOf(-10, -10, 10),
                     "rssiOffsets" to listOf(0, 5, 20),
                     "timestamp" to "yesterday",

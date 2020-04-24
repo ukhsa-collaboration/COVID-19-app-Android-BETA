@@ -45,8 +45,8 @@ class DiagnoseReviewViewModelTest {
 
         runBlocking {
             val events = listOf(
-                CoLocationEvent(sonarId = "001", rssiValues = listOf(-10, 0), rssiOffsets = listOf(0, 2), timestamp = "2s ago", duration = 10),
-                CoLocationEvent(sonarId = "002", rssiValues = listOf(-10, -10, 10), rssiOffsets = listOf(0, 100, 2000), timestamp = "yesterday", duration = 120)
+                CoLocationEvent(encryptedRemoteContactId = "001", rssiValues = listOf(-10, 0), rssiOffsets = listOf(0, 2), timestamp = "2s ago", duration = 10),
+                CoLocationEvent(encryptedRemoteContactId = "002", rssiValues = listOf(-10, -10, 10), rssiOffsets = listOf(0, 100, 2000), timestamp = "yesterday", duration = 120)
             )
             val coLocationData = CoLocationData(RESIDENT_ID, symptomsDate.toUtcIsoFormat(), events)
             coEvery { coLocationDataProvider.getEvents() } returns events

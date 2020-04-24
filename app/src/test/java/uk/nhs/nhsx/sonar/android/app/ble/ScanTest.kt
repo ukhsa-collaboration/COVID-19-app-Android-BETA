@@ -28,6 +28,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
+import java.util.Base64
 import java.util.concurrent.TimeUnit
 
 class ScanTest {
@@ -76,13 +77,12 @@ class ScanTest {
         every { connection.requestMtu(108) } returns Single.just(108)
         every { connection.readRssi() } returns Single.just(rssi)
 
-        identifier = ByteArray(64) { 1 }
+        identifier = ByteArray(106) { 1 }
         every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(
-            ByteArray(64) { 1 }
+            identifier
         )
     }
 
-    // TODO: Speed up - probably by making scan extension configurable
     @Test
     fun connectionWithSingularDevice() {
         runBlocking {
@@ -90,8 +90,7 @@ class ScanTest {
                 bleClient,
                 saveContactWorker,
                 currentTimestampProvider = { timestamp },
-                bleEvents = BleEvents(),
-                encryptSonarId = false,
+                bleEvents = BleEvents { Base64.getEncoder().encodeToString(it) },
                 scanIntervalLength = 1
             )
             sut.start(this)

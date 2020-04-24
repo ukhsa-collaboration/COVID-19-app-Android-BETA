@@ -53,13 +53,9 @@ interface TestAppComponent : ApplicationComponent {
 class TestBluetoothModule(
     private val appContext: Context,
     private val rxBleClient: RxBleClient,
-    private val startTimestampProvider: () -> DateTime,
-    private val endTimestampProvider: () -> DateTime,
     private val currentTimestampProvider: () -> DateTime,
-    // TODO: Flip this switch - requires more known cryptograms. Needs alignment on source of truth
-    private val encryptSonarId: Boolean = false,
     private val scanIntervalLength: Int = 2
-) : BluetoothModule(appContext, scanIntervalLength, encryptSonarId) {
+) : BluetoothModule(appContext, scanIntervalLength) {
 
     override fun provideRxBleClient(): RxBleClient =
         rxBleClient
@@ -74,7 +70,6 @@ class TestBluetoothModule(
             saveContactWorker,
             bleEvents,
             currentTimestampProvider,
-            encryptSonarId,
             scanIntervalLength
         )
 }

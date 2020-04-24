@@ -4,6 +4,7 @@
 
 package uk.nhs.nhsx.sonar.android.app.ble
 
+import android.util.Base64
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.joda.time.DateTime
@@ -14,6 +15,13 @@ import javax.inject.Singleton
 
 @Singleton
 class BleEvents @Inject constructor() {
+    constructor(customEncoder: (ByteArray) -> String) : this() {
+        base64Encoder = customEncoder
+    }
+
+    var base64Encoder: (ByteArray) -> String = {
+        Base64.encodeToString(it, Base64.DEFAULT)
+    }
 
     private val eventsList = mutableListOf<ConnectedDevice>()
     private val connectionEvents = MutableLiveData<List<ConnectedDevice>>()
@@ -22,12 +30,13 @@ class BleEvents @Inject constructor() {
     fun observeConnectionEvents(): LiveData<List<ConnectedDevice>> =
         connectionEvents
 
-    fun connectedDeviceEvent(id: String, rssiValues: List<Int>) {
+    fun connectedDeviceEvent(id: ByteArray, rssiValues: List<Int>) {
+        val idString = base64Encoder(id)
         safelyUpdateEventList {
-            eventsList.removeIf { it.id == id }
+            eventsList.removeIf { it.id == idString }
             eventsList.add(
                 ConnectedDevice(
-                    id = id,
+                    id = idString,
                     timestamp = getCurrentTimeStamp(),
                     rssiValues = rssiValues
                 )

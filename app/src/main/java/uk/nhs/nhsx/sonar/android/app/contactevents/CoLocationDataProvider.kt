@@ -8,16 +8,12 @@ import android.util.Base64
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Seconds
-import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import uk.nhs.nhsx.sonar.android.client.CoLocationEvent
 import javax.inject.Inject
-import javax.inject.Named
 
 class CoLocationDataProvider @Inject constructor(
-    private val contactEventDao: ContactEventDao,
-    @Named(BluetoothModule.ENCRYPT_SONAR_ID)
-    private val encryptSonarId: Boolean
+    private val contactEventDao: ContactEventDao
 ) {
 
     suspend fun getEvents(): List<CoLocationEvent> {
@@ -26,7 +22,11 @@ class CoLocationDataProvider @Inject constructor(
 
     private fun convert(contactEvent: ContactEvent): CoLocationEvent {
         val startTime = DateTime(contactEvent.timestamp, DateTimeZone.UTC)
-        val event = CoLocationEvent(
+        return CoLocationEvent(
+            encryptedRemoteContactId = Base64.encodeToString(
+                contactEvent.sonarId,
+                Base64.DEFAULT
+            ),
             rssiValues = contactEvent.rssiValues,
             rssiOffsets = contactEvent.rssiTimestamps.map {
                 Seconds.secondsBetween(startTime, DateTime(it, DateTimeZone.UTC)).seconds
@@ -34,18 +34,6 @@ class CoLocationDataProvider @Inject constructor(
             timestamp = startTime.toUtcIsoFormat(),
             duration = contactEvent.duration
         )
-
-        return if (encryptSonarId) {
-            val encryptedRemoteContactId = Base64.encodeToString(
-                contactEvent.sonarId,
-                Base64.DEFAULT
-            )
-            event.copy(
-                encryptedRemoteContactId = encryptedRemoteContactId
-            )
-        } else {
-            event.copy(sonarId = contactEvent.idAsString())
-        }
     }
 
     suspend fun clearData() {
