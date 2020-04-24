@@ -19,7 +19,7 @@ class ResidentApiTest {
     private val encryptionKeyStorage = mockk<KeyStorage>(relaxed = true)
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
-    private val httpClient = HttpClient(requestQueue)
+    private val httpClient = HttpClient(requestQueue, "someValue")
     private val residentApi = ResidentApi(baseUrl, encryptionKeyStorage, httpClient)
 
     @Test

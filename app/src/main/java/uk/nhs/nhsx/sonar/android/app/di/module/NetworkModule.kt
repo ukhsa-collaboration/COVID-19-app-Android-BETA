@@ -13,11 +13,14 @@ import uk.nhs.nhsx.sonar.android.client.ResidentApi
 import uk.nhs.nhsx.sonar.android.client.http.HttpClient
 
 @Module
-class NetworkModule(private val baseUrl: String) {
+class NetworkModule(
+    private val baseUrl: String,
+    private val sonarHeaderValue: String
+) {
 
     @Provides
     fun provideHttpClient(context: Context): HttpClient =
-        HttpClient(context)
+        HttpClient(context, sonarHeaderValue)
 
     @Provides
     fun residentApi(keyStorage: KeyStorage, httpClient: HttpClient): ResidentApi =

@@ -50,6 +50,15 @@ android {
         }
     }
 
+    defaultConfig {
+        def baseUrl = property("sonar.baseUrl")
+
+        logger.quiet("sonar.baseUrl is: $baseUrl")
+
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        buildConfigField("String", "SONAR_HEADER_VALUE", "\"${property("sonar.headerValue")}\"")
+    }
+
     buildTypes {
         debug {
             testCoverageEnabled project.hasProperty("coverage")

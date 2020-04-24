@@ -15,10 +15,16 @@ import uk.nhs.nhsx.sonar.android.client.http.Promise.Deferred
 
 class HttpClient(
     private val queue: RequestQueue,
-    private val base64enc: (ByteArray) -> String = { Base64.encodeToString(it, Base64.DEFAULT) }
+    private val sonarHeaderValue: String,
+    private val base64enc: (ByteArray) -> String = {
+        Base64.encodeToString(
+            it,
+            Base64.DEFAULT
+        )
+    }
 ) {
 
-    constructor(ctx: Context) : this(Volley.newRequestQueue(ctx))
+    constructor(ctx: Context, sonarHeaderValue: String) : this(Volley.newRequestQueue(ctx), sonarHeaderValue)
 
     fun send(request: HttpRequest): Promise<JSONObject> {
         val deferred = Deferred<JSONObject>()
@@ -29,15 +35,22 @@ class HttpClient(
         return deferred.promise
     }
 
-    private fun createRequest(request: HttpRequest, deferred: Deferred<JSONObject>): JsonObjectRequest =
-        SignableJsonObjectRequest(request, deferred, base64enc)
-            .apply {
-                retryPolicy = DefaultRetryPolicy(
-                    30 * 1000,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-                )
-            }
+    private fun createRequest(
+        request: HttpRequest,
+        deferred: Deferred<JSONObject>
+    ): JsonObjectRequest =
+        SignableJsonObjectRequest(
+            httpRequest = request,
+            deferred = deferred,
+            base64enc = base64enc,
+            sonarHeaderValue = sonarHeaderValue
+        ).apply {
+            retryPolicy = DefaultRetryPolicy(
+                30 * 1000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            )
+        }
 }
 
 class HttpRequest(

@@ -21,11 +21,14 @@ class SignableJsonObjectRequestTest {
                 jsonBody = JSONObject(),
                 key = generateSignatureKey()
             ),
-            Deferred()
+            Deferred(),
+            sonarHeaderValue = "someValue"
         ) { Base64.getEncoder().encodeToString(it) }
 
-        assertThat(request.headers).containsKey("Sonar-Message-Signature")
-        assertThat(request.headers).containsKey("Sonar-Request-Timestamp")
-        assertThat(request.headers["Sonar-Request-Timestamp"]).matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z")
+        val headers = request.headers
+        assertThat(headers).containsKey("Sonar-Message-Signature")
+        assertThat(headers).containsKey("Sonar-Request-Timestamp")
+        assertThat(headers["Sonar-Request-Timestamp"]).matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z")
+        assertThat(headers).containsEntry("X-Sonar-Foundation", "someValue")
     }
 }

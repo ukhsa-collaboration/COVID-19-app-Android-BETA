@@ -20,6 +20,7 @@ import javax.crypto.spec.SecretKeySpec
 class SignableJsonObjectRequest(
     private val httpRequest: HttpRequest,
     deferred: Deferred<JSONObject>,
+    private val sonarHeaderValue: String,
     private val base64enc: (ByteArray) -> String
 ) :
     JsonObjectRequest(
@@ -38,21 +39,27 @@ class SignableJsonObjectRequest(
         }
 
     override fun getHeaders(): Map<String, String> {
-        if (httpRequest.key == null) {
-            return mapOf("Accept" to "application/json")
-        }
-
-        val timestampAsString = LocalDateTime
-            .now(DateTimeZone.UTC)
-            .toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
-
-        val signature = generateSignature(httpRequest.key, timestampAsString, body)
-
-        return mapOf(
+        val defaultHeaders = arrayOf(
             "Accept" to "application/json",
-            "Sonar-Request-Timestamp" to timestampAsString,
-            "Sonar-Message-Signature" to signature
+            "X-Sonar-Foundation" to sonarHeaderValue
         )
+
+        return when (httpRequest.key) {
+            null -> return mapOf(*defaultHeaders)
+            else -> {
+                val timestampAsString = LocalDateTime
+                    .now(DateTimeZone.UTC)
+                    .toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
+
+                val signature = generateSignature(httpRequest.key, timestampAsString, body)
+
+                mapOf(
+                    *defaultHeaders,
+                    "Sonar-Request-Timestamp" to timestampAsString,
+                    "Sonar-Message-Signature" to signature
+                )
+            }
+        }
     }
 
     private fun generateSignature(key: ByteArray, timestamp: String, body: ByteArray): String {

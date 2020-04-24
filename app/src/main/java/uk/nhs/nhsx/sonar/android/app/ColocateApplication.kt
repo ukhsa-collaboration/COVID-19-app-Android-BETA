@@ -29,8 +29,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import java.security.Security
 
-const val BASE_URL = "https://test.route.cp.data.england.nhs.uk"
-
 class ColocateApplication : Application() {
 
     lateinit var appComponent: ApplicationComponent
@@ -79,12 +77,12 @@ class ColocateApplication : Application() {
                 BluetoothModule(
                     this,
                     connectionV2 = false,
-                    encryptSonarId = true,
+                    encryptSonarId = false,
                     scanIntervalLength = 8
                 )
             )
             .cryptoModule(CryptoModule())
-            .networkModule(NetworkModule(BASE_URL))
+            .networkModule(NetworkModule(BuildConfig.BASE_URL, BuildConfig.SONAR_HEADER_VALUE))
             .notificationsModule(NotificationsModule())
             .build()
 

@@ -14,7 +14,7 @@ import java.util.Base64
 class HttpClientTest {
 
     private val queue = TestQueue()
-    private val httpClient = HttpClient(queue) { Base64.getEncoder().encodeToString(it) }
+    private val httpClient = HttpClient(queue, "someValue") { Base64.getEncoder().encodeToString(it) }
 
     @Test
     fun `test send() POST request, without encryption key`() {
@@ -29,7 +29,10 @@ class HttpClientTest {
         assertThat(request.url).isEqualTo("http://localhost:123/api")
         assertThat(request.body).isEqualTo(jsonOf("foo" to "bar").toByteArray())
         assertThat(request.bodyContentType).contains("application/json")
-        assertThat(request.headers).containsEntry("Accept", "application/json")
+
+        val headers = request.headers
+        assertThat(headers).containsEntry("Accept", "application/json")
+        assertThat(headers).containsEntry("X-Sonar-Foundation", "someValue")
     }
 
     @Test
@@ -51,7 +54,10 @@ class HttpClientTest {
         assertThat(request.url).isEqualTo("http://localhost:123/api")
         assertThat(request.body).isEqualTo("{}".toByteArray())
         assertThat(request.bodyContentType).contains("application/json")
-        assertThat(request.headers).containsEntry("Accept", "application/json")
+
+        val headers = request.headers
+        assertThat(headers).containsEntry("Accept", "application/json")
+        assertThat(headers).containsEntry("X-Sonar-Foundation", "someValue")
     }
 
     @Test
