@@ -25,7 +25,7 @@ open class EnableLocationActivity :
 
         edgeCaseTitle.setText(R.string.enable_location_service_title)
         edgeCaseText.setText(R.string.enable_location_service_rationale)
-        takeActionButton.setText(R.string.go_to_app_settings)
+        takeActionButton.setText(R.string.go_to_your_settings)
 
         takeActionButton.setOnClickListener {
             val intent = Intent(ACTION_LOCATION_SOURCE_SETTINGS)

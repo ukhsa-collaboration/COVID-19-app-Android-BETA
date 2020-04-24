@@ -19,7 +19,7 @@ open class GrantLocationPermissionActivity :
 
         edgeCaseTitle.setText(R.string.grant_location_permission_title)
         edgeCaseText.setText(R.string.grant_location_permission_rationale)
-        takeActionButton.setText(R.string.go_to_your_settings)
+        takeActionButton.setText(R.string.go_to_app_settings)
 
         takeActionButton.setOnClickListener {
             val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
