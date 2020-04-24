@@ -66,6 +66,7 @@
         <activity android:name=".onboarding.GrantLocationPermissionActivity" />
         <activity android:name=".onboarding.EnableLocationServicesActivity" />
         <activity android:name=".edgecases.EnableBluetoothAfterRegistrationActivity" />
+        <activity android:name=".edgecases.GrantLocationPermissionAfterRegistrationActivity" />
 
         <service
             android:name=".ble.BluetoothService"

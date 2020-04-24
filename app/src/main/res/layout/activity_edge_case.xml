@@ -44,13 +44,19 @@
         app:layout_constraintBottom_toBottomOf="@id/nhsLogo"
         app:layout_constraintStart_toEndOf="@id/nhsLogo" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/nhsPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="nhsLogo,name" />
+
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="56dp"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/enableBluetoothButton"
+        app:layout_constraintBottom_toTopOf="@id/takeActionButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -61,19 +67,21 @@
             android:paddingHorizontal="16dp">
 
             <TextView
+                android:id="@+id/edgeCaseTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="24dp"
-                android:text="@string/bluetooth_disabled_title"
+                android:text="@string/enable_bluetooth_title"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/edgeCaseText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:lineSpacingMultiplier="1.2"
-                android:text="@string/bluetooth_disabled_rationale"
+                android:text="@string/enable_bluetooth_rationale"
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
@@ -82,7 +90,7 @@
     </ScrollView>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/enableBluetoothButton"
+        android:id="@+id/takeActionButton"
         style="@style/PrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -94,9 +102,4 @@
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/nhsPanel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="nhsLogo,name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,13 +4,9 @@
 
 package uk.nhs.nhsx.sonar.android.app.onboarding
 
-import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_permission.permission_continue
@@ -18,6 +14,8 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
 import uk.nhs.nhsx.sonar.android.app.util.isLocationEnabled
+import uk.nhs.nhsx.sonar.android.app.util.locationPermissionsGranted
+import uk.nhs.nhsx.sonar.android.app.util.requiredLocationPermissions
 
 class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
 
@@ -74,16 +72,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
     }
 
     private fun requestLocationPermissions() {
-        requestPermissions(locationPermissions, REQUEST_LOCATION)
-    }
-
-    private fun locationPermissionsGranted(): Boolean {
-        return locationPermissions.all { permission ->
-            packageManager.checkPermission(
-                permission,
-                packageName
-            ) == PackageManager.PERMISSION_GRANTED
-        }
+        requestPermissions(requiredLocationPermissions, REQUEST_LOCATION)
     }
 
     private fun startOkActivity() {
@@ -117,11 +106,5 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
 
         private fun getIntent(context: Context) =
             Intent(context, PermissionActivity::class.java)
-
-        val locationPermissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            arrayOf(ACCESS_FINE_LOCATION, ACCESS_BACKGROUND_LOCATION)
-        } else {
-            arrayOf(ACCESS_FINE_LOCATION)
-        }
     }
 }

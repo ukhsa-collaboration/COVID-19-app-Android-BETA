@@ -133,12 +133,12 @@
     <string name="recovery_dialog_title">Start following general advice</string>
     <string name="recovery_dialog_description">Although you still have a continuous cough, you no longer need to self-isolate and can begin following general advice.</string>
     <string name="okay">Okay</string>
-    <string name="bluetooth_disabled_title">Your permission is needed to allow the use of Bluetooth</string>
-    <string name="bluetooth_disabled_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nUsing Bluetooth means that the app cannot track your location and your privacy remains protected.\n\nIf you do not give permission for Bluetooth this app will not work.\n\nTo give permission for this app to access Bluetooth, please go to Settings and allow access</string>
+    <string name="enable_bluetooth_title">Your permission is needed to allow the use of Bluetooth</string>
+    <string name="enable_bluetooth_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nUsing Bluetooth means that the app cannot track your location and your privacy remains protected.\n\nIf you do not give permission for Bluetooth this app will not work.\n\nTo give permission for this app to access Bluetooth, please go to Settings and allow access</string>
     <string name="enable_bluetooth">Enable Bluetooth</string>
     <string name="grant_location_permission_title">Your permission is needed to allow access to your location</string>
     <string name="grant_location_permission_rationale">This app is not using Bluetooth or your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nIf you do not allow access to your location this app will not work.\n\nTo enable this app to work, please go to Settings and allow access:</string>
-    <string name="go_to_your_settings">Go to your Settings</string>
+    <string name="go_to_your_settings">Go to App Settings</string>
     <string name="enable_location_service_title">You need to enable location services on your phone</string>
     <string name="enable_location_service_rationale">To make Bluetooth work, we need you to turn on location services on your phone.\n\nThis app is not using Bluetooth or your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nIf you do not enable location services on your phone this app will not work.\n\nTo enable this app to work, please go to Settings and enable location services:</string>
     <string name="follow_until">Follow this advice until %1$s</string>

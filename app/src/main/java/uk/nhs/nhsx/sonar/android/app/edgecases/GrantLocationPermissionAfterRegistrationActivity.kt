@@ -6,9 +6,9 @@ import android.os.Bundle
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_edge_case.banner
 import kotlinx.android.synthetic.main.activity_edge_case.nhsPanel
-import uk.nhs.nhsx.sonar.android.app.onboarding.EnableBluetoothActivity
+import uk.nhs.nhsx.sonar.android.app.onboarding.GrantLocationPermissionActivity
 
-class EnableBluetoothAfterRegistrationActivity : EnableBluetoothActivity() {
+class GrantLocationPermissionAfterRegistrationActivity : GrantLocationPermissionActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +26,6 @@ class EnableBluetoothAfterRegistrationActivity : EnableBluetoothActivity() {
             context.startActivity(getIntent(context))
 
         private fun getIntent(context: Context) =
-            Intent(context, EnableBluetoothAfterRegistrationActivity::class.java)
+            Intent(context, GrantLocationPermissionAfterRegistrationActivity::class.java)
     }
 }

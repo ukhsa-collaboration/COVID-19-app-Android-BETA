@@ -13,8 +13,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.EnableBluetoothAfterRegistrationActivity
+import uk.nhs.nhsx.sonar.android.app.edgecases.GrantLocationPermissionAfterRegistrationActivity
 import uk.nhs.nhsx.sonar.android.app.util.ShakeListener
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
+import uk.nhs.nhsx.sonar.android.app.util.locationPermissionsGranted
 
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -35,6 +37,10 @@ abstract class BaseActivity : AppCompatActivity() {
         }
         val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
         registerReceiver(bluetoothStateBroadcastReceiver, filter)
+
+        if (!locationPermissionsGranted()) {
+            GrantLocationPermissionAfterRegistrationActivity.start(this)
+        }
     }
 
     override fun onPause() {
