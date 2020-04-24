@@ -24,13 +24,11 @@ import android.bluetooth.BluetoothProfile.GATT
 import android.content.Context
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothCryptogramProvider
-import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import javax.inject.Inject
 
 class Gatt @Inject constructor(
     private val context: Context,
     private val bluetoothManager: BluetoothManager,
-    private val sonarIdProvider: SonarIdProvider,
     private val bluetoothCryptogramProvider: BluetoothCryptogramProvider
 ) {
     // No semantic value, just to avoid caching.
