@@ -9,12 +9,16 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifyAll
+import org.joda.time.DateTime
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
+import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.client.AcknowledgmentsApi
 
 class NotificationHandlerTest {
@@ -63,18 +67,49 @@ class NotificationHandlerTest {
     @Test
     fun testOnMessageReceived_StatusUpdate() {
         val messageData = mapOf("status" to "POTENTIAL")
+        every { statusStorage.get() } returns DefaultState(DateTime.now())
 
         handler.handle(messageData)
 
         verifyAll {
+            statusStorage.get()
             statusStorage.update(any<EmberState>())
             sender.send(10001, R.string.notification_title, R.string.notification_text, any())
         }
     }
 
     @Test
+    fun testOnMessageReceived_InEmberState() {
+        val messageData = mapOf("status" to "POTENTIAL")
+        every { statusStorage.get() } returns EmberState(DateTime.now())
+
+        handler.handle(messageData)
+
+        verifyAll {
+            statusStorage.get()
+            sender wasNot Called
+        }
+        verify(exactly = 0) { statusStorage.update(any<EmberState>()) }
+    }
+
+    @Test
+    fun testOnMessageReceived_InRedState() {
+        val messageData = mapOf("status" to "POTENTIAL")
+        every { statusStorage.get() } returns RedState(DateTime.now(), setOf(Symptom.TEMPERATURE))
+
+        handler.handle(messageData)
+
+        verifyAll {
+            statusStorage.get()
+            sender wasNot Called
+        }
+        verify(exactly = 0) { statusStorage.update(any<EmberState>()) }
+    }
+
+    @Test
     fun testOnMessageReceived_WithAcknowledgmentUrl() {
         every { ackDao.tryFind(any()) } returns null
+        every { statusStorage.get() } returns DefaultState(DateTime.now())
 
         val messageData =
             mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/100")
@@ -82,6 +117,7 @@ class NotificationHandlerTest {
         handler.handle(messageData)
 
         verifyAll {
+            statusStorage.get()
             statusStorage.update(any<EmberState>())
             sender.send(10001, R.string.notification_title, R.string.notification_text, any())
             ackApi.send("https://api.example.com/ack/100")
