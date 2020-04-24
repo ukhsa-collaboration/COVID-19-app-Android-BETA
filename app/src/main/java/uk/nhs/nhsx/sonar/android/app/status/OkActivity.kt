@@ -115,9 +115,11 @@ class OkActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        navigateTo(stateStorage.get())
 
-        if (stateStorage.get() is RecoveryState) {
+        val state = stateStorage.get()
+        navigateTo(state)
+
+        if (state is RecoveryState) {
             dialog.show()
         } else {
             dialog.dismiss()
