@@ -108,56 +108,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                style="@style/TextViewStatusSubTittle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/status_description_01"/>
-
-            <TextView
-                style="@style/TextViewStatusSubTittle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/status_description_02"/>
-
-
-            <TextView
-                style="@style/TextViewStatusSubTittle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/status_description_03" />
-
-
-            <View
-                style="@style/HorizontalDivider"
-                android:layout_marginTop="36dp"
-                android:layout_marginBottom="24dp" />
-
-            <TextView
-                android:id="@+id/need_medical_advice"
-                style="@style/TextViewActionSubTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/need_medical_advice"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/nhs_service"
-                style="@style/TextViewActionTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:text="@string/nhs_online_service" />
-
-            <View
-                style="@style/HorizontalDivider"
-                android:layout_marginTop="36dp"
-                android:layout_marginBottom="8dp"/>
-
+            <include layout="@layout/status_footer_view"/>
 
         </LinearLayout>
     </ScrollView>

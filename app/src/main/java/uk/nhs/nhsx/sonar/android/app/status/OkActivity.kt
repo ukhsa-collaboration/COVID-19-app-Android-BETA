@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
+import kotlinx.android.synthetic.main.status_footer_view.nhs_service
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -23,6 +24,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
+import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
@@ -62,6 +64,10 @@ class OkActivity : BaseActivity() {
         }
 
         toggleNotFeelingCard(false)
+
+        nhs_service.setOnClickListener {
+            openUrl(NHS_SUPPORT_PAGE)
+        }
 
         addViewModelListener()
         viewModel.onStart()

@@ -9,8 +9,8 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_at_risk.follow_until
 import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_amber
-import kotlinx.android.synthetic.main.activity_at_risk.nhs_service
 import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
+import kotlinx.android.synthetic.main.status_footer_view.nhs_service
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent

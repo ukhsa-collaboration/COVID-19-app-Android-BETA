@@ -51,9 +51,7 @@
             style="@style/TextViewActionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_chevron_right"
-            android:drawablePadding="8dp"
-            android:text="@string/nhs_online_service" />
+            android:text="@string/nhs_111_online_service" />
 
     </LinearLayout>
 

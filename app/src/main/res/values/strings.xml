@@ -95,6 +95,7 @@
     <string name="status_red_next_steps">Next steps</string>
     <string name="need_medical_advice">If you need urgent medical advice about your coronavirus symptoms, visit</string>
     <string name="nhs_online_service">NHS Coronavirus</string>
+    <string name="nhs_111_online_service">NHS 111 online coronavirus service</string>
     <string name="status_today_feeling">How are you feeling today?</string>
     <string name="registration_finalising_setup">Finalising setup…</string>
     <string name="registration_everything_is_working_ok">Everything is working OK</string>
