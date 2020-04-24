@@ -4,13 +4,11 @@
 
 package uk.nhs.nhsx.sonar.android.app.notifications
 
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
-import uk.nhs.nhsx.sonar.android.app.status.EmberState
+import uk.nhs.nhsx.sonar.android.app.status.StateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.client.AcknowledgmentsApi
 import javax.inject.Inject
@@ -35,7 +33,7 @@ class NotificationHandler @Inject constructor(
                     registrationManager.register()
                 }
                 isStatusUpdate(messageData) -> {
-                    stateStorage.update(EmberState(DateTime.now(DateTimeZone.UTC).plusDays(14)))
+                    stateStorage.update(StateFactory.ember())
                     showStatusNotification()
                 }
             }
