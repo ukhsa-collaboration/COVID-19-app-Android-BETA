@@ -40,9 +40,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,7 +60,6 @@
         <activity android:name=".diagnose.DiagnoseCoughActivity" />
         <activity
             android:name=".onboarding.PostCodeActivity"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity android:name=".diagnose.DiagnoseCloseActivity" />
         <activity android:name=".onboarding.EnableBluetoothActivity" />
