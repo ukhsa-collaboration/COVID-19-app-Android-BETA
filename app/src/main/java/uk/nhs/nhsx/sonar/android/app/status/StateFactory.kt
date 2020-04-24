@@ -40,10 +40,10 @@ object StateFactory {
         if (a.isAfter(b)) a else b
 
     private fun isMoreThanSevenDays(symptomsDate: LocalDate, today: LocalDate): Boolean {
-        return symptomsDate
+        return !symptomsDate
             .withFixedTime()
             .plusDays(NO_DAYS_IN_RED - 1)
-            .isBefore(today.withFixedTime())
+            .isAfter(today.withFixedTime())
     }
 
     private fun hasOnlyCough(symptoms: Set<Symptom>) =
