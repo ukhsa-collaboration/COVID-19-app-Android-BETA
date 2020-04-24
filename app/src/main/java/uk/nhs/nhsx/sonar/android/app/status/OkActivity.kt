@@ -14,8 +14,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -105,7 +103,7 @@ class OkActivity : BaseActivity() {
         dialog.behavior.isHideable = false
 
         dialog.findViewById<Button>(R.id.ok)?.setOnClickListener {
-            stateStorage.update(DefaultState(DateTime.now(DateTimeZone.UTC)))
+            stateStorage.update(DefaultState())
             dialog.dismiss()
         }
         dialog.setOnCancelListener {

@@ -11,8 +11,6 @@ import android.widget.Button
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
 import kotlinx.android.synthetic.main.activity_isolate.nhs_service
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -54,7 +52,7 @@ class IsolateActivity : BaseActivity() {
         dialog.behavior.isHideable = false
 
         dialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {
-            stateStorage.update(DefaultState(DateTime.now(DateTimeZone.UTC)))
+            stateStorage.update(DefaultState())
             navigateTo(stateStorage.get())
             dialog.cancel()
         }

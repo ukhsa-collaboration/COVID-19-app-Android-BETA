@@ -201,7 +201,7 @@ class FlowTest {
     }
 
     fun testBluetoothInteractions() {
-        setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
+        setUserState(DefaultState())
         setValidSonarIdAndSecretKeyAndPublicKey()
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -216,7 +216,7 @@ class FlowTest {
     }
 
     fun testReceivingStatusUpdateNotification() {
-        setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
+        setUserState(DefaultState())
         setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())
@@ -242,7 +242,7 @@ class FlowTest {
     }
 
     fun testLaunchWhenStateIsDefault() {
-        setUserState(DefaultState(DateTime.now(DateTimeZone.UTC)))
+        setUserState(DefaultState())
         setValidSonarId()
 
         onView(withId(R.id.start_main_activity)).perform(click())

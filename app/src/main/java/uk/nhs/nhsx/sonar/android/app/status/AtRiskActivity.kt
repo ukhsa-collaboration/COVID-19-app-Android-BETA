@@ -11,7 +11,6 @@ import kotlinx.android.synthetic.main.activity_at_risk.follow_until
 import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_amber
 import kotlinx.android.synthetic.main.activity_at_risk.nhs_service
 import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
-import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -57,7 +56,7 @@ class AtRiskActivity : BaseActivity() {
         navigateTo(state)
 
         if (state.hasExpired()) {
-            DefaultState(DateTime.now()).let {
+            DefaultState().let {
                 stateStorage.update(it)
                 navigateTo(it)
             }

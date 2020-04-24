@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone.UTC
 
 sealed class UserState {
     abstract val until: DateTime
@@ -12,9 +13,9 @@ sealed class UserState {
     fun hasExpired(): Boolean = until.isBeforeNow
 }
 
-data class DefaultState(override val until: DateTime) : UserState()
+data class DefaultState(override val until: DateTime = DateTime.now(UTC)) : UserState()
 
-data class RecoveryState(override val until: DateTime) : UserState()
+data class RecoveryState(override val until: DateTime = DateTime.now(UTC)) : UserState()
 
 data class EmberState(override val until: DateTime) : UserState()
 

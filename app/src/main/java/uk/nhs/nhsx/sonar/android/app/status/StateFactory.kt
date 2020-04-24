@@ -16,7 +16,7 @@ object StateFactory {
 
     fun decide(symptomsDate: LocalDate, symptoms: Set<Symptom>, today: LocalDate = LocalDate.now()): UserState {
         return if (hasOnlyCough(symptoms) && isMoreThanSevenDays(symptomsDate, today)) {
-            RecoveryState(today.tomorrow().toDateTime(UTC))
+            RecoveryState()
         } else {
             red(symptomsDate, symptoms, today)
         }

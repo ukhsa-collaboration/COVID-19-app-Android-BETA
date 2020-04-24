@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone.UTC
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
@@ -45,10 +43,10 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
                 StateFactory.extendedRed(Symptom.TEMPERATURE)
 
             hasCough ->
-                RecoveryState(inOneDay())
+                RecoveryState()
 
             else ->
-                DefaultState(inOneDay())
+                DefaultState()
         }.let {
             updateState(it)
         }
@@ -61,8 +59,6 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
         stateStorage.update(newState)
         return StateResult.Main(newState)
     }
-
-    private fun inOneDay() = DateTime.now(UTC).plusDays(1)
 }
 
 sealed class StateResult {

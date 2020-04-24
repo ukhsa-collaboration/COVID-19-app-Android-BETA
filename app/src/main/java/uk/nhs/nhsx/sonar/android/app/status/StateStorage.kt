@@ -6,8 +6,6 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
 import androidx.core.content.edit
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone.UTC
 import javax.inject.Inject
 
 class StateStorage @Inject constructor(context: Context) {
@@ -25,7 +23,7 @@ class StateStorage @Inject constructor(context: Context) {
     fun get(): UserState =
         storage.getString(PREF_USER_STATE, null)
             ?.let { UserStateSerialization.deserialize(it) }
-            ?: DefaultState(DateTime.now(UTC))
+            ?: DefaultState()
 
     fun clear() {
         storage.edit { clear() }
