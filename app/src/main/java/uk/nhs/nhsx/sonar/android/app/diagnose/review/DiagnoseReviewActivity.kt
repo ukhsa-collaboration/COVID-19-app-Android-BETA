@@ -167,7 +167,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                         position == SpinnerAdapter.MAX_VISIBLE_POSITION -> {
                             picker.show(supportFragmentManager, null)
                         }
-                        position < adapter.count - 1 -> {
+                        position <  SpinnerAdapter.MAX_VISIBLE_POSITION  -> {
                             date_selection_error.visibility = View.GONE
                             symptomsDate = LocalDate.now().minusDays(position)
                         }
