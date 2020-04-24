@@ -152,7 +152,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun verifyReceivedRegistrationRequest() {
-        val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
+        // WorkManager is responsible for starting registration process and unfortunately it is not exact
+        // Have to wait for longer time (usually less than 10 seconds). Putting 20 secs just to be sure
+        val lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.method).isEqualTo("POST")
@@ -168,7 +170,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     private fun verifyReceivedActivationRequest() {
-        val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
+        // WorkManager is responsible for starting registration process and unfortunately it is not exact
+        // Have to wait for longer time (usually less than 10 seconds). Putting 20 secs just to be sure
+        val lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.method).isEqualTo("POST")
@@ -196,7 +200,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             keyStorage.providePublicKey()
         }
         val publicKey = keyStorage.providePublicKey()?.encoded
-        val decodedPublicKey = Base64.decode(TestCoLocateServiceDispatcher.PUBLIC_KEY, Base64.DEFAULT)
+        val decodedPublicKey =
+            Base64.decode(TestCoLocateServiceDispatcher.PUBLIC_KEY, Base64.DEFAULT)
         assertThat(publicKey).isEqualTo(decodedPublicKey)
     }
 
