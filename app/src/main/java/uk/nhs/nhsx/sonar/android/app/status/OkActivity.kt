@@ -43,7 +43,7 @@ class OkActivity : BaseActivity() {
         viewModelFactory
     }
 
-    private lateinit var dialog: BottomSheetDialog
+    private lateinit var recoveryDialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +72,7 @@ class OkActivity : BaseActivity() {
         addViewModelListener()
         viewModel.onStart()
 
-        setBottomSheet()
+        setRecoveryBottomSheet()
     }
 
     private fun toggleNotFeelingCard(enabled: Boolean) {
@@ -103,16 +103,16 @@ class OkActivity : BaseActivity() {
         })
     }
 
-    private fun setBottomSheet() {
-        dialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
-        dialog.setContentView(layoutInflater.inflate(R.layout.bottom_sheet_recovery, null))
-        dialog.behavior.isHideable = false
+    private fun setRecoveryBottomSheet() {
+        recoveryDialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
+        recoveryDialog.setContentView(layoutInflater.inflate(R.layout.bottom_sheet_recovery, null))
+        recoveryDialog.behavior.isHideable = false
 
-        dialog.findViewById<Button>(R.id.ok)?.setOnClickListener {
+        recoveryDialog.findViewById<Button>(R.id.ok)?.setOnClickListener {
             stateStorage.update(DefaultState())
-            dialog.dismiss()
+            recoveryDialog.dismiss()
         }
-        dialog.setOnCancelListener {
+        recoveryDialog.setOnCancelListener {
             finish()
         }
     }
@@ -124,15 +124,15 @@ class OkActivity : BaseActivity() {
         navigateTo(state)
 
         if (state is RecoveryState) {
-            dialog.show()
+            recoveryDialog.show()
         } else {
-            dialog.dismiss()
+            recoveryDialog.dismiss()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        dialog.dismiss()
+        recoveryDialog.dismiss()
     }
 
     companion object {
