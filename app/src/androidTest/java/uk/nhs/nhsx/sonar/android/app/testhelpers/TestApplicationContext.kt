@@ -46,7 +46,6 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     private val notificationService = NotificationService()
-    private val testDispatcher = TestCoLocateServiceDispatcher()
     private val testRxBleClient = TestRxBleClient(app)
     private var eventNumber = 0
     private val currentTimestampProvider = {
@@ -66,17 +65,16 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         currentTimestampProvider,
         scanIntervalLength = 2
     )
-    private val mockServer = MockWebServer()
+
+    private var testDispatcher = TestCoLocateServiceDispatcher()
+    private var mockServer = MockWebServer()
 
     val component: TestAppComponent
 
     init {
-        mockServer.apply {
-            dispatcher = testDispatcher
-            start()
-        }
         JodaTimeAndroid.init(app)
 
+        resetTestMockServer()
         val mockServerUrl = mockServer.url("").toString().removeSuffix("/")
 
         component = DaggerTestAppComponent.builder()
@@ -147,22 +145,31 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         testDispatcher.simulateResponse(error)
     }
 
-    fun verifyReceivedRegistrationRequest() {
-        // WorkManager is responsible for starting registration process and unfortunately it is not exact
-        // Have to wait for longer time (usually less than 10 seconds). Putting 20 secs just to be sure
-        val lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
-
-        assertThat(lastRequest).isNotNull()
-        assertThat(lastRequest?.method).isEqualTo("POST")
-        assertThat(lastRequest?.path).isEqualTo("/api/devices/registrations")
-        assertThat(lastRequest?.body?.readUtf8()).isEqualTo("""{"pushToken":"test firebase token #010"}""")
-    }
-
     fun verifyRegistrationFlow() {
         verifyReceivedRegistrationRequest()
         simulateActivationCodeReceived()
         verifyReceivedActivationRequest()
         verifySonarIdAndSecretKeyAndPublicKey()
+    }
+
+    fun verifyRegistrationRetry() {
+        verifyReceivedRegistrationRequest()
+        simulateActivationCodeReceived()
+    }
+
+    private fun verifyReceivedRegistrationRequest() {
+        // WorkManager is responsible for starting registration process and unfortunately it is not exact
+        // Have to wait for longer time (usually less than 10 seconds). Putting 20 secs just to be sure
+        var lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
+
+        if (lastRequest?.path?.contains("linking-id") == true) {
+            lastRequest = mockServer.takeRequest()
+        }
+
+        assertThat(lastRequest).isNotNull()
+        assertThat(lastRequest?.method).isEqualTo("POST")
+        assertThat(lastRequest?.path).isEqualTo("/api/devices/registrations")
+        assertThat(lastRequest?.body?.readUtf8()).isEqualTo("""{"pushToken":"test firebase token #010"}""")
     }
 
     private fun verifyReceivedActivationRequest() {
@@ -252,8 +259,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
-        assertThat(lastRequest?.method).isEqualTo("PATCH")
         assertThat(lastRequest?.path).isEqualTo("/api/residents/${TestCoLocateServiceDispatcher.RESIDENT_ID}")
+        assertThat(lastRequest?.method).isEqualTo("PATCH")
 
         val body = lastRequest?.body?.readUtf8() ?: ""
         assertThat(body).contains(""""symptomsTimestamp":""")
@@ -288,8 +295,12 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         app.baseContext.sendBroadcast(it)
     }
 
-    fun resetTestDispatcher() {
-        testDispatcher.reset()
+    fun resetTestMockServer() {
+        testDispatcher = TestCoLocateServiceDispatcher()
+        mockServer.shutdown()
+        mockServer = MockWebServer()
+        mockServer.dispatcher = testDispatcher
+        mockServer.start(43239)
     }
 }
 

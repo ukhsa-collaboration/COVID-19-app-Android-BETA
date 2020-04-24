@@ -92,7 +92,7 @@ class FlowTest {
             getSonarIdProvider().clear()
             getActivationCodeProvider().clear()
         }
-        testAppContext.resetTestDispatcher()
+        testAppContext.resetTestMockServer()
 
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val intent = Intent(testAppContext.app, FlowTestStartActivity::class.java).apply {
@@ -182,17 +182,15 @@ class FlowTest {
 
         checkOkActivityIsShown()
 
-        testAppContext.verifyReceivedRegistrationRequest()
-
         checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
         verifyCheckMySymptomsButton(not(isEnabled()))
 
         testAppContext.simulateBackendResponse(error = false)
 
-        // job retries after at least 10 seconds
-        waitForText(R.string.registration_everything_is_working_ok, timeoutInMs = 12000)
+        testAppContext.verifyRegistrationRetry()
 
-        testAppContext.verifyRegistrationFlow()
+        // job retries after at least 10 seconds
+        waitForText(R.string.registration_everything_is_working_ok, timeoutInMs = 20000)
 
         checkViewHasText(
             R.id.registrationStatusText,
@@ -274,7 +272,7 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkIsolateActivityIsShown()
-        checkDisplayOfReferenceCode()
+        checkDisplayOfReferenceCode(scroll = false)
     }
 
     fun testLaunchWhenStateIsRedAndExpired() {
@@ -365,8 +363,12 @@ class FlowTest {
         onView(withId(R.id.bottom_sheet_isolate)).check(matches(isDisplayed()))
     }
 
-    private fun checkDisplayOfReferenceCode() {
-        onView(withId(R.id.reference_code_link)).perform(click())
+    private fun checkDisplayOfReferenceCode(scroll: Boolean = true) {
+        if (scroll)
+            onView(withId(R.id.reference_code_link)).perform(scrollTo(), click())
+        else
+            onView(withId(R.id.reference_code_link)).perform(click())
+
         onView(withId(R.id.reference_code)).check(matches(withText(REFERENCE_CODE)))
         onView(withId(R.id.close)).perform(click())
     }
