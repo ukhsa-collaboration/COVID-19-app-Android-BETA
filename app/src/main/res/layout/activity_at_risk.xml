@@ -103,7 +103,7 @@
                         style="@style/TextViewActionSubTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/status_not_feeling_well_desc" />
+                        android:text="@string/status_not_feeling_well_desc"/>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

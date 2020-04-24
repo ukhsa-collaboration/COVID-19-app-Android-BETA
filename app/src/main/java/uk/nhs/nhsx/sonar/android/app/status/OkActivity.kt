@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
@@ -22,6 +23,8 @@ import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
@@ -35,13 +38,15 @@ class OkActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<OkViewModel>
+    private val viewModel: OkViewModel by viewModels { viewModelFactory }
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider
 
-    private val viewModel: OkViewModel by viewModels {
-        viewModelFactory
-    }
+    @Inject
+    lateinit var referenceCodeViewModelFactory: ViewModelFactory<ReferenceCodeViewModel>
+    private val referenceCodeViewModel: ReferenceCodeViewModel by viewModels { referenceCodeViewModelFactory }
+    private var referenceCodeDialog: BottomSheetDialog? = null
 
     private lateinit var recoveryDialog: BottomSheetDialog
 
@@ -72,7 +77,7 @@ class OkActivity : BaseActivity() {
         addViewModelListener()
         viewModel.onStart()
 
-        setRecoveryBottomSheet()
+        setRecoveryDialog()
     }
 
     private fun toggleNotFeelingCard(enabled: Boolean) {
@@ -83,6 +88,20 @@ class OkActivity : BaseActivity() {
         }
     }
 
+    private fun toggleReferenceCodeLink(enabled: Boolean) {
+        val link = findViewById<View>(R.id.reference_code_link)
+
+        link.let {
+            it.isClickable = enabled
+            it.isFocusable = enabled
+            it.isEnabled = enabled
+        }
+
+        if (enabled && referenceCodeDialog == null) {
+            referenceCodeDialog = ReferenceCodeDialog(this, referenceCodeViewModel, link)
+        }
+    }
+
     private fun addViewModelListener() {
         viewModel.viewState().observe(this, Observer { result ->
             when (result) {
@@ -90,20 +109,23 @@ class OkActivity : BaseActivity() {
                     registrationPanel.setState(RegistrationProgressPanel.State.REGISTERED)
                     BluetoothService.start(this)
                     toggleNotFeelingCard(true)
+                    toggleReferenceCodeLink(true)
                 }
                 ViewState.Progress -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.IN_PROGRESS)
                     toggleNotFeelingCard(false)
+                    toggleReferenceCodeLink(false)
                 }
                 is ViewState.Error -> {
                     registrationPanel.setState(RegistrationProgressPanel.State.FAILED)
                     toggleNotFeelingCard(false)
+                    toggleReferenceCodeLink(false)
                 }
             }
         })
     }
 
-    private fun setRecoveryBottomSheet() {
+    private fun setRecoveryDialog() {
         recoveryDialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
         recoveryDialog.setContentView(layoutInflater.inflate(R.layout.bottom_sheet_recovery, null))
         recoveryDialog.behavior.isHideable = false

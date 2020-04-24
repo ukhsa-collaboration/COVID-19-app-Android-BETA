@@ -20,6 +20,7 @@ class TestCoLocateServiceDispatcher : Dispatcher() {
         const val SECRET_KEY: String = "secret key from TestCoLocateServiceDispatcher"
         const val PUBLIC_KEY: String = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu1f68MqDXbKeTqZMTHsOGToO4rKnPClXe/kE+oWqlaWZQv4J1E98cUNdpzF9JIFRPMCNdGOvTr4UB+BhQv9GWg=="
         const val RESIDENT_ID: String = "1ae5d70d-0c40-4af2-bac0-c2d18d25091f"
+        const val REFERENCE_CODE: String = "REF CODE #202"
 
         val encodedSecretKey = Base64
             .encode(SECRET_KEY.toByteArray(), Base64.DEFAULT)
@@ -37,6 +38,9 @@ class TestCoLocateServiceDispatcher : Dispatcher() {
                         setBody("""{"id":"$RESIDENT_ID","secretKey":"$encodedSecretKey","publicKey":"$PUBLIC_KEY"}""")
                     }
                     "/api/residents/$RESIDENT_ID" -> MockResponse()
+                    "/api/residents/$RESIDENT_ID/linking-id" -> MockResponse().apply {
+                        setBody("""{"linkingId":"$REFERENCE_CODE"}""")
+                    }
                     else -> MockResponse().apply {
                         setBody("Unexpected request reached TestCoLocateServiceDispatcher class")
                         setResponseCode(500)

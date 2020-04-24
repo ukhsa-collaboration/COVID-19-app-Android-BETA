@@ -81,7 +81,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
                 android:clickable="false"
                 android:enabled="false"
                 android:focusable="false">
@@ -97,13 +96,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        android:text="@string/status_not_feeling_well" />
+                        android:text="@string/status_not_feeling_well"/>
 
                     <TextView
                         style="@style/TextViewActionSubTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/status_not_feeling_well_desc" />
+                        android:text="@string/status_not_feeling_well_desc"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

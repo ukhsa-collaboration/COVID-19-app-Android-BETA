@@ -93,12 +93,25 @@
                     android:layout_height="wrap_content"
                     android:drawableEnd="@drawable/ic_chevron_right"
                     android:drawablePadding="8dp"
-                    android:text="@string/nhs_online_service" />
+                    android:text="@string/nhs_online_service"/>
 
+                <View
+                    style="@style/HorizontalDivider"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@color/divider"
+                />
+
+                <TextView
+                    style="@style/TextViewActionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:drawableEnd="@drawable/ic_chevron_right"
+                    android:drawablePadding="8dp"
+                    android:id="@+id/reference_code_link"
+                    android:text="@string/view_reference_code"/>
             </LinearLayout>
-
         </LinearLayout>
-
     </RelativeLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

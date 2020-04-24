@@ -10,7 +10,9 @@ import dagger.Provides
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
 import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeApi
 import uk.nhs.nhsx.sonar.android.app.registration.ResidentApi
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 
 @Module
 class NetworkModule(
@@ -29,4 +31,8 @@ class NetworkModule(
     @Provides
     fun coLocationApi(keyStorage: KeyStorage, httpClient: HttpClient): CoLocationApi =
         CoLocationApi(baseUrl, keyStorage, httpClient)
+
+    @Provides
+    fun referenceCodeApi(sonarIdProvider: SonarIdProvider, httpClient: HttpClient): ReferenceCodeApi =
+        ReferenceCodeApi(baseUrl, sonarIdProvider, httpClient)
 }

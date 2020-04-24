@@ -53,6 +53,7 @@ import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestAppComponent
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.REFERENCE_CODE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.hasTextInputLayoutErrorText
 
 @RunWith(AndroidJUnit4::class)
@@ -248,6 +249,7 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkOkActivityIsShown()
+        checkDisplayOfReferenceCode()
     }
 
     fun testLaunchWhenStateIsEmber() {
@@ -257,6 +259,7 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkAtRiskActivityIsShown()
+        checkDisplayOfReferenceCode()
     }
 
     fun testLaunchWhenStateIsRed() {
@@ -271,6 +274,7 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkIsolateActivityIsShown()
+        checkDisplayOfReferenceCode()
     }
 
     fun testLaunchWhenStateIsRedAndExpired() {
@@ -359,6 +363,12 @@ class FlowTest {
 
     private fun checkIsolateActivityPopUpIsShown() {
         onView(withId(R.id.bottom_sheet_isolate)).check(matches(isDisplayed()))
+    }
+
+    private fun checkDisplayOfReferenceCode() {
+        onView(withId(R.id.reference_code_link)).perform(click())
+        onView(withId(R.id.reference_code)).check(matches(withText(REFERENCE_CODE)))
+        onView(withId(R.id.close)).perform(click())
     }
 
     private fun setUserState(state: UserState) {

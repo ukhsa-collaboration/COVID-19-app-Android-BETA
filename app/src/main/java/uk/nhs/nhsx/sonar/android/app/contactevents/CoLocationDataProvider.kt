@@ -8,7 +8,6 @@ import android.util.Base64
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Seconds
-import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import javax.inject.Inject

@@ -49,4 +49,14 @@
         style="@style/HorizontalDivider"
         android:layout_marginTop="36dp"
         android:layout_marginBottom="8dp"/>
+
+    <TextView
+        style="@style/TextViewActionTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:drawableEnd="@drawable/ic_chevron_right"
+        android:drawablePadding="8dp"
+        android:id="@+id/reference_code_link"
+        android:text="@string/view_reference_code"/>
 </merge>

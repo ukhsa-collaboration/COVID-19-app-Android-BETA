@@ -8,14 +8,18 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import androidx.activity.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
 import kotlinx.android.synthetic.main.activity_isolate.nhs_service
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL_RED_STATE
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -26,7 +30,12 @@ class IsolateActivity : BaseActivity() {
     @Inject
     protected lateinit var stateStorage: StateStorage
 
-    private lateinit var dialog: BottomSheetDialog
+    private lateinit var updateSymptomsDialog: BottomSheetDialog
+
+    @Inject
+    lateinit var referenceCodeViewModelFactory: ViewModelFactory<ReferenceCodeViewModel>
+    private val referenceCodeViewModel: ReferenceCodeViewModel by viewModels { referenceCodeViewModelFactory }
+    private var referenceCodeDialog: BottomSheetDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -43,25 +52,26 @@ class IsolateActivity : BaseActivity() {
             openUrl(NHS_SUPPORT_PAGE)
         }
 
-        setBottomSheet()
+        setUpdateSymptomsDialog()
+        referenceCodeDialog = ReferenceCodeDialog(this, referenceCodeViewModel, findViewById(R.id.reference_code_link))
     }
 
-    private fun setBottomSheet() {
-        dialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
-        dialog.setContentView(layoutInflater.inflate(R.layout.bottom_sheet_isolate, null))
-        dialog.behavior.isHideable = false
+    private fun setUpdateSymptomsDialog() {
+        updateSymptomsDialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
+        updateSymptomsDialog.setContentView(layoutInflater.inflate(R.layout.bottom_sheet_isolate, null))
+        updateSymptomsDialog.behavior.isHideable = false
 
-        dialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {
+        updateSymptomsDialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {
             stateStorage.update(DefaultState())
             navigateTo(stateStorage.get())
-            dialog.cancel()
+            updateSymptomsDialog.cancel()
         }
 
-        dialog.setOnCancelListener {
+        updateSymptomsDialog.setOnCancelListener {
             finish()
         }
 
-        dialog.findViewById<Button>(R.id.have_symptoms)?.setOnClickListener {
+        updateSymptomsDialog.findViewById<Button>(R.id.have_symptoms)?.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
         }
     }
@@ -73,15 +83,15 @@ class IsolateActivity : BaseActivity() {
         navigateTo(state)
 
         if (state.hasExpired()) {
-            dialog.show()
+            updateSymptomsDialog.show()
         } else {
-            dialog.dismiss()
+            updateSymptomsDialog.dismiss()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        dialog.dismiss()
+        updateSymptomsDialog.dismiss()
     }
 
     companion object {
