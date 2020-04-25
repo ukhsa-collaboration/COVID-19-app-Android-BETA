@@ -10,8 +10,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.activity_ok.areaNotSupported
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
@@ -23,6 +25,7 @@ import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
@@ -44,6 +47,9 @@ class OkActivity : BaseActivity() {
     lateinit var sonarIdProvider: SonarIdProvider
 
     @Inject
+    lateinit var postCodeProvider: PostCodeProvider
+
+    @Inject
     lateinit var referenceCodeViewModelFactory: ViewModelFactory<ReferenceCodeViewModel>
     private val referenceCodeViewModel: ReferenceCodeViewModel by viewModels { referenceCodeViewModelFactory }
     private var referenceCodeDialog: BottomSheetDialog? = null
@@ -59,6 +65,8 @@ class OkActivity : BaseActivity() {
         }
 
         setContentView(R.layout.activity_ok)
+
+        areaNotSupported.isVisible = !postCodeProvider.getPostCode().startsWith("PO3", true)
 
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)

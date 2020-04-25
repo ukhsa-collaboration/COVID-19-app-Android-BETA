@@ -166,4 +166,6 @@
     <string name="checkin_notification_action">Open App</string>
     <string name="checkin_notification_title">NHS Stop the Spread</string>
     <string name="checkin_notification_text">\n\nHow are you feeling today?\nPlease open the app to update your symptoms and view your latest advice. Your help saves lives.</string>
+    <string name="area_not_supported_title">Your area is not supported yet</string>
+    <string name="area_not_supported_message">This app is currently being evaluated on the Isle of Wight. It is not yet intended for use elsewhere. We are working to bring full functionality across the UK</string>
 </resources>
