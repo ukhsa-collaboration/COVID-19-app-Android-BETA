@@ -54,7 +54,6 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestAppComponent
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.REFERENCE_CODE
-import uk.nhs.nhsx.sonar.android.app.testhelpers.hasTextInputLayoutErrorText
 
 @RunWith(AndroidJUnit4::class)
 class FlowTest {
@@ -139,7 +138,7 @@ class FlowTest {
 
         onView(withId(R.id.postCodeContinue)).perform(click())
 
-        onView(withId(R.id.postCodeTextInputLayout)).check(matches(hasTextInputLayoutErrorText(R.string.valid_post_code_is_required)))
+        onView(withId(R.id.invalidPostCodeHint)).check(matches(isDisplayed()))
 
         onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
         closeSoftKeyboard()

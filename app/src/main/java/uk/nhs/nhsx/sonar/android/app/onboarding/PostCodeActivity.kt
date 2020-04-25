@@ -9,10 +9,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.activity_post_code.invalidPostCodeHint
 import kotlinx.android.synthetic.main.activity_post_code.postCodeContinue
 import kotlinx.android.synthetic.main.activity_post_code.postCodeEditText
-import kotlinx.android.synthetic.main.activity_post_code.postCodeTextInputLayout
+import kotlinx.android.synthetic.main.activity_post_code.postCodeRationale
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -32,6 +35,12 @@ class PostCodeActivity : AppCompatActivity(R.layout.activity_post_code) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
 
+        postCodeRationale.text =
+            HtmlCompat.fromHtml(
+                getString(R.string.post_code_rationale),
+                HtmlCompat.FROM_HTML_MODE_COMPACT
+            )
+
         postCodeContinue.setOnClickListener {
             viewModel.onContinue(postCodeEditText.text.toString())
         }
@@ -39,9 +48,9 @@ class PostCodeActivity : AppCompatActivity(R.layout.activity_post_code) {
         viewModel.viewState().observe(this, Observer { viewState ->
             when (viewState) {
                 PostCodeViewState.Valid ->
-                    postCodeTextInputLayout.error = null
+                    invalidPostCodeHint.isVisible = false
                 PostCodeViewState.Invalid ->
-                    postCodeTextInputLayout.error = getString(R.string.valid_post_code_is_required)
+                    invalidPostCodeHint.isVisible = true
             }
         })
 
