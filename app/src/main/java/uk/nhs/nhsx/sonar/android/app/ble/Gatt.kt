@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.ble
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt.GATT_FAILURE
 import android.bluetooth.BluetoothGatt.GATT_SUCCESS
+import android.bluetooth.BluetoothGatt.STATE_DISCONNECTED
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_READ
 import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_WRITE
@@ -20,8 +21,12 @@ import android.bluetooth.BluetoothGattServerCallback
 import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothGattService.SERVICE_TYPE_PRIMARY
 import android.bluetooth.BluetoothManager
+import android.bluetooth.BluetoothProfile
 import android.bluetooth.BluetoothProfile.GATT
 import android.content.Context
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothCryptogramProvider
 import javax.inject.Inject
@@ -33,6 +38,7 @@ class Gatt @Inject constructor(
 ) {
     // No semantic value, just to avoid caching.
     private var keepAliveValue: Byte = 0x00
+    private var running: Boolean = true
 
     private val payload: ByteArray
         get() = bluetoothCryptogramProvider.provideBluetoothCryptogram().asBytes()
@@ -72,8 +78,9 @@ class Gatt @Inject constructor(
 
     private var server: BluetoothGattServer? = null
     private val subscribedDevices = mutableListOf<BluetoothDevice>()
+    private val lock = Object()
 
-    fun start() {
+    fun start(coroutineScope: CoroutineScope) {
         Timber.d("Bluetooth Gatt start")
         val callback = object : BluetoothGattServerCallback() {
             override fun onCharacteristicReadRequest(
@@ -82,9 +89,12 @@ class Gatt @Inject constructor(
                 offset: Int,
                 characteristic: BluetoothGattCharacteristic
             ) {
+                if (characteristic.isKeepAlive()) {
+                    server?.sendResponse(device, requestId, GATT_SUCCESS, 0, byteArrayOf())
+                    return
+                }
                 if (characteristic.isDeviceIdentifier() && payloadIsValid) {
                     server?.sendResponse(device, requestId, GATT_SUCCESS, 0, payload)
-                    notifyKeepAliveSubscribers()
                 } else {
                     server?.sendResponse(device, requestId, GATT_FAILURE, 0, byteArrayOf())
                 }
@@ -96,7 +106,9 @@ class Gatt @Inject constructor(
                 newState: Int
             ) {
                 super.onConnectionStateChange(device, status, newState)
-                notifyKeepAliveSubscribers()
+                if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    subscribedDevices.remove(device)
+                }
             }
 
             override fun onDescriptorWriteRequest(
@@ -119,19 +131,8 @@ class Gatt @Inject constructor(
                     return
                 }
                 Timber.d("Device $device has subscribed to keep alive.")
-                subscribedDevices.add(device)
-                notifyKeepAliveSubscribers()
-            }
-
-            private fun notifyKeepAliveSubscribers() {
-                keepAliveValue++
-                keepAliveCharacteristic.value = byteArrayOf(keepAliveValue)
-                val connectedSubscribers =
-                    bluetoothManager.getConnectedDevices(GATT).intersect(subscribedDevices)
-                connectedSubscribers.forEach {
-                    Timber.d("Notifying $it of new value $keepAliveValue")
-
-                    server?.notifyCharacteristicChanged(it, keepAliveCharacteristic, false)
+                synchronized(lock) {
+                    subscribedDevices.add(device)
                 }
             }
         }
@@ -139,10 +140,34 @@ class Gatt @Inject constructor(
         server = bluetoothManager.openGattServer(context, callback).also {
             it.addService(service)
         }
+
+        coroutineScope.launch {
+            while (running) {
+                delay(8_000)
+                var connectedSubscribers: Set<BluetoothDevice>
+                synchronized(lock) {
+                    connectedSubscribers =
+                        bluetoothManager.getConnectedDevices(GATT)
+                            .intersect(subscribedDevices)
+                }
+
+                if (connectedSubscribers.isEmpty()) {
+                    continue
+                }
+
+                keepAliveValue++
+                keepAliveCharacteristic.value = byteArrayOf(keepAliveValue)
+                connectedSubscribers.forEach {
+                    Timber.d("Notifying $it of new value $keepAliveValue")
+                    server?.notifyCharacteristicChanged(it, keepAliveCharacteristic, false)
+                }
+            }
+        }
     }
 
     fun stop() {
         Timber.d("Bluetooth Gatt stop")
+        running = false
         server?.close()
     }
 }

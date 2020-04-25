@@ -58,7 +58,8 @@ class BluetoothService : Service(), Delegate {
     lateinit var coroutineDispatcher: CoroutineDispatcher
 
     private lateinit var locationProviderChangedReceiver: LocationProviderChangedReceiver
-    private lateinit var coroutineScope: CoroutineScope
+    private lateinit var scanScope: CoroutineScope
+    private lateinit var gattScope: CoroutineScope
 
     private var stateChangeDisposable: Disposable? = null
     private var isInjected = false
@@ -144,8 +145,8 @@ class BluetoothService : Service(), Delegate {
         Timber.d("startScan isScanRunning = $isScanRunning")
         if (!isScanRunning) {
             isScanRunning = true
-            coroutineScope = CoroutineScope(coroutineDispatcher + Job())
-            scan.start(coroutineScope)
+            scanScope = CoroutineScope(coroutineDispatcher + Job())
+            scan.start(scanScope)
         }
     }
 
@@ -162,7 +163,8 @@ class BluetoothService : Service(), Delegate {
         Timber.d("startGattAndAdvertise areGattAndAdvertiseRunning = $areGattAndAdvertiseRunning")
         if (!areGattAndAdvertiseRunning) {
             areGattAndAdvertiseRunning = true
-            gatt.start()
+            gattScope = CoroutineScope(coroutineDispatcher + Job())
+            gatt.start(gattScope)
             advertise.start()
         }
     }
@@ -171,6 +173,7 @@ class BluetoothService : Service(), Delegate {
         Timber.d("stopGattAndAdvertise areGattAndAdvertiseRunning = $areGattAndAdvertiseRunning")
         if (areGattAndAdvertiseRunning) {
             areGattAndAdvertiseRunning = false
+            gattScope.cancel()
             gatt.stop()
             advertise.stop()
         }
@@ -180,7 +183,7 @@ class BluetoothService : Service(), Delegate {
         Timber.d("stopScan isScanRunning = $isScanRunning")
         if (isScanRunning) {
             isScanRunning = false
-            coroutineScope.cancel()
+            scanScope.cancel()
             scan.stop()
         }
     }
