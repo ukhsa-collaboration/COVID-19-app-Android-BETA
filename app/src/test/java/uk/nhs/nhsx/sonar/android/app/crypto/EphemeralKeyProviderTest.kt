@@ -29,19 +29,15 @@ class EphemeralKeyProviderTest {
 
     @Test
     fun `keys are generated with the correct algorithm`() {
-        assertThat(provider.providePublicKey().algorithm).isEqualTo("EC")
-        assertThat(provider.providePrivateKey().algorithm).isEqualTo("EC")
-    }
-
-    @Test
-    fun `exposes the publicKey as X9dot62 if you squint at it`() {
-        // leading 0x04 then two coordinates as 32 bit integers
-        assertThat(provider.providePublicKeyPoint()).hasSize(65)
+        val keyPair = provider.provideEphemeralKeys()
+        assertThat(keyPair.public.algorithm).isEqualTo("EC")
+        assertThat(keyPair.private.algorithm).isEqualTo("EC")
     }
 
     @Test
     fun `key point can recreate public key`() {
-        val encodedKeyPoints = provider.providePublicKeyPoint()
+        val keyPair = provider.provideEphemeralKeys()
+        val encodedKeyPoints = keyPair.public.toPublicKeyPoint()
 
         val spec = ECNamedCurveTable.getParameterSpec(EC_STANDARD_CURVE_NAME)
         val params = ECNamedCurveSpec(EC_STANDARD_CURVE_NAME, spec.curve, spec.g, spec.n)
@@ -49,6 +45,12 @@ class EphemeralKeyProviderTest {
         val pubKeySpec = ECPublicKeySpec(publicPoint, params)
         val publicKey = KeyFactory.getInstance("EC", PROVIDER_NAME).generatePublic(pubKeySpec)
 
-        assertThat(publicKey).isEqualTo(provider.providePublicKey())
+        assertThat(publicKey).isEqualTo(keyPair.public)
+    }
+
+    @Test
+    fun `generates new keys each time`() {
+        val firstKeyPair = provider.provideEphemeralKeys()
+        assertThat(firstKeyPair).isNotEqualTo(provider.provideEphemeralKeys())
     }
 }

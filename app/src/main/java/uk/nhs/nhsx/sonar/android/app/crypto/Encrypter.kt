@@ -24,12 +24,13 @@ class Encrypter @Inject constructor(
 ) {
 
     fun encrypt(plainText: ByteArray): Cryptogram {
+        val ephemeralKeyPair = ephemeralKeyProvider.provideEphemeralKeys()
 
-        val localPrivateKey = ephemeralKeyProvider.providePrivateKey()
+        val localPrivateKey = ephemeralKeyPair.private
         val serverPublicKey = keyStorage.providePublicKey()
         val sharedSecret = generateSharedSecret(localPrivateKey, serverPublicKey!!)
 
-        val sharedInformation = ephemeralKeyProvider.providePublicKeyPoint()
+        val sharedInformation = ephemeralKeyPair.public.toPublicKeyPoint()
 
         val derivedKeyAndIV = deriveSecretKeyAndIV(sharedSecret, sharedInformation)
         val encryptionResult = aesGcmEncrypt(derivedKeyAndIV.secretKey, derivedKeyAndIV.iv, plainText)

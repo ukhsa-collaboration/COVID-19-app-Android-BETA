@@ -10,7 +10,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.generators.KDF2BytesGenerator
 import org.bouncycastle.crypto.params.KDFParameters
-import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.ECPointUtil
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
@@ -19,6 +18,7 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import java.nio.ByteBuffer
 import java.security.KeyFactory
+import java.security.KeyPair
 import java.security.PrivateKey
 import java.security.PublicKey
 import java.security.Security
@@ -72,11 +72,10 @@ class EncrypterTest {
         val ephemeralKeyProvider = mockk<EphemeralKeyProvider>()
         val keyStorage = mockk<KeyStorage>()
         every { keyStorage.providePublicKey() } returns loadPublicKey(exampleServerPubPEM)
-        every { ephemeralKeyProvider.providePublicKey() } returns loadPublicKey(exampleLocalPubPEM) as BCECPublicKey
-        val x = knownXCoordinate.hexStringToByteArray()
-        val y = knownYCoordinate.hexStringToByteArray()
-        every { ephemeralKeyProvider.providePublicKeyPoint() } returns byteArrayOf(0x04) + x + y
-        every { ephemeralKeyProvider.providePrivateKey() } returns loadPrivateKey(exampleLocalPrivPEM)
+        every { ephemeralKeyProvider.provideEphemeralKeys() } returns KeyPair(
+            loadPublicKey(exampleLocalPubPEM),
+            loadPrivateKey(exampleLocalPrivPEM)
+        )
 
         val encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
 
