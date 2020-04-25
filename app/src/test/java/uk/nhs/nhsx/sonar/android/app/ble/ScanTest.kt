@@ -28,6 +28,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 import java.util.Base64
 import java.util.concurrent.TimeUnit
 
@@ -74,10 +75,10 @@ class ScanTest {
                     Observable.error<RxBleConnection>(disconnectException)
                 }
         )
-        every { connection.requestMtu(108) } returns Single.just(108)
+        every { connection.requestMtu(Cryptogram.SIZE + 2) } returns Single.just(Cryptogram.SIZE + 2)
         every { connection.readRssi() } returns Single.just(rssi)
 
-        identifier = ByteArray(106) { 1 }
+        identifier = ByteArray(Cryptogram.SIZE) { 1 }
         every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(
             identifier
         )
