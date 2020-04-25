@@ -11,10 +11,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textViewStyle">@style/AppTextView</item>
+        <item name="android:windowBackground">@color/color_nhsuk_grey_5</item>
+        <item name="android:windowDisablePreview">true</item>
 
         <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
-        <item name="materialCalendarFullscreenTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen</item>
-        <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar</item>
+        <item name="materialCalendarFullscreenTheme">
+            @style/ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen
+        </item>
+        <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar
+        </item>
     </style>
 
     <style name="AppTextView" parent="AppTheme">
@@ -83,6 +88,11 @@
         <item name="android:textColor">@color/text_sub_title</item>
     </style>
 
+    <style name="OnboardingTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:lineSpacingMultiplier">1</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
     <style name="PrimaryButton" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_round_background</item>

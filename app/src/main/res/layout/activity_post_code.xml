@@ -8,7 +8,6 @@
     android:id="@+id/activity_isolate"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_nhsuk_grey_5"
     android:orientation="vertical"
     tools:context="uk.nhs.nhsx.sonar.android.app.MainActivity">
 
@@ -63,13 +62,12 @@
 
             <TextView
                 android:id="@+id/postCodeTitle"
+                style="@style/OnboardingTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:labelFor="@id/postCodeEditText"
-                android:text="@string/post_code_title"
-                android:textSize="28sp"
-                android:textStyle="bold" />
+                android:text="@string/post_code_title" />
 
             <TextView
                 android:layout_width="wrap_content"

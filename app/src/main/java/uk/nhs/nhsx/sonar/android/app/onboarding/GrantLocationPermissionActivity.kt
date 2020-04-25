@@ -3,6 +3,7 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.appcompat.app.AppCompatActivity
@@ -17,8 +18,13 @@ open class GrantLocationPermissionActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        edgeCaseTitle.setText(R.string.grant_location_permission_title)
-        edgeCaseText.setText(R.string.grant_location_permission_rationale)
+        if (Build.VERSION.SDK_INT >= 29) {
+            edgeCaseTitle.setText(R.string.grant_location_permission_title)
+            edgeCaseText.setText(R.string.grant_location_permission_rationale)
+        } else {
+            edgeCaseTitle.setText(R.string.grant_location_permission_title_pre_10)
+            edgeCaseText.setText(R.string.grant_location_permission_rationale_pre_10)
+        }
         takeActionButton.setText(R.string.go_to_app_settings)
 
         takeActionButton.setOnClickListener {

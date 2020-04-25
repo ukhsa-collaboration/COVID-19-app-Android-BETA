@@ -10,7 +10,6 @@
         android:id="@+id/main_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_nhsuk_grey_5"
         android:orientation="vertical">
 
         <include layout="@layout/banner" />

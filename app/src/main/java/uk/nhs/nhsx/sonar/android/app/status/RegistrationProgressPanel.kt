@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.registration_panel.view.registrationPanelDivider
 import kotlinx.android.synthetic.main.registration_panel.view.registrationProgressBar
 import kotlinx.android.synthetic.main.registration_panel.view.registrationRetryButton
 import kotlinx.android.synthetic.main.registration_panel.view.registrationStatusIcon
@@ -63,7 +62,6 @@ class RegistrationProgressPanel @JvmOverloads constructor(
         registrationRetryButton.isVisible = false
         registrationProgressBar.isVisible = true
         registrationStatusIcon.isVisible = false
-        registrationPanelDivider.isVisible = true
         registrationStatusText.setText(R.string.registration_finalising_setup)
         registrationStatusText.setTextColor(ContextCompat.getColor(context, R.color.black))
     }
@@ -74,7 +72,6 @@ class RegistrationProgressPanel @JvmOverloads constructor(
         registrationProgressBar.isVisible = false
         registrationStatusIcon.isVisible = true
         registrationStatusIcon.setImageResource(R.drawable.ic_success_outline)
-        registrationPanelDivider.isVisible = true
         registrationStatusText.setText(R.string.registration_everything_is_working_ok)
         registrationStatusText.setTextColor(ContextCompat.getColor(context, R.color.black))
     }
@@ -85,7 +82,6 @@ class RegistrationProgressPanel @JvmOverloads constructor(
         registrationProgressBar.isVisible = false
         registrationStatusIcon.isVisible = true
         registrationStatusIcon.setImageResource(R.drawable.ic_warning_outline)
-        registrationPanelDivider.isVisible = false
         registrationStatusText.setText(R.string.registration_app_setup_failed)
         registrationStatusText.setTextColor(ContextCompat.getColor(context, R.color.white))
     }

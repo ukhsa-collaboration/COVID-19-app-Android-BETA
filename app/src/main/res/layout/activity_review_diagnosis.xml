@@ -4,8 +4,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/color_nhsuk_grey_5">
+    android:layout_height="match_parent">
 
     <include layout="@layout/symptom_banner" />
 

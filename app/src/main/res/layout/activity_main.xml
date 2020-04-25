@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
@@ -9,17 +8,18 @@
     android:id="@+id/activity_isolate"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_nhsuk_grey_5"
     android:orientation="vertical"
-    android:paddingHorizontal="16dp"
     tools:context="uk.nhs.nhsx.sonar.android.app.MainActivity">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/logo"
+        android:id="@+id/nhsLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:baselineAlignBottom="true"
+        android:paddingVertical="4dp"
+        android:scaleType="center"
         android:src="@drawable/nhs_logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,18 +29,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginBottom="0dp"
         android:text="@string/coronavirus"
         android:textColor="?attr/colorAccent"
         android:textSize="20sp"
-        android:textStyle="italic"
-        app:layout_constraintBaseline_toBaselineOf="@id/logo"
-        app:layout_constraintStart_toEndOf="@id/logo" />
+        app:layout_constraintBottom_toBottomOf="@id/nhsLogo"
+        app:layout_constraintStart_toEndOf="@id/nhsLogo" />
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="56dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@id/confirm_onboarding"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,29 +49,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="148dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/introMarker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:src="@drawable/ic_onboarding_intro" />
-
-            </FrameLayout>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/introMarker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:src="@drawable/ic_onboarding_intro" />
 
             <TextView
                 android:id="@+id/onboarding_title"
+                style="@style/OnboardingTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/onboarding_title"
-                android:textSize="32sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="8dp"
+                android:text="@string/onboarding_title" />
 
             <TextView
                 android:id="@+id/app_rationale"
@@ -88,6 +82,7 @@
                 android:layout_marginTop="16sp"
                 android:clickable="true"
                 android:focusable="true"
+                android:fontFamily="sans-serif-medium"
                 android:gravity="center_vertical"
                 android:minHeight="48dp"
                 android:text="@string/explanation_link"
@@ -104,9 +99,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="32dp"
         android:minHeight="54dp"
-        android:text="@string/start_now"
+        android:text="@string/continue_button"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent" />
 
