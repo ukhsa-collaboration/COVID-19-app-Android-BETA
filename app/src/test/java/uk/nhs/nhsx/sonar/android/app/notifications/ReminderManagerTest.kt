@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.notifications
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -14,12 +15,15 @@ import io.mockk.spyk
 import io.mockk.verify
 import org.junit.Before
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.notifications.ReminderManager.Companion.REMINDER_TYPE
+import uk.nhs.nhsx.sonar.android.app.notifications.ReminderManager.Companion.REQUEST_CODE_REGISTRATION_REMINDER
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.hideRegistrationNotFinishedNotification
 import uk.nhs.nhsx.sonar.android.app.util.showRegistrationReminderNotification
 
 class ReminderManagerTest {
 
+    private val intent = mockk<Intent>()
     private val context = mockk<Context>(relaxUnitFun = true)
     private val alarmManager = mockk<AlarmManager>(relaxUnitFun = true)
     private val reminderTimeProvider = mockk<ReminderTimeProvider>(relaxed = true)
@@ -45,7 +49,7 @@ class ReminderManagerTest {
     fun cancelReminderCancelsAlarm() {
         sut.cancelReminder()
 
-        verify { alarmManager.cancel(any<PendingIntent>()) }
+        verify(exactly = 2) { alarmManager.cancel(any<PendingIntent>()) }
     }
 
     @Test
@@ -57,38 +61,40 @@ class ReminderManagerTest {
 
     @Test
     fun showReminderNotificationShowsNotification() {
-        sut.showNotification()
+        sut.showRegistrationReminder()
 
         verify(exactly = 1) { showRegistrationReminderNotification(any()) }
     }
 
     @Test
     fun showReminderNotificationSetsLastReminderNotificationTime() {
-        sut.showNotification()
+        sut.showRegistrationReminder()
 
         verify(exactly = 1) { reminderTimeProvider.setLastReminderNotificationTime(any()) }
     }
 
     @Test
     fun handleBroadcastShowsNotificationAndSchedulesReminderIfUserNotRegistered() {
+        every { intent.getIntExtra(REMINDER_TYPE, -1) } returns REQUEST_CODE_REGISTRATION_REMINDER
         every { sonarIdProvider.hasProperSonarId() } returns false
 
-        sut.handleReminderBroadcast()
+        sut.handleReminderBroadcast(intent)
 
         verify(exactly = 1) {
-            sut.showNotification()
+            showRegistrationReminderNotification(any())
             sut.scheduleReminder()
         }
     }
 
     @Test
     fun handleBroadcastShowsNotificationAndSchedulesReminderIfUserIsRegistered() {
+        every { intent.getIntExtra(REMINDER_TYPE, -1) } returns REQUEST_CODE_REGISTRATION_REMINDER
         every { sonarIdProvider.hasProperSonarId() } returns true
 
-        sut.handleReminderBroadcast()
+        sut.handleReminderBroadcast(intent)
 
         verify(exactly = 0) {
-            sut.showNotification()
+            showRegistrationReminderNotification(any())
             sut.scheduleReminder()
         }
     }

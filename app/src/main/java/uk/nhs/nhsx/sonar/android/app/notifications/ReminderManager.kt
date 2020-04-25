@@ -8,9 +8,11 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import org.joda.time.DateTime
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.hideRegistrationNotFinishedNotification
+import uk.nhs.nhsx.sonar.android.app.util.showCheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.util.showRegistrationReminderNotification
 import java.util.Calendar
 import javax.inject.Inject
@@ -23,7 +25,7 @@ class ReminderManager @Inject constructor(
 ) {
     fun scheduleReminder() {
         Timber.d("setupReminder")
-        val pendingIntent = generateReminderPendingIntent()
+        val pendingIntent = generateReminderPendingIntent(REQUEST_CODE_REGISTRATION_REMINDER)
 
         val time = reminderTimeProvider.provideNextReminderTime()
         alarmManager.setExactAndAllowWhileIdle(
@@ -33,29 +35,47 @@ class ReminderManager @Inject constructor(
         )
     }
 
-    fun cancelReminder() {
-        Timber.d("cancelReminder")
-        alarmManager.cancel(generateReminderPendingIntent())
-    }
+    fun scheduleCheckInReminder(time: DateTime) {
+        Timber.d("Schedule check-in reminder for: $time")
 
-    private fun generateReminderPendingIntent(): PendingIntent? {
-        val intent = Intent(context, RegistrationReminderBroadcastReceiver::class.java)
-        return PendingIntent.getBroadcast(
-            context, REQUEST_CODE_REGISTRATION_REMINDER,
-            intent, PendingIntent.FLAG_UPDATE_CURRENT
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            time.millis,
+            generateReminderPendingIntent(REQUEST_CODE_CHECK_IN_REMINDER)
         )
     }
 
-    fun handleReminderBroadcast() {
-        if (!sonarIdProvider.hasProperSonarId()) {
-            showNotification()
-            scheduleReminder()
+    fun cancelReminder() {
+        Timber.d("cancelReminder")
+        alarmManager.cancel(generateReminderPendingIntent(REQUEST_CODE_REGISTRATION_REMINDER))
+        alarmManager.cancel(generateReminderPendingIntent(REQUEST_CODE_CHECK_IN_REMINDER))
+    }
+
+    private fun generateReminderPendingIntent(requestCode: Int): PendingIntent? {
+        val intent = Intent(context, ReminderBroadcastReceiver::class.java).apply {
+            putExtra(REMINDER_TYPE, requestCode)
+        }
+        return PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
+
+    fun handleReminderBroadcast(intent: Intent) {
+        when (intent.getIntExtra(REMINDER_TYPE, -1)) {
+            REQUEST_CODE_REGISTRATION_REMINDER -> showRegistrationReminder()
+            REQUEST_CODE_CHECK_IN_REMINDER -> showCheckInReminderNotification(context)
         }
     }
 
-    fun showNotification() {
-        showRegistrationReminderNotification(context)
-        reminderTimeProvider.setLastReminderNotificationTime(Calendar.getInstance())
+    fun showRegistrationReminder() {
+        if (!sonarIdProvider.hasProperSonarId()) {
+            showRegistrationReminderNotification(context)
+            reminderTimeProvider.setLastReminderNotificationTime(Calendar.getInstance())
+            scheduleReminder()
+        }
     }
 
     fun hideReminderNotification() {
@@ -69,6 +89,8 @@ class ReminderManager @Inject constructor(
     }
 
     companion object {
+        const val REMINDER_TYPE = "REMINDER_TYPE"
         const val REQUEST_CODE_REGISTRATION_REMINDER = 1
+        const val REQUEST_CODE_CHECK_IN_REMINDER = 2
     }
 }

@@ -22,6 +22,7 @@ import uk.nhs.nhsx.sonar.android.app.TurnBluetoothOnReceiver
 const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
 const val NOTIFICATION_ID_LOCATION_IS_DISABLED = 1338
 const val NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED = 1339
+const val NOTIFICATION_CHECK_IN_REMINDER = 1340
 
 class BluetoothNotificationHelper(val context: Context) {
 
@@ -38,15 +39,15 @@ class BluetoothNotificationHelper(val context: Context) {
     }
 
     fun showBluetoothIsDisabled() {
-        val notificationId = NOTIFICATION_ID_BLUETOOTH_IS_DISABLED
         val turnBluetoothOnIntent = Intent(context, TurnBluetoothOnReceiver::class.java).apply {
             action = TurnBluetoothOnReceiver.ACTION_TURN_BLUETOOTH_ON
         }
-        val actionPendingIntent = PendingIntent.getBroadcast(context, 0, turnBluetoothOnIntent, FLAG_UPDATE_CURRENT)
+        val actionPendingIntent =
+            PendingIntent.getBroadcast(context, 0, turnBluetoothOnIntent, FLAG_UPDATE_CURRENT)
 
         showNotification(
             context,
-            notificationId,
+            NOTIFICATION_ID_BLUETOOTH_IS_DISABLED,
             context.getString(R.string.notification_bluetooth_disabled_title),
             context.getString(R.string.notification_bluetooth_disabled_text),
             context.getString(R.string.notification_bluetooth_disabled_action),
@@ -55,13 +56,13 @@ class BluetoothNotificationHelper(val context: Context) {
     }
 
     fun showLocationIsDisabled() {
-        val notificationId = NOTIFICATION_ID_LOCATION_IS_DISABLED
         val turnLocationOnIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-        val actionPendingIntent = PendingIntent.getActivity(context, 0, turnLocationOnIntent, FLAG_UPDATE_CURRENT)
+        val actionPendingIntent =
+            PendingIntent.getActivity(context, 0, turnLocationOnIntent, FLAG_UPDATE_CURRENT)
 
         showNotification(
             context,
-            notificationId,
+            NOTIFICATION_ID_LOCATION_IS_DISABLED,
             context.getString(R.string.notification_location_disabled_title),
             context.getString(R.string.notification_location_disabled_text),
             context.getString(R.string.notification_location_disabled_action),
@@ -77,14 +78,27 @@ fun hideRegistrationNotFinishedNotification(context: Context) {
 }
 
 fun showRegistrationReminderNotification(context: Context) {
-    val notificationId = NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED
-
     showNotification(
         context,
-        notificationId,
+        NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED,
         context.getString(R.string.notification_registration_failed_title),
         context.getString(R.string.notification_registration_failed_text),
         "",
+        autoCancel = true
+    )
+}
+
+fun showCheckInReminderNotification(context: Context) {
+    val actionPendingIntent =
+        PendingIntent.getActivity(context, 0, MainActivity.getIntent(context), FLAG_UPDATE_CURRENT)
+
+    showNotification(
+        context,
+        NOTIFICATION_CHECK_IN_REMINDER,
+        context.getString(R.string.checkin_notification_title),
+        context.getString(R.string.checkin_notification_text),
+        context.getString(R.string.checkin_notification_action),
+        actionPendingIntent,
         autoCancel = true
     )
 }

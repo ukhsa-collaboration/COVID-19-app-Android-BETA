@@ -13,21 +13,22 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
 
-class RegistrationReminderBroadcastReceiverTest {
+class ReminderBroadcastReceiverTest {
 
-    private val reminderManager = mockk<ReminderManager>(relaxed = true)
+    private val manager = mockk<ReminderManager>(relaxed = true)
     private val context = mockk<Context>(relaxed = true)
     private val intent = mockk<Intent>()
     private val applicationComponent = mockk<ApplicationComponent>(relaxed = true)
-    private val sut = RegistrationReminderBroadcastReceiver()
+    private val sut = ReminderBroadcastReceiver().apply {
+        this.reminderManager = manager
+    }
 
     @Test
     fun onReceive() {
         every { context.appComponent } returns applicationComponent
-        sut.reminderManager = reminderManager
 
         sut.onReceive(context, intent)
 
-        verify(exactly = 1) { reminderManager.handleReminderBroadcast() }
+        verify(exactly = 1) { manager.handleReminderBroadcast(intent) }
     }
 }

@@ -23,7 +23,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCoughActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
-import uk.nhs.nhsx.sonar.android.app.notifications.RegistrationReminderBroadcastReceiver
+import uk.nhs.nhsx.sonar.android.app.notifications.ReminderBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
@@ -58,7 +58,7 @@ interface ApplicationComponent {
     fun inject(testerActivity: TesterActivity)
     fun inject(diagnoseCoughActivity: DiagnoseCoughActivity)
     fun inject(diagnoseTemperatureActivity: DiagnoseTemperatureActivity)
-    fun inject(registrationReminderBroadcastReceiver: RegistrationReminderBroadcastReceiver)
+    fun inject(reminderBroadcastReceiver: ReminderBroadcastReceiver)
     fun inject(registrationWorker: RegistrationWorker)
 
     fun provideRxBleClient(): RxBleClient

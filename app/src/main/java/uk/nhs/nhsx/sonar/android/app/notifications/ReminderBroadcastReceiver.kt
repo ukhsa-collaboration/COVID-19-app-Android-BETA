@@ -11,7 +11,7 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import javax.inject.Inject
 
-class RegistrationReminderBroadcastReceiver : BroadcastReceiver() {
+class ReminderBroadcastReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var reminderManager: ReminderManager
@@ -20,6 +20,6 @@ class RegistrationReminderBroadcastReceiver : BroadcastReceiver() {
         Timber.d("onReceive $intent")
         context.appComponent.inject(this)
 
-        reminderManager.handleReminderBroadcast()
+        reminderManager.handleReminderBroadcast(intent)
     }
 }

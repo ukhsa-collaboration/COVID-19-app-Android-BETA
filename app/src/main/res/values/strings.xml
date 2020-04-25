@@ -163,4 +163,7 @@
     <string name="post_code_example">Example: CE1B</string>
     <string name="post_code_rationale_title">Why do we need this?</string>
     <string name="enable_permissions">Enable permissions</string>
+    <string name="checkin_notification_action">Open App</string>
+    <string name="checkin_notification_title">NHS Stop the Spread</string>
+    <string name="checkin_notification_text">\n\nHow are you feeling today?\nPlease open the app to update your symptoms and view your latest advice. Your help saves lives.</string>
 </resources>

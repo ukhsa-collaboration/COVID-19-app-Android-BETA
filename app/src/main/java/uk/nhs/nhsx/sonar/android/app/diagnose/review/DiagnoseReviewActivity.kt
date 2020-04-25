@@ -33,6 +33,8 @@ import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.SpinnerAdapter
+import uk.nhs.nhsx.sonar.android.app.notifications.ReminderManager
+import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
@@ -45,6 +47,9 @@ import javax.inject.Inject
 class DiagnoseReviewActivity : BaseActivity() {
     @Inject
     protected lateinit var stateStorage: StateStorage
+
+    @Inject
+    protected lateinit var reminderManager: ReminderManager
 
     @Inject
     protected lateinit var viewModelFactory: ViewModelFactory<DiagnoseReviewViewModel>
@@ -202,6 +207,11 @@ class DiagnoseReviewActivity : BaseActivity() {
     private fun updateStateAndNavigate() {
         symptomsDate?.let {
             val state = StateFactory.decide(it, symptoms)
+
+            if (state is RedState) {
+                reminderManager.scheduleCheckInReminder(state.until)
+            }
+
             stateStorage.update(state)
 
             Timber.d("Updated the state to: $state")
