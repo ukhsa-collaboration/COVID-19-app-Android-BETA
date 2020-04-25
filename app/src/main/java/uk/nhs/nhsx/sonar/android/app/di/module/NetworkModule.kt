@@ -4,7 +4,6 @@
 
 package uk.nhs.nhsx.sonar.android.app.di.module
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
@@ -21,8 +20,8 @@ class NetworkModule(
 ) {
 
     @Provides
-    fun provideHttpClient(context: Context): HttpClient =
-        HttpClient(context, sonarHeaderValue)
+    fun provideHttpClient(): HttpClient =
+        HttpClient(sonarHeaderValue)
 
     @Provides
     fun residentApi(keyStorage: KeyStorage, httpClient: HttpClient): ResidentApi =

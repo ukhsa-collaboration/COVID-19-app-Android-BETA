@@ -4,14 +4,18 @@
 
 package uk.nhs.nhsx.sonar.android.app.http
 
-import android.content.Context
 import android.util.Base64
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.BasicNetwork
+import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
+import com.android.volley.toolbox.NoCache
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
+
+private fun createQueue(): RequestQueue =
+    RequestQueue(NoCache(), BasicNetwork(HurlStack())).apply { start() }
 
 class HttpClient(
     private val queue: RequestQueue,
@@ -23,8 +27,7 @@ class HttpClient(
         )
     }
 ) {
-
-    constructor(ctx: Context, sonarHeaderValue: String) : this(Volley.newRequestQueue(ctx), sonarHeaderValue)
+    constructor(sonarHeaderValue: String) : this(createQueue(), sonarHeaderValue)
 
     fun send(request: HttpRequest): Promise<JSONObject> {
         val deferred = Deferred<JSONObject>()
