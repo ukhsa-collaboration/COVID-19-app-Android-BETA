@@ -1,31 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
 <network-security-config>
-
-    <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">localhost</domain>
-    </domain-config>
-
-    <!-- Official Android N API -->
-    <!--https://android-developers.googleblog.com/2016/07/changes-to-trusted-certificate.html-->
-<!--    <domain-config cleartextTrafficPermitted="false">-->
-<!--        <domain includeSubdomains="true">nhs.uk</domain>-->
-<!--        <trust-anchors>-->
-<!--            <certificates src="system" />-->
-<!--        </trust-anchors>-->
-<!--        <pin-set>-->
-<!--            <pin digest="SHA-256">4Fb3Y16nA2u31p4pcILcnOX831kUuXLpUNCTIxuWZsw=</pin>-->
-<!--        </pin-set>-->
-
-<!--        &lt;!&ndash; TrustKit Android API &ndash;&gt;-->
-<!--        &lt;!&ndash; enforce pinning validation &ndash;&gt;-->
-<!--        &lt;!&ndash;trustkit-config enforcePinning="true" disableDefaultReportUri="true">-->
-<!--            <report-uri>https://report.pdm.approov.io/pinning-violation/report</report-uri>-->
-<!--        </trustkit-config&ndash;&gt;-->
-<!--    </domain-config>-->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
 
     <debug-overrides>
         <trust-anchors>
@@ -34,4 +16,16 @@
         </trust-anchors>
     </debug-overrides>
 
+<!--    This entry is needed for testing on device with okhttp/mockwebserver -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+    </domain-config>
+
+    <domain-config>
+        <domain includeSubdomains="true">nhs.uk</domain>
+<!--        Need to confirm the cert to pin against-->
+<!--        <pin-set>-->
+<!--            <pin digest="SHA-256">public key of cert</pin>-->
+<!--        </pin-set>-->
+    </domain-config>
 </network-security-config>
