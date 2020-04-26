@@ -66,8 +66,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun isDeviceSupported(): Boolean {
         val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null || !bluetoothAdapter.isMultipleAdvertisementSupported ||
-            !packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+        if (bluetoothAdapter == null || !packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
         ) {
             return false
         }
