@@ -21,6 +21,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCoughActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEvents
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderBroadcastReceiver
@@ -60,6 +61,7 @@ interface ApplicationComponent {
     fun inject(diagnoseTemperatureActivity: DiagnoseTemperatureActivity)
     fun inject(reminderBroadcastReceiver: ReminderBroadcastReceiver)
     fun inject(registrationWorker: RegistrationWorker)
+    fun inject(submitContactEvents: SubmitContactEvents)
 
     fun provideRxBleClient(): RxBleClient
 }

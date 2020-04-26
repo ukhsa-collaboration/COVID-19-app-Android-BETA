@@ -10,28 +10,22 @@ import android.os.Bundle
 import android.os.Parcel
 import android.view.View
 import android.widget.AdapterView
-import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.activity_review_diagnosis.date_selection_error
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_cough
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_temperature
-import kotlinx.android.synthetic.main.activity_review_diagnosis.submission_error
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_prompt
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
-import org.joda.time.LocalTime
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
-import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEvents
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.SpinnerAdapter
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderManager
 import uk.nhs.nhsx.sonar.android.app.status.RedState
@@ -50,13 +44,6 @@ class DiagnoseReviewActivity : BaseActivity() {
 
     @Inject
     protected lateinit var reminderManager: ReminderManager
-
-    @Inject
-    protected lateinit var viewModelFactory: ViewModelFactory<DiagnoseReviewViewModel>
-
-    private val viewModel: DiagnoseReviewViewModel by viewModels {
-        viewModelFactory
-    }
 
     private val symptoms: Set<Symptom> by lazy {
         setOf(
@@ -82,20 +69,6 @@ class DiagnoseReviewActivity : BaseActivity() {
         setSymptomsDateQuestion()
         setDateSpinner()
 
-        viewModel.isolationResult.observe(this, Observer
-        { result ->
-            if (result is ViewState.Success) {
-                viewModel.clearContactEvents()
-
-                updateStateAndNavigate()
-                submission_error.visibility = View.GONE
-            } else {
-                submission_error.visibility = View.VISIBLE
-                submission_error.announceForAccessibility(getString(R.string.submission_error))
-                submit_diagnosis.text = getString(R.string.retry)
-            }
-        })
-
         submit_diagnosis.setOnClickListener {
             val selectedSymptomsDate = this.symptomsDate
 
@@ -103,7 +76,8 @@ class DiagnoseReviewActivity : BaseActivity() {
                 date_selection_error.visibility = View.VISIBLE
                 date_selection_error.announceForAccessibility(getString(R.string.date_selection_error))
             } else {
-                viewModel.uploadContactEvents(selectedSymptomsDate.toDateTime(LocalTime.now(), UTC))
+                SubmitContactEvents.schedule(this, selectedSymptomsDate)
+                updateStateAndNavigate()
             }
         }
     }
