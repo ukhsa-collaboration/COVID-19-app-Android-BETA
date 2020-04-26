@@ -4,13 +4,16 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
 import kotlinx.android.synthetic.main.activity_main.explanation_link
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
+import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.ExplanationActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
@@ -35,6 +38,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
 
+        if (!isDeviceSupported()) {
+            finish()
+            DeviceNotSupportedActivity.start(this)
+            return
+        }
+
         setContentView(R.layout.activity_main)
 
         confirm_onboarding.setOnClickListener {
@@ -53,6 +62,16 @@ class MainActivity : AppCompatActivity() {
             finish()
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
+    }
+
+    private fun isDeviceSupported(): Boolean {
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter == null || !bluetoothAdapter.isMultipleAdvertisementSupported ||
+            !packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+        ) {
+            return false
+        }
+        return true
     }
 
     companion object {
