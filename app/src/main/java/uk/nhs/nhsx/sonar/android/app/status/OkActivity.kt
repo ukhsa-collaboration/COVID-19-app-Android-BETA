@@ -32,6 +32,7 @@ import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
+import java.util.Locale
 import javax.inject.Inject
 
 class OkActivity : BaseActivity() {
@@ -66,7 +67,9 @@ class OkActivity : BaseActivity() {
 
         setContentView(R.layout.activity_ok)
 
-        areaNotSupported.isVisible = !postCodeProvider.getPostCode().startsWith("PO3", true)
+        val postCode = postCodeProvider.getPostCode().toUpperCase(Locale.UK)
+        val postCodeRegex = Regex("PO(3[0-9]|4[0-1])")
+        areaNotSupported.isVisible = !postCodeRegex.matches(postCode)
 
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
