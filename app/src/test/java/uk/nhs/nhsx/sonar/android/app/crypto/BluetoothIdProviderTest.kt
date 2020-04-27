@@ -81,4 +81,11 @@ class BluetoothIdProviderTest {
         val payload = idProvider.provideBluetoothPayload()
         assertThat(payload.countryCode).isEqualTo(byteArrayOf('G'.toByte(), 'B'.toByte()))
     }
+
+    @Test
+    fun `contains the txPower`() {
+        val payload = idProvider.provideBluetoothPayload()
+        // https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/bluetooth/le/BluetoothLeAdvertiser.java#144
+        assertThat(payload.txPower).isEqualTo(-7)
+    }
 }

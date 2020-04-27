@@ -27,7 +27,8 @@ class ContactEventDaoTest {
             rssiValues = listOf(1, 2, 3),
             rssiTimestamps = listOf(2000, 3000, 63_000),
             duration = 61,
-            timestamp = 2000
+            timestamp = 2000,
+            txPower = 8
         )
 
     @Test
@@ -38,7 +39,8 @@ class ContactEventDaoTest {
                 rssiValues = listOf(4),
                 rssiTimestamps = listOf(1000),
                 duration = 60,
-                timestamp = 1000
+                timestamp = 1000,
+                txPower = 8
             )
 
             assertThat(merge(pastEvent, storedEvent)).isEqualTo(
@@ -47,7 +49,8 @@ class ContactEventDaoTest {
                     rssiValues = listOf(4, 1, 2, 3),
                     rssiTimestamps = listOf(1000, 2000, 3000, 63_000),
                     duration = 62,
-                    timestamp = 1000
+                    timestamp = 1000,
+                    txPower = 8
                 )
             )
         }
@@ -61,7 +64,8 @@ class ContactEventDaoTest {
                 rssiValues = listOf(4),
                 rssiTimestamps = listOf(64_000),
                 duration = 60,
-                timestamp = 64_000
+                timestamp = 64_000,
+                txPower = 8
             )
 
             assertThat(merge(futureEvent, storedEvent)).isEqualTo(
@@ -70,7 +74,8 @@ class ContactEventDaoTest {
                     rssiValues = listOf(1, 2, 3, 4),
                     rssiTimestamps = listOf(2000, 3000, 63_000, 64_000),
                     duration = 62,
-                    timestamp = 2000
+                    timestamp = 2000,
+                    txPower = 8
                 )
             )
         }
@@ -84,7 +89,8 @@ class ContactEventDaoTest {
                 rssiValues = listOf(4),
                 rssiTimestamps = listOf(4000),
                 duration = 60,
-                timestamp = 4000
+                timestamp = 4000,
+                txPower = 8
             )
 
             assertThat(merge(futureEvent, storedEvent)).isEqualTo(
@@ -93,7 +99,8 @@ class ContactEventDaoTest {
                     rssiValues = listOf(1, 2, 4, 3),
                     rssiTimestamps = listOf(2000, 3000, 4000, 63_000),
                     duration = 61,
-                    timestamp = 2000
+                    timestamp = 2000,
+                    txPower = 8
                 )
             )
         }
@@ -107,7 +114,8 @@ class ContactEventDaoTest {
                 rssiValues = listOf(4, 5, 6),
                 rssiTimestamps = listOf(1000, 4000, 64_000),
                 duration = 63,
-                timestamp = 1000
+                timestamp = 1000,
+                txPower = 8
             )
 
             assertThat(merge(longerEvent, storedEvent)).isEqualTo(
@@ -116,7 +124,8 @@ class ContactEventDaoTest {
                     rssiValues = listOf(4, 1, 2, 5, 3, 6),
                     rssiTimestamps = listOf(1000, 2000, 3000, 4000, 63_000, 64_000),
                     duration = 63,
-                    timestamp = 1000
+                    timestamp = 1000,
+                    txPower = 8
                 )
             )
         }

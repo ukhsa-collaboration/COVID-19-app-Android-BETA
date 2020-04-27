@@ -23,7 +23,8 @@ class CoLocationDataProviderTest {
             rssiValues = listOf(-49, -48, -50),
             rssiTimestamps = listOf(1_000, 4_000, 70_000),
             timestamp = 0,
-            duration = 70
+            duration = 70,
+            txPower = (-8).toByte()
         )
     )
 

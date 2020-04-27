@@ -194,7 +194,7 @@ class Scan @Inject constructor(
             connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID),
             connection.readRssi(),
             BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
-                Event(characteristicValue, rssi, scope, currentTimestampProvider())
+                Event(characteristicValue.clone(), rssi, scope, currentTimestampProvider())
             }
         )
     }

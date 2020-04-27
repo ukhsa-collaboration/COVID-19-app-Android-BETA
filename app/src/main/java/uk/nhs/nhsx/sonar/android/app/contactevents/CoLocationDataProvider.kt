@@ -37,7 +37,8 @@ class CoLocationDataProvider @Inject constructor(
             rssiValues = contactEvent.rssiValues,
             rssiOffsets = rssiOffsets,
             timestamp = startTime.toUtcIsoFormat(),
-            duration = contactEvent.duration
+            duration = contactEvent.duration,
+            txPower = contactEvent.txPower
         )
     }
 

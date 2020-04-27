@@ -265,20 +265,22 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(body).contains(""""contactEvents":[""")
         assertThat(body).contains(
             jsonOf(
-                "encryptedRemoteContactId" to "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\nAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\n",
+                "encryptedRemoteContactId" to "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\nAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ==\n",
                 "rssiValues" to listOf(10, 20, 15),
                 "rssiOffsets" to listOf(0, 90, 610),
                 "timestamp" to "2020-04-01T14:33:13Z",
-                "duration" to 700
+                "duration" to 700,
+                "txPower" to 1
             )
         )
         assertThat(body).contains(
             jsonOf(
-                "encryptedRemoteContactId" to "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC\nAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC\n",
+                "encryptedRemoteContactId" to "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC\nAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg==\n",
                 "rssiValues" to listOf(40),
                 "rssiOffsets" to listOf(0),
                 "timestamp" to "2020-04-01T14:34:43Z",
-                "duration" to 60
+                "duration" to 60,
+                "txPower" to 2
             )
         )
         assertThat(body.countOccurrences("""{"encryptedRemoteContactId":""")).isEqualTo(2)

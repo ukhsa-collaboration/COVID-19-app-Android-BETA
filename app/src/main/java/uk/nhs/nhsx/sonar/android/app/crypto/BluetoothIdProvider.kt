@@ -26,6 +26,7 @@ class BluetoothIdProvider @Inject constructor(
         'G'.toByte(),
         'B'.toByte()
     )
+    private val txPowerLevel = (-7).toByte()
 
     private val lock = Object()
 
@@ -36,7 +37,7 @@ class BluetoothIdProvider @Inject constructor(
                 latestDate = currentDate
                 cryptogram = generateCryptogram()
             }
-            return BluetoothIdentifier(countryCode, cryptogram!!)
+            return BluetoothIdentifier(countryCode, cryptogram!!, txPowerLevel)
         }
     }
 

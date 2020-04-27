@@ -6,6 +6,7 @@ package uk.nhs.nhsx.sonar.android.app.debug
 
 import android.content.Context
 import android.content.Intent
+import android.util.Base64
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -62,7 +63,7 @@ class TestViewModel @Inject constructor(
                         ).seconds
                 }.joinToString(":")
 
-                "${it.idAsString().replace(
+                "${Base64.encodeToString(it.sonarId, Base64.DEFAULT).replace(
                     "\n",
                     ""
                 )},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiOffsets}"

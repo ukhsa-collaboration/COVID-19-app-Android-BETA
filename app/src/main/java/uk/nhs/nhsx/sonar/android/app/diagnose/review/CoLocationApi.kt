@@ -43,7 +43,8 @@ data class CoLocationEvent(
     val rssiValues: List<Int>,
     val rssiOffsets: List<Int>,
     val timestamp: String,
-    val duration: Int
+    val duration: Int,
+    val txPower: Byte
 )
 
 private fun CoLocationData.toJson(): JSONObject =
@@ -55,7 +56,8 @@ private fun CoLocationData.toJson(): JSONObject =
                 "rssiValues" to it.rssiValues,
                 "rssiOffsets" to it.rssiOffsets,
                 "timestamp" to it.timestamp,
-                "duration" to it.duration
+                "duration" to it.duration,
+                "txPower" to it.txPower
             )
         }
     )

@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.contactevents
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 
 @Entity(tableName = ContactEvent.TABLE_NAME)
 data class ContactEvent(
@@ -17,6 +16,7 @@ data class ContactEvent(
     val sonarId: ByteArray,
     val rssiValues: List<Int>,
     val rssiTimestamps: List<Long>,
+    val txPower: Byte,
     val timestamp: Long,
     val duration: Int
 ) {
@@ -51,8 +51,6 @@ data class ContactEvent(
     }
 
     override fun toString(): String {
-        return "ContactEvent(sonarid=${idAsString()}, rssiValues=${rssiValues.joinToString(",","[","]")}, timestamp=$timestamp, duration=$duration"
+        return "ContactEvent(sonarid=$sonarId, rssiValues=${rssiValues.joinToString(",","[","]")}, timestamp=$timestamp, duration=$duration"
     }
-
-    fun idAsString(): String = BluetoothIdentifier.fromBytes(sonarId).asString()
 }
