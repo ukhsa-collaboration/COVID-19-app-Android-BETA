@@ -39,16 +39,6 @@
         </LinearLayout>
     </ScrollView>
 
-    <CheckBox
-        android:id="@+id/confirm_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="96dp"
-        android:text="@string/confirm_diagnosis_text_3" />
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/submit_diagnosis"
         style="@style/PrimaryButton"
