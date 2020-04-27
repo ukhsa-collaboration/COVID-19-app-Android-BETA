@@ -1,38 +1,20 @@
 package uk.nhs.nhsx.sonar.android.app.registration
 
-import android.content.Context
 import androidx.work.ListenableWorker
-import androidx.work.WorkerParameters
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker.Companion.WAITING_FOR_ACTIVATION_CODE
 import kotlin.test.assertTrue
 
 @ExperimentalCoroutinesApi
-class RegistrationWorkerTest {
+class RegistrationWorkTest {
 
-    private val context = mockk<Context>(relaxed = true)
-    private val workerParams = mockk<WorkerParameters>(relaxed = true)
     private val registrationUseCase = mockk<RegistrationUseCase>()
-    private val appComponent = mockk<ApplicationComponent>(relaxed = true)
-
-    private val sut = RegistrationWorker(context, workerParams)
-
-    @Before
-    fun setUp() {
-        mockkStatic("uk.nhs.nhsx.sonar.android.app.ColocateApplicationKt")
-        every { sut.appComponent } returns appComponent
-        sut.registrationUseCase = registrationUseCase
-    }
+    private val sut = RegistrationWork(registrationUseCase)
 
     @Test
     fun onSuccessReturnsSuccess() = runBlockingTest {
