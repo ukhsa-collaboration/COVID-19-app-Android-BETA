@@ -15,7 +15,6 @@ import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
 import javax.crypto.Mac
 import javax.crypto.SecretKey
-import javax.crypto.spec.SecretKeySpec
 
 class SignableJsonObjectRequest(
     private val httpRequest: HttpRequest,
@@ -44,14 +43,18 @@ class SignableJsonObjectRequest(
             "X-Sonar-Foundation" to sonarHeaderValue
         )
 
-        return when (httpRequest.key) {
+        return when (httpRequest.secretKey) {
             null -> return mapOf(*defaultHeaders)
             else -> {
                 val timestampAsString = LocalDateTime
                     .now(DateTimeZone.UTC)
                     .toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
-                val signature = generateSignature(httpRequest.key, timestampAsString, body)
+                val signature = generateSignature(
+                    httpRequest.secretKey,
+                    timestampAsString,
+                    body
+                )
 
                 mapOf(
                     *defaultHeaders,
@@ -62,8 +65,11 @@ class SignableJsonObjectRequest(
         }
     }
 
-    private fun generateSignature(key: ByteArray, timestamp: String, body: ByteArray): String {
-        val secretKey: SecretKey = SecretKeySpec(key, "HMACSHA256")
+    private fun generateSignature(
+        secretKey: SecretKey,
+        timestamp: String,
+        body: ByteArray
+    ): String {
         val mac = Mac.getInstance("HMACSHA256")
             .apply {
                 init(secretKey)

@@ -19,7 +19,11 @@ class HttpClientTest {
 
     @Test
     fun `test send() POST request, without encryption key`() {
-        val inputRequest = HttpRequest(POST, "http://localhost:123/api", jsonObjectOf("foo" to "bar"))
+        val inputRequest = HttpRequest(
+            POST,
+            "http://localhost:123/api",
+            jsonObjectOf("foo" to "bar")
+        )
         val promise = httpClient.send(inputRequest)
 
         assertThat(promise.isInProgress).isTrue()

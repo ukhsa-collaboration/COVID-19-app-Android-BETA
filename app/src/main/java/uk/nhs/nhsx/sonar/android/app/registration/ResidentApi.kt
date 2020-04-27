@@ -21,7 +21,11 @@ class ResidentApi @Inject constructor(
 
     fun register(token: String): Promise<Unit> {
         val requestJson = jsonObjectOf("pushToken" to token)
-        val request = HttpRequest(POST, "$baseUrl/api/devices/registrations", requestJson)
+        val request = HttpRequest(
+            POST,
+            "$baseUrl/api/devices/registrations",
+            requestJson
+        )
 
         return httpClient.send(request).mapToUnit()
     }
