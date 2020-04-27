@@ -16,38 +16,42 @@ import javax.inject.Named
 
 @Module
 class AppModule(private val applicationContext: Context) {
+
     @Provides
     fun provideContext() = applicationContext
 
     @Provides
     @Named(DISPATCHER_DEFAULT)
-    fun defaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+    fun defaultDispatcher(): CoroutineDispatcher =
+        Dispatchers.Default
 
     @Provides
     @Named(DISPATCHER_IO)
-    fun ioDispatcher(): CoroutineDispatcher = Dispatchers.IO
+    fun ioDispatcher(): CoroutineDispatcher =
+        Dispatchers.IO
 
     @Provides
     @Named(DISPATCHER_MAIN)
-    fun mainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+    fun mainDispatcher(): CoroutineDispatcher =
+        Dispatchers.Main
 
     @Provides
     @Named(DEVICE_MODEL)
-    fun deviceModel(): String = Build.MODEL ?: "unknown"
+    fun deviceModel(): String =
+        Build.MODEL ?: "unknown"
 
     @Provides
     @Named(DEVICE_OS_VERSION)
-    fun deviceOsVersion(): String = Build.VERSION.SDK_INT.toString()
+    fun deviceOsVersion(): String =
+        Build.VERSION.SDK_INT.toString()
 
     @Provides
-    fun provideAlarmManager(context: Context): AlarmManager {
-        return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-    }
+    fun provideAlarmManager(context: Context): AlarmManager =
+        context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     @Provides
-    fun provideWorkManager(context: Context): WorkManager {
-        return WorkManager.getInstance(context)
-    }
+    fun provideWorkManager(context: Context): WorkManager =
+        WorkManager.getInstance(context)
 
     companion object {
         const val DISPATCHER_DEFAULT = "DISPATCHER_DEFAULT"

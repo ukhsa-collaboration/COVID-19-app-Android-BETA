@@ -11,6 +11,7 @@ import dagger.Module
 import dagger.Provides
 import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.AppDatabase
+import uk.nhs.nhsx.sonar.android.app.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.Scan
@@ -72,6 +73,16 @@ class TestBluetoothModule(
             currentTimestampProvider,
             scanIntervalLength
         )
+
+    var simulateUnsupportedDevice = false
+
+    override fun provideDeviceDetection(): DeviceDetection {
+        return if (simulateUnsupportedDevice) {
+            DeviceDetection(null, appContext.packageManager)
+        } else {
+            super.provideDeviceDetection()
+        }
+    }
 }
 
 @Module

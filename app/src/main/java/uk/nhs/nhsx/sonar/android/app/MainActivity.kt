@@ -4,10 +4,8 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
-import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
@@ -34,14 +32,30 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var onboardingStatusProvider: OnboardingStatusProvider
 
+    @Inject
+    lateinit var deviceDetection: DeviceDetection
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
 
-        if (!isDeviceSupported()) {
-            finish()
-            DeviceNotSupportedActivity.start(this)
-            return
+        when {
+            deviceDetection.isUnsupported() -> {
+                finish()
+                DeviceNotSupportedActivity.start(this)
+                return
+            }
+            sonarIdProvider.hasProperSonarId() -> {
+                BluetoothService.start(this)
+                navigateTo(stateStorage.get())
+                return
+            }
+            onboardingStatusProvider.isOnboardingFinished() -> {
+                OkActivity.start(this)
+                finish()
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                return
+            }
         }
 
         setContentView(R.layout.activity_main)
@@ -53,27 +67,6 @@ class MainActivity : AppCompatActivity() {
         explanation_link.setOnClickListener {
             ExplanationActivity.start(this)
         }
-
-        when {
-            sonarIdProvider.hasProperSonarId() -> {
-                BluetoothService.start(this)
-                navigateTo(stateStorage.get())
-            }
-            onboardingStatusProvider.isOnboardingFinished() -> {
-                OkActivity.start(this)
-                finish()
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-            }
-        }
-    }
-
-    private fun isDeviceSupported(): Boolean {
-        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if (bluetoothAdapter == null || !packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
-        ) {
-            return false
-        }
-        return true
     }
 
     companion object {

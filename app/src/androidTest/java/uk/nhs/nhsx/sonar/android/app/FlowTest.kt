@@ -84,14 +84,7 @@ class FlowTest {
     }
 
     private fun resetApp() {
-        component.apply {
-            getAppDatabase().clearAllTables()
-            getOnboardingStatusProvider().setOnboardingFinished(false)
-            getStateStorage().clear()
-            getSonarIdProvider().clear()
-            getActivationCodeProvider().clear()
-        }
-        testAppContext.resetTestMockServer()
+        testAppContext.reset()
 
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val intent = Intent(testAppContext.app, FlowTestStartActivity::class.java).apply {
@@ -108,6 +101,7 @@ class FlowTest {
     @Test
     fun testRunner() {
         val tests = listOf(
+            ::testUnsupportedDevice,
             ::testRegistration,
             ::testRegistrationRetry,
             ::testBluetoothInteractions,
@@ -125,6 +119,14 @@ class FlowTest {
             resetApp()
             it()
         }
+    }
+
+    fun testUnsupportedDevice() {
+        testAppContext.simulateUnsupportedDevice()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkViewHasText(R.id.edgeCaseTitle, R.string.device_not_supported_title)
     }
 
     fun testRegistration() {

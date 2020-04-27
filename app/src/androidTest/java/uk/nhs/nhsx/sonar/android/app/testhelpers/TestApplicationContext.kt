@@ -295,12 +295,28 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         app.baseContext.sendBroadcast(it)
     }
 
+    fun simulateUnsupportedDevice() {
+        testBluetoothModule.simulateUnsupportedDevice = true
+    }
+
     fun resetTestMockServer() {
         testDispatcher = TestCoLocateServiceDispatcher()
         mockServer.shutdown()
         mockServer = MockWebServer()
         mockServer.dispatcher = testDispatcher
         mockServer.start(43239)
+    }
+
+    fun reset() {
+        component.apply {
+            getAppDatabase().clearAllTables()
+            getOnboardingStatusProvider().setOnboardingFinished(false)
+            getStateStorage().clear()
+            getSonarIdProvider().clear()
+            getActivationCodeProvider().clear()
+        }
+        testBluetoothModule.simulateUnsupportedDevice = false
+        resetTestMockServer()
     }
 }
 
