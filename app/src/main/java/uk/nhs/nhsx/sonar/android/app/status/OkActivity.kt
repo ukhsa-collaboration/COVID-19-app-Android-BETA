@@ -17,7 +17,8 @@ import kotlinx.android.synthetic.main.activity_ok.areaNotSupported
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
-import kotlinx.android.synthetic.main.status_footer_view.nhs_service
+import kotlinx.android.synthetic.main.activity_review_close.nhs_service
+import kotlinx.android.synthetic.main.status_footer_view_common.medicalWorkersInstructions
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -25,6 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDialog
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
@@ -83,6 +85,10 @@ class OkActivity : BaseActivity() {
 
         nhs_service.setOnClickListener {
             openUrl(NHS_SUPPORT_PAGE)
+        }
+
+        medicalWorkersInstructions.setOnClickListener {
+            MedicalWorkersInstructionsDialog(this).show()
         }
 
         addViewModelListener()

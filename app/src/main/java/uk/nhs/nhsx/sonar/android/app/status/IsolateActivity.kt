@@ -11,13 +11,15 @@ import android.widget.Button
 import androidx.activity.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
-import kotlinx.android.synthetic.main.activity_isolate.nhs_service
+import kotlinx.android.synthetic.main.status_footer_view_common.medicalWorkersInstructions
+import kotlinx.android.synthetic.main.status_footer_view_common.nhs_service
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL_RED_STATE
@@ -52,13 +54,26 @@ class IsolateActivity : BaseActivity() {
             openUrl(NHS_SUPPORT_PAGE)
         }
 
+        medicalWorkersInstructions.setOnClickListener {
+            MedicalWorkersInstructionsDialog(this).show()
+        }
+
         setUpdateSymptomsDialog()
-        referenceCodeDialog = ReferenceCodeDialog(this, referenceCodeViewModel, findViewById(R.id.reference_code_link))
+        referenceCodeDialog = ReferenceCodeDialog(
+            this,
+            referenceCodeViewModel,
+            findViewById(R.id.reference_code_link)
+        )
     }
 
     private fun setUpdateSymptomsDialog() {
         updateSymptomsDialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
-        updateSymptomsDialog.setContentView(layoutInflater.inflate(R.layout.bottom_sheet_isolate, null))
+        updateSymptomsDialog.setContentView(
+            layoutInflater.inflate(
+                R.layout.bottom_sheet_isolate,
+                null
+            )
+        )
         updateSymptomsDialog.behavior.isHideable = false
 
         updateSymptomsDialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {

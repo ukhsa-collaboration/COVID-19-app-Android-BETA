@@ -33,7 +33,6 @@ import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
-import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.hamcrest.CoreMatchers.anything
@@ -272,7 +271,7 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkIsolateActivityIsShown()
-        checkDisplayOfReferenceCode(scroll = false)
+        checkDisplayOfReferenceCode()
     }
 
     fun testLaunchWhenStateIsRedAndExpired() {
@@ -363,11 +362,8 @@ class FlowTest {
         onView(withId(R.id.bottom_sheet_isolate)).check(matches(isDisplayed()))
     }
 
-    private fun checkDisplayOfReferenceCode(scroll: Boolean = true) {
-        if (scroll)
-            onView(withId(R.id.reference_code_link)).perform(scrollTo(), click())
-        else
-            onView(withId(R.id.reference_code_link)).perform(click())
+    private fun checkDisplayOfReferenceCode() {
+        onView(withId(R.id.reference_code_link)).perform(scrollTo(), click())
 
         onView(withId(R.id.reference_code)).check(matches(withText(REFERENCE_CODE)))
         onView(withId(R.id.close)).perform(click())

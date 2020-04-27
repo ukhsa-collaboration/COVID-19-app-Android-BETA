@@ -7,18 +7,20 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_at_risk.follow_until
 import androidx.activity.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.activity_at_risk.follow_until
 import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_amber
 import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
-import kotlinx.android.synthetic.main.status_footer_view.nhs_service
+import kotlinx.android.synthetic.main.status_footer_view_common.medicalWorkersInstructions
+import kotlinx.android.synthetic.main.status_footer_view_common.nhs_service
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
@@ -57,7 +59,15 @@ class AtRiskActivity : BaseActivity() {
             openUrl(NHS_SUPPORT_PAGE)
         }
 
-        referenceCodeDialog = ReferenceCodeDialog(this, referenceCodeViewModel, findViewById(R.id.reference_code_link))
+        medicalWorkersInstructions.setOnClickListener {
+            MedicalWorkersInstructionsDialog(this).show()
+        }
+
+        referenceCodeDialog = ReferenceCodeDialog(
+            this,
+            referenceCodeViewModel,
+            findViewById(R.id.reference_code_link)
+        )
     }
 
     override fun onResume() {

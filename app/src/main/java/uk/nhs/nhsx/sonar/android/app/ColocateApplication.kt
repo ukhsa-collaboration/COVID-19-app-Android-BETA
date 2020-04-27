@@ -11,6 +11,7 @@ import androidx.annotation.StringRes
 import androidx.work.ListenableWorker
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.iid.FirebaseInstanceId
 import com.polidea.rxandroidble2.exceptions.BleException
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
@@ -52,11 +53,23 @@ class ColocateApplication : Application() {
             }
             "debug" -> {
                 Timber.plant(Timber.DebugTree())
+                logFirebaseToken()
                 FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
             }
         }
 
         DeleteOutdatedEventsWorker.schedule(this)
+    }
+
+    private fun logFirebaseToken() {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Timber.d(task.exception, "FirebaseInstanceId.getInstanceId failed")
+                }
+                val token = task.result?.token
+                Timber.d(task.exception, "Firebase Token = $token")
+            }
     }
 
     private fun configureRxJavaErrorHandler() {
