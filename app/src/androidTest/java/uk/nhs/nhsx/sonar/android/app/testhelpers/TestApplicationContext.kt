@@ -269,7 +269,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             jsonOf(
                 "encryptedRemoteContactId" to "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\nAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ==\n",
                 "rssiValues" to listOf(10, 20, 15),
-                "rssiOffsets" to listOf(0, 90, 700),
+                "rssiOffsets" to listOf(0, 90, 610),
                 "timestamp" to "2020-04-01T14:33:13Z",
                 "duration" to 700
             )

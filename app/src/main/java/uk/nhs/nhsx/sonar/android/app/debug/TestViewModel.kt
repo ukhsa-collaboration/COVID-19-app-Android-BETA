@@ -51,7 +51,16 @@ class TestViewModel @Inject constructor(
             val events = contactEventDao.getAll()
             val text = events.joinToString("\n") {
                 val eventTime = DateTime(it.timestamp)
-                "${it.idAsString()},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},${it.rssiTimestamps.map{ Seconds.secondsBetween(eventTime, DateTime(it)).seconds}.joinToString(":")}}"
+                val rssiOffsets = it.rssiTimestamps.mapIndexed { index, timestamp ->
+                    return@mapIndexed if (index == 0) 0
+                    else
+                        Seconds.secondsBetween(
+                            DateTime(it.rssiTimestamps[index - 1]),
+                            DateTime(timestamp)
+                        ).seconds
+                }.joinToString(":")
+
+                "${it.idAsString()},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiOffsets}"
             }
 
             val zipFile = "contact-events-exports.zip"
