@@ -54,13 +54,16 @@ class MainActivity : AppCompatActivity() {
             ExplanationActivity.start(this)
         }
 
-        if (sonarIdProvider.hasProperSonarId()) {
-            BluetoothService.start(this)
-            navigateTo(stateStorage.get())
-        } else if (onboardingStatusProvider.isOnboardingFinished()) {
-            OkActivity.start(this)
-            finish()
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+        when {
+            sonarIdProvider.hasProperSonarId() -> {
+                BluetoothService.start(this)
+                navigateTo(stateStorage.get())
+            }
+            onboardingStatusProvider.isOnboardingFinished() -> {
+                OkActivity.start(this)
+                finish()
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            }
         }
     }
 

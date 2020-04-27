@@ -64,8 +64,10 @@ class EventsAdapter :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is EventViewHolder) holder.bindTo(getItem(position))
-        else if (holder is EventErrorViewHolder) holder.bindTo(getItem(position))
+        when (holder) {
+            is EventViewHolder -> holder.bindTo(getItem(position))
+            is EventErrorViewHolder -> holder.bindTo(getItem(position))
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
