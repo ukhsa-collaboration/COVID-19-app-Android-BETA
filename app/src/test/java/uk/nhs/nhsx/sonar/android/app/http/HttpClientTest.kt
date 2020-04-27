@@ -47,7 +47,7 @@ class HttpClientTest {
                 method = HttpMethod.PATCH,
                 url = "http://localhost:123/api",
                 jsonBody = JSONObject(),
-                key = generateSignatureKey()
+                secretKey = generateSignatureKey()
             )
         val promise = httpClient.send(inputRequest)
 

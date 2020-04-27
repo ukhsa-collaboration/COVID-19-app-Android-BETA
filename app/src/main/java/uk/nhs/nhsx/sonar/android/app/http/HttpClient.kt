@@ -14,7 +14,6 @@ import com.android.volley.toolbox.NoCache
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
 import javax.crypto.SecretKey
-import javax.crypto.spec.SecretKeySpec
 
 private fun createQueue(): RequestQueue =
     RequestQueue(NoCache(), BasicNetwork(HurlStack())).apply { start() }
@@ -62,13 +61,8 @@ class HttpRequest(
     val method: HttpMethod,
     val url: String,
     val jsonBody: JSONObject? = null,
-    val key: ByteArray? = null
-) {
-    val secretKey: SecretKey? = when {
-        key == null || key.isEmpty() -> null
-        else -> SecretKeySpec(key, "HMACSHA256")
-    }
-}
+    val secretKey: SecretKey? = null
+)
 
 enum class HttpMethod {
     GET,

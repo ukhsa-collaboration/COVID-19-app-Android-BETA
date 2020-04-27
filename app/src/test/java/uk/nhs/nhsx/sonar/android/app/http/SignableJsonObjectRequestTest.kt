@@ -19,7 +19,7 @@ class SignableJsonObjectRequestTest {
                 method = HttpMethod.POST,
                 url = "http://somehere.com",
                 jsonBody = JSONObject(),
-                key = generateSignatureKey()
+                secretKey = generateSignatureKey()
             ),
             Deferred(),
             sonarHeaderValue = "someValue"

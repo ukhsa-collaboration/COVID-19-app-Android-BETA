@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.http
 
 import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
 
-fun generateSignatureKey(): ByteArray =
-    KeyGenerator.getInstance("HMACSHA256").generateKey().getEncoded()
+fun generateSignatureKey(): SecretKey =
+    KeyGenerator.getInstance("HMACSHA256").generateKey()
