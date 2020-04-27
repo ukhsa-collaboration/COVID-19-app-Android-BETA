@@ -11,9 +11,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
-import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -24,33 +21,14 @@ class DeleteOutdatedEventsWorker(
 ) : CoroutineWorker(appContext, params) {
 
     @Inject
-    protected lateinit var contactEventDao: ContactEventDao
+    lateinit var contactEventDao: ContactEventDao
 
     override suspend fun doWork(): Result {
         appComponent.inject(this)
-
-        Timber.d("Started to delete outdated events... ")
-
-        val attempts = params.runAttemptCount
-        if (attempts > 3) {
-            Timber.d("Giving up after $attempts attempts ")
-            return Result.failure()
-        }
-
-        val timestamp = DateTime.now(DateTimeZone.UTC).minusDays(28)
-
-        Timber.d("Deleting all events before $timestamp")
-        return try {
-            contactEventDao.clearOldEvents(timestamp.millis)
-            Result.success()
-        } catch (e: Exception) {
-            Timber.e(e, "Failed to delete events")
-            Result.retry()
-        }
+        return DeleteOutdatedEventsWork(contactEventDao).doWork(params.runAttemptCount)
     }
 
     companion object {
-
         fun schedule(context: Context) {
             val constraints = Constraints.Builder().build()
 
