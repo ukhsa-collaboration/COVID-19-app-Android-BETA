@@ -10,7 +10,10 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.activity.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.activity_at_risk.follow_until
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
+import kotlinx.android.synthetic.main.activity_isolate.symptoms
+import kotlinx.android.synthetic.main.activity_isolate.will_be_notified
 import kotlinx.android.synthetic.main.status_footer_view_common.medicalWorkersInstructions
 import kotlinx.android.synthetic.main.status_footer_view_common.nhs_service
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -25,6 +28,7 @@ import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL_RED_STATE
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
+import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 import javax.inject.Inject
 
 class IsolateActivity : BaseActivity() {
@@ -45,6 +49,19 @@ class IsolateActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_isolate)
         BluetoothService.start(this)
+
+        val state: RedState = stateStorage.get() as RedState
+
+        symptoms.text = state.symptoms.sortedDescending().joinToString("\n") {
+            when (it) {
+                Symptom.TEMPERATURE -> getString(R.string.high_temperature)
+                Symptom.COUGH -> getString(R.string.continuous_cough)
+            }
+        }
+
+        follow_until.text = getString(R.string.follow_until, state.until.toUiFormat())
+        will_be_notified.text =
+            getString(R.string.isolate_will_be_notified, state.until.toUiFormat())
 
         latest_advice_red.setOnClickListener {
             openUrl(LATEST_ADVICE_URL_RED_STATE)

@@ -31,23 +31,38 @@
                     android:id="@+id/status_red"
                     style="@style/PrimaryCard"
                     android:layout_width="match_parent"
+
                     android:layout_height="wrap_content">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/red_card_background"
+                        android:background="@drawable/amber_card_background"
                         android:orientation="vertical"
-                        android:paddingStart="28dp"
-                        android:paddingTop="32dp"
-                        android:paddingEnd="24dp"
+                        android:paddingTop="16dp"
                         android:paddingBottom="32dp">
+
+                        <TextView
+                            android:id="@+id/symptoms"
+                            style="@style/TextViewCardSubTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="28dp"
+                            android:paddingEnd="24dp" />
+
+                        <View
+                            style="@style/HorizontalDivider"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="16dp" />
 
                         <TextView
                             android:id="@+id/status_red_title"
                             style="@style/TextViewStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:paddingStart="28dp"
+                            android:paddingEnd="24dp"
                             android:text="@string/status_red_title" />
 
                         <TextView
@@ -56,18 +71,35 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="24dp"
+                            android:paddingStart="28dp"
+                            android:paddingEnd="24dp"
+
                             android:text="@string/status_latest_advice" />
+
+                        <TextView
+                            android:id="@+id/follow_until"
+                            style="@style/TextViewCardSubTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:paddingStart="28dp"
+                            android:paddingEnd="24dp"
+                            android:text="@string/follow_until" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
-                    android:id="@+id/status_red_next_steps"
-                    style="@style/TextViewSubHead"
+                    android:id="@+id/will_be_notified"
+                    style="@style/TextViewStatusSubTittle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/status_red_next_steps" />
+                    android:layout_marginTop="36dp"
+                    android:text="@string/isolate_will_be_notified" />
+
+                <View
+                    style="@style/HorizontalDivider"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginBottom="24dp" />
 
                 <include layout="@layout/status_footer_view_common" />
             </LinearLayout>
