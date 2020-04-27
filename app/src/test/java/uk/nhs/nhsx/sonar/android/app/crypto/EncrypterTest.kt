@@ -52,7 +52,7 @@ MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLCloV6m2p78+7EYHJyyniGdpLxiPhWk+
 -----END PRIVATE KEY-----"""
 
 const val knownPayload = "B2004D7751FBDA695CEA19D4540772BEB3BFADDA3096B2EC4917"
-const val knownTag = "B93C04EA50CE5482B9F8F2EE94DC878B"
+const val knownTag = "7BAEF8950B1A58350FD58EBB6772AB27"
 const val knownSharedSecret = "1EFF9D676FDBE0AEDBE914DB7F8F72E485870DC2554BE5B2D2DB52C6BEEE5F7A"
 const val knownDerivedKey = "F35CEB3A03CA0D6707D3DA754698F326"
 const val knownInitialisationVector = "470D6E206CB55D2890558C01B315A7E0"
@@ -136,8 +136,7 @@ class EncrypterTest {
         val endTime = DateTime.parse("2020-04-25T14:00:00Z")
             .encodeAsSecondsSinceEpoch()
         assertThat(decrypted).isEqualTo(
-            countryCode + startTime + endTime + UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
-                .uuidBytes()
+            startTime + endTime + UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").uuidBytes() + countryCode
         )
     }
 
