@@ -11,7 +11,6 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
-import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class RegistrationUseCase @Inject constructor(
@@ -59,14 +58,10 @@ class RegistrationUseCase @Inject constructor(
         return tokenRetriever.retrieveToken()
     }
 
-    private suspend fun registerDevice(firebaseToken: String) {
-        return suspendCoroutine { continuation ->
-            residentApi
-                .register(firebaseToken)
-                .onSuccess { continuation.resumeWith(Result.success(Unit)) }
-                .onError { continuation.resumeWith(Result.failure(it)) }
-        }
-    }
+    private suspend fun registerDevice(firebaseToken: String) =
+        residentApi
+            .register(firebaseToken)
+            .toCoroutine()
 
     private suspend fun registerResident(
         activationCode: String,
@@ -81,12 +76,10 @@ class RegistrationUseCase @Inject constructor(
             postalCode = postCode
         )
 
-        return suspendCoroutine { continuation ->
-            residentApi
-                .confirmDevice(confirmation)
-                .onSuccess { continuation.resumeWith(Result.success(it.id)) }
-                .onError { continuation.resumeWith(Result.failure(it)) }
-        }
+        return residentApi
+            .confirmDevice(confirmation)
+            .map { it.id }
+            .toCoroutine()
     }
 
     private fun storeSonarId(sonarId: String) {

@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.http
 import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Failed
 import uk.nhs.nhsx.sonar.android.app.http.Promise.State.InProgress
 import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Succeeded
+import kotlin.coroutines.suspendCoroutine
 
 class Promise<T : Any?> private constructor() {
 
@@ -60,6 +61,13 @@ class Promise<T : Any?> private constructor() {
 
     fun mapToUnit(): Promise<Unit> =
         map {}
+
+    suspend fun toCoroutine(): T =
+        suspendCoroutine { continuation ->
+            this
+                .onSuccess { continuation.resumeWith(Result.success(it)) }
+                .onError { continuation.resumeWith(Result.failure(it)) }
+        }
 
     private var triggered = false
 
