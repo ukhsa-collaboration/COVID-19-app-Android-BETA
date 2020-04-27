@@ -13,6 +13,8 @@ private const val STATE_UI_DATE = "dd MMMM"
 
 fun DateTime.toUtcIsoFormat(): String = toString(DATE_TIME_FORMAT)
 
+fun LocalDate.toUtcIsoFormat(): String = toString(DATE_TIME_FORMAT)
+
 fun DateTime.toUiFormat(): String = toString(STATE_UI_DATE)
 
 fun LocalDate.toUiSpinnerFormat(): String = toString(SPINNER_DATE_TIME_FORMAT)

@@ -20,6 +20,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCoughActivity
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEvents
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
@@ -57,6 +58,7 @@ interface ApplicationComponent {
     fun inject(bootCompletedReceiver: BootCompletedReceiver)
     fun inject(postCodeActivity: PostCodeActivity)
     fun inject(testerActivity: TesterActivity)
+    fun inject(diagnoseSubmitActivity: DiagnoseSubmitActivity)
     fun inject(diagnoseCoughActivity: DiagnoseCoughActivity)
     fun inject(diagnoseTemperatureActivity: DiagnoseTemperatureActivity)
     fun inject(reminderBroadcastReceiver: ReminderBroadcastReceiver)

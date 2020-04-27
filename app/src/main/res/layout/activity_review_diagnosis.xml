@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/logo"
-        android:layout_marginBottom="120dp"
+        android:layout_marginBottom="72dp"
         android:paddingTop="24dp">
 
         <LinearLayout
@@ -98,31 +98,8 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/spinner_background" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="64dp"
-                android:text="@string/diagnosis_review_description"
-                android:textColor="@color/text_sub_title"
-                android:textSize="16sp" />
-
         </LinearLayout>
     </ScrollView>
-
-    <TextView
-        android:id="@+id/submission_error"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/submit_diagnosis"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="@font/roboto_medium"
-        android:text="@string/submission_error"
-        android:textColor="@color/colorDanger"
-        android:textSize="16sp"
-        android:visibility="gone" />
-
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/submit_diagnosis"
@@ -133,7 +110,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="24dp"
-        android:text="@string/submit" />
+        android:text="@string/continue_button" />
 
 
 </RelativeLayout>
