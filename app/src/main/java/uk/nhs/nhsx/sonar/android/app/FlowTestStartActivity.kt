@@ -4,7 +4,6 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_flow_test_start.start_main_activity
@@ -19,7 +18,7 @@ class FlowTestStartActivity : AppCompatActivity() {
         setContentView(R.layout.activity_flow_test_start)
 
         start_main_activity.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            MainActivity.start(this)
         }
     }
 }

@@ -78,8 +78,8 @@ class FlowTest {
 
     @Before
     fun setup() {
-        testAppContext = TestApplicationContext(activityRule)
         ensureBluetoothEnabled()
+        testAppContext = TestApplicationContext(activityRule)
         testAppContext.closeNotificationPanel()
     }
 
@@ -112,7 +112,8 @@ class FlowTest {
             ::testLaunchWhenStateIsRed,
             ::testLaunchWhenStateIsRedAndExpired,
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
-            ::testLaunchWhenOnboardingIsFinishedButNotRegistered
+            ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
+            ::testResumeWhenBluetoothIsDisabled
         )
 
         tests.forEach {
@@ -316,6 +317,25 @@ class FlowTest {
         checkOkActivityIsShown()
     }
 
+    fun testResumeWhenBluetoothIsDisabled() {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        setUserState(DefaultState())
+        setValidSonarId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        onView(withId(R.id.latest_advice_ok)).perform(click())
+        ensureBluetoothDisabled()
+        device.pressBack()
+
+        checkViewHasText(R.id.edgeCaseTitle, R.string.re_enable_bluetooth_title)
+
+        onView(withId(R.id.takeActionButton)).perform(click())
+
+        waitForText(R.string.status_initial_title, timeoutInMs = 2_000)
+    }
+
     private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
         onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
     }
@@ -403,6 +423,19 @@ class FlowTest {
 
         await until {
             adapter.isEnabled
+        }
+    }
+
+    private fun ensureBluetoothDisabled() {
+        val activity = activityRule.activity
+        val context = activity.application.applicationContext
+        val manager = context.getSystemService(BluetoothManager::class.java) as BluetoothManager
+        val adapter = manager.adapter
+
+        adapter.disable()
+
+        await until {
+            !adapter.isEnabled
         }
     }
 
