@@ -60,7 +60,7 @@ class TestViewModel @Inject constructor(
                         ).seconds
                 }.joinToString(":")
 
-                "${it.idAsString()},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiOffsets}"
+                "${it.idAsString().replace("\n", "")},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiOffsets}"
             }
 
             val zipFile = "contact-events-exports.zip"
