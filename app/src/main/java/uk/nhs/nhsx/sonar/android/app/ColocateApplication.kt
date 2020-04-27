@@ -64,11 +64,15 @@ class ColocateApplication : Application() {
     private fun logFirebaseToken() {
         FirebaseInstanceId.getInstance().instanceId
             .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    Timber.d(task.exception, "FirebaseInstanceId.getInstanceId failed")
+                try {
+                    if (!task.isSuccessful) {
+                        Timber.d(task.exception, "FirebaseInstanceId.getInstanceId failed")
+                    }
+                    val token = task.result?.token
+                    Timber.d(task.exception, "Firebase Token = $token")
+                } catch (exception: Exception) {
+                    Timber.e(task.exception, "Firebase Token retrieval failed")
                 }
-                val token = task.result?.token
-                Timber.d(task.exception, "Firebase Token = $token")
             }
     }
 

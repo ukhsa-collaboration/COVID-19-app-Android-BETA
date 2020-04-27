@@ -22,15 +22,22 @@ class FirebaseTokenRetriever @Inject constructor() : TokenRetriever {
         return suspendCoroutine { cont ->
             FirebaseInstanceId.getInstance().instanceId
                 .addOnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        Timber.w(task.exception, "getInstanceId failed")
-                        cont.resumeWithException(
-                            task.exception ?: RuntimeException("Cannot retrieve Firebase Id")
-                        )
-                        return@addOnCompleteListener
+                    try {
+                        if (!task.isSuccessful) {
+                            Timber.w(task.exception, "getInstanceId failed")
+                            cont.resumeWithException(
+                                task.exception ?: RuntimeException("Cannot retrieve Firebase Id")
+                            )
+                            return@addOnCompleteListener
+                        }
+                        val token = task.result?.token!!
+                        cont.resume(token)
+                    } catch (exception: Exception) {
+                        // Can fail even if the status isSuccessful
+                        // https://stackoverflow.com/questions/60698622/java-io-ioexception-fis-auth-error-in-android-firebase
+                        Timber.w(exception, "getInstanceId failed")
+                        cont.resumeWithException(exception)
                     }
-                    val token = task.result?.token!!
-                    cont.resume(token)
                 }
         }
     }
