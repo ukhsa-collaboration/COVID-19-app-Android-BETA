@@ -12,16 +12,14 @@ import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import io.reactivex.Observable
 import io.reactivex.Single
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import net.lachlanmckee.timberjunit.TimberTestRule
-import org.assertj.core.api.Assertions.assertThat
-import org.awaitility.kotlin.await
-import org.awaitility.kotlin.untilNotNull
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.junit.Before
@@ -32,13 +30,14 @@ import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import java.util.Base64
 import java.util.concurrent.TimeUnit
 
+@ExperimentalCoroutinesApi
 class ScanTest {
 
     private val bleClient = mockk<RxBleClient>()
     private val scanResult = mockk<ScanResult>()
     private val bleDevice = mockk<RxBleDevice>()
     private val connection = mockk<RxBleConnection>()
-    private val saveContactWorker = FakeSaveContactWorker()
+    private val saveContactWorker = mockk<SaveContactWorker>()
 
     private val timestamp = DateTime.now(DateTimeZone.UTC)
     private val rssi = -50
@@ -85,50 +84,26 @@ class ScanTest {
     }
 
     @Test
-    fun connectionWithSingularDevice() {
-        runBlocking {
-            val sut = Scan(
-                bleClient,
-                saveContactWorker,
-                currentTimestampProvider = { timestamp },
-                bleEvents = BleEvents { Base64.getEncoder().encodeToString(it) },
-                scanIntervalLength = 1
-            )
-            sut.start(this)
+    fun connectionWithSingularDevice() = runBlocking {
+        val coroutineScope = this
+        val scan = Scan(
+            bleClient,
+            saveContactWorker,
+            currentTimestampProvider = { timestamp },
+            bleEvents = BleEvents { Base64.getEncoder().encodeToString(it) },
+            scanIntervalLength = 1
+        )
 
+        scan.start(coroutineScope)
+
+        try {
             withContext(Dispatchers.Default) {
-                await untilNotNull { saveContactWorker.savedId }
+                verify(timeout = 3_000) {
+                    saveContactWorker.createOrUpdateContactEvent(coroutineScope, identifier, rssi, timestamp)
+                }
             }
-
-            assertThat(saveContactWorker.savedId).isEqualTo(identifier)
-            assertThat(saveContactWorker.savedRssi).isEqualTo(rssi)
-            assertThat(saveContactWorker.savedTimestamp).isEqualTo(timestamp)
-
-            assertThat(saveContactWorker.saveScope).isEqualTo(this)
-            sut.stop()
+        } finally {
+            scan.stop()
         }
-    }
-}
-
-private class FakeSaveContactWorker : SaveContactWorker by mockk() {
-    var saveScope: CoroutineScope? = null
-        private set
-    var savedId: ByteArray? = null
-        private set
-    var savedRssi: Int? = null
-        private set
-    var savedTimestamp: DateTime? = null
-        private set
-
-    override fun createOrUpdateContactEvent(
-        scope: CoroutineScope,
-        id: ByteArray,
-        rssi: Int,
-        timestamp: DateTime
-    ) {
-        saveScope = scope
-        savedId = id
-        savedRssi = rssi
-        savedTimestamp = timestamp
     }
 }

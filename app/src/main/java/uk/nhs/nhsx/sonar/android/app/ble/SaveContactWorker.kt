@@ -16,23 +16,15 @@ import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.lang.IllegalArgumentException
+import javax.inject.Inject
 import javax.inject.Named
 
-interface SaveContactWorker {
-    fun createOrUpdateContactEvent(
-        scope: CoroutineScope,
-        id: ByteArray,
-        rssi: Int,
-        timestamp: DateTime
-    )
-}
-
-class DefaultSaveContactWorker(
+class SaveContactWorker @Inject constructor(
     @Named(AppModule.DISPATCHER_IO) private val dispatcher: CoroutineDispatcher,
     private val contactEventDao: ContactEventDao
-) : SaveContactWorker {
+) {
 
-    override fun createOrUpdateContactEvent(
+    fun createOrUpdateContactEvent(
         scope: CoroutineScope,
         id: ByteArray,
         rssi: Int,

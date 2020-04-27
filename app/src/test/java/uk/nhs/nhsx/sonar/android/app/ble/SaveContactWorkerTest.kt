@@ -20,7 +20,7 @@ import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 class SaveContactWorkerTest {
     private val testDispatcher = TestCoroutineDispatcher()
     private val contactEventDao = mockk<ContactEventDao>()
-    private val saveContactWorker = DefaultSaveContactWorker(testDispatcher, contactEventDao)
+    private val saveContactWorker = SaveContactWorker(testDispatcher, contactEventDao)
 
     @Test
     fun `does not save events that contain too short bluetooth identifier`() {
