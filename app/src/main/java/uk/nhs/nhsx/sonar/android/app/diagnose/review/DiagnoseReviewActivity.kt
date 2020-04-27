@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_pr
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -38,7 +39,7 @@ class DiagnoseReviewActivity : BaseActivity() {
         intent.getBooleanExtra(HAS_COUGH, false)
     }
 
-    private var symptomsDate: LocalDate? = null
+    private var symptomsDate: DateTime? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +74,7 @@ class DiagnoseReviewActivity : BaseActivity() {
 
         val dateValidator = object : CalendarConstraints.DateValidator {
             override fun isValid(timestamp: Long): Boolean {
-                val selectedDate = localDateFromMidnightUtcTimestamp(timestamp)
+                val selectedDate = DateTime(timestamp).withZone(UTC).toLocalDate()
                 val tomorrow = LocalDate.now().plusDays(1)
                 val minimum = tomorrow.minusDays(28)
                 return selectedDate.isAfter(minimum) && selectedDate.isBefore(tomorrow)
@@ -96,7 +97,7 @@ class DiagnoseReviewActivity : BaseActivity() {
             .build()
 
         picker.addOnPositiveButtonClickListener { timestamp ->
-            val selectedDate = localDateFromMidnightUtcTimestamp(timestamp)
+            val selectedDate = DateTime(timestamp).withZone(UTC).toDateTime()
             adapter.update(selectedDate.toUiSpinnerFormat())
             symptoms_date_spinner.setSelection(SpinnerAdapter.MAX_VISIBLE_POSITION + 1)
             symptomsDate = selectedDate
@@ -133,7 +134,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                         }
                         position < SpinnerAdapter.MAX_VISIBLE_POSITION -> {
                             date_selection_error.visibility = View.GONE
-                            symptomsDate = LocalDate.now().minusDays(position)
+                            symptomsDate = DateTime.now(UTC).minusDays(position)
                         }
                     }
                 }

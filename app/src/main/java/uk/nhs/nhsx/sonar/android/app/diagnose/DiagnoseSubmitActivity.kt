@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
+import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -22,7 +23,6 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
-import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import javax.inject.Inject
 
 class DiagnoseSubmitActivity : BaseActivity() {
@@ -40,7 +40,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private val symptomsDate: LocalDate by lazy {
-        LocalDate.parse(intent.getStringExtra(SYMPTOMS_DATE))
+        DateTime(intent.getLongExtra(SYMPTOMS_DATE, 0)).toLocalDate()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,9 +54,8 @@ class DiagnoseSubmitActivity : BaseActivity() {
             onBackPressed()
         }
 
-
         submit_diagnosis.setOnClickListener {
-            SubmitContactEvents.schedule(this, symptomsDate)
+            SubmitContactEventsWorker.schedule(this, symptomsDate)
             updateStateAndNavigate()
         }
     }
@@ -85,7 +84,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
             context: Context,
             hasTemperature: Boolean = false,
             hasCough: Boolean = false,
-            symptomsDate: LocalDate
+            symptomsDate: DateTime
         ) =
             context.startActivity(
                 getIntent(
@@ -100,12 +99,12 @@ class DiagnoseSubmitActivity : BaseActivity() {
             context: Context,
             hasTemperature: Boolean,
             hasCough: Boolean,
-            symptomsDate: LocalDate
+            symptomsDate: DateTime
         ) =
             Intent(context, DiagnoseSubmitActivity::class.java).apply {
                 putExtra(HAS_COUGH, hasCough)
                 putExtra(HAS_TEMPERATURE, hasTemperature)
-                putExtra(SYMPTOMS_DATE, symptomsDate.toUtcIsoFormat())
+                putExtra(SYMPTOMS_DATE, symptomsDate.millis)
             }
     }
 }

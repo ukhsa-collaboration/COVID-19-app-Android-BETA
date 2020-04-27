@@ -8,7 +8,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import org.joda.time.LocalDate
+import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 
@@ -50,7 +50,7 @@ class SpinnerAdapter(context: Context) :
         const val MAX_VISIBLE_POSITION = 3
 
         private fun getDates(context: Context): MutableList<String> {
-            val today = LocalDate.now()
+            val today = DateTime.now()
 
             return mutableListOf(
                 context.getString(R.string.today),

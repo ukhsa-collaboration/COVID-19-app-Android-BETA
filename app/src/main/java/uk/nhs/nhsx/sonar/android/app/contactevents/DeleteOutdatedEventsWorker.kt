@@ -18,7 +18,7 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class DeleteOutdatedEvents(
+class DeleteOutdatedEventsWorker(
     appContext: Context,
     private val params: WorkerParameters
 ) : CoroutineWorker(appContext, params) {
@@ -55,7 +55,7 @@ class DeleteOutdatedEvents(
             val constraints = Constraints.Builder().build()
 
             val request =
-                PeriodicWorkRequestBuilder<DeleteOutdatedEvents>(1, TimeUnit.DAYS)
+                PeriodicWorkRequestBuilder<DeleteOutdatedEventsWorker>(1, TimeUnit.DAYS)
                     .setConstraints(constraints)
                     .setInitialDelay(5, TimeUnit.SECONDS)
                     .setBackoffCriteria(BackoffPolicy.LINEAR, 1, TimeUnit.MINUTES)

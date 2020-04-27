@@ -10,7 +10,7 @@ import uk.nhs.nhsx.sonar.android.app.BootCompletedReceiver
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEvents
+import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWorker
 import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
@@ -22,7 +22,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCoughActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
-import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEvents
+import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEventsWorker
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderBroadcastReceiver
@@ -45,7 +45,7 @@ import javax.inject.Singleton
     ]
 )
 interface ApplicationComponent {
-    fun inject(deleteOutdatedEvents: DeleteOutdatedEvents)
+    fun inject(deleteOutdatedEventsWorker: DeleteOutdatedEventsWorker)
     fun inject(bluetoothService: BluetoothService)
     fun inject(isolateActivity: IsolateActivity)
     fun inject(okActivity: OkActivity)
@@ -63,7 +63,7 @@ interface ApplicationComponent {
     fun inject(diagnoseTemperatureActivity: DiagnoseTemperatureActivity)
     fun inject(reminderBroadcastReceiver: ReminderBroadcastReceiver)
     fun inject(registrationWorker: RegistrationWorker)
-    fun inject(submitContactEvents: SubmitContactEvents)
+    fun inject(submitContactEventsWorker: SubmitContactEventsWorker)
 
     fun provideRxBleClient(): RxBleClient
 }

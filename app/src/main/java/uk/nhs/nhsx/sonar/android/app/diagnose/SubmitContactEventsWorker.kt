@@ -24,11 +24,12 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.coroutines.suspendCoroutine
 
-class SubmitContactEvents(
+class SubmitContactEventsWorker(
     appContext: Context,
     private val params: WorkerParameters
 ) : CoroutineWorker(appContext, params) {
@@ -61,7 +62,6 @@ class SubmitContactEvents(
             uploadContactEvents(coLocationData)
 
             coLocationDataProvider.clearData()
-
             return Result.success()
         } catch (e: Exception) {
             Timber.e(e)
@@ -92,13 +92,13 @@ class SubmitContactEvents(
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
-            val symptomsDateUtcIsoFormat =
+            val symptomsDateUtcIsoFormat: String =
                 symptomsDate.toDateTime(LocalTime.now(), DateTimeZone.UTC).toUtcIsoFormat()
 
             val data = workDataOf(SYMPTOMS_DATE to symptomsDateUtcIsoFormat)
 
             val request =
-                OneTimeWorkRequestBuilder<SubmitContactEvents>()
+                OneTimeWorkRequestBuilder<SubmitContactEventsWorker>()
                     .setConstraints(constraints)
                     .setInputData(data)
                     .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
