@@ -164,11 +164,7 @@ class Scan @Inject constructor(
             .take(1)
             .blockingSubscribe(
                 { event ->
-                    // TODO: Temporary fix
-                    // iOS will currently send an empty array
-                    // if ID not initialised (unfinished registration).
-                    if (event.identifier.size == BluetoothIdentifier.SIZE)
-                        storeEvent(event)
+                    storeEvent(event)
                 },
                 { e ->
                     Timber.e("failed reading from $macAddress - $e")
@@ -194,7 +190,7 @@ class Scan @Inject constructor(
             connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID),
             connection.readRssi(),
             BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
-                Event(characteristicValue.clone(), rssi, scope, currentTimestampProvider())
+                Event(characteristicValue, rssi, scope, currentTimestampProvider())
             }
         )
     }

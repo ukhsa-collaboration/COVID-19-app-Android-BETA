@@ -32,7 +32,7 @@ class BluetoothIdentifier(
     }
 
     fun asBytes(): ByteArray =
-        (countryCode + cryptogram.asBytes() + txPower).clone()
+        (countryCode + cryptogram.asBytes() + txPower)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

@@ -92,4 +92,33 @@ class SaveContactWorkerTest {
             coVerify { contactEventDao.createOrUpdate(expectedEvent) }
         }
     }
+    // TODO: Remove once iOS is sending txPower and country code
+    @Test
+    fun `saves events if they are missing txPower and country code`() {
+        runBlocking {
+            val countryCode = byteArrayOf('G'.toByte(), 'B'.toByte())
+            val cryptogram = Cryptogram(ByteArray(64), ByteArray(26), ByteArray(16))
+            val bluetoothIdentifier = BluetoothIdentifier(countryCode, cryptogram, -7)
+            val timestamp = DateTime.now()
+
+            saveContactWorker.createOrUpdateContactEvent(
+                this,
+                cryptogram.asBytes(),
+                -42,
+                timestamp
+            )
+
+            val idWithDefaultTx = bluetoothIdentifier.asBytes()
+            idWithDefaultTx[idWithDefaultTx.size - 1] = 0.toByte()
+            val expectedEvent = ContactEvent(
+                sonarId = idWithDefaultTx,
+                rssiValues = listOf(-42),
+                rssiTimestamps = listOf(timestamp.millis),
+                txPower = 0,
+                duration = 60,
+                timestamp = timestamp.millis
+            )
+            coVerify { contactEventDao.createOrUpdate(expectedEvent) }
+        }
+    }
 }

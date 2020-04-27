@@ -13,6 +13,7 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
+import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.lang.IllegalArgumentException
@@ -43,6 +44,13 @@ class SaveContactWorker @Inject constructor(
                         BluetoothIdentifier.SIZE - 1 -> {
                             Timber.d("Id missing one byte, probably txPower from iOS")
                             BluetoothIdentifier.fromBytes(id + byteArrayOf(0))
+                        }
+                        Cryptogram.SIZE -> {
+                            BluetoothIdentifier.fromBytes(
+                                byteArrayOf('G'.toByte(), 'B'.toByte()) + id + byteArrayOf(
+                                    0
+                                )
+                            )
                         }
                         else -> throw IllegalArgumentException("Identifier has wrong size, must be ${BluetoothIdentifier.SIZE} or ${BluetoothIdentifier.SIZE - 1}, was ${id.size}")
                     }

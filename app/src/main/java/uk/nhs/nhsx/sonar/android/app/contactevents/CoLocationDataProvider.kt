@@ -9,6 +9,7 @@ import android.util.Base64.DEFAULT
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Seconds
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 
@@ -32,7 +33,7 @@ class CoLocationDataProvider(
         }
 
         return CoLocationEvent(
-            encryptedRemoteContactId = base64encode(contactEvent.sonarId),
+            encryptedRemoteContactId = base64encode(BluetoothIdentifier.fromBytes(contactEvent.sonarId).cryptogram.asBytes()),
             rssiValues = contactEvent.rssiValues,
             rssiOffsets = rssiOffsets,
             timestamp = startTime.toUtcIsoFormat(),

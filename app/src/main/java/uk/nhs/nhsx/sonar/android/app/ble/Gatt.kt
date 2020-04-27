@@ -40,7 +40,7 @@ class Gatt @Inject constructor(
     private var running: Boolean = true
 
     private val payload: ByteArray
-        get() = bluetoothIdProvider.provideBluetoothPayload().asBytes()
+        get() = bluetoothIdProvider.provideBluetoothPayload().cryptogram.asBytes()
 
     private val payloadIsValid: Boolean
         get() = bluetoothIdProvider.canProvideCryptogram()
