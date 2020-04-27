@@ -164,7 +164,11 @@ class Scan @Inject constructor(
             .take(1)
             .blockingSubscribe(
                 { event ->
-                    onReadSuccess(event)
+                    // TODO: Temporary fix
+                    // iOS will currently send an empty array
+                    // if ID not initialised (unfinished registration).
+                    if (event.identifier.size == Cryptogram.SIZE)
+                        storeEvent(event)
                 },
                 { e ->
                     Timber.e("failed reading from $macAddress - $e")
@@ -200,7 +204,7 @@ class Scan @Inject constructor(
         Timber.e("Connection failed with: $e")
     }
 
-    private fun onReadSuccess(event: Event) {
+    private fun storeEvent(event: Event) {
         Timber.d("Event $event")
         bleEvents.connectedDeviceEvent(
             event.identifier,
