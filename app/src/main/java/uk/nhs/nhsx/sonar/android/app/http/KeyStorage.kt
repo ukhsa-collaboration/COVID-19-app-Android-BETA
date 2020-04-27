@@ -12,10 +12,12 @@ import uk.nhs.nhsx.sonar.android.app.crypto.PROVIDER_NAME
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.spec.X509EncodedKeySpec
+import javax.crypto.SecretKey
+import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
 interface KeyStorage {
-    fun provideSecretKey(): ByteArray?
+    fun provideSecretKey(): SecretKey?
     fun storeSecretKey(encodedKey: String)
     fun providePublicKey(): PublicKey?
     fun storeServerPublicKey(encodedKey: String)
@@ -25,13 +27,18 @@ class SharedPreferencesKeyStorage @Inject constructor(
     private val context: Context
 ) : KeyStorage {
 
-    override fun provideSecretKey(): ByteArray? {
+    override fun provideSecretKey(): SecretKey? {
         val keyAsString = context
             .getSharedPreferences(SECRET_KEY_PREFERENCE_FILENAME, Context.MODE_PRIVATE)
             .getString(PREF_SECRET_KEY, null)
             ?: return null
 
-        return Base64.decode(keyAsString, Base64.DEFAULT)
+        return secretKeyFromBytes(Base64.decode(keyAsString, Base64.DEFAULT))
+    }
+
+    private fun secretKeyFromBytes(bytes: ByteArray?): SecretKey? = when {
+        bytes == null || bytes.isEmpty() -> null
+        else -> SecretKeySpec(bytes, "HMACSHA256")
     }
 
     override fun storeSecretKey(encodedKey: String) {

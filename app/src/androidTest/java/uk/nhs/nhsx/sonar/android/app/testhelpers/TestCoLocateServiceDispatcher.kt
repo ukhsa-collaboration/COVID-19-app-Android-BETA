@@ -10,6 +10,8 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
 import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
 
 class TestCoLocateServiceDispatcher : Dispatcher() {
 
@@ -17,13 +19,13 @@ class TestCoLocateServiceDispatcher : Dispatcher() {
     private var shouldSimulateError = false
 
     companion object {
-        const val SECRET_KEY: String = "secret key from TestCoLocateServiceDispatcher"
+        val SECRET_KEY: SecretKey = KeyGenerator.getInstance("HMACSHA256").generateKey()
         const val PUBLIC_KEY: String = "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu1f68MqDXbKeTqZMTHsOGToO4rKnPClXe/kE+oWqlaWZQv4J1E98cUNdpzF9JIFRPMCNdGOvTr4UB+BhQv9GWg=="
         const val RESIDENT_ID: String = "1ae5d70d-0c40-4af2-bac0-c2d18d25091f"
         const val REFERENCE_CODE: String = "REF CODE #202"
 
         val encodedSecretKey = Base64
-            .encode(SECRET_KEY.toByteArray(), Base64.DEFAULT)
+            .encode(SECRET_KEY.encoded, Base64.DEFAULT)
             .toString(Charset.defaultCharset())
     }
 

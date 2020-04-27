@@ -17,11 +17,12 @@ import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.TestQueue
 import uk.nhs.nhsx.sonar.android.app.http.assertBodyHasJson
+import uk.nhs.nhsx.sonar.android.app.http.generateSignatureKey
 
 class CoLocationApiTest {
 
     private val encryptionKeyStorage = object : KeyStorage by mockk() {
-        override fun provideSecretKey() = ByteArray(0)
+        override fun provideSecretKey() = generateSignatureKey()
     }
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"

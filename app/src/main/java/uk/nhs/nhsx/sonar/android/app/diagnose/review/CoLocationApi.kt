@@ -12,13 +12,6 @@ import uk.nhs.nhsx.sonar.android.app.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.Promise
 import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
-import javax.crypto.SecretKey
-import javax.crypto.spec.SecretKeySpec
-
-fun secretKeyFromBytes(bytes: ByteArray?): SecretKey? = when {
-    bytes == null || bytes.isEmpty() -> null
-    else -> SecretKeySpec(bytes, "HMACSHA256")
-}
 
 class CoLocationApi(
     private val baseUrl: String,
@@ -31,7 +24,7 @@ class CoLocationApi(
             method = PATCH,
             url = "$baseUrl/api/residents/${coLocationData.sonarId}",
             jsonBody = coLocationData.toJson(),
-            secretKey = secretKeyFromBytes(keyStorage.provideSecretKey()!!)
+            secretKey = keyStorage.provideSecretKey()!!
         )
         Timber.i("Sending $coLocationData")
 

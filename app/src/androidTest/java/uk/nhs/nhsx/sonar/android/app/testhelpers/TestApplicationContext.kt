@@ -35,7 +35,6 @@ import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
-import java.nio.charset.Charset
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
@@ -196,8 +195,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         await untilNotNull {
             keyStorage.provideSecretKey()
         }
-        val decodedKey = keyStorage.provideSecretKey()?.toString(Charset.defaultCharset())
-        assertThat(decodedKey).isEqualTo(TestCoLocateServiceDispatcher.SECRET_KEY)
+        assertThat(keyStorage.provideSecretKey()).isEqualTo(TestCoLocateServiceDispatcher.SECRET_KEY)
 
         await untilNotNull {
             keyStorage.providePublicKey()
