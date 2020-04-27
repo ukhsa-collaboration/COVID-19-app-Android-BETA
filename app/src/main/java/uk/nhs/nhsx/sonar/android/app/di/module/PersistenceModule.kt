@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.ble.DefaultSaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
+import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgmentsDao
 import javax.inject.Named
@@ -29,6 +30,10 @@ class PersistenceModule(private val appContext: Context) {
     @Provides
     fun provideContactEventDao(database: AppDatabase): ContactEventDao =
         database.contactEventDao()
+
+    @Provides
+    fun provideCoLocationDataProvider(dao: ContactEventDao): CoLocationDataProvider =
+        CoLocationDataProvider(dao)
 
     @Provides
     fun provideAcknowledgmentsDao(database: AppDatabase): AcknowledgmentsDao =
