@@ -24,7 +24,6 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.coroutines.suspendCoroutine
@@ -35,39 +34,36 @@ class SubmitContactEventsWorker(
 ) : CoroutineWorker(appContext, params) {
 
     @Inject
-    protected lateinit var contactEventDao: ContactEventDao
+    lateinit var contactEventDao: ContactEventDao
 
     @Inject
-    protected lateinit var coLocationApi: CoLocationApi
+    lateinit var coLocationApi: CoLocationApi
 
     @Inject
-    protected lateinit var coLocationDataProvider: CoLocationDataProvider
+    lateinit var coLocationDataProvider: CoLocationDataProvider
 
     @Inject
-    protected lateinit var sonarIdProvider: SonarIdProvider
+    lateinit var sonarIdProvider: SonarIdProvider
 
-    override suspend fun doWork(): Result {
+    private val symptomsTimestamp: String by lazy {
+        params.inputData.getString(SYMPTOMS_DATE)!!
+    }
+
+    override suspend fun doWork(): Result = runCatching {
         appComponent.inject(this)
         Timber.d("Started uploading contact events... ")
 
-        try {
-            val symptomsTimestamp = params.inputData.getString(SYMPTOMS_DATE)!!
+        val coLocationData = CoLocationData(
+            sonarId = sonarIdProvider.getSonarId(),
+            symptomsTimestamp = symptomsTimestamp,
+            contactEvents = coLocationDataProvider.getEvents()
+        )
 
-            val coLocationData = CoLocationData(
-                sonarId = sonarIdProvider.getSonarId(),
-                symptomsTimestamp = symptomsTimestamp,
-                contactEvents = coLocationDataProvider.getEvents()
-            )
+        uploadContactEvents(coLocationData)
 
-            uploadContactEvents(coLocationData)
-
-            coLocationDataProvider.clearData()
-            return Result.success()
-        } catch (e: Exception) {
-            Timber.e(e)
-            return Result.retry()
-        }
-    }
+        coLocationDataProvider.clearData()
+        Result.success()
+    }.getOrElse { Result.retry() }
 
     private suspend fun uploadContactEvents(coLocationData: CoLocationData) {
         return suspendCoroutine { continuation ->
