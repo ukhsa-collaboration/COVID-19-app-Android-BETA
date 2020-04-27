@@ -10,7 +10,6 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.location.LocationManager
 import android.location.LocationManager.PROVIDERS_CHANGED_ACTION
 import android.os.IBinder
 import androidx.core.content.ContextCompat
@@ -73,9 +72,8 @@ class BluetoothService : Service(), Delegate {
         val bleClient = appComponent.provideRxBleClient()
         val notificationHelper = BluetoothNotificationHelper(this)
         val subscriptionStatusHandler = BluetoothStatusSubscriptionHandler(this, notificationHelper)
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        locationProviderChangedReceiver = LocationProviderChangedReceiver(locationManager)
+        locationProviderChangedReceiver = LocationProviderChangedReceiver(appComponent.provideLocationHelper())
 
         val bleClientStates = bleClient.observeStateChanges().startWith(bleClient.state)
         val locationPermissionsStates = locationProviderChangedReceiver.getLocationStatus()

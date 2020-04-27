@@ -6,6 +6,7 @@ package uk.nhs.nhsx.sonar.android.app.testhelpers
 
 import android.content.ContextWrapper
 import android.content.Intent
+import android.location.LocationManager
 import android.util.Base64
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
@@ -36,6 +37,7 @@ import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
+import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
@@ -82,7 +84,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val mockServerUrl = mockServer.url("").toString().removeSuffix("/")
 
         component = DaggerTestAppComponent.builder()
-            .appModule(AppModule(app))
+            .appModule(AppModule(app, AndroidLocationHelper(app)))
             .persistenceModule(PersistenceModule(app))
             .bluetoothModule(testBluetoothModule)
             .cryptoModule(CryptoModule())

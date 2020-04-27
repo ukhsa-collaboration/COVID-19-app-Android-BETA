@@ -18,25 +18,30 @@ import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReAllowGrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableBluetoothActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableLocationActivity
+import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.ShakeListener
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
-import uk.nhs.nhsx.sonar.android.app.util.locationPermissionsGranted
+import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity() {
 
     private var locationSubscription: Disposable? = null
-    private lateinit var shakeListener: ShakeListener
 
+    @Inject
+    lateinit var locationHelper: LocationHelper
+
+    private lateinit var shakeListener: ShakeListener
     private lateinit var locationProviderChangedReceiver: LocationProviderChangedReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appComponent.inject(this)
+
         shakeListener = ShakeListener(this) {
             TesterActivity.start(this@BaseActivity)
         }
 
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        locationProviderChangedReceiver = LocationProviderChangedReceiver(locationManager)
+        locationProviderChangedReceiver = LocationProviderChangedReceiver(locationHelper)
     }
 
     override fun onResume() {
@@ -57,7 +62,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun checkLocationPermission() {
-        if (!locationPermissionsGranted()) {
+        if (!locationHelper.locationPermissionsGranted()) {
             ReAllowGrantLocationPermissionActivity.start(this)
         }
     }

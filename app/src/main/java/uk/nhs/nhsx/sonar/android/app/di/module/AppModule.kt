@@ -12,13 +12,20 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import javax.inject.Named
 
 @Module
-class AppModule(private val applicationContext: Context) {
+class AppModule(
+    private val applicationContext: Context,
+    private val locationHelper: LocationHelper
+) {
 
     @Provides
     fun provideContext() = applicationContext
+
+    @Provides
+    fun provideLocationHelper() = locationHelper
 
     @Provides
     @Named(DISPATCHER_DEFAULT)

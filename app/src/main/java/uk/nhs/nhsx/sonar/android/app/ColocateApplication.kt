@@ -28,6 +28,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
+import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import java.security.Security
 
 class ColocateApplication : Application() {
@@ -89,14 +90,9 @@ class ColocateApplication : Application() {
 
     private fun buildApplicationComponent(): ApplicationComponent =
         DaggerApplicationComponent.builder()
-            .appModule(AppModule(this))
+            .appModule(AppModule(this, AndroidLocationHelper(this)))
             .persistenceModule(PersistenceModule(this))
-            .bluetoothModule(
-                BluetoothModule(
-                    this,
-                    scanIntervalLength = 8
-                )
-            )
+            .bluetoothModule(BluetoothModule(this, scanIntervalLength = 8))
             .cryptoModule(CryptoModule())
             .networkModule(NetworkModule(BuildConfig.BASE_URL, BuildConfig.SONAR_HEADER_VALUE))
             .notificationsModule(NotificationsModule())

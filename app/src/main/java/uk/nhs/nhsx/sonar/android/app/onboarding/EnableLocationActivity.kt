@@ -12,16 +12,22 @@ import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.LocationProviderChangedReceiver
-import uk.nhs.nhsx.sonar.android.app.util.isLocationEnabled
+import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
+import javax.inject.Inject
 
-open class EnableLocationActivity :
-    AppCompatActivity(R.layout.activity_edge_case) {
+open class EnableLocationActivity : AppCompatActivity(R.layout.activity_edge_case) {
+
+    @Inject
+    lateinit var locationHelper: LocationHelper
+
     private var locationSubscription: Disposable? = null
     private lateinit var locationProviderChangedReceiver: LocationProviderChangedReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appComponent.inject(this)
 
         edgeCaseTitle.setText(R.string.enable_location_service_title)
         edgeCaseText.setText(R.string.enable_location_service_rationale)
@@ -32,13 +38,12 @@ open class EnableLocationActivity :
             startActivity(intent)
         }
 
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        locationProviderChangedReceiver = LocationProviderChangedReceiver(locationManager)
+        locationProviderChangedReceiver = LocationProviderChangedReceiver(locationHelper)
     }
 
     override fun onResume() {
         super.onResume()
-        if (isLocationEnabled()) {
+        if (locationHelper.isLocationEnabled()) {
             finish()
         }
         registerReceiver(

@@ -2,7 +2,6 @@ package uk.nhs.nhsx.sonar.android.app.ble
 
 import android.app.Activity
 import android.content.Intent
-import android.location.LocationManager
 import android.location.LocationManager.GPS_PROVIDER
 import android.location.LocationManager.NETWORK_PROVIDER
 import io.mockk.every
@@ -11,10 +10,11 @@ import io.mockk.verifyAll
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 
 class LocationProviderChangedReceiverTest {
 
-    private val location = mockk<LocationManager>()
+    private val location = mockk<LocationHelper>()
     private val receiver = LocationProviderChangedReceiver(location)
     private val context = Activity()
 

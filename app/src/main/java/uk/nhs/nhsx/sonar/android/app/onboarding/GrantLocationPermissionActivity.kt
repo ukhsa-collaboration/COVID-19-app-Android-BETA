@@ -11,12 +11,18 @@ import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.util.locationPermissionsGranted
+import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
+import javax.inject.Inject
 
-open class GrantLocationPermissionActivity :
-    AppCompatActivity(R.layout.activity_edge_case) {
+open class GrantLocationPermissionActivity : AppCompatActivity(R.layout.activity_edge_case) {
+
+    @Inject
+    lateinit var locationHelper: LocationHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appComponent.inject(this)
 
         if (Build.VERSION.SDK_INT >= 29) {
             edgeCaseTitle.setText(R.string.grant_location_permission_title)
@@ -39,7 +45,7 @@ open class GrantLocationPermissionActivity :
 
     override fun onResume() {
         super.onResume()
-        if (locationPermissionsGranted()) {
+        if (locationHelper.locationPermissionsGranted()) {
             finish()
         }
     }

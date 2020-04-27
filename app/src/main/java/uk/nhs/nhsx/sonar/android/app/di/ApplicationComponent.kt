@@ -6,6 +6,7 @@ package uk.nhs.nhsx.sonar.android.app.di
 
 import com.polidea.rxandroidble2.RxBleClient
 import dagger.Component
+import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.BootCompletedReceiver
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.MainActivity
@@ -26,11 +27,15 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEventsWorker
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderBroadcastReceiver
+import uk.nhs.nhsx.sonar.android.app.onboarding.EnableLocationActivity
+import uk.nhs.nhsx.sonar.android.app.onboarding.GrantLocationPermissionActivity
+import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
+import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import javax.inject.Singleton
 
 @Singleton
@@ -45,25 +50,33 @@ import javax.inject.Singleton
     ]
 )
 interface ApplicationComponent {
-    fun inject(deleteOutdatedEventsWorker: DeleteOutdatedEventsWorker)
-    fun inject(bluetoothService: BluetoothService)
-    fun inject(isolateActivity: IsolateActivity)
-    fun inject(okActivity: OkActivity)
-    fun inject(atRiskActivity: AtRiskActivity)
-    fun inject(diagnoseReviewActivity: DiagnoseReviewActivity)
-    fun inject(diagnoseCloseActivity: DiagnoseCloseActivity)
-    fun inject(mainActivity: MainActivity)
-    fun inject(notificationService: NotificationService)
-    fun inject(flowTestStartActivity: FlowTestStartActivity)
-    fun inject(bootCompletedReceiver: BootCompletedReceiver)
-    fun inject(postCodeActivity: PostCodeActivity)
-    fun inject(testerActivity: TesterActivity)
-    fun inject(diagnoseSubmitActivity: DiagnoseSubmitActivity)
-    fun inject(diagnoseCoughActivity: DiagnoseCoughActivity)
-    fun inject(diagnoseTemperatureActivity: DiagnoseTemperatureActivity)
-    fun inject(reminderBroadcastReceiver: ReminderBroadcastReceiver)
-    fun inject(registrationWorker: RegistrationWorker)
-    fun inject(submitContactEventsWorker: SubmitContactEventsWorker)
+    fun inject(activity: BaseActivity)
+    fun inject(activity: PermissionActivity)
+    fun inject(activity: EnableLocationActivity)
+    fun inject(activity: GrantLocationPermissionActivity)
+    fun inject(activity: IsolateActivity)
+    fun inject(activity: OkActivity)
+    fun inject(activity: AtRiskActivity)
+    fun inject(activity: DiagnoseReviewActivity)
+    fun inject(activity: DiagnoseCloseActivity)
+    fun inject(activity: MainActivity)
+    fun inject(activity: FlowTestStartActivity)
+    fun inject(activity: PostCodeActivity)
+    fun inject(activity: TesterActivity)
+    fun inject(activity: DiagnoseSubmitActivity)
+    fun inject(activity: DiagnoseCoughActivity)
+    fun inject(activity: DiagnoseTemperatureActivity)
+
+    fun inject(service: BluetoothService)
+    fun inject(service: NotificationService)
+
+    fun inject(worker: DeleteOutdatedEventsWorker)
+    fun inject(worker: RegistrationWorker)
+    fun inject(worker: SubmitContactEventsWorker)
+
+    fun inject(receiver: BootCompletedReceiver)
+    fun inject(receiver: ReminderBroadcastReceiver)
 
     fun provideRxBleClient(): RxBleClient
+    fun provideLocationHelper(): LocationHelper
 }

@@ -11,16 +11,20 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_permission.permission_continue
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
+import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
-import uk.nhs.nhsx.sonar.android.app.util.isLocationEnabled
-import uk.nhs.nhsx.sonar.android.app.util.locationPermissionsGranted
-import uk.nhs.nhsx.sonar.android.app.util.requiredLocationPermissions
+import javax.inject.Inject
 
 class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
 
+    @Inject
+    lateinit var locationHelper: LocationHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appComponent.inject(this)
 
         permission_continue.setOnClickListener {
             checkRequirements()
@@ -32,11 +36,11 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
             requestEnablingBluetooth()
             return
         }
-        if (!locationPermissionsGranted()) {
+        if (!locationHelper.locationPermissionsGranted()) {
             requestLocationPermissions()
             return
         }
-        if (!isLocationEnabled()) {
+        if (!locationHelper.isLocationEnabled()) {
             startEnableLocationServicesActivity()
             return
         }
@@ -57,7 +61,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (locationPermissionsGranted()) {
+        if (locationHelper.locationPermissionsGranted()) {
             checkRequirements()
         } else {
             startGrantLocationPermissionActivity()
@@ -72,7 +76,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
     }
 
     private fun requestLocationPermissions() {
-        requestPermissions(requiredLocationPermissions, REQUEST_LOCATION)
+        requestPermissions(locationHelper.requiredLocationPermissions, REQUEST_LOCATION)
     }
 
     private fun startOkActivity() {
