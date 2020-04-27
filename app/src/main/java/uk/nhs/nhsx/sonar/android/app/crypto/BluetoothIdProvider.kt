@@ -14,25 +14,29 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BluetoothCryptogramProvider @Inject constructor(
+class BluetoothIdProvider @Inject constructor(
     private val sonarIdProvider: SonarIdProvider,
-    private val encrypter: Encrypter
+    private val encrypter: Encrypter,
+    private val currentDateProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) }
 ) {
 
     private var latestDate: DateTime? = null
     private var cryptogram: Cryptogram? = null
+    private val countryCode = byteArrayOf(
+        'G'.toByte(),
+        'B'.toByte()
+    )
+
     private val lock = Object()
 
-    fun provideBluetoothCryptogram(): Cryptogram {
+    fun provideBluetoothPayload(): BluetoothIdentifier {
         synchronized(lock) {
-            val currentDate = DateTime.now(DateTimeZone.UTC)
-            return if (currentCryptogramExpired(currentDate)) {
+            val currentDate = currentDateProvider()
+            if (currentCryptogramExpired(currentDate)) {
                 latestDate = currentDate
                 cryptogram = generateCryptogram()
-                cryptogram!!
-            } else {
-                cryptogram!!
             }
+            return BluetoothIdentifier(countryCode, cryptogram!!)
         }
     }
 
@@ -54,7 +58,7 @@ class BluetoothCryptogramProvider @Inject constructor(
         val encodedStartDate = latestDate!!.withTimeAtStartOfDay().encodeAsSecondsSinceEpoch()
         val encodedEndDate = latestDate!!.startOfNextDay().encodeAsSecondsSinceEpoch()
         val residentIdBytes = Identifier.fromString(sonarIdProvider.getSonarId()).asBytes
-        return encrypter.encrypt(encodedStartDate + encodedEndDate + residentIdBytes + byteArrayOf('G'.toByte(), 'B'.toByte()))
+        return encrypter.encrypt(encodedStartDate, encodedEndDate, residentIdBytes, countryCode)
     }
 
     private fun DateTime.startOfNextDay(): DateTime =

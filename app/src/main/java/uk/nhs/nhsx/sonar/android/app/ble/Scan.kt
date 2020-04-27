@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import javax.inject.Inject
 import javax.inject.Named
@@ -167,7 +167,7 @@ class Scan @Inject constructor(
                     // TODO: Temporary fix
                     // iOS will currently send an empty array
                     // if ID not initialised (unfinished registration).
-                    if (event.identifier.size == Cryptogram.SIZE)
+                    if (event.identifier.size == BluetoothIdentifier.SIZE)
                         storeEvent(event)
                 },
                 { e ->
@@ -178,7 +178,7 @@ class Scan @Inject constructor(
 
     private fun negotiateMTU(connection: RxBleConnection): Single<RxBleConnection> {
         // the overhead appears to be 2 bytes
-        return connection.requestMtu(2 + Cryptogram.SIZE)
+        return connection.requestMtu(2 + BluetoothIdentifier.SIZE)
             .doOnSubscribe { Timber.i("Negotiating MTU started") }
             .doOnError { e: Throwable? ->
                 Timber.e("Failed to negotiate MTU: $e")

@@ -13,6 +13,7 @@ import org.bouncycastle.crypto.params.KDFParameters
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.ECPointUtil
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
+import org.joda.time.DateTime
 import org.junit.Before
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
@@ -50,8 +51,8 @@ const val exampleServerPrivPEM = """-----BEGIN PRIVATE KEY-----
 MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgLCloV6m2p78+7EYHJyyniGdpLxiPhWk+q2AozMlWT4ahRANCAAS7V/rwyoNdsp5OpkxMew4ZOg7isqc8KVd7+QT6haqVpZlC/gnUT3xxQ12nMX0kgVE8wI10Y69OvhQH4GFC/0Za
 -----END PRIVATE KEY-----"""
 
-const val knownPayload = "4608173DB4E454C52B9D5D900152509C"
-const val knownTag = "8F2DEB80A07AC5B89BA7BD3D6BF3B5B8"
+const val knownPayload = "B2004D7751FBDA695CEA19D4540772BEB3BFADDA3096B2EC4917"
+const val knownTag = "B93C04EA50CE5482B9F8F2EE94DC878B"
 const val knownSharedSecret = "1EFF9D676FDBE0AEDBE914DB7F8F72E485870DC2554BE5B2D2DB52C6BEEE5F7A"
 const val knownDerivedKey = "F35CEB3A03CA0D6707D3DA754698F326"
 const val knownInitialisationVector = "470D6E206CB55D2890558C01B315A7E0"
@@ -80,14 +81,16 @@ class EncrypterTest {
         val encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
 
         val plainText = UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").uuidBytes()
-
-        val cryptogram = encrypter.encrypt(plainText)
+        val countryCode = byteArrayOf('G'.toByte(), 'B'.toByte())
+        val encodedStartDate = DateTime.parse("2020-04-24T14:00:00Z").encodeAsSecondsSinceEpoch()
+        val encodedEndDate = DateTime.parse("2020-04-25T14:00:00Z").encodeAsSecondsSinceEpoch()
+        val cryptogram = encrypter.encrypt(encodedStartDate, encodedEndDate, plainText, countryCode)
 
         // strips away the leading 0x04, to save a byte
         assertThat(cryptogram.publicKeyBytes).hasSize(64)
         assertThat(cryptogram.publicKeyBytes).isEqualTo(knownXCoordinate.hexStringToByteArray() + knownYCoordinate.hexStringToByteArray())
 
-        assertThat(cryptogram.encryptedPayload).hasSize(16)
+        assertThat(cryptogram.encryptedPayload).hasSize(26)
         assertThat(cryptogram.encryptedPayload.toHexString()).isEqualTo(knownPayload)
 
         assertThat(cryptogram.tag).hasSize(16)
@@ -127,8 +130,14 @@ class EncrypterTest {
             iv = iv
         )
 
+        val countryCode = byteArrayOf('G'.toByte(), 'B'.toByte())
+        val startTime = DateTime.parse("2020-04-24T14:00:00Z")
+            .encodeAsSecondsSinceEpoch()
+        val endTime = DateTime.parse("2020-04-25T14:00:00Z")
+            .encodeAsSecondsSinceEpoch()
         assertThat(decrypted).isEqualTo(
-            UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").uuidBytes()
+            countryCode + startTime + endTime + UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                .uuidBytes()
         )
     }
 

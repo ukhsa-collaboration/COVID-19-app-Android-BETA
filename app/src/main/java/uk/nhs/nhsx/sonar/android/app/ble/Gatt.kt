@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.ble
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt.GATT_FAILURE
 import android.bluetooth.BluetoothGatt.GATT_SUCCESS
-import android.bluetooth.BluetoothGatt.STATE_DISCONNECTED
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_READ
 import android.bluetooth.BluetoothGattCharacteristic.PERMISSION_WRITE
@@ -28,23 +27,23 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothCryptogramProvider
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdProvider
 import javax.inject.Inject
 
 class Gatt @Inject constructor(
     private val context: Context,
     private val bluetoothManager: BluetoothManager,
-    private val bluetoothCryptogramProvider: BluetoothCryptogramProvider
+    private val bluetoothIdProvider: BluetoothIdProvider
 ) {
     // No semantic value, just to avoid caching.
     private var keepAliveValue: Byte = 0x00
     private var running: Boolean = true
 
     private val payload: ByteArray
-        get() = bluetoothCryptogramProvider.provideBluetoothCryptogram().asBytes()
+        get() = bluetoothIdProvider.provideBluetoothPayload().asBytes()
 
     private val payloadIsValid: Boolean
-        get() = bluetoothCryptogramProvider.canProvideCryptogram()
+        get() = bluetoothIdProvider.canProvideCryptogram()
 
     private val keepAliveCharacteristic = BluetoothGattCharacteristic(
         COLOCATE_KEEPALIVE_CHARACTERISTIC_UUID,

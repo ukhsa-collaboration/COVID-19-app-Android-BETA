@@ -23,7 +23,12 @@ class Encrypter @Inject constructor(
     private val ephemeralKeyProvider: EphemeralKeyProvider
 ) {
 
-    fun encrypt(plainText: ByteArray): Cryptogram {
+    fun encrypt(
+        encodedStartDate: ByteArray,
+        encodedEndDate: ByteArray,
+        sonarID: ByteArray,
+        countryCode: ByteArray
+    ): Cryptogram {
         val ephemeralKeyPair = ephemeralKeyProvider.provideEphemeralKeys()
 
         val localPrivateKey = ephemeralKeyPair.private
@@ -33,6 +38,7 @@ class Encrypter @Inject constructor(
         val sharedInformation = ephemeralKeyPair.public.toPublicKeyPoint()
 
         val derivedKeyAndIV = deriveSecretKeyAndIV(sharedSecret, sharedInformation)
+        val plainText = encodedStartDate + encodedEndDate + sonarID + countryCode
         val encryptionResult = aesGcmEncrypt(derivedKeyAndIV.secretKey, derivedKeyAndIV.iv, plainText)
 
         return Cryptogram(

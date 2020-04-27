@@ -12,6 +12,7 @@ import org.joda.time.DateTime
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import javax.inject.Named
 
@@ -38,9 +39,11 @@ class DefaultSaveContactWorker(
         scope.launch {
             withContext(dispatcher) {
                 try {
+                    // Attempt to create identifier from payload to ensure correct structure
+                    val identifier = BluetoothIdentifier.fromBytes(id)
                     val contactEvent =
                         ContactEvent(
-                            sonarId = id,
+                            sonarId = identifier.asBytes(),
                             rssiValues = listOf(rssi),
                             rssiTimestamps = listOf(timestamp.millis),
                             timestamp = timestamp.millis,

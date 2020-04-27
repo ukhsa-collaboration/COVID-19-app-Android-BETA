@@ -26,7 +26,7 @@ import org.joda.time.DateTime
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ColocateApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
-import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
@@ -207,8 +207,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun simulateDeviceInProximity() {
-        val firstDeviceId = ByteArray(Cryptogram.SIZE) { 1 }
-        val secondDeviceId = ByteArray(Cryptogram.SIZE) { 2 }
+        val firstDeviceId = ByteArray(BluetoothIdentifier.SIZE) { 1 }
+        val secondDeviceId = ByteArray(BluetoothIdentifier.SIZE) { 2 }
         val dao = component.getAppDatabase().contactEventDao()
 
         testRxBleClient.emitScanResults(
@@ -265,7 +265,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(body).contains(""""contactEvents":[""")
         assertThat(body).contains(
             jsonOf(
-                "encryptedRemoteContactId" to "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\nAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ==\n",
+                "encryptedRemoteContactId" to "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\nAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\n",
                 "rssiValues" to listOf(10, 20, 15),
                 "rssiOffsets" to listOf(0, 90, 610),
                 "timestamp" to "2020-04-01T14:33:13Z",
@@ -274,7 +274,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         )
         assertThat(body).contains(
             jsonOf(
-                "encryptedRemoteContactId" to "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC\nAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg==\n",
+                "encryptedRemoteContactId" to "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC\nAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC\n",
                 "rssiValues" to listOf(40),
                 "rssiOffsets" to listOf(0),
                 "timestamp" to "2020-04-01T14:34:43Z",
