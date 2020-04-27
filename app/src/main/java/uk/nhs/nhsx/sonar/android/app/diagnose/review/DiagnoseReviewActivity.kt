@@ -69,14 +69,14 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     private fun setDateSpinner() {
-        val now = DateTime.now()
         val adapter = SpinnerAdapter(this)
 
         val dateValidator = object : CalendarConstraints.DateValidator {
             override fun isValid(timestamp: Long): Boolean {
-                val selectedDate = DateTime(timestamp).withZone(UTC).toLocalDate()
+                val selectedDate = DateTime(timestamp, UTC).toLocalDate()
                 val tomorrow = LocalDate.now().plusDays(1)
                 val minimum = tomorrow.minusDays(28)
+
                 return selectedDate.isAfter(minimum) && selectedDate.isBefore(tomorrow)
             }
 
@@ -86,19 +86,20 @@ class DiagnoseReviewActivity : BaseActivity() {
 
         val calendarConstraints =
             CalendarConstraints.Builder()
-                .setStart(now.minusDays(28).millis)
-                .setEnd(now.millis)
+                .setStart(DateTime.now().minusDays(28).millis)
+                .setEnd(DateTime.now().millis)
                 .setValidator(dateValidator)
                 .build()
 
+        val today = DateTime.now()
         val picker = MaterialDatePicker.Builder.datePicker()
-            .setSelection(now.millis)
+            .setSelection(today.millis + today.zone.getOffset(today.millis))
             .setCalendarConstraints(calendarConstraints)
             .build()
 
         picker.addOnPositiveButtonClickListener { timestamp ->
-            val selectedDate = DateTime(timestamp).withZone(UTC).toDateTime()
-            adapter.update(selectedDate.toUiSpinnerFormat())
+            val selectedDate = DateTime(timestamp, UTC)
+            adapter.update(selectedDate.toLocalDate().toUiSpinnerFormat())
             symptoms_date_spinner.setSelection(SpinnerAdapter.MAX_VISIBLE_POSITION + 1)
             symptomsDate = selectedDate
         }

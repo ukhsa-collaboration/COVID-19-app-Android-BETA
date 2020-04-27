@@ -10,6 +10,7 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -40,7 +41,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private val symptomsDate: LocalDate by lazy {
-        DateTime(intent.getLongExtra(SYMPTOMS_DATE, 0)).toLocalDate()
+        DateTime(intent.getLongExtra(SYMPTOMS_DATE, 0), UTC).toLocalDate()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
