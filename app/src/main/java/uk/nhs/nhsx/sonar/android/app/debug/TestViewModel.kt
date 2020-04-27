@@ -9,6 +9,7 @@ import android.content.Intent
 import androidx.core.content.FileProvider
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,6 +41,7 @@ class TestViewModel @Inject constructor(
             eventTracker.clear()
             withContext(Dispatchers.IO) {
                 FirebaseInstanceId.getInstance().deleteInstanceId()
+                WorkManager.getInstance(context).cancelUniqueWork(REGISTRATION_WORK)
             }
 
             MainActivity.start(context)
@@ -60,7 +62,10 @@ class TestViewModel @Inject constructor(
                         ).seconds
                 }.joinToString(":")
 
-                "${it.idAsString().replace("\n", "")},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiOffsets}"
+                "${it.idAsString().replace(
+                    "\n",
+                    ""
+                )},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiOffsets}"
             }
 
             val zipFile = "contact-events-exports.zip"
@@ -90,4 +95,8 @@ class TestViewModel @Inject constructor(
     }
 
     fun observeConnectionEvents() = eventTracker.observeConnectionEvents()
+
+    companion object {
+        private const val REGISTRATION_WORK = "registration"
+    }
 }
