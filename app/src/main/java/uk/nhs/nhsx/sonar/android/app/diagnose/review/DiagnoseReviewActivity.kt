@@ -20,39 +20,26 @@ import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_pr
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
-import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEvents
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.SpinnerAdapter
-import uk.nhs.nhsx.sonar.android.app.notifications.ReminderManager
-import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.StateFactory
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
-import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
-import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
-import javax.inject.Inject
 
 class DiagnoseReviewActivity : BaseActivity() {
-    @Inject
-    protected lateinit var stateStorage: StateStorage
 
-    @Inject
-    protected lateinit var reminderManager: ReminderManager
-
-    private val symptoms: Set<Symptom> by lazy {
-        setOf(
-            if (intent.getBooleanExtra(HAS_COUGH, false)) COUGH else null,
-            if (intent.getBooleanExtra(HAS_TEMPERATURE, false)) TEMPERATURE else null
-        ).filterNotNull().toSet()
+    private val hasTemperature: Boolean by lazy {
+        intent.getBooleanExtra(HAS_TEMPERATURE, false)
     }
 
-    private var symptomsDate: LocalDate? = null
+    private val hasCough: Boolean by lazy {
+        intent.getBooleanExtra(HAS_COUGH, false)
+    }
+
+    private var symptomsDate: DateTime? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,8 +63,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                 date_selection_error.visibility = View.VISIBLE
                 date_selection_error.announceForAccessibility(getString(R.string.date_selection_error))
             } else {
-                SubmitContactEvents.schedule(this, selectedSymptomsDate)
-                updateStateAndNavigate()
+                DiagnoseSubmitActivity.start(this, hasTemperature, hasCough, selectedSymptomsDate)
             }
         }
     }
@@ -88,7 +74,7 @@ class DiagnoseReviewActivity : BaseActivity() {
 
         val dateValidator = object : CalendarConstraints.DateValidator {
             override fun isValid(timestamp: Long): Boolean {
-                val selectedDate = localDateFromMidnightUtcTimestamp(timestamp)
+                val selectedDate = DateTime(timestamp).withZone(UTC).toLocalDate()
                 val tomorrow = LocalDate.now().plusDays(1)
                 val minimum = tomorrow.minusDays(28)
                 return selectedDate.isAfter(minimum) && selectedDate.isBefore(tomorrow)
@@ -111,7 +97,7 @@ class DiagnoseReviewActivity : BaseActivity() {
             .build()
 
         picker.addOnPositiveButtonClickListener { timestamp ->
-            val selectedDate = localDateFromMidnightUtcTimestamp(timestamp)
+            val selectedDate = DateTime(timestamp).withZone(UTC).toDateTime()
             adapter.update(selectedDate.toUiSpinnerFormat())
             symptoms_date_spinner.setSelection(SpinnerAdapter.MAX_VISIBLE_POSITION + 1)
             symptomsDate = selectedDate
@@ -148,7 +134,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                         }
                         position < SpinnerAdapter.MAX_VISIBLE_POSITION -> {
                             date_selection_error.visibility = View.GONE
-                            symptomsDate = LocalDate.now().minusDays(position)
+                            symptomsDate = DateTime.now(UTC).minusDays(position)
                         }
                     }
                 }
@@ -157,13 +143,13 @@ class DiagnoseReviewActivity : BaseActivity() {
 
     private fun setSymptomsReviewAnswers() {
         review_answer_temperature.text =
-            when (TEMPERATURE in symptoms) {
+            when (hasTemperature) {
                 true -> getString(R.string.i_do_temperature)
                 false -> getString(R.string.i_do_not_temperature)
             }
 
         review_answer_cough.text =
-            when (COUGH in symptoms) {
+            when (hasCough) {
                 true -> getString(R.string.i_do_cough)
                 false -> getString(R.string.i_do_not_cough)
             }
@@ -171,34 +157,18 @@ class DiagnoseReviewActivity : BaseActivity() {
 
     private fun setSymptomsDateQuestion() {
         symptoms_date_prompt.text =
-            when (symptoms) {
-                setOf(TEMPERATURE) -> getString(R.string.symptoms_date_prompt_temperature)
-                setOf(COUGH) -> getString(R.string.symptoms_date_prompt_cough)
+            when {
+                !hasCough -> getString(R.string.symptoms_date_prompt_temperature)
+                !hasTemperature -> getString(R.string.symptoms_date_prompt_cough)
                 else -> getString(R.string.symptoms_date_prompt_all)
             }
     }
 
-    private fun updateStateAndNavigate() {
-        symptomsDate?.let {
-            val state = StateFactory.decide(it, symptoms)
-
-            if (state is RedState) {
-                reminderManager.scheduleCheckInReminder(state.until)
-            }
-
-            stateStorage.update(state)
-
-            Timber.d("Updated the state to: $state")
-
-            navigateTo(state)
-        }
-    }
-
     companion object {
 
-        const val HAS_TEMPERATURE = "HAS_TEMPERATURE"
+        private const val HAS_TEMPERATURE = "HAS_TEMPERATURE"
 
-        const val HAS_COUGH = "HAS_COUGH"
+        private const val HAS_COUGH = "HAS_COUGH"
 
         fun start(context: Context, hasTemperature: Boolean = false, hasCough: Boolean = false) =
             context.startActivity(

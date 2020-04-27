@@ -69,6 +69,7 @@
         <activity android:name=".edgecases.ReAllowGrantLocationPermissionActivity" />
         <activity android:name=".edgecases.ReEnableLocationActivity" />
         <activity android:name=".edgecases.DeviceNotSupportedActivity" />
+        <activity android:name=".diagnose.DiagnoseSubmitActivity" />
 
         <service
             android:name=".ble.BluetoothService"

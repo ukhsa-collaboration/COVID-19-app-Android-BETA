@@ -33,6 +33,7 @@ import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
+import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.hamcrest.CoreMatchers.anything
@@ -444,6 +445,11 @@ class FlowTest {
         onData(anything()).atPosition(1).perform(click())
         onView(withId(R.id.submit_diagnosis)).perform(click())
 
+        // Confirmation Step
+        onView(withId(R.id.submit_events_info)).check(matches(isDisplayed()))
+        onView(withId(R.id.submit_diagnosis)).perform(click())
+
+        // Red State
         onView(withId(R.id.status_red)).check(matches(isDisplayed()))
     }
 }

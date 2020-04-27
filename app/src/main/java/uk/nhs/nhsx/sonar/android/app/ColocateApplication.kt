@@ -17,7 +17,7 @@ import io.reactivex.plugins.RxJavaPlugins
 import net.danlew.android.joda.JodaTimeAndroid
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEvents
+import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWorker
 import uk.nhs.nhsx.sonar.android.app.crypto.PROVIDER_NAME
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
 import uk.nhs.nhsx.sonar.android.app.di.DaggerApplicationComponent
@@ -56,7 +56,7 @@ class ColocateApplication : Application() {
             }
         }
 
-        DeleteOutdatedEvents.schedule(this)
+        DeleteOutdatedEventsWorker.schedule(this)
     }
 
     private fun configureRxJavaErrorHandler() {

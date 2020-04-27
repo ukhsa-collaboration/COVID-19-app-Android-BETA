@@ -62,10 +62,6 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         DiagnoseCoughActivity.start(this, hasTemperature)
     }
 
-    protected fun setProgress(data: String) {
-        progress.text = data
-    }
-
     companion object {
         fun start(context: Context) =
             context.startActivity(getIntent(context))

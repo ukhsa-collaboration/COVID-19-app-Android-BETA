@@ -91,7 +91,7 @@ class DiagnoseCoughActivity : BaseActivity() {
 
     companion object {
 
-        const val HAS_TEMPERATURE = "HAS_TEMPERATURE"
+        private const val HAS_TEMPERATURE = "HAS_TEMPERATURE"
 
         fun start(context: Context, hasTemperature: Boolean = false) =
             context.startActivity(getIntent(context, hasTemperature))
