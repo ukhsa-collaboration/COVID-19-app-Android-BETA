@@ -11,16 +11,16 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/logo"
-        android:layout_marginBottom="72dp"
-        android:paddingTop="24dp">
+        android:layout_above="@id/submit_diagnosis"
+        android:layout_below="@+id/logo">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="8dp">
 
             <TextView
                 android:id="@+id/progress"
@@ -29,6 +29,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="@font/roboto_medium"
                 android:letterSpacing="0.1"
+                android:paddingTop="24dp"
                 android:text="@string/progress_three_thirds"
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
