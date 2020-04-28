@@ -95,6 +95,7 @@ class FlowTest {
     fun testRunner() {
         val tests = listOf(
             ::testUnsupportedDevice,
+            ::testUnsupportedDeviceOnThePermissionScreen,
             ::testRegistration,
             ::testRegistrationRetry,
             ::testBluetoothInteractions,
@@ -122,6 +123,31 @@ class FlowTest {
         testAppContext.simulateUnsupportedDevice()
 
         onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkViewHasText(R.id.edgeCaseTitle, R.string.device_not_supported_title)
+    }
+
+    fun testUnsupportedDeviceOnThePermissionScreen() {
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        onView(withId(R.id.confirm_onboarding)).perform(click())
+
+        checkPostCodeActivityIsShown()
+
+        onView(withId(R.id.postCodeContinue)).perform(click())
+
+        onView(withId(R.id.invalidPostCodeHint)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
+        closeSoftKeyboard()
+
+        testAppContext.simulateUnsupportedDevice()
+
+        onView(withId(R.id.postCodeContinue)).perform(click())
+
+        checkPermissionActivityIsShown()
+
+        onView(withId(R.id.permission_continue)).perform(click())
 
         checkViewHasText(R.id.edgeCaseTitle, R.string.device_not_supported_title)
     }

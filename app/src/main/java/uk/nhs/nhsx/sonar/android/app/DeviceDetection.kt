@@ -10,5 +10,6 @@ class DeviceDetection(
 ) {
 
     fun isUnsupported(): Boolean =
-        bluetoothAdapter == null || !packageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE)
+        bluetoothAdapter == null || !packageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE) ||
+            (bluetoothAdapter.isEnabled && !bluetoothAdapter.isMultipleAdvertisementSupported)
 }

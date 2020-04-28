@@ -36,7 +36,6 @@ import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
-import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
