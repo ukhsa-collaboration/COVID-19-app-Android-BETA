@@ -27,6 +27,7 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ColocateApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
+import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
@@ -37,6 +38,7 @@ import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
@@ -57,6 +59,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             else -> throw IllegalStateException()
         }
     }
+    private val countryCode = "GB".toByteArray()
+    private val firstDeviceId = BluetoothIdentifier(countryCode, Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)), -6)
+    private val secondDeviceId = BluetoothIdentifier(countryCode, Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)), -8)
 
     private val testBluetoothModule = TestBluetoothModule(
         app,
@@ -207,18 +212,16 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun simulateDeviceInProximity() {
-        val firstDeviceId = ByteArray(BluetoothIdentifier.SIZE) { 1 }
-        val secondDeviceId = ByteArray(BluetoothIdentifier.SIZE) { 2 }
         val dao = component.getAppDatabase().contactEventDao()
 
         testRxBleClient.emitScanResults(
             ScanResultArgs(
-                encryptedId = firstDeviceId,
+                encryptedId = firstDeviceId.asBytes(),
                 macAddress = "06-00-00-00-00-00",
                 rssiList = listOf(10)
             ),
             ScanResultArgs(
-                encryptedId = secondDeviceId,
+                encryptedId = secondDeviceId.asBytes(),
                 macAddress = "07-00-00-00-00-00",
                 rssiList = listOf(40)
             )
@@ -230,26 +233,26 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
         testRxBleClient.emitScanResults(
             ScanResultArgs(
-                encryptedId = firstDeviceId,
+                encryptedId = firstDeviceId.asBytes(),
                 macAddress = "06-00-00-00-00-00",
                 rssiList = listOf(20)
             )
         )
 
         await until {
-            runBlocking { dao.get(firstDeviceId)!!.rssiValues.size } == 2
+            runBlocking { dao.get(firstDeviceId.asBytes())!!.rssiValues.size } == 2
         }
 
         testRxBleClient.emitScanResults(
             ScanResultArgs(
-                encryptedId = firstDeviceId,
+                encryptedId = firstDeviceId.asBytes(),
                 macAddress = "06-00-00-00-00-00",
                 rssiList = listOf(15)
             )
         )
 
         await until {
-            runBlocking { dao.get(firstDeviceId)!!.rssiValues.size } == 3
+            runBlocking { dao.get(firstDeviceId.asBytes())!!.rssiValues.size } == 3
         }
     }
 
@@ -265,22 +268,22 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(body).contains(""""contactEvents":[""")
         assertThat(body).contains(
             jsonOf(
-                "encryptedRemoteContactId" to "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB\nAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ==\n",
+                "encryptedRemoteContactId" to Base64.encodeToString(firstDeviceId.cryptogram.asBytes(), Base64.DEFAULT),
                 "rssiValues" to listOf(10, 20, 15),
                 "rssiOffsets" to listOf(0, 90, 610),
                 "timestamp" to "2020-04-01T14:33:13Z",
                 "duration" to 700,
-                "txPower" to 1
+                "txPower" to -6
             )
         )
         assertThat(body).contains(
             jsonOf(
-                "encryptedRemoteContactId" to "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC\nAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg==\n",
+                "encryptedRemoteContactId" to Base64.encodeToString(secondDeviceId.cryptogram.asBytes(), Base64.DEFAULT),
                 "rssiValues" to listOf(40),
                 "rssiOffsets" to listOf(0),
                 "timestamp" to "2020-04-01T14:34:43Z",
                 "duration" to 60,
-                "txPower" to 2
+                "txPower" to -8
             )
         )
         assertThat(body.countOccurrences("""{"encryptedRemoteContactId":""")).isEqualTo(2)
@@ -299,7 +302,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         testBluetoothModule.simulateUnsupportedDevice = true
     }
 
-    fun resetTestMockServer() {
+    private fun resetTestMockServer() {
         testDispatcher = TestCoLocateServiceDispatcher()
         mockServer.shutdown()
         mockServer = MockWebServer()
