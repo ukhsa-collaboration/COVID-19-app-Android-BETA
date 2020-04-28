@@ -12,6 +12,7 @@ import android.widget.Button
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_ok.areaNotSupported
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
@@ -164,6 +165,7 @@ class OkActivity : BaseActivity() {
 
         if (state is RecoveryState) {
             recoveryDialog.show()
+            recoveryDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         } else {
             recoveryDialog.dismiss()
         }

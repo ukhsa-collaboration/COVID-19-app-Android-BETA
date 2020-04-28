@@ -10,19 +10,16 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <TextView
-        style="@style/TextViewStatus"
+        style="@style/BottomSheetTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="@string/medical_workers_instructions_title"
-        android:textColor="@color/black"
-        android:textSize="20sp" />
+        android:layout_marginTop="40dp"
+        android:text="@string/medical_workers_instructions_title" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="12dp"
         android:text="@string/medical_workers_instructions_text"
         android:textColor="@color/black"
         android:textSize="16sp" />
@@ -32,7 +29,7 @@
         style="@style/SecondaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="24dp"
-        android:minHeight="54dp"
         android:text="@string/close" />
 </LinearLayout>

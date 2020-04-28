@@ -10,12 +10,11 @@
               app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <TextView
-        style="@style/TextViewStatus"
+        style="@style/BottomSheetTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:textAlignment="center"
-        android:textColor="@color/black"
         android:text="@string/reference_code"/>
 
     <TextView
@@ -34,6 +33,7 @@
         style="@style/SecondaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/close"/>
 </LinearLayout>
