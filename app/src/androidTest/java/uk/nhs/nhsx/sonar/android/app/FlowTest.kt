@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app
 import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.os.Build
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
@@ -105,6 +106,7 @@ class FlowTest {
             ::testLaunchWhenStateIsRedAndExpired,
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
             ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
+            ::testOnboarding_WhenPermissionsNeedToBeSet,
             ::testResumeWhenBluetoothIsDisabled,
             ::testResumeWhenLocationAccessIsDisabled,
             ::testResumeWhenLocationPermissionIsRevoked
@@ -311,6 +313,65 @@ class FlowTest {
         checkOkActivityIsShown()
     }
 
+    fun testOnboarding_WhenPermissionsNeedToBeSet() {
+        fun testEnableBluetooth() {
+            onView(withId(R.id.permission_continue)).perform(click())
+
+            testAppContext.device.apply {
+                wait(Until.hasObject(By.textContains("wants to tun on Bluetooth")), 500)
+                findObject(By.text("Allow")).click()
+            }
+        }
+
+        fun testGrantLocationPermission() {
+            if (Build.VERSION.SDK_INT >= 29) {
+                checkViewHasText(R.id.edgeCaseTitle, R.string.grant_location_permission_title)
+            } else {
+                checkViewHasText(R.id.edgeCaseTitle, R.string.grant_location_permission_title_pre_10)
+            }
+
+            onView(withId(R.id.takeActionButton)).perform(click())
+            testAppContext.grantLocationPermission()
+            testAppContext.device.pressBack()
+
+            checkPermissionActivityIsShown()
+        }
+
+        fun testEnableLocationAccess() {
+            onView(withId(R.id.permission_continue)).perform(click())
+
+            onView(withId(R.id.edgeCaseTitle)).check(matches(withText(R.string.enable_location_service_title)))
+
+            onView(withId(R.id.takeActionButton)).perform(click())
+            testAppContext.enableLocationAccess()
+            testAppContext.device.pressBack()
+
+            checkPermissionActivityIsShown()
+        }
+
+        onBoardUntilPermissionsScreen()
+
+        ensureBluetoothDisabled()
+        testAppContext.disableLocationAccess()
+        testAppContext.revokeLocationPermission()
+
+        testEnableBluetooth()
+        testGrantLocationPermission()
+        testEnableLocationAccess()
+
+        onView(withId(R.id.permission_continue)).perform(click())
+
+        checkOkActivityIsShown()
+    }
+
+    private fun onBoardUntilPermissionsScreen() {
+        onView(withId(R.id.start_main_activity)).perform(click())
+        onView(withId(R.id.confirm_onboarding)).perform(click())
+        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
+        closeSoftKeyboard()
+        onView(withId(R.id.postCodeContinue)).perform(click())
+    }
+
     fun testResumeWhenBluetoothIsDisabled() {
         setUserState(DefaultState())
         setValidSonarId()
@@ -356,7 +417,7 @@ class FlowTest {
         checkViewHasText(R.id.edgeCaseTitle, R.string.re_allow_location_permission_title)
 
         onView(withId(R.id.takeActionButton)).perform(click())
-        testAppContext.acceptLocationPermission()
+        testAppContext.grantLocationPermission()
         testAppContext.device.pressBack()
 
         waitForText(R.string.status_initial_title)
@@ -367,12 +428,15 @@ class FlowTest {
     }
 
     private fun waitForText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         val context = activityRule.activity
-        val text = context.getString(stringId)
+        waitForText(context.getString(stringId), timeoutInMs)
+    }
+
+    private fun waitForText(text: String, timeoutInMs: Long = 500) {
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
         device.wait(Until.findObject(By.text(text)), timeoutInMs)
-            ?: fail("Timed out waiting for text: ${context.getString(stringId)}")
+            ?: fail("Timed out waiting for text: $text")
     }
 
     private fun checkViewHasText(@IdRes viewId: Int, @StringRes stringId: Int) {

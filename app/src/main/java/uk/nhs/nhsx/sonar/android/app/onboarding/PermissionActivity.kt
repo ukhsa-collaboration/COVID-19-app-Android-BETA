@@ -41,7 +41,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
             return
         }
         if (!locationHelper.isLocationEnabled()) {
-            startEnableLocationServicesActivity()
+            EnableLocationActivity.start(this)
             return
         }
         startOkActivity()
@@ -52,7 +52,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
         if (isBluetoothEnabled()) {
             checkRequirements()
         } else {
-            startEnableBluetoothActivity()
+            EnableBluetoothActivity.start(this)
         }
     }
 
@@ -64,7 +64,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
         if (locationHelper.locationPermissionsGranted()) {
             checkRequirements()
         } else {
-            startGrantLocationPermissionActivity()
+            GrantLocationPermissionActivity.start(this)
         }
     }
 
@@ -83,18 +83,6 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
         OkActivity.start(this)
         finish()
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-    }
-
-    private fun startGrantLocationPermissionActivity() {
-        GrantLocationPermissionActivity.start(this)
-    }
-
-    private fun startEnableBluetoothActivity() {
-        EnableBluetoothActivity.start(this)
-    }
-
-    private fun startEnableLocationServicesActivity() {
-        EnableLocationActivity.start(this)
     }
 
     companion object {

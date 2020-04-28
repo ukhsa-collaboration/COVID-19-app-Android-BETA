@@ -318,7 +318,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         testLocationHelper.locationPermissionsGranted = false
     }
 
-    fun acceptLocationPermission() {
+    fun grantLocationPermission() {
         testLocationHelper.locationPermissionsGranted = true
     }
 
