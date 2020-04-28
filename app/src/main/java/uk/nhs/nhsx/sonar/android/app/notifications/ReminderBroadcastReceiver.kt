@@ -14,12 +14,12 @@ import javax.inject.Inject
 class ReminderBroadcastReceiver : BroadcastReceiver() {
 
     @Inject
-    lateinit var reminderManager: ReminderManager
+    lateinit var reminders: Reminders
 
     override fun onReceive(context: Context, intent: Intent) {
         Timber.d("onReceive $intent")
         context.appComponent.inject(this)
 
-        reminderManager.handleReminderBroadcast(intent)
+        reminders.handleReminderBroadcast(intent)
     }
 }

@@ -15,13 +15,11 @@ import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
 
 class ReminderBroadcastReceiverTest {
 
-    private val manager = mockk<ReminderManager>(relaxed = true)
+    private val reminders = mockk<Reminders>(relaxed = true)
     private val context = mockk<Context>(relaxed = true)
     private val intent = mockk<Intent>()
     private val applicationComponent = mockk<ApplicationComponent>(relaxed = true)
-    private val sut = ReminderBroadcastReceiver().apply {
-        this.reminderManager = manager
-    }
+    private val sut = ReminderBroadcastReceiver().also { it.reminders = reminders }
 
     @Test
     fun onReceive() {
@@ -29,6 +27,6 @@ class ReminderBroadcastReceiverTest {
 
         sut.onReceive(context, intent)
 
-        verify(exactly = 1) { manager.handleReminderBroadcast(intent) }
+        verify(exactly = 1) { reminders.handleReminderBroadcast(intent) }
     }
 }

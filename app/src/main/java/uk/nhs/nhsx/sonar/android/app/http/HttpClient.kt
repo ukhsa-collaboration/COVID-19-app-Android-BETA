@@ -21,12 +21,7 @@ private fun createQueue(): RequestQueue =
 class HttpClient(
     private val queue: RequestQueue,
     private val sonarHeaderValue: String,
-    private val base64enc: (ByteArray) -> String = {
-        Base64.encodeToString(
-            it,
-            Base64.DEFAULT
-        )
-    }
+    private val base64enc: (ByteArray) -> String = { Base64.encodeToString(it, Base64.DEFAULT) }
 ) {
     constructor(sonarHeaderValue: String) : this(createQueue(), sonarHeaderValue)
 

@@ -16,7 +16,7 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.notifications.ReminderManager
+import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
@@ -31,7 +31,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     protected lateinit var stateStorage: StateStorage
 
     @Inject
-    protected lateinit var reminderManager: ReminderManager
+    protected lateinit var reminders: Reminders
 
     private val symptoms: Set<Symptom> by lazy {
         setOf(
@@ -65,7 +65,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
         val state = StateFactory.decide(symptomsDate, symptoms)
 
         if (state is RedState) {
-            reminderManager.scheduleCheckInReminder(state.until)
+            reminders.scheduleCheckInReminder(state.until)
         }
 
         stateStorage.update(state)

@@ -18,10 +18,10 @@ import androidx.core.app.NotificationManagerCompat
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.TurnBluetoothOnReceiver
+import javax.inject.Inject
 
 const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
 const val NOTIFICATION_ID_LOCATION_IS_DISABLED = 1338
-const val NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED = 1339
 const val NOTIFICATION_CHECK_IN_REMINDER = 1340
 
 class BluetoothNotificationHelper(val context: Context) {
@@ -71,19 +71,22 @@ class BluetoothNotificationHelper(val context: Context) {
     }
 }
 
-fun showCheckInReminderNotification(context: Context) {
-    val actionPendingIntent =
-        PendingIntent.getActivity(context, 0, MainActivity.getIntent(context), FLAG_UPDATE_CURRENT)
+class CheckInReminderNotification @Inject constructor(private val context: Context) {
 
-    showNotification(
-        context,
-        NOTIFICATION_CHECK_IN_REMINDER,
-        context.getString(R.string.checkin_notification_title),
-        context.getString(R.string.checkin_notification_text),
-        context.getString(R.string.checkin_notification_action),
-        actionPendingIntent,
-        autoCancel = true
-    )
+    fun show() {
+        val actionPendingIntent =
+            PendingIntent.getActivity(context, 0, MainActivity.getIntent(context), FLAG_UPDATE_CURRENT)
+
+        showNotification(
+            context,
+            NOTIFICATION_CHECK_IN_REMINDER,
+            context.getString(R.string.checkin_notification_title),
+            context.getString(R.string.checkin_notification_text),
+            context.getString(R.string.checkin_notification_action),
+            actionPendingIntent,
+            autoCancel = true
+        )
+    }
 }
 
 fun Context.notificationBuilder(): NotificationCompat.Builder =
