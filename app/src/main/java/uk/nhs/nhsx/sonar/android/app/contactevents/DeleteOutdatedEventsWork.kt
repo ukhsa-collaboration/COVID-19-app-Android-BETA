@@ -18,7 +18,7 @@ class DeleteOutdatedEventsWork(
             return Result.failure()
         }
 
-        val timestamp = dateTimeProvider().minusDays(28)
+        val timestamp = dateTimeProvider().minusDays(28).withTimeAtStartOfDay()
 
         Timber.d("Deleting all events before $timestamp")
 

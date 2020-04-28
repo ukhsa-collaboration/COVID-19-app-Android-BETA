@@ -18,19 +18,19 @@ class DeleteOutdatedEventsWorkTest {
     private val work = DeleteOutdatedEventsWork(dao) { now }
 
     @Test
-    fun `test doWork()`() = runBlockingTest {
+    fun `doWork - considers the beginning of the day()`() = runBlockingTest {
         coEvery { dao.clearOldEvents(any()) } returns Unit
 
         val result = work.doWork(3)
 
         assertThat(result).isEqualTo(Result.success())
 
-        val expectedTimeStamp = DateTime.parse("2020-04-01T11:08:10Z").millis
+        val expectedTimeStamp = DateTime.parse("2020-04-01T00:00:00Z").millis
         coVerify { dao.clearOldEvents(expectedTimeStamp) }
     }
 
     @Test
-    fun `test doWork() when attempts exceed 3`() = runBlockingTest {
+    fun `doWork - when attempts exceed 3`() = runBlockingTest {
         val result = work.doWork(4)
 
         assertThat(result).isEqualTo(Result.failure())
@@ -39,7 +39,18 @@ class DeleteOutdatedEventsWorkTest {
     }
 
     @Test
-    fun `test doWork() when clearOldEvents fails`() = runBlockingTest {
+    fun `doWork - when clearOldEvents finishes successfully`() = runBlockingTest {
+        coEvery { dao.clearOldEvents(any()) } returns Unit
+
+        val result = work.doWork(3)
+
+        assertThat(result).isEqualTo(Result.success())
+
+        coVerify { dao.clearOldEvents(any()) }
+    }
+
+    @Test
+    fun `doWork - when clearOldEvents fails`() = runBlockingTest {
         coEvery { dao.clearOldEvents(any()) } throws Exception("DAO failed")
 
         val result = work.doWork(1)
