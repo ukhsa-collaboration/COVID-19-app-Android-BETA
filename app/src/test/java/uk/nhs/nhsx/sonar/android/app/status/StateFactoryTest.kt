@@ -43,8 +43,8 @@ class StateFactoryTest {
     }
 
     @Test
-    fun `when symptoms date is 6 days ago without temperature, state should be recovery`() {
-        val state = StateFactory.decide(today.minusDays(6), setOf(Symptom.COUGH), today)
+    fun `when symptoms date is 8 days ago without temperature, state should be recovery`() {
+        val state = StateFactory.decide(today.minusDays(8), setOf(Symptom.COUGH), today)
 
         assertThat(state).isInstanceOf(RecoveryState::class.java)
     }

@@ -42,7 +42,7 @@ object StateFactory {
     private fun isMoreThanSevenDays(symptomsDate: LocalDate, today: LocalDate): Boolean {
         return !symptomsDate
             .withFixedTime()
-            .plusDays(NO_DAYS_IN_RED - 1)
+            .plusDays(NO_DAYS_IN_RED)
             .isAfter(today.withFixedTime())
     }
 
