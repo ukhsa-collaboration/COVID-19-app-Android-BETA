@@ -145,6 +145,32 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         device.wait(Until.gone(By.text(notificationTitle)), 500)
     }
 
+    fun clickOnNotificationAction(
+        @StringRes notificationTitleRes: Int,
+        @StringRes notificationTextRes: Int,
+        @StringRes notificationActionRes: Int,
+        notificationDisplayTimeout: Long = 500
+    ) {
+        val notificationTitle = testActivity.getString(notificationTitleRes)
+        val notificationText = testActivity.getString(notificationTextRes)
+        val notificationAction = testActivity.getString(notificationActionRes)
+
+        device.openNotification()
+
+        device.wait(Until.hasObject(By.text(notificationTitle)), notificationDisplayTimeout)
+
+        // Only title is shown, click on it to toggle notification,
+        // on some devices/android version it might trigger the notification action instead
+        if (!device.hasObject(By.text(notificationAction))) {
+            device.findObject(By.text(notificationTitle)).click()
+        }
+
+        assertThat(device.hasObject(By.text(notificationText))).isTrue()
+
+        device.findObject(By.text(notificationAction)).click()
+        device.pressBack()
+    }
+
     fun simulateBackendResponse(error: Boolean) {
         testDispatcher.simulateResponse(error)
     }

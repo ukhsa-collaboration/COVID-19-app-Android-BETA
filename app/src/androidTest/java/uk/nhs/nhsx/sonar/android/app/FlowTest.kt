@@ -4,6 +4,7 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
@@ -71,9 +72,9 @@ class FlowTest {
 
     @Before
     fun setup() {
-        ensureBluetoothEnabled()
         testAppContext = TestApplicationContext(activityRule)
         testAppContext.closeNotificationPanel()
+        ensureBluetoothEnabled()
     }
 
     private fun resetApp() {
@@ -110,7 +111,8 @@ class FlowTest {
             ::testOnboarding_WhenPermissionsNeedToBeSet,
             ::testResumeWhenBluetoothIsDisabled,
             ::testResumeWhenLocationAccessIsDisabled,
-            ::testResumeWhenLocationPermissionIsRevoked
+            ::testResumeWhenLocationPermissionIsRevoked,
+            ::testEnableBluetoothThroughNotification
         )
 
         tests.forEach {
@@ -449,6 +451,25 @@ class FlowTest {
         waitForText(R.string.status_initial_title)
     }
 
+    fun testEnableBluetoothThroughNotification() {
+        setUserState(DefaultState())
+        setValidSonarId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        ensureBluetoothDisabled()
+
+        testAppContext.clickOnNotificationAction(
+            notificationTitleRes = R.string.notification_bluetooth_disabled_title,
+            notificationTextRes = R.string.notification_bluetooth_disabled_text,
+            notificationActionRes = R.string.notification_bluetooth_disabled_action
+        )
+
+        checkViewHasText(R.id.edgeCaseTitle, R.string.re_enable_bluetooth_title)
+        verifyBluetoothIsEnabled()
+        checkOkActivityIsShown()
+    }
+
     private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
         onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
     }
@@ -530,29 +551,30 @@ class FlowTest {
         keyStorage.storeServerPublicKey(TestCoLocateServiceDispatcher.PUBLIC_KEY)
     }
 
-    private fun ensureBluetoothEnabled() {
+    private fun bluetoothAdapter(): BluetoothAdapter {
         val activity = activityRule.activity
         val context = activity.application.applicationContext
         val manager = context.getSystemService(BluetoothManager::class.java) as BluetoothManager
-        val adapter = manager.adapter
+        return manager.adapter
+    }
 
-        adapter.enable()
+    private fun ensureBluetoothEnabled() {
+        bluetoothAdapter().let {
+            it.enable()
+            await until { it.isEnabled }
+        }
+    }
 
-        await until {
-            adapter.isEnabled
+    private fun verifyBluetoothIsEnabled() {
+        bluetoothAdapter().let {
+            await until { it.isEnabled }
         }
     }
 
     private fun ensureBluetoothDisabled() {
-        val activity = activityRule.activity
-        val context = activity.application.applicationContext
-        val manager = context.getSystemService(BluetoothManager::class.java) as BluetoothManager
-        val adapter = manager.adapter
-
-        adapter.disable()
-
-        await until {
-            !adapter.isEnabled
+        bluetoothAdapter().let {
+            it.disable()
+            await until { !it.isEnabled }
         }
     }
 

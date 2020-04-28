@@ -13,11 +13,9 @@ import timber.log.Timber
 class TurnBluetoothOnReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Timber.d("onReceive $intent")
+
         if (intent.action == ACTION_TURN_BLUETOOTH_ON) {
-            val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
-            if (bluetoothAdapter != null && !bluetoothAdapter.isEnabled) {
-                bluetoothAdapter.enable()
-            }
+            BluetoothAdapter.getDefaultAdapter()?.enable()
         }
     }
 
