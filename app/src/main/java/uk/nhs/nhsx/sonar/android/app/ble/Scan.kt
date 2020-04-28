@@ -41,7 +41,7 @@ class Scan @Inject constructor(
     private val connections: MutableList<Disposable?> = mutableListOf()
 
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
-        .setServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
+        .setServiceUuid(ParcelUuid(SONAR_SERVICE_UUID))
         .build()
 
     private var scanDisposable: Disposable? = null
@@ -187,7 +187,7 @@ class Scan @Inject constructor(
 
     private fun read(connection: RxBleConnection, scope: CoroutineScope): Single<Event> {
         return Single.zip(
-            connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID),
+            connection.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID),
             connection.readRssi(),
             BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
                 Event(characteristicValue, rssi, scope, currentTimestampProvider())

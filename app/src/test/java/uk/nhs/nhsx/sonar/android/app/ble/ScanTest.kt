@@ -78,7 +78,7 @@ class ScanTest {
         every { connection.readRssi() } returns Single.just(rssi)
 
         identifier = ByteArray(BluetoothIdentifier.SIZE) { 1 }
-        every { connection.readCharacteristic(DEVICE_CHARACTERISTIC_UUID) } returns Single.just(
+        every { connection.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID) } returns Single.just(
             identifier
         )
     }

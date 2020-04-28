@@ -23,7 +23,7 @@ import io.reactivex.Emitter
 import io.reactivex.Observable
 import org.assertj.core.api.Assertions.fail
 import org.joda.time.Instant
-import uk.nhs.nhsx.sonar.android.app.ble.DEVICE_CHARACTERISTIC_UUID
+import uk.nhs.nhsx.sonar.android.app.ble.SONAR_IDENTITY_CHARACTERISTIC_UUID
 import java.util.UUID
 
 class TestRxBleClient(context: Context) : RxBleClient() {
@@ -69,7 +69,7 @@ class TestRxBleClient(context: Context) : RxBleClient() {
     private fun createScanResult(args: ScanResultArgs): ScanResult {
         val scanRecord =
             ScanRecordImplCompat(null, null, null, -1, Int.MIN_VALUE, null, ByteArray(0))
-        val characteristicUuid = DEVICE_CHARACTERISTIC_UUID
+        val characteristicUuid = SONAR_IDENTITY_CHARACTERISTIC_UUID
 
         val characteristic =
             BluetoothGattCharacteristic(characteristicUuid, PROPERTY_READ, PERMISSION_READ)

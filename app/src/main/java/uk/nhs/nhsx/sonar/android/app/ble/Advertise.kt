@@ -17,7 +17,7 @@ import javax.inject.Singleton
 class Advertise @Inject constructor(private val bluetoothLeAdvertiser: BluetoothLeAdvertiser) {
     private val advertiseData: AdvertiseData =
         AdvertiseData.Builder()
-            .addServiceUuid(ParcelUuid(COLOCATE_SERVICE_UUID))
+            .addServiceUuid(ParcelUuid(SONAR_SERVICE_UUID))
             .setIncludeDeviceName(false)
             .setIncludeTxPowerLevel(true)
             .build()

@@ -30,7 +30,7 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdProvider
 import javax.inject.Inject
 
-class Gatt @Inject constructor(
+class GattServer @Inject constructor(
     private val context: Context,
     private val bluetoothManager: BluetoothManager,
     private val bluetoothIdProvider: BluetoothIdProvider
@@ -46,26 +46,26 @@ class Gatt @Inject constructor(
         get() = bluetoothIdProvider.canProvideCryptogram()
 
     private val keepAliveCharacteristic = BluetoothGattCharacteristic(
-        COLOCATE_KEEPALIVE_CHARACTERISTIC_UUID,
+        SONAR_KEEPALIVE_CHARACTERISTIC_UUID,
         PROPERTY_READ + PROPERTY_WRITE + PROPERTY_WRITE_NO_RESPONSE + PROPERTY_NOTIFY,
         PERMISSION_READ + PERMISSION_WRITE
     ).also {
         it.addDescriptor(
             BluetoothGattDescriptor(
-                UPDATE_DESCRIPTOR_UUID,
+                NOTIFY_DESCRIPTOR_UUID,
                 PERMISSION_READ + PERMISSION_WRITE
             )
         )
     }
 
     private val identityCharacteristic = BluetoothGattCharacteristic(
-        DEVICE_CHARACTERISTIC_UUID,
+        SONAR_IDENTITY_CHARACTERISTIC_UUID,
         PROPERTY_READ,
         PERMISSION_READ
     )
 
     private val service: BluetoothGattService =
-        BluetoothGattService(COLOCATE_SERVICE_UUID, SERVICE_TYPE_PRIMARY)
+        BluetoothGattService(SONAR_SERVICE_UUID, SERVICE_TYPE_PRIMARY)
             .also {
                 it.addCharacteristic(
                     identityCharacteristic

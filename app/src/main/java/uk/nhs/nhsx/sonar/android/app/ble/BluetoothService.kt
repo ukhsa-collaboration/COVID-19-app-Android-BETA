@@ -51,7 +51,7 @@ class BluetoothService : Service(), Delegate {
     lateinit var scan: Scanner
 
     @Inject
-    lateinit var gatt: Gatt
+    lateinit var gattServer: GattServer
 
     @Inject
     @Named(AppModule.DISPATCHER_DEFAULT)
@@ -164,7 +164,7 @@ class BluetoothService : Service(), Delegate {
         if (!areGattAndAdvertiseRunning) {
             areGattAndAdvertiseRunning = true
             gattScope = CoroutineScope(coroutineDispatcher + Job())
-            gatt.start(gattScope)
+            gattServer.start(gattScope)
             advertise.start()
         }
     }
@@ -174,7 +174,7 @@ class BluetoothService : Service(), Delegate {
         if (areGattAndAdvertiseRunning) {
             areGattAndAdvertiseRunning = false
             gattScope.cancel()
-            gatt.stop()
+            gattServer.stop()
             advertise.stop()
         }
     }
