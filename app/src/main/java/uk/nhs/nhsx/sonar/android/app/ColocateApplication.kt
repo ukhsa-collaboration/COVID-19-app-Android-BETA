@@ -67,6 +67,7 @@ class ColocateApplication : Application() {
                 try {
                     if (!task.isSuccessful) {
                         Timber.d(task.exception, "FirebaseInstanceId.getInstanceId failed")
+                        return@addOnCompleteListener
                     }
                     val token = task.result?.token
                     Timber.d(task.exception, "Firebase Token = $token")
