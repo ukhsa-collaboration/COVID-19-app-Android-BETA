@@ -314,6 +314,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         app.sendBroadcast(Intent(testLocationHelper.providerChangedIntentAction))
     }
 
+    fun revokeLocationPermission() {
+        testLocationHelper.locationPermissionsGranted = false
+    }
+
+    fun acceptLocationPermission() {
+        testLocationHelper.locationPermissionsGranted = true
+    }
+
     private fun resetTestMockServer() {
         testDispatcher = TestCoLocateServiceDispatcher()
         mockServer.shutdown()

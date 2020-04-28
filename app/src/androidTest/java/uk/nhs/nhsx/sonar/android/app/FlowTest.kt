@@ -106,7 +106,8 @@ class FlowTest {
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
             ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
             ::testResumeWhenBluetoothIsDisabled,
-            ::testResumeWhenLocationAccessIsDisabled
+            ::testResumeWhenLocationAccessIsDisabled,
+            ::testResumeWhenLocationPermissionIsRevoked
         )
 
         tests.forEach {
@@ -338,6 +339,25 @@ class FlowTest {
         waitForText(R.string.re_enable_location_title)
 
         testAppContext.enableLocationAccess()
+
+        waitForText(R.string.status_initial_title)
+    }
+
+    fun testResumeWhenLocationPermissionIsRevoked() {
+        setUserState(DefaultState())
+        setValidSonarId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        onView(withId(R.id.latest_advice_ok)).perform(click())
+        testAppContext.revokeLocationPermission()
+        testAppContext.device.pressBack()
+
+        checkViewHasText(R.id.edgeCaseTitle, R.string.re_allow_location_permission_title)
+
+        onView(withId(R.id.takeActionButton)).perform(click())
+        testAppContext.acceptLocationPermission()
+        testAppContext.device.pressBack()
 
         waitForText(R.string.status_initial_title)
     }
