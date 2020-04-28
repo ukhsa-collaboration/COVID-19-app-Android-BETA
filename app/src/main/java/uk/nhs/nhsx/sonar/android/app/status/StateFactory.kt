@@ -23,7 +23,7 @@ object StateFactory {
     }
 
     fun red(symptomsDate: LocalDate, symptoms: Set<Symptom>, today: LocalDate = LocalDate.now()): RedState {
-        val suggested = symptomsDate.daysAfter(NO_DAYS_IN_RED - 1)
+        val suggested = symptomsDate.daysAfter(NO_DAYS_IN_RED)
         val tomorrow = today.tomorrow()
         val redStateUntil = latest(suggested, tomorrow)
 

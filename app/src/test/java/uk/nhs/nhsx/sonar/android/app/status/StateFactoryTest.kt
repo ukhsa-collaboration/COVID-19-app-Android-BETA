@@ -15,17 +15,17 @@ class StateFactoryTest {
     private val today = LocalDate(2020, 4, 10)
 
     @Test
-    fun `when symptoms date is today, red state is valid until 6 days after today`() {
+    fun `when symptoms date is today, red state is valid until 7 days after today`() {
         val state = StateFactory.red(today, setOf(Symptom.COUGH), today)
 
-        assertThat(state.until).isEqualTo(DateTime(2020, 4, 16, 7, 0).toDateTime(UTC))
+        assertThat(state.until).isEqualTo(DateTime(2020, 4, 17, 7, 0).toDateTime(UTC))
     }
 
     @Test
-    fun `when symptoms date is yesterday, red state is valid until 5 days after today`() {
+    fun `when symptoms date is yesterday, red state is valid until 6 days after today`() {
         val state = StateFactory.red(today.minusDays(1), setOf(Symptom.COUGH), today)
 
-        assertThat(state.until).isEqualTo(DateTime(2020, 4, 15, 7, 0).toDateTime(UTC))
+        assertThat(state.until).isEqualTo(DateTime(2020, 4, 16, 7, 0).toDateTime(UTC))
     }
 
     @Test
