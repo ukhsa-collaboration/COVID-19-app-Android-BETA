@@ -23,7 +23,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
-import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
@@ -95,8 +94,4 @@ class TestNotificationsModule {
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
         TestTokenRetriever()
-
-    @Provides
-    fun provideReminderTimeProvider(): ReminderTimeProvider =
-        TestReminderTimeProvider()
 }

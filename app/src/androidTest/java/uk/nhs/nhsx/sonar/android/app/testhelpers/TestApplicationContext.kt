@@ -34,7 +34,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
-import uk.nhs.nhsx.sonar.android.app.notifications.ReminderTimeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import java.util.Calendar
@@ -346,15 +345,6 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
 class TestTokenRetriever : TokenRetriever {
     override suspend fun retrieveToken() = "test firebase token #010"
-}
-
-class TestReminderTimeProvider : ReminderTimeProvider {
-    override fun provideNextReminderTime(): Long {
-        return System.currentTimeMillis() + 50
-    }
-
-    override fun setLastReminderNotificationTime(time: Calendar) {
-    }
 }
 
 private fun String.countOccurrences(substring: String): Int =

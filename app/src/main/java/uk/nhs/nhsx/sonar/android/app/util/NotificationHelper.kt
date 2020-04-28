@@ -71,23 +71,6 @@ class BluetoothNotificationHelper(val context: Context) {
     }
 }
 
-fun hideRegistrationNotFinishedNotification(context: Context) {
-    NotificationManagerCompat
-        .from(context)
-        .cancel(NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED)
-}
-
-fun showRegistrationReminderNotification(context: Context) {
-    showNotification(
-        context,
-        NOTIFICATION_ID_REGISTRATION_IS_NOT_FINISHED,
-        context.getString(R.string.notification_registration_failed_title),
-        context.getString(R.string.notification_registration_failed_text),
-        "",
-        autoCancel = true
-    )
-}
-
 fun showCheckInReminderNotification(context: Context) {
     val actionPendingIntent =
         PendingIntent.getActivity(context, 0, MainActivity.getIntent(context), FLAG_UPDATE_CURRENT)
