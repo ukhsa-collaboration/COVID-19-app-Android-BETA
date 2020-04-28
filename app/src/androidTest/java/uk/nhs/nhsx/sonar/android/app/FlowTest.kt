@@ -475,7 +475,7 @@ class FlowTest {
     }
 
     private fun waitForText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
-        val context = activityRule.activity
+        val context = testAppContext.app.applicationContext
         waitForText(context.getString(stringId), timeoutInMs)
     }
 
@@ -552,8 +552,7 @@ class FlowTest {
     }
 
     private fun bluetoothAdapter(): BluetoothAdapter {
-        val activity = activityRule.activity
-        val context = activity.application.applicationContext
+        val context = testAppContext.app.applicationContext
         val manager = context.getSystemService(BluetoothManager::class.java) as BluetoothManager
         return manager.adapter
     }
