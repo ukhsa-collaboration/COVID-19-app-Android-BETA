@@ -50,6 +50,7 @@ class BluetoothIdProviderTest {
 
     @Before
     fun setUp() {
+        every { sonarIdProvider.hasProperSonarId() } returns true
         every { sonarIdProvider.getSonarId() } returns "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
         val ecKeyFactory = KeyFactory.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME)
         every { keyStorage.providePublicKey() } returns ecKeyFactory.generatePublic(
@@ -87,5 +88,22 @@ class BluetoothIdProviderTest {
         val payload = idProvider.provideBluetoothPayload()
         // https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/bluetooth/le/BluetoothLeAdvertiser.java#144
         assertThat(payload.txPower).isEqualTo(-7)
+    }
+
+    @Test
+    fun `can provide identifier if sonarId and encrypter has public key`() {
+        assertThat(idProvider.canProvideCryptogram()).isTrue()
+    }
+
+    @Test
+    fun `can not provide identifier if sonarId is not set`() {
+        every { sonarIdProvider.hasProperSonarId() } returns false
+        assertThat(idProvider.canProvideCryptogram()).isFalse()
+    }
+
+    @Test
+    fun `can not provide identifier if encrypter is not able to encrypt`() {
+        every { keyStorage.providePublicKey() } returns null
+        assertThat(idProvider.canProvideCryptogram()).isFalse()
     }
 }

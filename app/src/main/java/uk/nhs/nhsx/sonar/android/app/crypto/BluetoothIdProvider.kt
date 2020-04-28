@@ -22,10 +22,7 @@ class BluetoothIdProvider @Inject constructor(
 
     private var latestDate: DateTime? = null
     private var cryptogram: Cryptogram? = null
-    private val countryCode = byteArrayOf(
-        'G'.toByte(),
-        'B'.toByte()
-    )
+    private val countryCode = "GB".toByteArray()
     private val txPowerLevel = (-7).toByte()
 
     private val lock = Object()
@@ -41,10 +38,8 @@ class BluetoothIdProvider @Inject constructor(
         }
     }
 
-    // TODO: Ensure encrypter has server public key
-    fun canProvideCryptogram(): Boolean {
-        return sonarIdProvider.hasProperSonarId()
-    }
+    fun canProvideCryptogram(): Boolean =
+        sonarIdProvider.hasProperSonarId() && encrypter.canEncrypt()
 
     private fun currentCryptogramExpired(currentDate: DateTime): Boolean {
         if (latestDate == null) return true

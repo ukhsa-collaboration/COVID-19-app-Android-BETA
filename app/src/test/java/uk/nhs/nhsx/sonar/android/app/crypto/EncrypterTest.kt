@@ -62,23 +62,34 @@ private val knownYCoordinate = "9F5054033AB40BECEEC90DEEA6D3D9F34572F123061BDC6A
 
 class EncrypterTest {
 
+    val ephemeralKeyProvider = mockk<EphemeralKeyProvider>()
+    val keyStorage = mockk<KeyStorage>()
+    val encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
+
     @Before
     fun setUp() {
         val bouncyCastleProvider = org.bouncycastle.jce.provider.BouncyCastleProvider()
         Security.insertProviderAt(bouncyCastleProvider, 1)
-    }
-
-    @Test
-    fun `produces the expected encrypted payload`() {
-        val ephemeralKeyProvider = mockk<EphemeralKeyProvider>()
-        val keyStorage = mockk<KeyStorage>()
         every { keyStorage.providePublicKey() } returns loadPublicKey(exampleServerPubPEM)
         every { ephemeralKeyProvider.provideEphemeralKeys() } returns KeyPair(
             loadPublicKey(exampleLocalPubPEM),
             loadPrivateKey(exampleLocalPrivPEM)
         )
+    }
 
-        val encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
+    @Test
+    fun `is able to encrypt when keys are available`() {
+        assertThat(encrypter.canEncrypt()).isTrue()
+    }
+
+    @Test
+    fun `can not encrypt when public key is unavailable`() {
+        every { keyStorage.providePublicKey() } returns null
+        assertThat(encrypter.canEncrypt()).isFalse()
+    }
+
+    @Test
+    fun `produces the expected encrypted payload`() {
 
         val plainText = UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").uuidBytes()
         val countryCode = byteArrayOf('G'.toByte(), 'B'.toByte())
@@ -136,11 +147,12 @@ class EncrypterTest {
         val endTime = DateTime.parse("2020-04-25T14:00:00Z")
             .encodeAsSecondsSinceEpoch()
         assertThat(decrypted).isEqualTo(
-            startTime + endTime + UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee").uuidBytes() + countryCode
+            startTime + endTime + UUID.fromString("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+                .uuidBytes() + countryCode
         )
     }
 
-    fun decrypt(
+    private fun decrypt(
         payload: ByteArray,
         tag: ByteArray,
         key: SecretKey,
