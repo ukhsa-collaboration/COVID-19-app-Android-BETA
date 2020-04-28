@@ -7,10 +7,11 @@ package uk.nhs.nhsx.sonar.android.app.status
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
+import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
 import javax.inject.Inject
 
 class OkViewModel @Inject constructor(
@@ -19,13 +20,9 @@ class OkViewModel @Inject constructor(
     private val registrationManager: RegistrationManager
 ) : ViewModel() {
 
-    fun viewState(): LiveData<ViewState> {
+    fun viewState(): LiveData<RegistrationState> {
         return Transformations.map(sonarIdProvider.hasProperSonarIdLiveData()) { hasProperSonarId ->
-            if (hasProperSonarId) {
-                ViewState.Success
-            } else {
-                ViewState.Progress
-            }
+            if (hasProperSonarId) Complete else InProgress
         }
     }
 
@@ -35,4 +32,9 @@ class OkViewModel @Inject constructor(
             registrationManager.register()
         }
     }
+}
+
+enum class RegistrationState {
+    Complete,
+    InProgress
 }

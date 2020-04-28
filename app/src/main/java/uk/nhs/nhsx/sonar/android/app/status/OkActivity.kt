@@ -23,7 +23,6 @@ import kotlinx.android.synthetic.main.status_footer_view_common.medicalWorkersIn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
-import uk.nhs.nhsx.sonar.android.app.ViewState
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
@@ -32,6 +31,8 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
+import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -123,21 +124,18 @@ class OkActivity : BaseActivity() {
     private fun addViewModelListener() {
         viewModel.viewState().observe(this, Observer { result ->
             when (result) {
-                ViewState.Success -> {
-                    registrationPanel.setState(RegistrationProgressPanel.State.REGISTERED)
+                Complete -> {
+                    registrationPanel.setState(result)
                     BluetoothService.start(this)
                     toggleNotFeelingCard(true)
                     toggleReferenceCodeLink(true)
                 }
-                ViewState.Progress -> {
-                    registrationPanel.setState(RegistrationProgressPanel.State.IN_PROGRESS)
+                InProgress -> {
+                    registrationPanel.setState(result)
                     toggleNotFeelingCard(false)
                     toggleReferenceCodeLink(false)
                 }
-                is ViewState.Error -> {
-                    registrationPanel.setState(RegistrationProgressPanel.State.FAILED)
-                    toggleNotFeelingCard(false)
-                    toggleReferenceCodeLink(false)
+                null -> {
                 }
             }
         })

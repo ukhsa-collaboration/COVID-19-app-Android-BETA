@@ -32,15 +32,8 @@ class SonarIdProvider @Inject constructor(context: Context) {
         sharedPreferences.edit { clear() }
 
     fun hasProperSonarIdLiveData(): LiveData<Boolean> {
-        return Transformations.map(
-            SharedPreferenceStringLiveData(
-                sharedPreferences,
-                KEY,
-                ""
-            )
-        ) { sonarId ->
-            sonarId.isNotEmpty()
-        }
+        val sonarIdLiveData = SharedPreferenceStringLiveData(sharedPreferences, KEY, "")
+        return Transformations.map(sonarIdLiveData) { sonarId -> sonarId.isNotEmpty() }
     }
 
     companion object {
