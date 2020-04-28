@@ -83,6 +83,10 @@ class TestBluetoothModule(
             super.provideDeviceDetection()
         }
     }
+
+    fun reset() {
+        simulateUnsupportedDevice = false
+    }
 }
 
 @Module

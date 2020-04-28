@@ -2,11 +2,8 @@ package uk.nhs.nhsx.sonar.android.app.ble
 
 import android.app.Activity
 import android.content.Intent
-import android.location.LocationManager.GPS_PROVIDER
-import android.location.LocationManager.NETWORK_PROVIDER
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verifyAll
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -23,30 +20,14 @@ class LocationProviderChangedReceiverTest {
     @Before
     fun setUp() {
         receiver.getLocationStatus().subscribe { latestStatus = it }
+        every { location.providerChangedIntentAction } returns "android.location.PROVIDERS_CHANGED"
     }
 
     @Test
-    fun `test onReceive() with providers changed action, gps enabled and network disabled`() {
+    fun `test onReceive() with providers changed action, location access enabled`() {
         val intent = TestIntent("android.location.PROVIDERS_CHANGED")
 
-        every { location.isProviderEnabled(GPS_PROVIDER) } returns true
-        every { location.isProviderEnabled(NETWORK_PROVIDER) } returns false
-
-        receiver.onReceive(context, intent)
-
-        verifyAll {
-            location.isProviderEnabled(GPS_PROVIDER)
-            location.isProviderEnabled(NETWORK_PROVIDER)
-        }
-        assertThat(latestStatus).isTrue()
-    }
-
-    @Test
-    fun `test onReceive() with providers changed action, gps disabled and network enabled`() {
-        val intent = TestIntent("android.location.PROVIDERS_CHANGED")
-
-        every { location.isProviderEnabled(GPS_PROVIDER) } returns false
-        every { location.isProviderEnabled(NETWORK_PROVIDER) } returns true
+        every { location.isLocationEnabled() } returns true
 
         receiver.onReceive(context, intent)
 
@@ -54,11 +35,10 @@ class LocationProviderChangedReceiverTest {
     }
 
     @Test
-    fun `test onReceive() with providers changed action, gps disabled and network disabled`() {
+    fun `test onReceive() with providers changed action, location access disabled`() {
         val intent = TestIntent("android.location.PROVIDERS_CHANGED")
 
-        every { location.isProviderEnabled(GPS_PROVIDER) } returns false
-        every { location.isProviderEnabled(NETWORK_PROVIDER) } returns false
+        every { location.isLocationEnabled() } returns false
 
         receiver.onReceive(context, intent)
 

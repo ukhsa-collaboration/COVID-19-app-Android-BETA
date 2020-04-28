@@ -4,13 +4,9 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
-import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.os.Build
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
@@ -54,6 +50,8 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestAppComponent
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.REFERENCE_CODE
+import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
+import kotlin.test.fail
 
 @RunWith(AndroidJUnit4::class)
 class FlowTest {
@@ -64,13 +62,7 @@ class FlowTest {
 
     @get:Rule
     val permissionRule: GrantPermissionRule =
-        GrantPermissionRule.grant(*permissions().toTypedArray())
-
-    private fun permissions() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        listOf(ACCESS_BACKGROUND_LOCATION, ACCESS_FINE_LOCATION)
-    } else {
-        listOf(ACCESS_COARSE_LOCATION)
-    }
+        GrantPermissionRule.grant(*AndroidLocationHelper.requiredLocationPermissions)
 
     private lateinit var testAppContext: TestApplicationContext
     private val component: TestAppComponent
@@ -113,7 +105,8 @@ class FlowTest {
             ::testLaunchWhenStateIsRedAndExpired,
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
             ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
-            ::testResumeWhenBluetoothIsDisabled
+            ::testResumeWhenBluetoothIsDisabled,
+            ::testResumeWhenLocationAccessIsDisabled
         )
 
         tests.forEach {
@@ -318,8 +311,6 @@ class FlowTest {
     }
 
     fun testResumeWhenBluetoothIsDisabled() {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
         setUserState(DefaultState())
         setValidSonarId()
 
@@ -327,13 +318,28 @@ class FlowTest {
 
         onView(withId(R.id.latest_advice_ok)).perform(click())
         ensureBluetoothDisabled()
-        device.pressBack()
+        testAppContext.device.pressBack()
 
         checkViewHasText(R.id.edgeCaseTitle, R.string.re_enable_bluetooth_title)
 
         onView(withId(R.id.takeActionButton)).perform(click())
 
         waitForText(R.string.status_initial_title, timeoutInMs = 2_000)
+    }
+
+    fun testResumeWhenLocationAccessIsDisabled() {
+        setUserState(DefaultState())
+        setValidSonarId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        testAppContext.disableLocationAccess()
+
+        waitForText(R.string.re_enable_location_title)
+
+        testAppContext.enableLocationAccess()
+
+        waitForText(R.string.status_initial_title)
     }
 
     private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
@@ -346,6 +352,7 @@ class FlowTest {
         val text = context.getString(stringId)
 
         device.wait(Until.findObject(By.text(text)), timeoutInMs)
+            ?: fail("Timed out waiting for text: ${context.getString(stringId)}")
     }
 
     private fun checkViewHasText(@IdRes viewId: Int, @StringRes stringId: Int) {

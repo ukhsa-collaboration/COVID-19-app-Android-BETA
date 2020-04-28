@@ -7,12 +7,10 @@ import android.location.LocationManager
 import android.os.Build
 import androidx.core.location.LocationManagerCompat
 
-
 interface LocationHelper {
     val requiredLocationPermissions: Array<String>
     val providerChangedIntentAction: String
     fun isLocationEnabled(): Boolean
-    fun isProviderEnabled(providerName: String): Boolean
     fun locationPermissionsGranted(): Boolean
 }
 
@@ -22,11 +20,8 @@ class AndroidLocationHelper(appContext: Context) : LocationHelper {
     private val packageManager = appContext.packageManager
     private val packageName = appContext.packageName
 
-    override val providerChangedIntentAction: String
-        get() = LocationManager.PROVIDERS_CHANGED_ACTION
-
-    override val requiredLocationPermissions: Array<String>
-        get() =
+    companion object {
+        val requiredLocationPermissions =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
@@ -35,12 +30,16 @@ class AndroidLocationHelper(appContext: Context) : LocationHelper {
             } else {
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
             }
+    }
+
+    override val providerChangedIntentAction: String
+        get() = LocationManager.PROVIDERS_CHANGED_ACTION
+
+    override val requiredLocationPermissions: Array<String>
+        get() = AndroidLocationHelper.requiredLocationPermissions
 
     override fun isLocationEnabled(): Boolean =
         LocationManagerCompat.isLocationEnabled(locationManager)
-
-    override fun isProviderEnabled(providerName: String): Boolean =
-        locationManager.isProviderEnabled(providerName)
 
     override fun locationPermissionsGranted(): Boolean =
         requiredLocationPermissions.all { permission ->

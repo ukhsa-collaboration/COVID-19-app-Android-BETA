@@ -6,7 +6,6 @@ package uk.nhs.nhsx.sonar.android.app.testhelpers
 
 import android.content.ContextWrapper
 import android.content.Intent
-import android.location.LocationManager
 import android.util.Base64
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
@@ -46,7 +45,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
     private val testActivity = rule.activity
     val app = rule.activity.application as ColocateApplication
-    private val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     private val notificationService = NotificationService()
     private val testRxBleClient = TestRxBleClient(app)
@@ -72,6 +71,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         scanIntervalLength = 2
     )
 
+    private val testLocationHelper = TestLocationHelper(AndroidLocationHelper(app))
     private var testDispatcher = TestCoLocateServiceDispatcher()
     private var mockServer = MockWebServer()
 
@@ -84,7 +84,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val mockServerUrl = mockServer.url("").toString().removeSuffix("/")
 
         component = DaggerTestAppComponent.builder()
-            .appModule(AppModule(app, AndroidLocationHelper(app)))
+            .appModule(AppModule(app, testLocationHelper))
             .persistenceModule(PersistenceModule(app))
             .bluetoothModule(testBluetoothModule)
             .cryptoModule(CryptoModule())
@@ -304,6 +304,16 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         testBluetoothModule.simulateUnsupportedDevice = true
     }
 
+    fun disableLocationAccess() {
+        testLocationHelper.locationEnabled = false
+        app.sendBroadcast(Intent(testLocationHelper.providerChangedIntentAction))
+    }
+
+    fun enableLocationAccess() {
+        testLocationHelper.locationEnabled = true
+        app.sendBroadcast(Intent(testLocationHelper.providerChangedIntentAction))
+    }
+
     private fun resetTestMockServer() {
         testDispatcher = TestCoLocateServiceDispatcher()
         mockServer.shutdown()
@@ -320,7 +330,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             getSonarIdProvider().clear()
             getActivationCodeProvider().clear()
         }
-        testBluetoothModule.simulateUnsupportedDevice = false
+        testBluetoothModule.reset()
+        testLocationHelper.reset()
         resetTestMockServer()
     }
 }

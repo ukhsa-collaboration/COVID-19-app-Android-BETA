@@ -9,7 +9,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.location.LocationManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.Disposable
@@ -68,11 +67,9 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun listenLocationChange() {
-        registerReceiver(
-            locationProviderChangedReceiver,
-            IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION)
-        )
+        registerReceiver(locationProviderChangedReceiver, IntentFilter(locationHelper.providerChangedIntentAction))
         locationProviderChangedReceiver.onCreate()
+
         locationSubscription =
             locationProviderChangedReceiver.getLocationStatus().subscribe { isLocationEnabled ->
                 if (!isLocationEnabled) {
