@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.IBinder
 import androidx.core.content.ContextCompat
 import com.polidea.rxandroidble2.RxBleClient
@@ -85,8 +84,7 @@ class BluetoothService : Service(), Delegate {
                 subscriptionStatusHandler.handle(status)
             }
 
-        registerReceiver(locationProviderChangedReceiver, IntentFilter(locationHelper.providerChangedIntentAction))
-        locationProviderChangedReceiver.onCreate()
+        locationProviderChangedReceiver.register(this)
     }
 
     private val combineStates: BiFunction<RxBleClient.State, Boolean, CombinedStatus> =
@@ -112,23 +110,16 @@ class BluetoothService : Service(), Delegate {
         Timber.d("BluetoothService onDestroy")
         unregisterReceiver(locationProviderChangedReceiver)
         stopSubServices()
-        sendBroadcastToRestartService()
+        ServiceRestarterBroadcastReceiver.sendBroadcast(this)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
         super.onTaskRemoved(rootIntent)
-        sendBroadcastToRestartService()
+        ServiceRestarterBroadcastReceiver.sendBroadcast(this)
     }
 
     private fun isBluetoothEnabled() =
         BluetoothAdapter.getDefaultAdapter().isEnabled
-
-    private fun sendBroadcastToRestartService() {
-        val broadcastIntent = Intent(this, ServiceRestarterBroadcastReceiver::class.java).apply {
-            action = ServiceRestarterBroadcastReceiver.ACTION_RESTART_BLUETOOTH_SERVICE
-        }
-        sendBroadcast(broadcastIntent)
-    }
 
     private fun injectIfNecessary() {
         if (!isInjected) {

@@ -2,7 +2,6 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
 import androidx.appcompat.app.AppCompatActivity
@@ -45,11 +44,8 @@ open class EnableLocationActivity : AppCompatActivity(R.layout.activity_edge_cas
         if (locationHelper.isLocationEnabled()) {
             finish()
         }
-        registerReceiver(
-            locationProviderChangedReceiver,
-            IntentFilter(locationHelper.providerChangedIntentAction)
-        )
-        locationProviderChangedReceiver.onCreate()
+        locationProviderChangedReceiver.register(this)
+
         locationSubscription =
             locationProviderChangedReceiver.getLocationStatus().subscribe { isLocationEnabled ->
                 if (isLocationEnabled) {

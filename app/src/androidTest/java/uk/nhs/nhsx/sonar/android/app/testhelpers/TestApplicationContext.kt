@@ -99,10 +99,12 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             .appModule(AppModule(app, testLocationHelper))
             .persistenceModule(PersistenceModule(app))
             .bluetoothModule(testBluetoothModule)
-            .cryptoModule(CryptoModule(
-                app,
-                keyStore
-            ))
+            .cryptoModule(
+                CryptoModule(
+                    app,
+                    keyStore
+                )
+            )
             .networkModule(NetworkModule(mockServerUrl, "someValue"))
             .testNotificationsModule(TestNotificationsModule())
             .build()

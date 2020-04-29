@@ -4,20 +4,17 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
-import android.bluetooth.BluetoothAdapter
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.bluetooth.BluetoothAdapter.STATE_OFF
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.Disposable
+import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStateBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.ble.LocationProviderChangedReceiver
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReAllowGrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableBluetoothActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableLocationActivity
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
-import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
+import uk.nhs.nhsx.sonar.android.app.util.isBluetoothDisabled
 import javax.inject.Inject
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -44,11 +41,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun listenBluetoothChange() {
-        if (!isBluetoothEnabled()) {
-            bluetoothHasBeenDisabled()
+        if (isBluetoothDisabled()) {
+            ReEnableBluetoothActivity.start(this)
         }
-        val filter = IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED)
-        registerReceiver(bluetoothStateBroadcastReceiver, filter)
+        bluetoothStateBroadcastReceiver.register(this)
     }
 
     private fun checkLocationPermission() {
@@ -58,8 +54,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun listenLocationChange() {
-        registerReceiver(locationProviderChangedReceiver, IntentFilter(locationHelper.providerChangedIntentAction))
-        locationProviderChangedReceiver.onCreate()
+        locationProviderChangedReceiver.register(this)
 
         locationSubscription =
             locationProviderChangedReceiver.getLocationStatus().subscribe { isLocationEnabled ->
@@ -76,22 +71,10 @@ abstract class BaseActivity : AppCompatActivity() {
         locationSubscription?.dispose()
     }
 
-    private fun bluetoothHasBeenDisabled() {
-        ReEnableBluetoothActivity.start(this)
-    }
-
-    private val bluetoothStateBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val action = intent.action
-            if (action == BluetoothAdapter.ACTION_STATE_CHANGED) {
-                val state = intent.getIntExtra(
-                    BluetoothAdapter.EXTRA_STATE,
-                    BluetoothAdapter.ERROR
-                )
-                if (state == BluetoothAdapter.STATE_OFF) {
-                    bluetoothHasBeenDisabled()
-                }
+    private val bluetoothStateBroadcastReceiver =
+        BluetoothStateBroadcastReceiver { state ->
+            if (state == STATE_OFF) {
+                ReEnableBluetoothActivity.start(this)
             }
         }
-    }
 }

@@ -20,5 +20,12 @@ class ServiceRestarterBroadcastReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_RESTART_BLUETOOTH_SERVICE = "ACTION_RESTART_BLUETOOTH_SERVICE"
+
+        fun sendBroadcast(context: Context) {
+            Intent(context, ServiceRestarterBroadcastReceiver::class.java).let {
+                it.action = ACTION_RESTART_BLUETOOTH_SERVICE
+                context.sendBroadcast(it)
+            }
+        }
     }
 }
