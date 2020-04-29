@@ -4,11 +4,17 @@ set -ev
 
 CURRENT_DIR=$(pwd)
 
+GOOGLE_SERVICES_FILE=app/google-services.json
 PLAY_SERVICES_FILE=$CURRENT_DIR/build/play-services.json
 SIGNING_KEY_STORE_FILE=$CURRENT_DIR/build/keystore
 
 if [ -z "$PLAY_TRACK" ]; then
   echo "PLAY_TRACK is required"
+  exit 1
+fi
+
+if [ -z "$GOOGLE_SERVICES" ]; then
+  echo "GOOGLE_SERVICES is required to generate $GOOGLE_SERVICES_FILE"
   exit 1
 fi
 
@@ -38,6 +44,7 @@ if [ -z "$SIGNING_KEY_PASSWORD" ]; then
 fi
 
 mkdir -p build
+echo "$GOOGLE_SERVICES" > $GOOGLE_SERVICES_FILE
 echo "$PLAY_SERVICES" > "$PLAY_SERVICES_FILE"
 
 echo "$SIGNING_KEY_STORE" > build/keystore.txt
