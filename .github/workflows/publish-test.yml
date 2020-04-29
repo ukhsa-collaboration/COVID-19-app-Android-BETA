@@ -43,6 +43,7 @@ jobs:
         uses: ./.github/actions/publish-action
         env:
           PLAY_TRACK: Test
+          GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
           SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}
           SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias}}
