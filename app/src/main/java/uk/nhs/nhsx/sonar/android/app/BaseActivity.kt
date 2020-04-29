@@ -13,12 +13,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.Disposable
 import uk.nhs.nhsx.sonar.android.app.ble.LocationProviderChangedReceiver
-import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReAllowGrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableBluetoothActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableLocationActivity
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
-import uk.nhs.nhsx.sonar.android.app.util.ShakeListener
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
 import javax.inject.Inject
 
@@ -29,24 +27,17 @@ abstract class BaseActivity : AppCompatActivity() {
     @Inject
     lateinit var locationHelper: LocationHelper
 
-    private lateinit var shakeListener: ShakeListener
     private lateinit var locationProviderChangedReceiver: LocationProviderChangedReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
 
-        shakeListener = ShakeListener(this) {
-            TesterActivity.start(this@BaseActivity)
-        }
-
         locationProviderChangedReceiver = LocationProviderChangedReceiver(locationHelper)
     }
 
     override fun onResume() {
         super.onResume()
-        shakeListener.start()
-
         listenBluetoothChange()
         checkLocationPermission()
         listenLocationChange()
@@ -80,7 +71,6 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        shakeListener.stop()
         unregisterReceiver(bluetoothStateBroadcastReceiver)
         unregisterReceiver(locationProviderChangedReceiver)
         locationSubscription?.dispose()
