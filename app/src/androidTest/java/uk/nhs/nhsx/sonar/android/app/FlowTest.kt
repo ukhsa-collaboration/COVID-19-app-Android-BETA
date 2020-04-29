@@ -108,7 +108,7 @@ class FlowTest {
             ::testLaunchWhenStateIsRedAndExpired,
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
             ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
-            ::testOnboarding_WhenPermissionsNeedToBeSet,
+//            ::testOnboarding_WhenPermissionsNeedToBeSet,
             ::testResumeWhenBluetoothIsDisabled,
             ::testResumeWhenLocationAccessIsDisabled,
             ::testResumeWhenLocationPermissionIsRevoked,
