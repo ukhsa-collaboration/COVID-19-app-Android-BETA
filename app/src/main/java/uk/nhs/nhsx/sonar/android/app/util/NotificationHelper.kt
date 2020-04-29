@@ -39,11 +39,8 @@ class BluetoothNotificationHelper(val context: Context) {
     }
 
     fun showBluetoothIsDisabled() {
-        val turnBluetoothOnIntent = Intent(context, TurnBluetoothOnReceiver::class.java).apply {
-            action = TurnBluetoothOnReceiver.ACTION_TURN_BLUETOOTH_ON
-        }
-        val actionPendingIntent =
-            PendingIntent.getBroadcast(context, 0, turnBluetoothOnIntent, FLAG_UPDATE_CURRENT)
+        val intent = TurnBluetoothOnReceiver.intent(context)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, FLAG_UPDATE_CURRENT)
 
         showNotification(
             context,
@@ -51,14 +48,13 @@ class BluetoothNotificationHelper(val context: Context) {
             context.getString(R.string.notification_bluetooth_disabled_title),
             context.getString(R.string.notification_bluetooth_disabled_text),
             context.getString(R.string.notification_bluetooth_disabled_action),
-            actionPendingIntent
+            pendingIntent
         )
     }
 
     fun showLocationIsDisabled() {
-        val turnLocationOnIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-        val actionPendingIntent =
-            PendingIntent.getActivity(context, 0, turnLocationOnIntent, FLAG_UPDATE_CURRENT)
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT)
 
         showNotification(
             context,
@@ -66,7 +62,7 @@ class BluetoothNotificationHelper(val context: Context) {
             context.getString(R.string.notification_location_disabled_title),
             context.getString(R.string.notification_location_disabled_text),
             context.getString(R.string.notification_location_disabled_action),
-            actionPendingIntent
+            pendingIntent
         )
     }
 }

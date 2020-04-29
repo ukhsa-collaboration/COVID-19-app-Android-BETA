@@ -35,7 +35,6 @@ class TestViewModel @Inject constructor(
 
     fun clear() {
         viewModelScope.launch {
-
             context.stopService(Intent(context, BluetoothService::class.java))
 
             contactEventDao.clearEvents()

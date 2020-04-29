@@ -11,6 +11,7 @@ import android.content.Intent
 import timber.log.Timber
 
 class TurnBluetoothOnReceiver : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent) {
         Timber.d("onReceive $intent")
 
@@ -21,5 +22,10 @@ class TurnBluetoothOnReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_TURN_BLUETOOTH_ON = "ACTION_TURN_BLUETOOTH_ON"
+
+        fun intent(context: Context) =
+            Intent(context, TurnBluetoothOnReceiver::class.java).apply {
+                action = ACTION_TURN_BLUETOOTH_ON
+            }
     }
 }

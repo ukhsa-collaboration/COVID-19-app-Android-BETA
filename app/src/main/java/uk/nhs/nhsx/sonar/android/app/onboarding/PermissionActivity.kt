@@ -4,7 +4,7 @@
 
 package uk.nhs.nhsx.sonar.android.app.onboarding
 
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -80,8 +80,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
 
     private fun requestEnablingBluetooth() {
         if (!isBluetoothEnabled()) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
+            startActivityForResult(Intent(ACTION_REQUEST_ENABLE), REQUEST_ENABLE_BT)
         }
     }
 
@@ -100,11 +99,7 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
         const val REQUEST_LOCATION: Int = 75
 
         fun start(context: Context) =
-            context.startActivity(
-                getIntent(
-                    context
-                )
-            )
+            context.startActivity(getIntent(context))
 
         private fun getIntent(context: Context) =
             Intent(context, PermissionActivity::class.java)

@@ -32,8 +32,7 @@ open class EnableLocationActivity : AppCompatActivity(R.layout.activity_edge_cas
         takeActionButton.setText(R.string.go_to_your_settings)
 
         takeActionButton.setOnClickListener {
-            val intent = Intent(ACTION_LOCATION_SOURCE_SETTINGS)
-            startActivity(intent)
+            startActivity(Intent(ACTION_LOCATION_SOURCE_SETTINGS))
         }
 
         locationProviderChangedReceiver = LocationProviderChangedReceiver(locationHelper)

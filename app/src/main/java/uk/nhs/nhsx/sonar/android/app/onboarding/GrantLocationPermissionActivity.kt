@@ -37,6 +37,7 @@ open class GrantLocationPermissionActivity : AppCompatActivity(R.layout.activity
             val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
             val uri = Uri.fromParts("package", packageName, null)
             intent.data = uri
+
             if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)
             }
