@@ -9,6 +9,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class StateFactoryTest {
 
@@ -16,49 +17,49 @@ class StateFactoryTest {
 
     @Test
     fun `when symptoms date is today, red state is valid until 7 days after today`() {
-        val state = StateFactory.red(today, setOf(Symptom.COUGH), today)
+        val state = StateFactory.red(today, nonEmptySetOf(Symptom.COUGH), today)
 
         assertThat(state.until).isEqualTo(DateTime(2020, 4, 17, 7, 0).toDateTime(UTC))
     }
 
     @Test
     fun `when symptoms date is yesterday, red state is valid until 6 days after today`() {
-        val state = StateFactory.red(today.minusDays(1), setOf(Symptom.COUGH), today)
+        val state = StateFactory.red(today.minusDays(1), nonEmptySetOf(Symptom.COUGH), today)
 
         assertThat(state.until).isEqualTo(DateTime(2020, 4, 16, 7, 0).toDateTime(UTC))
     }
 
     @Test
     fun `when symptoms date is 7 days ago, red state is valid until tomorrow`() {
-        val state = StateFactory.red(today.minusDays(7), setOf(Symptom.COUGH), today)
+        val state = StateFactory.red(today.minusDays(7), nonEmptySetOf(Symptom.COUGH), today)
 
         assertThat(state.until).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
     }
 
     @Test
     fun `when extending the state, red state is valid until tomorrow`() {
-        val state = StateFactory.extendedRed(Symptom.COUGH, today = today)
+        val state = StateFactory.extendedRed(nonEmptySetOf(Symptom.COUGH), today = today)
 
         assertThat(state.until).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
     }
 
     @Test
     fun `when symptoms date is 8 days ago without temperature, state should be recovery`() {
-        val state = StateFactory.decide(today.minusDays(8), setOf(Symptom.COUGH), today)
+        val state = StateFactory.decide(today.minusDays(8), nonEmptySetOf(Symptom.COUGH), today)
 
         assertThat(state).isInstanceOf(RecoveryState::class.java)
     }
 
     @Test
     fun `when symptoms date is 7 days ago without temperature, state should be recovery`() {
-        val state = StateFactory.decide(today.minusDays(7), setOf(Symptom.COUGH), today)
+        val state = StateFactory.decide(today.minusDays(7), nonEmptySetOf(Symptom.COUGH), today)
 
         assertThat(state).isInstanceOf(RecoveryState::class.java)
     }
 
     @Test
     fun `when symptoms date is 6 days ago with temperature, state should be red`() {
-        val state = StateFactory.decide(today.minusDays(6), setOf(Symptom.TEMPERATURE), today)
+        val state = StateFactory.decide(today.minusDays(6), nonEmptySetOf(Symptom.TEMPERATURE), today)
 
         assertThat(state).isInstanceOf(RedState::class.java)
     }

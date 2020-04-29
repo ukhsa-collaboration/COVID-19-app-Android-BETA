@@ -17,6 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
@@ -24,6 +25,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import javax.inject.Inject
 
 class DiagnoseSubmitActivity : BaseActivity() {
@@ -62,7 +64,10 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private fun updateStateAndNavigate() {
-        val state = StateFactory.decide(symptomsDate, symptoms)
+        val state =
+            NonEmptySet.create(symptoms)
+                ?.let { StateFactory.decide(symptomsDate, it) }
+                ?: DefaultState() // should never actually happen
 
         if (state is RedState) {
             reminders.scheduleCheckInReminder(state.until)

@@ -25,6 +25,7 @@ import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 @ExperimentalCoroutinesApi
 class DiagnoseCoughViewModelTest {
@@ -75,7 +76,7 @@ class DiagnoseCoughViewModelTest {
     @Test
     fun `initial state is red then final state Is blue`() {
         val expected = DefaultState()
-        every { stateStorage.get() } returns RedState(DateTime.now(UTC), setOf(Symptom.COUGH))
+        every { stateStorage.get() } returns RedState(DateTime.now(UTC), nonEmptySetOf(Symptom.COUGH))
         testSubject.update(hasTemperature = false, hasCough = false)
 
         verify {
@@ -88,7 +89,7 @@ class DiagnoseCoughViewModelTest {
     @Test
     fun `initial state is red then final state is recovery`() {
         val expected = RecoveryState()
-        every { stateStorage.get() } returns RedState(DateTime.now(UTC), setOf(Symptom.COUGH))
+        every { stateStorage.get() } returns RedState(DateTime.now(UTC), nonEmptySetOf(Symptom.COUGH))
         testSubject.update(hasTemperature = false, hasCough = true)
 
         verify {
@@ -105,8 +106,8 @@ class DiagnoseCoughViewModelTest {
             .toDateTime(LocalTime("7:00:00"))
             .toDateTime(UTC)
 
-        val expected = RedState(tomorrowSevenAm, setOf(Symptom.TEMPERATURE))
-        every { stateStorage.get() } returns RedState(DateTime.now(UTC), setOf(Symptom.COUGH))
+        val expected = RedState(tomorrowSevenAm, nonEmptySetOf(Symptom.TEMPERATURE))
+        every { stateStorage.get() } returns RedState(DateTime.now(UTC), nonEmptySetOf(Symptom.COUGH))
         testSubject.update(hasTemperature = true, hasCough = false)
 
         verify {
@@ -118,7 +119,7 @@ class DiagnoseCoughViewModelTest {
 
     @Test
     fun `initial state is Amber then final state Is red`() {
-        RedState(DateTime.now(UTC).plusDays(7), setOf(Symptom.TEMPERATURE))
+        RedState(DateTime.now(UTC).plusDays(7), nonEmptySetOf(Symptom.TEMPERATURE))
         every { stateStorage.get() } returns EmberState(DateTime.now(UTC))
         testSubject.update(hasTemperature = true, hasCough = false)
 

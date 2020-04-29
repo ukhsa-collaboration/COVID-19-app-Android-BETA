@@ -19,6 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class NotificationHandlerTest {
 
@@ -94,7 +95,7 @@ class NotificationHandlerTest {
     @Test
     fun testOnMessageReceived_InRedState() {
         val messageData = mapOf("status" to "POTENTIAL")
-        every { statusStorage.get() } returns RedState(DateTime.now(), setOf(Symptom.TEMPERATURE))
+        every { statusStorage.get() } returns RedState(DateTime.now(), nonEmptySetOf(Symptom.TEMPERATURE))
 
         handler.handle(messageData)
 

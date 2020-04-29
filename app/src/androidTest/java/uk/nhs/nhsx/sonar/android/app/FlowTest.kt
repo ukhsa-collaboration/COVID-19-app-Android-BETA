@@ -55,6 +55,7 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.REFERENCE_CODE
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import kotlin.test.fail
 
 @RunWith(AndroidJUnit4::class)
@@ -294,7 +295,7 @@ class FlowTest {
         setUserState(
             RedState(
                 DateTime.now(DateTimeZone.UTC).plusDays(1),
-                setOf(Symptom.TEMPERATURE)
+                nonEmptySetOf(Symptom.TEMPERATURE)
             )
         )
         setValidSonarId()
@@ -309,7 +310,7 @@ class FlowTest {
         setUserState(
             RedState(
                 DateTime.now(DateTimeZone.UTC).minusDays(1),
-                setOf(Symptom.TEMPERATURE)
+                nonEmptySetOf(Symptom.TEMPERATURE)
             )
         )
         setValidSonarId()
@@ -323,7 +324,7 @@ class FlowTest {
         setUserState(
             RedState(
                 DateTime.now(DateTimeZone.UTC).minusDays(1),
-                setOf(Symptom.TEMPERATURE)
+                nonEmptySetOf(Symptom.TEMPERATURE)
             )
         )
         setValidSonarId()

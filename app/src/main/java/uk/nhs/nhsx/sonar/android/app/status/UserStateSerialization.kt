@@ -4,6 +4,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
+import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 
 object UserStateSerialization {
 
@@ -28,14 +29,14 @@ object UserStateSerialization {
             )
         }
 
-    fun deserialize(json: String): UserState {
+    fun deserialize(json: String): UserState? {
         val jsonObj = JSONObject(json)
         val type = jsonObj.getString("type")
         val until = DateTime(jsonObj.getLong("until"), DateTimeZone.UTC)
 
         return when (type) {
             "EmberState" -> EmberState(until)
-            "RedState" -> RedState(until, jsonObj.getSymptoms())
+            "RedState" -> jsonObj.getSymptoms()?.let { RedState(until, it) }
             "RecoveryState" -> RecoveryState(until)
             else -> DefaultState(until)
         }
@@ -43,7 +44,7 @@ object UserStateSerialization {
 
     private fun UserState.type() = javaClass.simpleName
 
-    private fun JSONObject.getSymptoms(): Set<Symptom> {
+    private fun JSONObject.getSymptoms(): NonEmptySet<Symptom>? {
         val array = getJSONArray("symptoms")
         val symptoms = mutableSetOf<Symptom>()
 
@@ -53,6 +54,6 @@ object UserStateSerialization {
             symptoms.add(symptom)
         }
 
-        return symptoms
+        return NonEmptySet.create(symptoms)
     }
 }

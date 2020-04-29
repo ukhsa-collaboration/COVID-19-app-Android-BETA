@@ -6,6 +6,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
+import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 
 sealed class UserState {
     abstract val until: DateTime
@@ -19,7 +20,7 @@ data class RecoveryState(override val until: DateTime = DateTime.now(UTC)) : Use
 
 data class EmberState(override val until: DateTime) : UserState()
 
-data class RedState(override val until: DateTime, val symptoms: Set<Symptom>) : UserState()
+data class RedState(override val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
 
 enum class Symptom {
     COUGH,

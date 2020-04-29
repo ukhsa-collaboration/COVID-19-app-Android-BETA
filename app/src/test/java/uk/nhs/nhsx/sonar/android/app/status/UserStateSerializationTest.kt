@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class UserStateSerializationTest {
 
@@ -44,7 +45,7 @@ class UserStateSerializationTest {
     @Test
     fun `serialize red state`() {
         val until = DateTime(1587241302263L, UTC)
-        val symptoms = setOf(Symptom.COUGH, Symptom.TEMPERATURE)
+        val symptoms = nonEmptySetOf(Symptom.COUGH, Symptom.TEMPERATURE)
         val redState = RedState(until, symptoms)
 
         assertThat(serialize(redState))
@@ -80,6 +81,12 @@ class UserStateSerializationTest {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"RedState"}"""))
-            .isEqualTo(RedState(until, setOf(Symptom.COUGH)))
+            .isEqualTo(RedState(until, nonEmptySetOf(Symptom.COUGH)))
+    }
+
+    @Test
+    fun `deserialize invalid red state`() {
+        assertThat(deserialize("""{"until":1587241302262,"symptoms":[],"type":"RedState"}"""))
+            .isNull()
     }
 }

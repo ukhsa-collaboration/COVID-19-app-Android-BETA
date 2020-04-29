@@ -12,6 +12,7 @@ import uk.nhs.nhsx.sonar.android.app.status.StateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserState
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import javax.inject.Inject
 
 class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: StateStorage) :
@@ -37,10 +38,10 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
     private fun handleSimplified(hasTemperature: Boolean, hasCough: Boolean): StateResult {
         return when {
             hasTemperature and hasCough ->
-                StateFactory.extendedRed(Symptom.COUGH, Symptom.TEMPERATURE)
+                StateFactory.extendedRed(nonEmptySetOf(Symptom.COUGH, Symptom.TEMPERATURE))
 
             hasTemperature ->
-                StateFactory.extendedRed(Symptom.TEMPERATURE)
+                StateFactory.extendedRed(nonEmptySetOf(Symptom.TEMPERATURE))
 
             hasCough ->
                 RecoveryState()
