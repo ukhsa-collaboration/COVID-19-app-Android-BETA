@@ -92,7 +92,7 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
 
 fun Context.notificationBuilder(): NotificationCompat.Builder =
     NotificationCompat.Builder(this, createNotificationChannelReturningId())
-        .setSmallIcon(R.mipmap.ic_launcher_round)
+        .setSmallIcon(R.mipmap.ic_launcher)
         .setContentIntent(mainActivityPendingContent(this))
 
 private fun showNotification(
@@ -107,7 +107,7 @@ private fun showNotification(
 ) {
     val builder = context
         .notificationBuilder()
-        .setSmallIcon(R.mipmap.ic_launcher_round)
+        .setSmallIcon(R.mipmap.ic_launcher)
         .setContentTitle(contentTitle)
         .setStyle(
             NotificationCompat.BigTextStyle()
