@@ -66,7 +66,7 @@ class TestViewModel @Inject constructor(
                 "${Base64.encodeToString(it.sonarId, Base64.DEFAULT).replace(
                     "\n",
                     ""
-                )},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiOffsets}"
+                )},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiOffsets"
             }
 
             val zipFile = "contact-events-exports.zip"
