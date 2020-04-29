@@ -36,8 +36,8 @@ import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
-import java.security.KeyStore
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
+import java.security.KeyStore
 import java.util.concurrent.TimeUnit
 import javax.crypto.Mac
 import kotlin.random.Random

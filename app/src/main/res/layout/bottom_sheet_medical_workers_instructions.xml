@@ -10,6 +10,7 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <TextView
+        android:id="@+id/medicalWorkersInstructionsTitle"
         style="@style/BottomSheetTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +18,7 @@
         android:text="@string/medical_workers_instructions_title" />
 
     <TextView
+        android:id="@+id/medicalWorkersInstructionsText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

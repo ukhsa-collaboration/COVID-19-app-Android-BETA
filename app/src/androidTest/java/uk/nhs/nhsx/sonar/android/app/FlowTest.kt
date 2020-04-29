@@ -279,6 +279,7 @@ class FlowTest {
 
         checkOkActivityIsShown()
         checkDisplayOfReferenceCode()
+        checkDisplayOfMedicalWorkersInstructions()
     }
 
     fun testLaunchWhenStateIsEmber() {
@@ -289,6 +290,7 @@ class FlowTest {
 
         checkAtRiskActivityIsShown()
         checkDisplayOfReferenceCode()
+        checkDisplayOfMedicalWorkersInstructions()
     }
 
     fun testLaunchWhenStateIsRed() {
@@ -304,6 +306,7 @@ class FlowTest {
 
         checkIsolateActivityIsShown()
         checkDisplayOfReferenceCode()
+        checkMedicalWorkersInstructionsNotDisplayed()
     }
 
     fun testLaunchWhenStateIsRedAndExpired() {
@@ -366,7 +369,10 @@ class FlowTest {
             if (Build.VERSION.SDK_INT >= 29) {
                 checkViewHasText(R.id.edgeCaseTitle, R.string.grant_location_permission_title)
             } else {
-                checkViewHasText(R.id.edgeCaseTitle, R.string.grant_location_permission_title_pre_10)
+                checkViewHasText(
+                    R.id.edgeCaseTitle,
+                    R.string.grant_location_permission_title_pre_10
+                )
             }
 
             onView(withId(R.id.takeActionButton)).perform(click())
@@ -549,6 +555,24 @@ class FlowTest {
 
         onView(withId(R.id.reference_code)).check(matches(withText(REFERENCE_CODE)))
         onView(withId(R.id.close)).perform(click())
+    }
+
+    private fun checkDisplayOfMedicalWorkersInstructions() {
+        onView(withId(R.id.medicalWorkersInstructions)).perform(scrollTo(), click())
+        checkViewHasText(
+            R.id.medicalWorkersInstructionsTitle,
+            R.string.medical_workers_instructions_title
+        )
+        checkViewHasText(
+            R.id.medicalWorkersInstructionsText,
+            R.string.medical_workers_instructions_text
+        )
+        onView(withId(R.id.closeButton)).perform(click())
+    }
+
+    private fun checkMedicalWorkersInstructionsNotDisplayed() {
+        val notDisplayed = matches(not(isDisplayed()))
+        onView(withId(R.id.medicalWorkersInstructions)).check(notDisplayed)
     }
 
     private fun setUserState(state: UserState) {

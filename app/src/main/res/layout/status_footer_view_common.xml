@@ -35,7 +35,9 @@
         android:paddingVertical="24dp"
         android:text="@string/important_instructions_for_medical_workers" />
 
-    <View style="@style/HorizontalDivider" />
+    <View
+        android:id="@+id/dividerBelowMedicalWorkersInstructions"
+        style="@style/HorizontalDivider" />
 
     <TextView
         android:id="@+id/reference_code_link"
