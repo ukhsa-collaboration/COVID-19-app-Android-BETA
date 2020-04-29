@@ -12,6 +12,7 @@ import androidx.core.os.bundleOf
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.firebase.messaging.RemoteMessage
@@ -61,8 +62,16 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         }
     }
     private val countryCode = "GB".toByteArray()
-    private val firstDeviceId = BluetoothIdentifier(countryCode, Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)), -6)
-    private val secondDeviceId = BluetoothIdentifier(countryCode, Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)), -8)
+    private val firstDeviceId = BluetoothIdentifier(
+        countryCode,
+        Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)),
+        -6
+    )
+    private val secondDeviceId = BluetoothIdentifier(
+        countryCode,
+        Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)),
+        -8
+    )
 
     private val testBluetoothModule = TestBluetoothModule(
         app,
@@ -166,13 +175,18 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
         // Only title is shown, click on it to toggle notification,
         // on some devices/android version it might trigger the notification action instead
-        if (!device.hasObject(By.text(notificationAction))) {
-            device.findObject(By.text(notificationTitle)).click()
+        if (!device.hasObject(By.text(notificationAction)) &&
+            !device.hasObject(By.text(notificationAction.toUpperCase()))
+        ) {
+            device.findObject(By.text(notificationTitle)).swipe(Direction.DOWN, 1F)
         }
 
         assertThat(device.hasObject(By.text(notificationText))).isTrue()
 
-        device.findObject(By.text(notificationAction)).click()
+        val action = device.findObject(By.text(notificationAction.toUpperCase()))
+            ?: device.findObject(By.text(notificationAction))
+
+        action.click()
         device.pressBack()
     }
 
@@ -307,7 +321,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         assertThat(body).contains(""""contactEvents":[""")
         assertThat(body).contains(
             jsonOf(
-                "encryptedRemoteContactId" to Base64.encodeToString(firstDeviceId.cryptogram.asBytes(), Base64.DEFAULT),
+                "encryptedRemoteContactId" to Base64.encodeToString(
+                    firstDeviceId.cryptogram.asBytes(),
+                    Base64.DEFAULT
+                ),
                 "rssiValues" to listOf(10, 20, 15),
                 "rssiOffsets" to listOf(0, 90, 610),
                 "timestamp" to "2020-04-01T14:33:13Z",
@@ -317,7 +334,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         )
         assertThat(body).contains(
             jsonOf(
-                "encryptedRemoteContactId" to Base64.encodeToString(secondDeviceId.cryptogram.asBytes(), Base64.DEFAULT),
+                "encryptedRemoteContactId" to Base64.encodeToString(
+                    secondDeviceId.cryptogram.asBytes(),
+                    Base64.DEFAULT
+                ),
                 "rssiValues" to listOf(40),
                 "rssiOffsets" to listOf(0),
                 "timestamp" to "2020-04-01T14:34:43Z",

@@ -513,6 +513,7 @@ class FlowTest {
     }
 
     private fun checkOkActivityIsShown() {
+        waitForText(R.string.status_initial_title, 1000)
         onView(withId(R.id.status_initial)).check(matches(isDisplayed()))
     }
 
