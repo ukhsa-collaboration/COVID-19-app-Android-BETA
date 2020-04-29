@@ -43,11 +43,11 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Publish
-          uses: ./.github/actions/publish-action
-          env:
-            PLAY_TRACK: Test
-            PLAY_SERVICES: ${{ secrets.PlayServices }}
-            SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}
-            SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias}}
-            SIGNING_KEY_STORE_PASSWORD: ${{ secrets.signingKeyStorePassword}}
-            SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword}}
+        uses: ./.github/actions/publish-action
+        env:
+          PLAY_TRACK: Test
+          PLAY_SERVICES: ${{ secrets.PlayServices }}
+          SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}
+          SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias}}
+          SIGNING_KEY_STORE_PASSWORD: ${{ secrets.signingKeyStorePassword}}
+          SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword}}
