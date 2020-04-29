@@ -49,6 +49,11 @@ jobs:
         env:
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
 
+      - name: Instrumentation test
+        uses: ./.github/actions/instrumentation-action
+        env:
+          SERVICE_ACCOUNT: ${{ secrets.ServiceAccount }}
+
       - name: Publish
         uses: ./.github/actions/publish-action
         env:
@@ -59,8 +64,3 @@ jobs:
           SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias}}
           SIGNING_KEY_STORE_PASSWORD: ${{ secrets.signingKeyStorePassword}}
           SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword}}
-
-      - name: Instrumentation test
-        uses: ./.github/actions/instrumentation-action
-        env:
-          SERVICE_ACCOUNT: ${{ secrets.ServiceAccount }}
