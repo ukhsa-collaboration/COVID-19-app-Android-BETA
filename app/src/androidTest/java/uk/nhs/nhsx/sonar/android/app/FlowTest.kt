@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Build
+import android.provider.Settings
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
@@ -43,6 +44,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
@@ -111,9 +113,11 @@ class FlowTest {
             ::testOnboarding_WhenPermissionsNeedToBeSet,
             ::testResumeWhenBluetoothIsDisabled,
             ::testResumeWhenLocationAccessIsDisabled,
-            ::testResumeWhenLocationPermissionIsRevoked
-//            ::testEnableBluetoothThroughNotification
+            ::testResumeWhenLocationPermissionIsRevoked,
+            ::testEnableBluetoothThroughNotification
         )
+
+        tests +
 
         tests.forEach {
             resetApp()
@@ -458,6 +462,11 @@ class FlowTest {
     }
 
     fun testEnableBluetoothThroughNotification() {
+        // This test fails on the moto g(6) play device that we use in Firebase test lab
+        if (runningInFirebaseTestLab()) {
+            Timber.w("Disabling the testEnableBluetoothThroughNotification test as it does not work in Firebase")
+            return
+        }
         setUserState(DefaultState())
         setValidSonarId()
 
@@ -475,6 +484,11 @@ class FlowTest {
         verifyBluetoothIsEnabled()
         checkOkActivityIsShown()
     }
+
+    private fun runningInFirebaseTestLab(): Boolean = Settings.System.getString(
+        testAppContext.app.contentResolver,
+        "firebase.test.lab"
+    ) == "true"
 
     private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
         onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
