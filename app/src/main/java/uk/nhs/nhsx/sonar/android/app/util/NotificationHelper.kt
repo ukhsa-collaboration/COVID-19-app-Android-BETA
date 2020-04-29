@@ -84,7 +84,8 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
             context.getString(R.string.checkin_notification_text),
             context.getString(R.string.checkin_notification_action),
             actionPendingIntent,
-            autoCancel = true
+            autoCancel = true,
+            isOngoing = false
         )
     }
 }
@@ -101,7 +102,8 @@ private fun showNotification(
     contentText: String,
     actionTitle: String,
     actionPendingIntent: PendingIntent? = null,
-    autoCancel: Boolean = true
+    autoCancel: Boolean = true,
+    isOngoing: Boolean = true
 ) {
     val builder = context
         .notificationBuilder()
@@ -114,7 +116,7 @@ private fun showNotification(
         .setPriority(NotificationCompat.PRIORITY_MAX)
         .setContentIntent(mainActivityPendingContent(context))
         .setAutoCancel(autoCancel)
-        .setOngoing(true)
+        .setOngoing(isOngoing)
         .setColor(context.getColor(R.color.colorAccent))
         .apply {
             if (actionPendingIntent != null) {
