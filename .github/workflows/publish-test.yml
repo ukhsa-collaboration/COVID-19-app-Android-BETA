@@ -31,9 +31,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Checkout Tag
-          run: |
-            git fetch --all --tags
-            git checkout publish-to-test
+        run: |
+          git fetch --all --tags
+          git checkout publish-to-test
 
       - name: Cache Gradle packages
         uses: actions/cache@v1
