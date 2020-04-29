@@ -1,0 +1,53 @@
+name: Publish To Test
+
+on:
+  push:
+    tags:
+      - publish-to-test
+
+jobs:
+
+  login_to_docker:
+    runs-on:
+      - linux
+      - self-hosted
+    steps:
+      - name: Login to Docker
+        run: |
+          docker login -u "${{secrets.docker_username}}" \
+          -p "${{secrets.docker_password}}" \
+          "nhsxpivotal.azurecr.io"
+      - name: Pull Image
+        run: |
+          docker pull nhsxpivotal.azurecr.io/sonar-colocate-services-image
+
+  build:
+    needs: login_to_docker
+    runs-on: [ "self-hosted", "linux" ]
+    container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
+
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@v2
+
+      - name: Checkout Tag
+          run: |
+            git fetch --all --tags
+            git checkout publish-to-test
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v1
+        with:
+          path: /root/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Publish
+          uses: ./.github/actions/publish-action
+          env:
+            PLAY_TRACK: Test
+            PLAY_SERVICES: ${{ secrets.PlayServices }}
+            SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}
+            SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias}}
+            SIGNING_KEY_STORE_PASSWORD: ${{ secrets.signingKeyStorePassword}}
+            SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword}}

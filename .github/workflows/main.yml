@@ -51,6 +51,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/publish-action
         env:
+          PLAY_TRACK: internal
           PLAY_SERVICES: ${{ secrets.PlayServices }}
           SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}
           SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias}}

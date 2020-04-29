@@ -7,6 +7,11 @@ CURRENT_DIR=$(pwd)
 PLAY_SERVICES_FILE=$CURRENT_DIR/build/play-services.json
 SIGNING_KEY_STORE_FILE=$CURRENT_DIR/build/keystore
 
+if [ -z "$PLAY_TRACK" ]; then
+  echo "PLAY_TRACK is required"
+  exit 1
+fi
+
 if [ -z "$PLAY_SERVICES" ]; then
   echo "PLAY_SERVICES is required"
   exit 1
@@ -37,7 +42,8 @@ echo "$PLAY_SERVICES" > "$PLAY_SERVICES_FILE"
 echo "$SIGNING_KEY_STORE" > build/keystore.txt
 base64 -d build/keystore.txt > "$SIGNING_KEY_STORE_FILE"
 
-./gradlew publish  -Pplay-enabled \
+./gradlew publish  --track="$PLAY_TRACK" \
+   -Pplay-enabled \
    -PPLAY_SERVICES_PUBLISH="$PLAY_SERVICES_FILE" \
    -PSIGNING_KEY_STORE="$SIGNING_KEY_STORE_FILE" \
    -PSIGNING_KEY_ALIAS="$SIGNING_KEY_ALIAS" \
