@@ -43,4 +43,4 @@ task("localBuild") {
     dependsOn(":app:connectedDebugAndroidTest")
 }
 
-defaultTasks("build", "connectedAndroidTest")
+defaultTasks("localBuild")

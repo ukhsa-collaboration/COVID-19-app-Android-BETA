@@ -19,18 +19,44 @@ To set a property refer to [official gradle documentation](https://docs.gradle.o
 
 1. Before pushing code run -
     ```bash
-    ./gradlew build connectedAndroidTest
+    ./gradlew localBuild
     ```
 
-   They are the default tasks, so you can also just run -
+   It is the default task, so you can also just run -
    ```bash
    ./gradlew
    ```
 
 **NOTE**
- * DO NOT UNDER ANY CIRCUMSTANCE skip running the tests before pushing.
- * DO NOT UNDER ANY CIRCUMSTANCE disable tests.
- * DO NOT UNDER ANY CIRCUMSTANCE push code to master that knowingly breaks the test suite.
+ * PLEASE NEVER skip running the tests before pushing.
+ * PLEASE NEVER disable tests.
+ * PLEASE NEVER push code to master that knowingly breaks the test suite.
+
+## Running tests on Firebase from your machine
+
+Make sure your APKs are built -
+
+```bash
+./gradlew localBuild
+```
+
+You will need the [`gcloud` CLI](https://cloud.google.com/sdk/install).
+Once installed run:
+
+```$bash
+./gradlew localBuild
+
+gcloud init
+gcloud config set project sonar-colocate
+gcloud firebase test android run \
+    --type=instrumentation \
+    --app=app/build/outputs/apk/debug/app-debug.apk \
+    --test=app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk \
+    --device-ids=aljeter_n \
+    --os-version-ids=26 \
+    --use-orchestrator \
+    --environment-variables=clearPackageData=true
+```
 
 ## Code formatting with KTLint
 
