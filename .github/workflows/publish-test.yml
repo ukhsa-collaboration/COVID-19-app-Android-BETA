@@ -11,6 +11,7 @@ jobs:
     runs-on:
       - linux
       - self-hosted
+      - aws
     steps:
       - name: Login to Docker
         run: |
@@ -23,7 +24,7 @@ jobs:
 
   build:
     needs: login_to_docker
-    runs-on: [ "self-hosted", "linux" ]
+    runs-on: [ "self-hosted", "linux", "aws" ]
     container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
     steps:
