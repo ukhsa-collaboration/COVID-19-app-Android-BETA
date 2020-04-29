@@ -23,6 +23,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -38,6 +39,7 @@ import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.LocalDate
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -651,10 +653,36 @@ class FlowTest {
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
         // Review Step
-        onView(withId(R.id.review_answer_temperature)).check(matches(isDisplayed()))
+        onView(withId(R.id.symptoms_date_prompt))
+            .check(matches(isDisplayed()))
+            .check(matches(withText(R.string.symptoms_date_prompt_all)))
+
+        onView(withId(R.id.review_answer_temperature))
+            .check(matches(withText(R.string.i_do_temperature)))
+
+        onView(withId(R.id.review_answer_cough))
+            .check(matches(withText(R.string.i_do_cough)))
+
+        onView(withId(R.id.submit_diagnosis)).perform(click())
+        onView(withId(R.id.date_selection_error)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.symptoms_date_spinner)).check(matches(withSpinnerText(R.string.start_date)))
+
+        onView(withId(R.id.symptoms_date_spinner)).perform(scrollTo(), click())
+        onData(anything()).atPosition(3).perform(click())
+        onView(withText("Cancel")).perform(click())
+        onView(withId(R.id.symptoms_date_spinner)).check(matches(withSpinnerText(R.string.start_date)))
+
+        val todayAsString = LocalDate.now().toString("EEEE, MMMM dd")
+        onView(withId(R.id.symptoms_date_spinner)).perform(scrollTo(), click())
+        onData(anything()).atPosition(3).perform(click())
+        onView(withText("OK")).perform(click())
+        onView(withId(R.id.symptoms_date_spinner)).check(matches(withSpinnerText(todayAsString)))
 
         onView(withId(R.id.symptoms_date_spinner)).perform(scrollTo(), click())
         onData(anything()).atPosition(1).perform(click())
+        onView(withId(R.id.symptoms_date_spinner)).check(matches(withSpinnerText(R.string.yesterday)))
+
         onView(withId(R.id.submit_diagnosis)).perform(click())
 
         // Confirmation Step
