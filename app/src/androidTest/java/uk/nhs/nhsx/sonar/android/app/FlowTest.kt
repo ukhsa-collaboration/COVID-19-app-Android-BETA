@@ -347,7 +347,13 @@ class FlowTest {
 
             testAppContext.device.apply {
                 wait(Until.hasObject(By.textContains("wants to tun on Bluetooth")), 500)
-                findObject(By.text("Allow")).click()
+                val buttonText = "Allow"
+                val allowButton = findObject(By.text(buttonText))
+                if (allowButton != null) {
+                    allowButton.click()
+                    return@apply
+                }
+                findObject(By.text(buttonText.toUpperCase())).click()
             }
         }
 
