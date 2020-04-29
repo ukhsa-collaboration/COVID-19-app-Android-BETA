@@ -420,7 +420,7 @@ class FlowTest {
 
         onView(withId(R.id.takeActionButton)).perform(click())
 
-        waitForText(R.string.status_initial_title, timeoutInMs = 2_000)
+        waitForText(R.string.status_initial_title, timeoutInMs = 6_000)
     }
 
     fun testResumeWhenLocationAccessIsDisabled() {
