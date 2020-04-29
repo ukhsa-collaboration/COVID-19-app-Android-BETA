@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Build
-import android.provider.Settings
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
@@ -44,7 +43,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
@@ -117,8 +115,6 @@ class FlowTest {
             ::testResumeWhenLocationPermissionIsRevoked,
             ::testEnableBluetoothThroughNotification
         )
-
-        tests +
 
         tests.forEach {
             resetApp()
@@ -369,13 +365,16 @@ class FlowTest {
             if (Build.VERSION.SDK_INT >= 29) {
                 checkViewHasText(R.id.edgeCaseTitle, R.string.grant_location_permission_title)
             } else {
-                checkViewHasText(
-                    R.id.edgeCaseTitle,
-                    R.string.grant_location_permission_title_pre_10
-                )
+                checkViewHasText(R.id.edgeCaseTitle, R.string.grant_location_permission_title_pre_10)
             }
 
             onView(withId(R.id.takeActionButton)).perform(click())
+
+            // ensure we leave the screen before moving on
+            waitUntilCannotFindText(R.string.grant_location_permission_title)
+            waitUntilCannotFindText(R.string.grant_location_permission_title_pre_10)
+
+            // moving on...
             testAppContext.grantLocationPermission()
             testAppContext.device.pressBack()
 
@@ -462,6 +461,7 @@ class FlowTest {
         checkViewHasText(R.id.edgeCaseTitle, R.string.re_allow_location_permission_title)
 
         onView(withId(R.id.takeActionButton)).perform(click())
+        testAppContext.device.wait(Until.gone(By.text("Allow this app to access your location to continue")), 500)
         testAppContext.grantLocationPermission()
         testAppContext.device.pressBack()
 
@@ -469,11 +469,6 @@ class FlowTest {
     }
 
     fun testEnableBluetoothThroughNotification() {
-        // This test fails on the moto g(6) play device that we use in Firebase test lab
-        if (runningInFirebaseTestLab()) {
-            Timber.w("Disabling the testEnableBluetoothThroughNotification test as it does not work in Firebase")
-            return
-        }
         setUserState(DefaultState())
         setValidSonarId()
 
@@ -487,23 +482,25 @@ class FlowTest {
             notificationActionRes = R.string.notification_bluetooth_disabled_action
         )
 
-        checkViewHasText(R.id.edgeCaseTitle, R.string.re_enable_bluetooth_title)
         verifyBluetoothIsEnabled()
         checkOkActivityIsShown()
     }
-
-    private fun runningInFirebaseTestLab(): Boolean = Settings.System.getString(
-        testAppContext.app.contentResolver,
-        "firebase.test.lab"
-    ) == "true"
 
     private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
         onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
     }
 
-    private fun waitForText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
+    private fun waitUntilCannotFindText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
+        testAppContext.device.wait(Until.gone(By.text(getString(stringId))), timeoutInMs)
+    }
+
+    private fun getString(@StringRes stringId: Int): String {
         val context = testAppContext.app.applicationContext
-        waitForText(context.getString(stringId), timeoutInMs)
+        return context.getString(stringId)
+    }
+
+    private fun waitForText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
+        waitForText(getString(stringId), timeoutInMs)
     }
 
     private fun waitForText(text: String, timeoutInMs: Long = 500) {
