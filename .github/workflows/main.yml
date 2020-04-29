@@ -61,7 +61,8 @@ jobs:
           PLAY_TRACK: internal
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
-          SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}
-          SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias}}
-          SIGNING_KEY_STORE_PASSWORD: ${{ secrets.signingKeyStorePassword}}
-          SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword}}
+          SIGNING_KEY_STORE: ${{ secrets.signingKeyStore }}
+          SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias }}
+          SIGNING_KEY_STORE_PASSWORD: ${{ secrets.signingKeyStorePassword }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword }}
+          TEST_SONAR_HEADER_VALUE: ${{ secrets.TestSonarHeaderValue }}
