@@ -29,12 +29,8 @@ jobs:
     steps:
       - name: Checkout Project
         uses: actions/checkout@v2
-
-      - name: Checkout Tag
-        run: |
-          apt-get -y install --no-install-recommends git-all
-          git fetch --all --tags
-          git checkout publish-to-test
+        with:
+          ref: publish-to-test
 
       - name: Cache Gradle packages
         uses: actions/cache@v1
