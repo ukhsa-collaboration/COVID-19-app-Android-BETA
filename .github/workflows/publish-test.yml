@@ -32,6 +32,7 @@ jobs:
 
       - name: Checkout Tag
         run: |
+          apt-get -y install --no-install-recommends git-all
           git fetch --all --tags
           git checkout publish-to-test
 
