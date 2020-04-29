@@ -37,6 +37,7 @@ if [ -z "$SIGNING_KEY_PASSWORD" ]; then
   exit 1
 fi
 
+mkdir -p build
 echo "$PLAY_SERVICES" > "$PLAY_SERVICES_FILE"
 
 echo "$SIGNING_KEY_STORE" > build/keystore.txt
