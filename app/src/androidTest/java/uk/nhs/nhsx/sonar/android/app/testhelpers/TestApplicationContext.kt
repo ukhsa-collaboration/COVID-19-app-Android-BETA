@@ -92,13 +92,16 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         resetTestMockServer()
         val mockServerUrl = mockServer.url("").toString().removeSuffix("/")
 
+        val keyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+        keyStore.aliases().asSequence().forEach { keyStore.deleteEntry(it) }
+
         component = DaggerTestAppComponent.builder()
             .appModule(AppModule(app, testLocationHelper))
             .persistenceModule(PersistenceModule(app))
             .bluetoothModule(testBluetoothModule)
             .cryptoModule(CryptoModule(
                 app,
-                KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+                keyStore
             ))
             .networkModule(NetworkModule(mockServerUrl, "someValue"))
             .testNotificationsModule(TestNotificationsModule())
