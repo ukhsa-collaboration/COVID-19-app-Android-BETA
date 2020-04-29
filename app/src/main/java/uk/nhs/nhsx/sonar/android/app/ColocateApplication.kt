@@ -29,6 +29,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
+import java.security.KeyStore
 import java.security.Security
 
 class ColocateApplication : Application() {
@@ -93,7 +94,12 @@ class ColocateApplication : Application() {
             .appModule(AppModule(this, AndroidLocationHelper(this)))
             .persistenceModule(PersistenceModule(this))
             .bluetoothModule(BluetoothModule(this, scanIntervalLength = 8))
-            .cryptoModule(CryptoModule())
+            .cryptoModule(
+                CryptoModule(
+                    this,
+                    KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+                )
+            )
             .networkModule(NetworkModule(BuildConfig.BASE_URL, BuildConfig.SONAR_HEADER_VALUE))
             .notificationsModule(NotificationsModule())
             .build()

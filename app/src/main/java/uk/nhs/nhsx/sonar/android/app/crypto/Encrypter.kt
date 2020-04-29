@@ -8,7 +8,7 @@ import android.annotation.SuppressLint
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.crypto.generators.KDF2BytesGenerator
 import org.bouncycastle.crypto.params.KDFParameters
-import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.PublicKeyStorage
 import java.security.PrivateKey
 import java.security.PublicKey
 import javax.crypto.Cipher
@@ -19,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec
 import javax.inject.Inject
 
 class Encrypter @Inject constructor(
-    private val keyStorage: KeyStorage,
+    private val keyStorage: PublicKeyStorage,
     private val ephemeralKeyProvider: EphemeralKeyProvider
 ) {
     fun canEncrypt(): Boolean {

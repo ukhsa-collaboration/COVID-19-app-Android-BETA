@@ -35,8 +35,10 @@ import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
+import java.security.KeyStore
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import java.util.concurrent.TimeUnit
+import javax.crypto.Mac
 import kotlin.random.Random
 
 class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
@@ -85,7 +87,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             .appModule(AppModule(app, testLocationHelper))
             .persistenceModule(PersistenceModule(app))
             .bluetoothModule(testBluetoothModule)
-            .cryptoModule(CryptoModule())
+            .cryptoModule(CryptoModule(
+                app,
+                KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+            ))
             .networkModule(NetworkModule(mockServerUrl, "someValue"))
             .testNotificationsModule(TestNotificationsModule())
             .build()
@@ -226,7 +231,15 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         await untilNotNull {
             keyStorage.provideSecretKey()
         }
-        assertThat(keyStorage.provideSecretKey()).isEqualTo(TestCoLocateServiceDispatcher.SECRET_KEY)
+        val messageToSign = "some message".toByteArray()
+        val actualSignature = Mac.getInstance("HMACSHA256").apply {
+            init(keyStorage.provideSecretKey())
+        }.doFinal(messageToSign)
+        val expectedSignature = Mac.getInstance("HMACSHA256").apply {
+            init(TestCoLocateServiceDispatcher.SECRET_KEY)
+        }.doFinal(messageToSign)
+
+        assertThat(actualSignature).isEqualTo(expectedSignature)
 
         await untilNotNull {
             keyStorage.providePublicKey()

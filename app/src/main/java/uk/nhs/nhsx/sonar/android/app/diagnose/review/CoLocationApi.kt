@@ -9,13 +9,13 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.HttpMethod.PATCH
 import uk.nhs.nhsx.sonar.android.app.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.Promise
+import uk.nhs.nhsx.sonar.android.app.http.SecretKeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
 
 class CoLocationApi(
     private val baseUrl: String,
-    private val keyStorage: KeyStorage,
+    private val keyStorage: SecretKeyStorage,
     private val httpClient: HttpClient
 ) {
 
