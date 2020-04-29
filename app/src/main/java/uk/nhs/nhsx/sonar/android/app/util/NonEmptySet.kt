@@ -1,6 +1,8 @@
 package uk.nhs.nhsx.sonar.android.app.util
 
-class NonEmptySet<T> private constructor(private val set: Set<T>) : Set<T> by set {
+import java.io.Serializable
+
+class NonEmptySet<T> private constructor(private val set: Set<T>) : Set<T> by set, Serializable {
     companion object {
         fun <T> create(set: Set<T>): NonEmptySet<T>? =
             if (set.isEmpty()) null

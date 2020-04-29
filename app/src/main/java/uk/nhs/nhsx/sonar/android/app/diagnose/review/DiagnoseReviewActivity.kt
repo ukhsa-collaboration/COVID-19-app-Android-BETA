@@ -27,16 +27,15 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.SpinnerAdapter
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 
 class DiagnoseReviewActivity : BaseActivity() {
 
-    private val hasTemperature: Boolean by lazy {
-        intent.getBooleanExtra(HAS_TEMPERATURE, false)
-    }
-
-    private val hasCough: Boolean by lazy {
-        intent.getBooleanExtra(HAS_COUGH, false)
+    private val symptoms: NonEmptySet<Symptom> by lazy {
+        @Suppress("UNCHECKED_CAST")
+        intent.getSerializableExtra(SYMPTOMS) as NonEmptySet<Symptom>
     }
 
     private var symptomsDate: DateTime? = null
@@ -63,7 +62,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                 date_selection_error.visibility = View.VISIBLE
                 date_selection_error.announceForAccessibility(getString(R.string.date_selection_error))
             } else {
-                DiagnoseSubmitActivity.start(this, hasTemperature, hasCough, selectedSymptomsDate)
+                DiagnoseSubmitActivity.start(this, symptoms, selectedSymptomsDate)
             }
         }
     }
@@ -144,13 +143,13 @@ class DiagnoseReviewActivity : BaseActivity() {
 
     private fun setSymptomsReviewAnswers() {
         review_answer_temperature.text =
-            when (hasTemperature) {
+            when (Symptom.TEMPERATURE in symptoms) {
                 true -> getString(R.string.i_do_temperature)
                 false -> getString(R.string.i_do_not_temperature)
             }
 
         review_answer_cough.text =
-            when (hasCough) {
+            when (Symptom.COUGH in symptoms) {
                 true -> getString(R.string.i_do_cough)
                 false -> getString(R.string.i_do_not_cough)
             }
@@ -159,31 +158,21 @@ class DiagnoseReviewActivity : BaseActivity() {
     private fun setSymptomsDateQuestion() {
         symptoms_date_prompt.text =
             when {
-                !hasCough -> getString(R.string.symptoms_date_prompt_temperature)
-                !hasTemperature -> getString(R.string.symptoms_date_prompt_cough)
+                Symptom.COUGH !in symptoms -> getString(R.string.symptoms_date_prompt_temperature)
+                Symptom.TEMPERATURE !in symptoms -> getString(R.string.symptoms_date_prompt_cough)
                 else -> getString(R.string.symptoms_date_prompt_all)
             }
     }
 
     companion object {
+        private const val SYMPTOMS = "SYMPTOMS"
 
-        private const val HAS_TEMPERATURE = "HAS_TEMPERATURE"
+        fun start(context: Context, symptoms: NonEmptySet<Symptom>) =
+            context.startActivity(getIntent(context, symptoms))
 
-        private const val HAS_COUGH = "HAS_COUGH"
-
-        fun start(context: Context, hasTemperature: Boolean = false, hasCough: Boolean = false) =
-            context.startActivity(
-                getIntent(
-                    context,
-                    hasTemperature,
-                    hasCough
-                )
-            )
-
-        private fun getIntent(context: Context, hasTemperature: Boolean, hasCough: Boolean) =
+        private fun getIntent(context: Context, symptoms: NonEmptySet<Symptom>) =
             Intent(context, DiagnoseReviewActivity::class.java).apply {
-                putExtra(HAS_COUGH, hasCough)
-                putExtra(HAS_TEMPERATURE, hasTemperature)
+                putExtra(SYMPTOMS, symptoms)
             }
     }
 }

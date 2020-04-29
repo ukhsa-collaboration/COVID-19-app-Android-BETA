@@ -17,13 +17,10 @@ import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import javax.inject.Inject
@@ -35,11 +32,9 @@ class DiagnoseSubmitActivity : BaseActivity() {
     @Inject
     protected lateinit var reminders: Reminders
 
-    private val symptoms: Set<Symptom> by lazy {
-        setOf(
-            if (intent.getBooleanExtra(HAS_COUGH, false)) COUGH else null,
-            if (intent.getBooleanExtra(HAS_TEMPERATURE, false)) TEMPERATURE else null
-        ).filterNotNull().toSet()
+    private val symptoms: NonEmptySet<Symptom> by lazy {
+        @Suppress("UNCHECKED_CAST")
+        intent.getSerializableExtra(SYMPTOMS) as NonEmptySet<Symptom>
     }
 
     private val symptomsDate: LocalDate by lazy {
@@ -64,10 +59,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private fun updateStateAndNavigate() {
-        val state =
-            NonEmptySet.create(symptoms)
-                ?.let { StateFactory.decide(symptomsDate, it) }
-                ?: DefaultState() // should never actually happen
+        val state = StateFactory.decide(symptomsDate, symptoms)
 
         if (state is RedState) {
             reminders.scheduleCheckInReminder(state.until)
@@ -82,34 +74,19 @@ class DiagnoseSubmitActivity : BaseActivity() {
 
     companion object {
 
-        private const val HAS_TEMPERATURE = "HAS_TEMPERATURE"
-        private const val HAS_COUGH = "HAS_COUGH"
+        private const val SYMPTOMS = "SYMPTOMS"
         private const val SYMPTOMS_DATE = "SYMPTOMS_DATE"
 
-        fun start(
-            context: Context,
-            hasTemperature: Boolean = false,
-            hasCough: Boolean = false,
-            symptomsDate: DateTime
-        ) =
-            context.startActivity(
-                getIntent(
-                    context,
-                    hasTemperature,
-                    hasCough,
-                    symptomsDate
-                )
-            )
+        fun start(context: Context, symptoms: NonEmptySet<Symptom>, symptomsDate: DateTime) =
+            context.startActivity(getIntent(context, symptoms, symptomsDate))
 
         private fun getIntent(
             context: Context,
-            hasTemperature: Boolean,
-            hasCough: Boolean,
+            symptoms: NonEmptySet<Symptom>,
             symptomsDate: DateTime
         ) =
             Intent(context, DiagnoseSubmitActivity::class.java).apply {
-                putExtra(HAS_COUGH, hasCough)
-                putExtra(HAS_TEMPERATURE, hasTemperature)
+                putExtra(SYMPTOMS, symptoms)
                 putExtra(SYMPTOMS_DATE, symptomsDate.millis)
             }
     }

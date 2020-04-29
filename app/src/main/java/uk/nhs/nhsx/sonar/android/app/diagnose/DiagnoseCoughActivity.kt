@@ -59,11 +59,7 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         viewModel.observeUserState().observe({ this.lifecycle }) { result ->
             when (result) {
-                is StateResult.Review -> DiagnoseReviewActivity.start(
-                    this,
-                    hasTemperature = hasTemperature,
-                    hasCough = result.hasCough
-                )
+                is StateResult.Review -> DiagnoseReviewActivity.start(this, result.symptoms)
                 StateResult.Close -> DiagnoseCloseActivity.start(this)
                 is StateResult.Main -> navigateTo(result.userState)
             }

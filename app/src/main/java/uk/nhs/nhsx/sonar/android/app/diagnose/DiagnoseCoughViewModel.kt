@@ -5,13 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Close
+import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Review
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateFactory
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserState
+import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import javax.inject.Inject
 
@@ -36,25 +41,22 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
     }
 
     private fun handleSimplified(hasTemperature: Boolean, hasCough: Boolean): StateResult {
-        return when {
-            hasTemperature and hasCough ->
-                StateFactory.extendedRed(nonEmptySetOf(Symptom.COUGH, Symptom.TEMPERATURE))
-
-            hasTemperature ->
-                StateFactory.extendedRed(nonEmptySetOf(Symptom.TEMPERATURE))
-
-            hasCough ->
-                RecoveryState()
-
-            else ->
-                DefaultState()
-        }.let {
-            updateState(it)
+        val userState = when {
+            hasTemperature and hasCough -> StateFactory.extendedRed(nonEmptySetOf(COUGH, TEMPERATURE))
+            hasTemperature -> StateFactory.extendedRed(nonEmptySetOf(TEMPERATURE))
+            hasCough -> RecoveryState()
+            else -> DefaultState()
         }
+        return updateState(userState)
     }
 
     private fun handleNormal(hasTemperature: Boolean, hasCough: Boolean): StateResult =
-        if (!hasCough and !hasTemperature) StateResult.Close else StateResult.Review(hasCough)
+        when {
+            hasTemperature and hasCough -> Review(nonEmptySetOf(TEMPERATURE, COUGH))
+            hasTemperature -> Review(nonEmptySetOf(TEMPERATURE))
+            hasCough -> Review(nonEmptySetOf(COUGH))
+            else -> Close
+        }
 
     private fun updateState(newState: UserState): StateResult {
         stateStorage.update(newState)
@@ -64,7 +66,7 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
 
 sealed class StateResult {
 
-    data class Review(val hasCough: Boolean) : StateResult()
+    data class Review(val symptoms: NonEmptySet<Symptom>) : StateResult()
 
     object Close : StateResult()
 
