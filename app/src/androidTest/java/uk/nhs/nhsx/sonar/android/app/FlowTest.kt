@@ -346,7 +346,7 @@ class FlowTest {
             onView(withId(R.id.permission_continue)).perform(click())
 
             testAppContext.device.apply {
-                wait(Until.hasObject(By.textContains("wants to tun on Bluetooth")), 500)
+                wait(Until.hasObject(By.textContains("wants to turn on Bluetooth")), 500)
                 val buttonText = "Allow"
                 val allowButton = findObject(By.text(buttonText))
                 if (allowButton != null) {
