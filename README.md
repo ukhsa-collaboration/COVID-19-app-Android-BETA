@@ -1,6 +1,15 @@
 # Sonar Co-Locate for Android
 ![CI](https://github.com/nhsx/sonar-colocate-android/workflows/CI/badge.svg)
 
+## Build setup
+
+Some secrets need to be set for the build to run. Please *DO NOT* add them to the project's `gradle.properties`.
+Required secrets are:
+
+ - `sonar.headerValue`
+
+To set a property refer to [official gradle documentation](https://docs.gradle.org/current/userguide/build_environment.html)
+
 ## Running tests
 
 1. Device setup
