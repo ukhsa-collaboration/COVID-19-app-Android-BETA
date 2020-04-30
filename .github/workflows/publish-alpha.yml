@@ -1,9 +1,9 @@
-name: Publish Test
+name: Publish Alpha
 
 on:
   push:
     tags:
-      - publish-test
+      - publish-alpha
 
 jobs:
 
@@ -31,7 +31,7 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v2
         with:
-          ref: publish-test
+          ref: publish-alpha
 
       - name: Cache Gradle packages
         uses: actions/cache@v1
@@ -43,7 +43,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/publish-action
         env:
-          PLAY_TRACK: Test
+          PLAY_TRACK: alpha
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
           SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}
