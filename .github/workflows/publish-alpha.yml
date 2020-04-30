@@ -52,3 +52,4 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword}}
           SONAR_HEADER_VALUE: ${{ secrets.TestSonarHeaderValue }}
           SONAR_BASE_URL: https://test.route.cp.data.england.nhs.uk
+          COMMIT_SHA: ${{ github.sha }}
