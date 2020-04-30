@@ -35,7 +35,12 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.PUBLIC_KEY
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.REFERENCE_CODE
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.RESIDENT_ID
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.SECRET_KEY
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit
@@ -204,6 +209,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         simulateActivationCodeReceived()
         verifyReceivedActivationRequest()
         verifySonarIdAndSecretKeyAndPublicKey()
+        verifyReferenceCode()
     }
 
     fun verifyRegistrationRetry() {
@@ -245,7 +251,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         await until {
             idProvider.getSonarId().isNotEmpty()
         }
-        assertThat(idProvider.getSonarId()).isEqualTo(TestCoLocateServiceDispatcher.RESIDENT_ID)
+        assertThat(idProvider.getSonarId()).isEqualTo(RESIDENT_ID)
 
         await untilNotNull {
             keyStorage.provideSecretKey()
@@ -255,7 +261,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             init(keyStorage.provideSecretKey())
         }.doFinal(messageToSign)
         val expectedSignature = Mac.getInstance("HMACSHA256").apply {
-            init(TestCoLocateServiceDispatcher.SECRET_KEY)
+            init(SECRET_KEY)
         }.doFinal(messageToSign)
 
         assertThat(actualSignature).isEqualTo(expectedSignature)
@@ -264,9 +270,15 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             keyStorage.providePublicKey()
         }
         val publicKey = keyStorage.providePublicKey()?.encoded
-        val decodedPublicKey =
-            Base64.decode(TestCoLocateServiceDispatcher.PUBLIC_KEY, Base64.DEFAULT)
+        val decodedPublicKey = Base64.decode(PUBLIC_KEY, Base64.DEFAULT)
         assertThat(publicKey).isEqualTo(decodedPublicKey)
+    }
+
+    private fun verifyReferenceCode() {
+        val provider = component.getReferenceCodeProvider()
+        await until {
+            provider.get() == ReferenceCode(REFERENCE_CODE)
+        }
     }
 
     fun simulateDeviceInProximity() {
@@ -315,10 +327,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun verifyReceivedProximityRequest() {
-        val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
+        var lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
+
+        if (lastRequest?.path?.contains("linking-id") == true) {
+            lastRequest = mockServer.takeRequest()
+        }
 
         assertThat(lastRequest).isNotNull()
-        assertThat(lastRequest?.path).isEqualTo("/api/residents/${TestCoLocateServiceDispatcher.RESIDENT_ID}")
+        assertThat(lastRequest?.path).isEqualTo("/api/residents/$RESIDENT_ID")
         assertThat(lastRequest?.method).isEqualTo("PATCH")
 
         val body = lastRequest?.body?.readUtf8() ?: ""
