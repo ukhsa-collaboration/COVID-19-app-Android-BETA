@@ -50,7 +50,7 @@ echo "$PLAY_SERVICES" > "$PLAY_SERVICES_FILE"
 echo "$SIGNING_KEY_STORE" > build/keystore.txt
 base64 -d build/keystore.txt > "$SIGNING_KEY_STORE_FILE"
 
-./gradlew publish --track="$PLAY_TRACK" \
+./gradlew "publish$BUILD_FLAVOR" --track="$PLAY_TRACK" \
    -Pgitcommit="${COMMIT_SHA:0:7}" \
    -Psonar.headerValue="$SONAR_HEADER_VALUE" \
    -Psonar.baseUrl="$SONAR_BASE_URL" \

@@ -58,6 +58,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/publish-action
         env:
+          BUILD_FLAVOR: Staging
           PLAY_TRACK: internal
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
