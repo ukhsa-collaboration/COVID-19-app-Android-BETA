@@ -18,6 +18,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:baselineAlignBottom="true"
+        android:contentDescription="@null"
         android:paddingVertical="4dp"
         android:scaleType="center"
         android:src="@drawable/nhs_logo"
@@ -58,6 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_onboarding_postcode_marker" />
 
             <TextView
@@ -66,6 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:accessibilityHeading="true"
                 android:labelFor="@id/postCodeEditText"
                 android:text="@string/post_code_title" />
 
@@ -77,27 +80,29 @@
                 android:textColor="@color/text_sub_title"
                 android:textSize="16sp" />
 
-            <EditText
-                android:id="@+id/postCodeEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/edit_text_nhs"
-                android:importantForAutofill="no"
-                android:inputType="textPostalAddress|textCapCharacters"
-                android:maxLength="4"
-                android:textSize="18sp" />
-
             <TextView
                 android:id="@+id/invalidPostCodeHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="sans-serif-medium"
                 android:text="@string/valid_post_code_is_required"
                 android:textColor="@color/colorDanger"
                 android:textSize="16sp"
                 android:visibility="gone"
                 tools:visibility="visible" />
+
+            <EditText
+                android:id="@+id/postCodeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/edit_text_background"
+                android:importantForAutofill="no"
+                android:inputType="textPostalAddress|textCapCharacters"
+                android:maxLength="4"
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -114,6 +119,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:accessibilityHeading="true"
                         android:lineSpacingMultiplier="1.2"
                         android:paddingStart="12dp"
                         android:text="@string/post_code_rationale_title"

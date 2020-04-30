@@ -70,6 +70,7 @@
                 style="@style/OnboardingTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
                 android:paddingTop="24dp"
                 android:text="@string/enable_bluetooth_title" />
 

@@ -18,6 +18,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:baselineAlignBottom="true"
+        android:contentDescription="@null"
         android:paddingVertical="4dp"
         android:scaleType="center"
         android:src="@drawable/nhs_logo"
@@ -57,6 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_onboarding_intro" />
 
             <TextView

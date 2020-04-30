@@ -28,6 +28,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"
+        android:contentDescription="@null"
         android:src="@drawable/ic_warning_outline"
         android:visibility="gone" />
 
@@ -37,6 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="32dp"
+        android:accessibilityLiveRegion="polite"
         android:text="@string/registration_finalising_setup"
         android:textSize="14sp" />
 </merge>

@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="64dp"
                 android:layout_marginBottom="24dp"
+                android:accessibilityHeading="true"
                 android:text="@string/explanation_title" />
 
             <TextView
@@ -39,8 +40,8 @@
         android:id="@+id/explanation_back"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginTop="8dp"
         android:layout_gravity="end|top"
+        android:layout_marginTop="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:contentDescription="@string/go_back"

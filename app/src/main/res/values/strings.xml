@@ -8,7 +8,7 @@
     <string name="bluetooth_permission">\u2022 <b>Bluetooth</b>, to record when your device is near others using this app</string>
     <string name="onboarding_title">Help the NHS stop the spread of coronavirus in the UK</string>
     <string name="location_rationale">You will not be tracked and your personal identity and location history will remain protected at all times. On an Android phone, your location permission is needed for Bluetooth to work.</string>
-    <string name="explanation_link">Learn more about how it works</string>
+    <string name="explanation_link"><u>Learn more about how it works</u></string>
     <string name="next_steps">You’ll be asked to consent to these permissions on the next screen.</string>
     <string name="start_now">Start Now</string>
     <string name="bluetooth_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app. For this app to work, Bluetooth needs to be kept on at all times.</string>
@@ -103,8 +103,8 @@
     <string name="post_code_title">Enter the first part of your home postcode</string>
     <string name="post_code">Post code</string>
     <string name="post_code_rationale"><![CDATA[This information will be used to help your local NHS respond to the coronavirus in your area and to understand the spread of the disease across the UK. Your postcode will <b>not</b> be used to track your location.]]></string>
-    <string name="valid_post_code_is_required">Valid post code is required</string>
-    <string name="coronavirus">Stop the Spread</string>
+    <string name="valid_post_code_is_required">Please enter the first part of a valid postcode. For example: PO30, E2, M1, EH1, L36</string>
+    <string name="coronavirus">COVID-19</string>
     <string name="app_rationale">This app can let you know if you may have been near someone with coronavirus symptoms (COVID-19).</string>
     <string name="back">Back</string>
     <string name="explanation_privacy_policy_and_terms_and_conditions">Read our privacy policy and terms and conditions.</string>

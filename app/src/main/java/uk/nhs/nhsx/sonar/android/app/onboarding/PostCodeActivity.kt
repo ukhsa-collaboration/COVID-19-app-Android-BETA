@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_post_code.postCodeRationale
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.util.announce
 import uk.nhs.nhsx.sonar.android.app.util.observeEvent
 import javax.inject.Inject
 
@@ -47,10 +48,15 @@ class PostCodeActivity : AppCompatActivity(R.layout.activity_post_code) {
 
         viewModel.viewState().observe(this, Observer { viewState ->
             when (viewState) {
-                PostCodeViewState.Valid ->
+                PostCodeViewState.Valid -> {
+                    postCodeEditText.setBackgroundResource(R.drawable.edit_text_background)
                     invalidPostCodeHint.isVisible = false
-                PostCodeViewState.Invalid ->
+                }
+                PostCodeViewState.Invalid -> {
+                    postCodeEditText.setBackgroundResource(R.drawable.edit_text_background_error)
+                    announce(R.string.valid_post_code_is_required)
                     invalidPostCodeHint.isVisible = true
+                }
             }
         })
 

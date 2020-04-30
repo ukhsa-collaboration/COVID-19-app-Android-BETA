@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
+import androidx.core.view.ViewCompat
 import kotlinx.android.synthetic.main.activity_explanation.explanationHow
 import kotlinx.android.synthetic.main.activity_explanation.explanation_back
 import uk.nhs.nhsx.sonar.android.app.R
@@ -23,6 +24,8 @@ class ExplanationActivity : AppCompatActivity(R.layout.activity_explanation) {
         )
 
         explanationHow.movementMethod = LinkMovementMethod.getInstance()
+        explanationHow.linksClickable = true
+        ViewCompat.enableAccessibleClickableSpanSupport(explanationHow)
 
         explanation_back.setOnClickListener {
             onBackPressed()
