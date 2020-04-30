@@ -111,7 +111,7 @@ play {
     track = "internal"
     defaultToAppBundles = true
     fromTrack = "internal"
-    promoteTrack = "alpha"
+    promoteTrack = "Test"
     resolutionStrategy = "auto"
     outputProcessor {
         def gitcommit = findProperty('gitcommit') ?: 'unknown'

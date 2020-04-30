@@ -1,8 +1,0 @@
-Latest changes
-- New self-report symptoms
-- All content is placeholder
-
-To demonstrate the complete functionality you will need at least 2 phones with the app installed:
-- Bring phones into proximity (currently up to 5 metres) for any length of time
-- On one device, declare your symptoms, and then tap the “notify” button
-- On the second device you will the screen update to say that you should self isolate at home (edited)
