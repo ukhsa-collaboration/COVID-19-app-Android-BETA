@@ -51,7 +51,7 @@ echo "$SIGNING_KEY_STORE" > build/keystore.txt
 base64 -d build/keystore.txt > "$SIGNING_KEY_STORE_FILE"
 
 ./gradlew publish --track="$PLAY_TRACK" \
-   -Pgitcommit="$(git rev-parse --verify --short HEAD)" \
+   -Pgitcommit="$COMMIT_SHA" \
    -Psonar.headerValue="$SONAR_HEADER_VALUE" \
    -Psonar.baseUrl="$SONAR_BASE_URL" \
    -Pplay-enabled \
