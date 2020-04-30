@@ -276,7 +276,6 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkOkActivityIsShown()
-        checkDisplayOfReferenceCode()
         checkDisplayOfMedicalWorkersInstructions()
     }
 
@@ -287,7 +286,6 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkAtRiskActivityIsShown()
-        checkDisplayOfReferenceCode()
         checkDisplayOfMedicalWorkersInstructions()
     }
 
@@ -304,7 +302,6 @@ class FlowTest {
 
         checkIsolateActivityIsShown()
         checkDisplayOfReferenceCode()
-        checkMedicalWorkersInstructionsNotDisplayed()
     }
 
     fun testLaunchWhenStateIsRedAndExpired() {
@@ -367,7 +364,10 @@ class FlowTest {
             if (Build.VERSION.SDK_INT >= 29) {
                 checkViewHasText(R.id.edgeCaseTitle, R.string.grant_location_permission_title)
             } else {
-                checkViewHasText(R.id.edgeCaseTitle, R.string.grant_location_permission_title_pre_10)
+                checkViewHasText(
+                    R.id.edgeCaseTitle,
+                    R.string.grant_location_permission_title_pre_10
+                )
             }
 
             onView(withId(R.id.takeActionButton)).perform(click())
@@ -463,7 +463,10 @@ class FlowTest {
         checkViewHasText(R.id.edgeCaseTitle, R.string.re_allow_location_permission_title)
 
         onView(withId(R.id.takeActionButton)).perform(click())
-        testAppContext.device.wait(Until.gone(By.text("Allow this app to access your location to continue")), 500)
+        testAppContext.device.wait(
+            Until.gone(By.text("Allow this app to access your location to continue")),
+            500
+        )
         testAppContext.grantLocationPermission()
         testAppContext.device.pressBack()
 
@@ -550,7 +553,7 @@ class FlowTest {
     }
 
     private fun checkDisplayOfReferenceCode() {
-        onView(withId(R.id.reference_code_link)).perform(scrollTo(), click())
+        onView(withId(R.id.reference_link_card)).perform(scrollTo(), click())
 
         onView(withId(R.id.reference_code)).check(matches(withText(REFERENCE_CODE)))
         onView(withId(R.id.close)).perform(click())

@@ -85,7 +85,7 @@
     <string name="progress_two_out_of_two">2/2</string>
     <string name="progress_three_thirds">3/3</string>
     <string name="submission_error">Submission failed. Please try again</string>
-    <string name="status_latest_advice">Read what to do next</string>
+    <string name="status_latest_advice"><u>Read what to do next</u></string>
     <string name="status_feeling_ok">I feel as healthy as normal</string>
     <string name="status_feeling_ok_desc">Nothing abnormal or out of the usual is going on with me</string>
     <string name="status_not_feeling_well">I feel unwell</string>
@@ -94,8 +94,8 @@
     <string name="status_red_title">Your symptoms indicate you may have coronavirus</string>
     <string name="status_red_next_steps">Next steps</string>
     <string name="need_medical_advice">If you need urgent medical advice about your coronavirus symptoms, visit</string>
-    <string name="nhs_online_service">NHS Coronavirus</string>
-    <string name="nhs_111_online_service">NHS 111 online coronavirus service</string>
+    <string name="nhs_online_service"><u>NHS Coronavirus</u></string>
+    <string name="nhs_111_online_service"><u>NHS 111 online coronavirus service</u></string>
     <string name="status_today_feeling">How are you feeling today?</string>
     <string name="registration_finalising_setup">Finalising setup…</string>
     <string name="registration_everything_is_working_ok">The app is working properly</string>
@@ -146,7 +146,7 @@
     <string name="go_to_your_settings">Go to your Settings</string>
     <string name="enable_location_service_title">You need to enable location services on your phone</string>
     <string name="enable_location_service_rationale">To make Bluetooth work, we need you to turn on location services on your phone.\n\nThis app is not using Bluetooth or your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nIf you do not enable location services on your phone this app will not work.\n\nTo enable this app to work, please go to Settings and enable location services:</string>
-    <string name="follow_until">Follow this advice until %1$s</string>
+    <string name="follow_until">Follow this advice until %1$s, at which point this app will notify you to update your symptoms </string>
     <string name="status_description_01">If you don’t have any symptoms, there’s no need to do anything right now.</string>
     <string name="status_description_02">Feel free to use other apps as normal and you’ll be notified if your advice changes.</string>
     <string name="status_description_03">If you develop symptoms, please come back to this app.</string>
@@ -156,7 +156,7 @@
     <string name="re_enable_location_rationale">To make Bluetooth work, we also need you to turn on location services. Your location will not be tracked. Your location and personal identity will remain protected.\n\nTo enable your location you need to turn on your location services on your phone.\n\n%1$s works using Bluetooth signals, to determine when you have been near someone else with this app who shows symptoms of Coronavirus.</string>
     <string name="re_allow_location_permission_title">Allow this app to access your location to continue</string>
     <string name="re_allow_location_permission_rationale">To make Bluetooth work, we also need you to turn on location services and give the app permission to use it. Your location will not be tracked. Your location and personal identity will remain protected.\n\nTo enable your location permissions you need to go to your Settings and allow this app to access location services.\n\n%1$s works using Bluetooth signals, to determine when you have been near someone else with this app who shows symptoms of Coronavirus.</string>
-    <string name="view_reference_code">View reference code</string>
+    <string name="view_reference_code">Show my reference code</string>
     <string name="reference_code">Reference code</string>
     <string name="loading">Loading…</string>
     <string name="error">Error</string>
@@ -172,10 +172,15 @@
     <string name="device_not_supported_rationale">Your device is not supported this could be for various reasons.</string>
     <string name="confirm_diagnosis_text_1">This information will be used to help decide if the people you have had contact with will be advised to stay at home. To avoid more social distancing restrictions, the NHS needs accurate data on the number of people with symptoms.</string>
     <string name="confirm_diagnosis_text_2">Together we can help save lives, protect the NHS and stop the spread of coronavirus in the UK.</string>
-    <string name="important_instructions_for_medical_workers">Important Instructions for medical workers</string>
+    <string name="important_instructions_for_medical_workers">Important Instructions for healthcare workers</string>
     <string name="medical_workers_instructions_title">Turn off your Bluetooth when you put on your PPE</string>
     <string name="medical_workers_instructions_text">Your interactions at work should not be captured when you are wearing personal protective equipment.</string>
     <string name="isolate_will_be_notified">On %1$s, this app will notify you to update your symptoms so that you can receive the latest advice.</string>
     <string name="high_temperature">High temperature</string>
     <string name="continuous_cough">Continuous cough</string>
+    <string name="info">information</string>
+    <string name="please_book_test">Please book a coronavirus test immediately. Write down your reference code and phone</string>
+    <string name="test_booking_number"><u>0800 540 4900</u></string>
+    <string name="isle_of_white_only_title">This app currently only works on the Isle of Wight</string>
+    <string name="isle_of_white_only_description">If you live elsewhere in the UK, please keep the app installed and we will let you know when it is ready for you to use.</string>
 </resources>

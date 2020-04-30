@@ -7,19 +7,17 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.activity_ok.areaNotSupported
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
 import kotlinx.android.synthetic.main.activity_review_close.nhs_service
-import kotlinx.android.synthetic.main.status_footer_view_common.medicalWorkersInstructions
+import kotlinx.android.synthetic.main.banner.toolbar_info
+import kotlinx.android.synthetic.main.status_footer_view.medical_workers_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -28,15 +26,13 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDialog
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
+import uk.nhs.nhsx.sonar.android.app.util.INFO_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
-import java.util.Locale
 import javax.inject.Inject
 
 class OkActivity : BaseActivity() {
@@ -54,11 +50,6 @@ class OkActivity : BaseActivity() {
     @Inject
     lateinit var postCodeProvider: PostCodeProvider
 
-    @Inject
-    lateinit var referenceCodeViewModelFactory: ViewModelFactory<ReferenceCodeViewModel>
-    private val referenceCodeViewModel: ReferenceCodeViewModel by viewModels { referenceCodeViewModelFactory }
-    private var referenceCodeDialog: BottomSheetDialog? = null
-
     private lateinit var recoveryDialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,10 +61,6 @@ class OkActivity : BaseActivity() {
         }
 
         setContentView(R.layout.activity_ok)
-
-        val postCode = postCodeProvider.getPostCode().toUpperCase(Locale.UK)
-        val postCodeRegex = Regex("PO(3[0-9]|4[0-1])")
-        areaNotSupported.isVisible = !postCodeRegex.matches(postCode)
 
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
@@ -89,8 +76,12 @@ class OkActivity : BaseActivity() {
             openUrl(NHS_SUPPORT_PAGE)
         }
 
-        medicalWorkersInstructions.setOnClickListener {
+        medical_workers_card.setOnClickListener {
             MedicalWorkersInstructionsDialog(this).show()
+        }
+
+        toolbar_info.setOnClickListener {
+            openUrl(INFO_PAGE)
         }
 
         addViewModelListener()
@@ -102,22 +93,7 @@ class OkActivity : BaseActivity() {
     private fun toggleNotFeelingCard(enabled: Boolean) {
         status_not_feeling_well.let {
             it.isClickable = enabled
-            it.isFocusable = enabled
             it.isEnabled = enabled
-        }
-    }
-
-    private fun toggleReferenceCodeLink(enabled: Boolean) {
-        val link = findViewById<View>(R.id.reference_code_link)
-
-        link.let {
-            it.isClickable = enabled
-            it.isFocusable = enabled
-            it.isEnabled = enabled
-        }
-
-        if (enabled && referenceCodeDialog == null) {
-            referenceCodeDialog = ReferenceCodeDialog(this, referenceCodeViewModel, link)
         }
     }
 
@@ -128,12 +104,10 @@ class OkActivity : BaseActivity() {
                     registrationPanel.setState(result)
                     BluetoothService.start(this)
                     toggleNotFeelingCard(true)
-                    toggleReferenceCodeLink(true)
                 }
                 InProgress -> {
                     registrationPanel.setState(result)
                     toggleNotFeelingCard(false)
-                    toggleReferenceCodeLink(false)
                 }
                 null -> {
                 }

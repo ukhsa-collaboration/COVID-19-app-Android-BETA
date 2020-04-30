@@ -38,6 +38,7 @@
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
                 android:text="@string/check_answers" />
 
             <View
@@ -80,6 +81,7 @@
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
                 android:text="@string/symptoms_date_prompt_cough" />
 
             <TextView

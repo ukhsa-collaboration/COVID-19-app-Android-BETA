@@ -6,18 +6,17 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import androidx.activity.viewModels
-import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.activity_at_risk.follow_until
+import kotlinx.android.synthetic.main.activity_isolate.book_test_card
+import kotlinx.android.synthetic.main.activity_isolate.follow_until
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
+import kotlinx.android.synthetic.main.activity_isolate.nhs_service
 import kotlinx.android.synthetic.main.activity_isolate.symptoms
-import kotlinx.android.synthetic.main.activity_isolate.will_be_notified
-import kotlinx.android.synthetic.main.status_footer_view_common.dividerBelowMedicalWorkersInstructions
-import kotlinx.android.synthetic.main.status_footer_view_common.medicalWorkersInstructions
-import kotlinx.android.synthetic.main.status_footer_view_common.nhs_service
+import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -26,6 +25,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
+import uk.nhs.nhsx.sonar.android.app.util.INFO_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL_RED_STATE
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -61,8 +61,6 @@ class IsolateActivity : BaseActivity() {
         }
 
         follow_until.text = getString(R.string.follow_until, state.until.toUiFormat())
-        will_be_notified.text =
-            getString(R.string.isolate_will_be_notified, state.until.toUiFormat())
 
         latest_advice_red.setOnClickListener {
             openUrl(LATEST_ADVICE_URL_RED_STATE)
@@ -72,14 +70,22 @@ class IsolateActivity : BaseActivity() {
             openUrl(NHS_SUPPORT_PAGE)
         }
 
-        medicalWorkersInstructions.isVisible = false
-        dividerBelowMedicalWorkersInstructions.isVisible = false
+        book_test_card.setOnClickListener {
+            val intent = Intent(Intent.ACTION_DIAL)
+            val bookTestPhoneNumber = getString(R.string.test_booking_number)
+            intent.data = Uri.parse("tel:$bookTestPhoneNumber")
+            startActivity(intent)
+        }
+
+        toolbar_info.setOnClickListener {
+            openUrl(INFO_PAGE)
+        }
 
         setUpdateSymptomsDialog()
         referenceCodeDialog = ReferenceCodeDialog(
             this,
             referenceCodeViewModel,
-            findViewById(R.id.reference_code_link)
+            findViewById(R.id.reference_link_card)
         )
     }
 
