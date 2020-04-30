@@ -32,6 +32,10 @@ class NetworkModule(
         CoLocationApi(baseUrl, keyStorage, httpClient)
 
     @Provides
-    fun referenceCodeApi(sonarIdProvider: SonarIdProvider, httpClient: HttpClient): ReferenceCodeApi =
-        ReferenceCodeApi(baseUrl, sonarIdProvider, httpClient)
+    fun referenceCodeApi(
+        sonarIdProvider: SonarIdProvider,
+        keyStorage: KeyStorage,
+        httpClient: HttpClient
+    ): ReferenceCodeApi =
+        ReferenceCodeApi(baseUrl, sonarIdProvider, keyStorage, httpClient)
 }
