@@ -15,6 +15,7 @@ import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
+import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 class SaveContactWorkerTest {
@@ -42,8 +43,15 @@ class SaveContactWorkerTest {
     fun `saves correct events`() {
         runBlocking {
             val countryCode = byteArrayOf('G'.toByte(), 'B'.toByte())
-            val cryptogram = Cryptogram(ByteArray(64), ByteArray(26), ByteArray(16))
-            val bluetoothIdentifier = BluetoothIdentifier(countryCode, cryptogram, -7)
+            val cryptogram = Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE))
+            val hmacSignature = Random.nextBytes(16)
+            val bluetoothIdentifier = BluetoothIdentifier(
+                countryCode,
+                cryptogram,
+                -7,
+                45,
+                hmacSignature
+            )
             val timestamp = DateTime.now()
             saveContactWorker.createOrUpdateContactEvent(
                 this,
@@ -53,70 +61,16 @@ class SaveContactWorkerTest {
             )
 
             val expectedEvent = ContactEvent(
-                sonarId = bluetoothIdentifier.asBytes(),
+                sonarId = bluetoothIdentifier.cryptogram.asBytes(),
                 rssiValues = listOf(-42),
                 rssiTimestamps = listOf(timestamp.millis),
-                txPower = -7,
+                txPowerInProtocol = -7,
                 duration = 60,
-                timestamp = timestamp.millis
-            )
-            coVerify { contactEventDao.createOrUpdate(expectedEvent) }
-        }
-    }
-
-    // TODO: Remove once iOS is sending txPower
-    @Test
-    fun `saves events if they are just missing txPower`() {
-        runBlocking {
-            val countryCode = byteArrayOf('G'.toByte(), 'B'.toByte())
-            val cryptogram = Cryptogram(ByteArray(64), ByteArray(26), ByteArray(16))
-            val bluetoothIdentifier = BluetoothIdentifier(countryCode, cryptogram, -7)
-            val timestamp = DateTime.now()
-            saveContactWorker.createOrUpdateContactEvent(
-                this,
-                bluetoothIdentifier.asBytes().dropLast(1).toByteArray(),
-                -42,
-                timestamp
-            )
-
-            val idWithDefaultTx = bluetoothIdentifier.asBytes()
-            idWithDefaultTx[idWithDefaultTx.size - 1] = 0.toByte()
-            val expectedEvent = ContactEvent(
-                sonarId = idWithDefaultTx,
-                rssiValues = listOf(-42),
-                rssiTimestamps = listOf(timestamp.millis),
-                txPower = 0,
-                duration = 60,
-                timestamp = timestamp.millis
-            )
-            coVerify { contactEventDao.createOrUpdate(expectedEvent) }
-        }
-    }
-    // TODO: Remove once iOS is sending txPower and country code
-    @Test
-    fun `saves events if they are missing txPower and country code`() {
-        runBlocking {
-            val countryCode = byteArrayOf('G'.toByte(), 'B'.toByte())
-            val cryptogram = Cryptogram(ByteArray(64), ByteArray(26), ByteArray(16))
-            val bluetoothIdentifier = BluetoothIdentifier(countryCode, cryptogram, -7)
-            val timestamp = DateTime.now()
-
-            saveContactWorker.createOrUpdateContactEvent(
-                this,
-                cryptogram.asBytes(),
-                -42,
-                timestamp
-            )
-
-            val idWithDefaultTx = bluetoothIdentifier.asBytes()
-            idWithDefaultTx[idWithDefaultTx.size - 1] = 0.toByte()
-            val expectedEvent = ContactEvent(
-                sonarId = idWithDefaultTx,
-                rssiValues = listOf(-42),
-                rssiTimestamps = listOf(timestamp.millis),
-                txPower = 0,
-                duration = 60,
-                timestamp = timestamp.millis
+                timestamp = timestamp.millis,
+                txPowerAdvertised = 0,
+                transmissionTime = 45,
+                hmacSignature = hmacSignature,
+                countryCode = countryCode
             )
             coVerify { contactEventDao.createOrUpdate(expectedEvent) }
         }
