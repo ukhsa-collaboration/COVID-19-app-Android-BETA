@@ -99,8 +99,6 @@ class FlowTest {
     @Test
     fun testRunner() {
         val tests = listOf(
-            ::testUnsupportedDevice,
-            ::testUnsupportedDeviceOnThePermissionScreen,
             ::testRegistration,
             ::testRegistrationRetry,
             ::testBluetoothInteractions,
