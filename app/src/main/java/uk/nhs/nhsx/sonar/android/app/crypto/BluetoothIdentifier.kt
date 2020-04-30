@@ -4,57 +4,35 @@
 
 package uk.nhs.nhsx.sonar.android.app.crypto
 
+import timber.log.Timber
 import java.lang.IllegalArgumentException
-import java.nio.ByteBuffer
 
 class BluetoothIdentifier(
     val countryCode: ByteArray,
     val cryptogram: Cryptogram,
-    val txPower: Byte,
-    val transmissionTime: Int,
-    val hmacSignature: ByteArray
+    val txPower: Byte
 ) {
-    init {
-        if (countryCode.size != 2) {
-            throw IllegalArgumentException("Country code must be two bytes of ISO 3166-1. Was ${countryCode.size} ")
-        }
-
-        if (hmacSignature.size != 16) {
-            throw IllegalArgumentException("Signature must be 16 bytes. Was ${hmacSignature.size} ")
-        }
-    }
 
     companion object {
         fun fromBytes(bytes: ByteArray): BluetoothIdentifier {
+            Timber.d("Bytes is ${bytes.size} - ${bytes.map{it.toInt()}.joinToString(",")}")
             if (bytes.size != SIZE) {
                 throw IllegalArgumentException("Identifier must be exactly $SIZE bytes, was given ${bytes.size}")
             }
-
-            val transmissionTimeOffset = countryCodeSize + Cryptogram.SIZE + txPowerSize
-            val signatureOffset = transmissionTimeOffset + transmissionTimeSize
             return BluetoothIdentifier(
-                bytes.sliceArray(0 until countryCodeSize),
-                Cryptogram.fromBytes(bytes.sliceArray(countryCodeSize until countryCodeSize + Cryptogram.SIZE)),
-                bytes[countryCodeSize + Cryptogram.SIZE],
-                ByteBuffer.wrap(bytes.sliceArray(transmissionTimeOffset until signatureOffset)).int,
-                bytes.sliceArray(signatureOffset until SIZE)
+                bytes.sliceArray(0 until 2),
+                Cryptogram.fromBytes(bytes.sliceArray(2 until bytes.size - 1)),
+                bytes.last()
             )
         }
 
         private const val countryCodeSize = 2
         private const val txPowerSize = 1
-        private const val transmissionTimeSize = 4
-        private const val signatureSize = 16
-        const val SIZE =
-            countryCodeSize + Cryptogram.SIZE + txPowerSize + transmissionTimeSize + signatureSize
+        const val SIZE = countryCodeSize + Cryptogram.SIZE + txPowerSize
     }
 
     fun asBytes(): ByteArray =
-        (countryCode + cryptogram.asBytes() + txPower + transmissionTimeBytes() + hmacSignature)
-
-    private fun transmissionTimeBytes() = ByteBuffer.wrap(ByteArray(transmissionTimeSize)).apply {
-        putInt(transmissionTime)
-    }.array()
+        (countryCode + cryptogram.asBytes() + txPower)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -65,8 +43,6 @@ class BluetoothIdentifier(
         if (!countryCode.contentEquals(other.countryCode)) return false
         if (cryptogram != other.cryptogram) return false
         if (txPower != other.txPower) return false
-        if (transmissionTime != other.transmissionTime) return false
-        if (!hmacSignature.contentEquals(other.hmacSignature)) return false
 
         return true
     }
@@ -75,8 +51,6 @@ class BluetoothIdentifier(
         var result = countryCode.contentHashCode()
         result = 31 * result + cryptogram.hashCode()
         result = 31 * result + txPower
-        result = 31 * result + transmissionTime
-        result = 31 * result + hmacSignature.contentHashCode()
         return result
     }
 }

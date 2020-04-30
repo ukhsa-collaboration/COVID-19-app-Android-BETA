@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.ble
 
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothGatt.GATT
 import android.bluetooth.BluetoothGatt.GATT_FAILURE
 import android.bluetooth.BluetoothGatt.GATT_SUCCESS
 import android.bluetooth.BluetoothGattCharacteristic
@@ -17,6 +18,7 @@ import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.test.TestCoroutineScope
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
@@ -43,8 +45,8 @@ class GattWrapperTest {
         )
     )
 
-    private lateinit var identifier: BluetoothIdentifier
-    private lateinit var identifierBytes: ByteArray
+    private lateinit var cryptogram: Cryptogram
+    private lateinit var cryptogramBytes: ByteArray
 
     private val gattWrapper = GattWrapper(
         server,
@@ -56,19 +58,15 @@ class GattWrapperTest {
 
     @Before
     fun setUp() {
-        val cryptogram = Cryptogram.fromBytes(
+        cryptogram = Cryptogram.fromBytes(
             Random.Default.nextBytes(Cryptogram.SIZE)
         )
-        val bluetoothIdentifier = BluetoothIdentifier(
+        cryptogramBytes = cryptogram.asBytes()
+        every { bluetoothIdProvider.provideBluetoothPayload() } returns BluetoothIdentifier(
             "GB".toByteArray(),
-            cryptogram,
-            (-8).toByte(),
-            14,
-            Random.nextBytes(16)
+            cryptogram, (-8).toByte()
         )
-        identifierBytes = bluetoothIdentifier.asBytes()
-        every { bluetoothIdProvider.provideBluetoothPayload() } returns bluetoothIdentifier
-        every { bluetoothIdProvider.canProvideIdentifier() } returns true
+        every { bluetoothIdProvider.canProvideCryptogram() } returns true
     }
 
     @After
@@ -151,7 +149,7 @@ class GattWrapperTest {
         every { identityCharacteristic.uuid } returns SONAR_IDENTITY_CHARACTERISTIC_UUID
 
         gattWrapper.respondToCharacteristicRead(device, 45, identityCharacteristic)
-        verify { server.sendResponse(device, 45, GATT_SUCCESS, 0, identifierBytes) }
+        verify { server.sendResponse(device, 45, GATT_SUCCESS, 0, cryptogramBytes) }
     }
 
     @Test

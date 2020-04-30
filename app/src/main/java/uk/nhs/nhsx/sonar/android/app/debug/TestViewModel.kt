@@ -53,7 +53,7 @@ class TestViewModel @Inject constructor(
             val events = contactEventDao.getAll()
             val text = events.joinToString("\n") {
                 val eventTime = DateTime(it.timestamp)
-                val rssiIntervals = it.rssiTimestamps.mapIndexed { index, timestamp ->
+                val rssiOffsets = it.rssiTimestamps.mapIndexed { index, timestamp ->
                     return@mapIndexed if (index == 0) 0
                     else
                         Seconds.secondsBetween(
@@ -65,7 +65,7 @@ class TestViewModel @Inject constructor(
                 "${Base64.encodeToString(it.sonarId, Base64.DEFAULT).replace(
                     "\n",
                     ""
-                )},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiIntervals"
+                )},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiOffsets"
             }
 
             val zipFile = "contact-events-exports.zip"

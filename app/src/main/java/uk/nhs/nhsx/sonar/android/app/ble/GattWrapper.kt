@@ -36,10 +36,10 @@ class GattWrapper(
     private val lock = Mutex()
 
     private val payload: ByteArray
-        get() = bluetoothIdProvider.provideBluetoothPayload().asBytes()
+        get() = bluetoothIdProvider.provideBluetoothPayload().cryptogram.asBytes()
 
     private val payloadIsValid: Boolean
-        get() = bluetoothIdProvider.canProvideIdentifier()
+        get() = bluetoothIdProvider.canProvideCryptogram()
 
     fun respondToCharacteristicRead(
         device: BluetoothDevice,

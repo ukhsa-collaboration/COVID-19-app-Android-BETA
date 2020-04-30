@@ -18,7 +18,6 @@ import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.TestQueue
 import uk.nhs.nhsx.sonar.android.app.http.assertBodyHasJson
 import uk.nhs.nhsx.sonar.android.app.http.generateSignatureKey
-import java.util.Base64
 
 class CoLocationApiTest {
 
@@ -35,35 +34,19 @@ class CoLocationApiTest {
         val events = listOf(
             CoLocationEvent(
                 encryptedRemoteContactId = "001",
-                rssiValues = Base64.getEncoder().encodeToString(
-                    byteArrayOf(0, (-10).toByte())
-                ),
-                rssiIntervals = listOf(0, 6),
+                rssiValues = listOf(-10, 0),
+                rssiOffsets = listOf(0, 6),
                 timestamp = "2s ago",
                 duration = 10,
-                txPowerInProtocol = (-9).toByte(),
-                txPowerAdvertised = (-5).toByte(),
-                hmacSignature = Base64.getEncoder().encodeToString(ByteArray(16) { 1 }),
-                countryCode = 1.toShort(),
-                transmissionTime = 1
+                txPower = (-9).toByte()
             ),
             CoLocationEvent(
                 encryptedRemoteContactId = "002",
-                rssiValues = Base64.getEncoder().encodeToString(
-                    byteArrayOf(
-                        (-10).toByte(),
-                        (-10).toByte(),
-                        (-10).toByte()
-                    )
-                ),
-                rssiIntervals = listOf(0, 5, 20),
+                rssiValues = listOf(-10, -10, 10),
+                rssiOffsets = listOf(0, 5, 20),
                 timestamp = "yesterday",
                 duration = 120,
-                txPowerInProtocol = (-4).toByte(),
-                txPowerAdvertised = (-8).toByte(),
-                hmacSignature = Base64.getEncoder().encodeToString(ByteArray(16) { 2 }),
-                countryCode = 2.toShort(),
-                transmissionTime = 2
+                txPower = (-4).toByte()
             )
         )
 
@@ -79,35 +62,19 @@ class CoLocationApiTest {
             "contactEvents" to listOf(
                 mapOf(
                     "encryptedRemoteContactId" to "001",
-                    "rssiValues" to Base64.getEncoder().encodeToString(
-                        byteArrayOf(0, (-10).toByte())
-                    ),
-                    "rssiIntervals" to listOf(0, 6),
+                    "rssiValues" to listOf(-10, 0),
+                    "rssiOffsets" to listOf(0, 6),
                     "timestamp" to "2s ago",
                     "duration" to 10,
-                    "txPowerInProtocol" to -9,
-                    "txPowerAdvertised" to -5,
-                    "countryCode" to 1,
-                    "hmacSignature" to Base64.getEncoder().encodeToString(ByteArray(16) { 1 }),
-                    "transmissionTime" to 1
+                    "txPower" to -9
                 ),
                 mapOf(
                     "encryptedRemoteContactId" to "002",
-                    "rssiValues" to Base64.getEncoder().encodeToString(
-                        byteArrayOf(
-                            (-10).toByte(),
-                            (-10).toByte(),
-                            (-10).toByte()
-                        )
-                    ),
-                    "rssiIntervals" to listOf(0, 5, 20),
+                    "rssiValues" to listOf(-10, -10, 10),
+                    "rssiOffsets" to listOf(0, 5, 20),
                     "timestamp" to "yesterday",
                     "duration" to 120,
-                    "txPowerInProtocol" to -4,
-                    "txPowerAdvertised" to -8,
-                    "countryCode" to 2,
-                    "hmacSignature" to Base64.getEncoder().encodeToString(ByteArray(16) { 2 }),
-                    "transmissionTime" to 2
+                    "txPower" to -4
                 )
             )
         )

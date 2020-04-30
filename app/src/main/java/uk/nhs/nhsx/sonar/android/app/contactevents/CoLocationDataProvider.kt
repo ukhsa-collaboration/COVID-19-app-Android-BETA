@@ -9,10 +9,9 @@ import android.util.Base64.DEFAULT
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Seconds
-import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
-import java.nio.ByteBuffer
 
 class CoLocationDataProvider(
     private val contactEventDao: ContactEventDao,
@@ -24,7 +23,7 @@ class CoLocationDataProvider(
 
     private fun convert(contactEvent: ContactEvent): CoLocationEvent {
         val startTime = DateTime(contactEvent.timestamp, DateTimeZone.UTC)
-        val rssiIntervals = contactEvent.rssiTimestamps.mapIndexed { index, timestamp ->
+        val rssiOffsets = contactEvent.rssiTimestamps.mapIndexed { index, timestamp ->
             return@mapIndexed if (index == 0) 0
             else
                 Seconds.secondsBetween(
@@ -33,19 +32,13 @@ class CoLocationDataProvider(
                 ).seconds
         }
 
-        val rssiValues = contactEvent.rssiValues.map { it.toByte() }.toByteArray()
-        Timber.e("Signature is ${base64encode(contactEvent.hmacSignature)}")
         return CoLocationEvent(
-            encryptedRemoteContactId = base64encode(contactEvent.sonarId),
-            rssiValues = base64encode(rssiValues),
-            rssiIntervals = rssiIntervals,
+            encryptedRemoteContactId = base64encode(BluetoothIdentifier.fromBytes(contactEvent.sonarId).cryptogram.asBytes()),
+            rssiValues = contactEvent.rssiValues,
+            rssiOffsets = rssiOffsets,
             timestamp = startTime.toUtcIsoFormat(),
             duration = contactEvent.duration,
-            txPowerInProtocol = contactEvent.txPowerInProtocol,
-            txPowerAdvertised = contactEvent.txPowerAdvertised,
-            hmacSignature = base64encode(contactEvent.hmacSignature),
-            countryCode = ByteBuffer.wrap(contactEvent.countryCode).short,
-            transmissionTime = contactEvent.transmissionTime
+            txPower = contactEvent.txPower
         )
     }
 

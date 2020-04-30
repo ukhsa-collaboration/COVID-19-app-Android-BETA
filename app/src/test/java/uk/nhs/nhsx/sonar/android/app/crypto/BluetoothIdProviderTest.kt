@@ -17,42 +17,36 @@ import org.junit.BeforeClass
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import java.nio.ByteBuffer
 import java.security.KeyFactory
 import java.security.Security
 import java.security.spec.X509EncodedKeySpec
 import java.util.Base64
-import javax.crypto.spec.SecretKeySpec
 
 class BluetoothIdProviderTest {
-    private val sonarIdProvider = mockk<SonarIdProvider>()
+    private val publicKeyBytes = Base64.getDecoder()
+        .decode("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu1f68MqDXbKeTqZMTHsOGToO4rKnPClXe/kE+oWqlaWZQv4J1E98cUNdpzF9JIFRPMCNdGOvTr4UB+BhQv9GWg==")
 
+    private val sonarIdProvider = mockk<SonarIdProvider>()
     private val keyStorage = mockk<KeyStorage>()
     private val currentDateProvider = mockk<() -> DateTime>()
-    private val ephemeralKeyProvider = EphemeralKeyProvider()
 
+    private val ephemeralKeyProvider = EphemeralKeyProvider()
     private val encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
-    private val signer = BluetoothIdSigner(keyStorage)
     private val idProvider: BluetoothIdProvider = BluetoothIdProvider(
         sonarIdProvider,
         encrypter,
-        signer,
         currentDateProvider
     )
-    companion object {
 
+    companion object {
         @BeforeClass
         @JvmStatic
         fun setUpBouncyCastle() {
             Security.insertProviderAt(BouncyCastleProvider(), 1)
         }
     }
-    private val startTime = DateTime.parse("2020-04-24T14:00:00Z")
-    private val publicKeyBytes = Base64.getDecoder()
-        .decode("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu1f68MqDXbKeTqZMTHsOGToO4rKnPClXe/kE+oWqlaWZQv4J1E98cUNdpzF9JIFRPMCNdGOvTr4UB+BhQv9GWg==")
-    private val countryCode = "GB".toByteArray()
 
-    private val secretKey = SecretKeySpec(Base64.getDecoder().decode("ddYTB7doP61hMnChfcWBVvvZsP5l5ypar5eeFQrBfY8="), "HMACSHA256")
+    private val startTime = DateTime.parse("2020-04-24T14:00:00Z")
 
     @Before
     fun setUp() {
@@ -62,7 +56,6 @@ class BluetoothIdProviderTest {
         every { keyStorage.providePublicKey() } returns ecKeyFactory.generatePublic(
             X509EncodedKeySpec(publicKeyBytes)
         )
-        every { keyStorage.provideSecretKey() } returns secretKey
         every { currentDateProvider.invoke() } returns startTime
     }
 
@@ -87,7 +80,7 @@ class BluetoothIdProviderTest {
     @Test
     fun `contains correct country code`() {
         val payload = idProvider.provideBluetoothPayload()
-        assertThat(payload.countryCode).isEqualTo(countryCode)
+        assertThat(payload.countryCode).isEqualTo(byteArrayOf('G'.toByte(), 'B'.toByte()))
     }
 
     @Test
@@ -98,46 +91,19 @@ class BluetoothIdProviderTest {
     }
 
     @Test
-    fun `contains the transmission time`() {
-        val payload = idProvider.provideBluetoothPayload()
-        assertThat(payload.transmissionTime).isEqualTo(1587736800)
-    }
-
-    @Test
-    fun `contains first half of hmac`() {
-        val payload = idProvider.provideBluetoothPayload()
-        val transmissionTimeBytes = ByteBuffer.wrap(ByteArray(4)).apply {
-            putInt(payload.transmissionTime)
-        }.array()
-        val expectedSignature = signer.computeHmacSignature(
-            countryCode,
-            payload.cryptogram.asBytes(),
-            payload.txPower,
-            transmissionTimeBytes
-        )
-        assertThat(payload.hmacSignature).isEqualTo(expectedSignature)
-    }
-
-    @Test
     fun `can provide identifier if sonarId and encrypter has public key`() {
-        assertThat(idProvider.canProvideIdentifier()).isTrue()
+        assertThat(idProvider.canProvideCryptogram()).isTrue()
     }
 
     @Test
     fun `can not provide identifier if sonarId is not set`() {
         every { sonarIdProvider.hasProperSonarId() } returns false
-        assertThat(idProvider.canProvideIdentifier()).isFalse()
+        assertThat(idProvider.canProvideCryptogram()).isFalse()
     }
 
     @Test
     fun `can not provide identifier if encrypter is not able to encrypt`() {
         every { keyStorage.providePublicKey() } returns null
-        assertThat(idProvider.canProvideIdentifier()).isFalse()
-    }
-
-    @Test
-    fun `can not provide identifier if secret key is not available`() {
-        every { keyStorage.provideSecretKey() } returns null
-        assertThat(idProvider.canProvideIdentifier()).isFalse()
+        assertThat(idProvider.canProvideCryptogram()).isFalse()
     }
 }

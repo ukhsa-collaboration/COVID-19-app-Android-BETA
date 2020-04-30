@@ -17,8 +17,6 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import java.util.Base64
-import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 class SubmitContactEventsWorkTest {
@@ -26,29 +24,17 @@ class SubmitContactEventsWorkTest {
     private val coLocationApi = mockk<CoLocationApi>()
     private val coLocationDataProvider = mockk<CoLocationDataProvider>()
     private val sonarIdProvider = mockk<SonarIdProvider>()
-    private val work =
-        SubmitContactEventsWork(coLocationApi, coLocationDataProvider, sonarIdProvider)
-
-    private val events: List<CoLocationEvent> = listOf(
-        CoLocationEvent(
-            "001",
-            Base64.getEncoder().encodeToString(byteArrayOf(0, 10.toByte())),
-            listOf(0, 2),
-            "2s ago",
-            10,
-            1.toByte(),
-            2.toByte(),
-            18242.toShort(),
-            5,
-            Base64.getEncoder().encodeToString(Random.nextBytes(16))
-        )
-    )
+    private val work = SubmitContactEventsWork(coLocationApi, coLocationDataProvider, sonarIdProvider)
 
     @Test
     fun `test doWork()`() = runBlockingTest {
         val residentId = "80baf81b-8afd-47e9-9915-50691525c910"
         val symptomsDate = "2020-04-24T11:04:10Z"
         val saveDeferred = Deferred<Unit>()
+
+        val events = listOf(
+            CoLocationEvent("001", listOf(-10, 0), listOf(0, 2), "2s ago", 10, 1.toByte())
+        )
 
         every { sonarIdProvider.getSonarId() } returns residentId
         coEvery { coLocationDataProvider.getEvents() } returns events
@@ -70,6 +56,10 @@ class SubmitContactEventsWorkTest {
         val residentId = "80baf81b-8afd-47e9-9915-50691525c910"
         val symptomsDate = "2020-04-24T11:04:10Z"
         val saveDeferred = Deferred<Unit>()
+
+        val events = listOf(
+            CoLocationEvent("001", listOf(-10, 0), listOf(0, 2), "2s ago", 10, 1.toByte())
+        )
 
         every { sonarIdProvider.getSonarId() } returns residentId
         coEvery { coLocationDataProvider.getEvents() } returns events

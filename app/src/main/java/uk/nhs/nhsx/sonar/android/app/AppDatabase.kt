@@ -15,7 +15,7 @@ import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgmentsDao
 
 @Database(
     entities = [ContactEvent::class, Acknowledgment::class],
-    version = 7,
+    version = 6,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

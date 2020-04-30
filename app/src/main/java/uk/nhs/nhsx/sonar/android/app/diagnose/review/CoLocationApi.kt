@@ -40,15 +40,11 @@ data class CoLocationData(
 
 data class CoLocationEvent(
     val encryptedRemoteContactId: String,
-    val rssiValues: String,
-    val rssiIntervals: List<Int>,
+    val rssiValues: List<Int>,
+    val rssiOffsets: List<Int>,
     val timestamp: String,
     val duration: Int,
-    val txPowerInProtocol: Byte,
-    val txPowerAdvertised: Byte,
-    val countryCode: Short,
-    val transmissionTime: Int,
-    val hmacSignature: String
+    val txPower: Byte
 )
 
 private fun CoLocationData.toJson(): JSONObject =
@@ -58,14 +54,10 @@ private fun CoLocationData.toJson(): JSONObject =
             mapOf(
                 "encryptedRemoteContactId" to it.encryptedRemoteContactId,
                 "rssiValues" to it.rssiValues,
-                "rssiIntervals" to it.rssiIntervals,
+                "rssiOffsets" to it.rssiOffsets,
                 "timestamp" to it.timestamp,
                 "duration" to it.duration,
-                "txPowerInProtocol" to it.txPowerInProtocol,
-                "txPowerAdvertised" to it.txPowerAdvertised,
-                "hmacSignature" to it.hmacSignature,
-                "transmissionTime" to it.transmissionTime,
-                "countryCode" to it.countryCode
+                "txPower" to it.txPower
             )
         }
     )

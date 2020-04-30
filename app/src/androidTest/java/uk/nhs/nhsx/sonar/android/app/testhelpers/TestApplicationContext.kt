@@ -29,7 +29,6 @@ import uk.nhs.nhsx.sonar.android.app.ColocateApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
-import uk.nhs.nhsx.sonar.android.app.crypto.encodeAsSecondsSinceEpoch
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
@@ -43,7 +42,6 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.C
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.RESIDENT_ID
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.SECRET_KEY
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
-import java.nio.ByteBuffer
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit
 import javax.crypto.Mac
@@ -58,34 +56,26 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     private val notificationService = NotificationService()
     private val testRxBleClient = TestRxBleClient(app)
     private var eventNumber = 0
-    private val startTime = DateTime.parse("2020-04-01T14:33:13Z")
     private val currentTimestampProvider = {
         eventNumber++
         Timber.d("Sending event nr $eventNumber")
         when (eventNumber) {
-            1 -> { startTime }
+            1 -> DateTime.parse("2020-04-01T14:33:13Z")
             2, 3 -> DateTime.parse("2020-04-01T14:34:43Z") // +90 seconds
             4 -> DateTime.parse("2020-04-01T14:44:53Z") // +610 seconds
             else -> throw IllegalStateException()
         }
     }
     private val countryCode = "GB".toByteArray()
-    private val transmissionTime = ByteBuffer.wrap(startTime.encodeAsSecondsSinceEpoch()).int
-    private val firstDeviceSignature = Random.nextBytes(16)
-    private val secondDeviceSignature = Random.nextBytes(16)
     private val firstDeviceId = BluetoothIdentifier(
         countryCode,
         Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)),
-        -6,
-        transmissionTime,
-        firstDeviceSignature
+        -6
     )
     private val secondDeviceId = BluetoothIdentifier(
         countryCode,
         Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)),
-        -8,
-        transmissionTime + 90,
-        secondDeviceSignature
+        -8
     )
 
     private val testBluetoothModule = TestBluetoothModule(
@@ -320,7 +310,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         )
 
         await until {
-            runBlocking { dao.get(firstDeviceId.cryptogram.asBytes())!!.rssiValues.size } == 2
+            runBlocking { dao.get(firstDeviceId.asBytes())!!.rssiValues.size } == 2
         }
 
         testRxBleClient.emitScanResults(
@@ -332,7 +322,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         )
 
         await until {
-            runBlocking { dao.get(firstDeviceId.cryptogram.asBytes())!!.rssiValues.size } == 3
+            runBlocking { dao.get(firstDeviceId.asBytes())!!.rssiValues.size } == 3
         }
     }
 
@@ -346,25 +336,17 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val body = lastRequest?.body?.readUtf8() ?: ""
         assertThat(body).contains(""""symptomsTimestamp":""")
         assertThat(body).contains(""""contactEvents":[""")
-        val rssiValues = listOf(10, 20, 15).map { it.toByte() }.toByteArray()
         assertThat(body).contains(
             jsonOf(
                 "encryptedRemoteContactId" to Base64.encodeToString(
                     firstDeviceId.cryptogram.asBytes(),
                     Base64.DEFAULT
                 ),
-                "rssiValues" to Base64.encodeToString(
-                    rssiValues,
-                    Base64.DEFAULT
-                ),
-                "rssiIntervals" to listOf(0, 90, 610),
+                "rssiValues" to listOf(10, 20, 15),
+                "rssiOffsets" to listOf(0, 90, 610),
                 "timestamp" to "2020-04-01T14:33:13Z",
                 "duration" to 700,
-                "txPowerInProtocol" to -6,
-                "txPowerAdvertised" to 0,
-                "hmacSignature" to Base64.encodeToString(firstDeviceSignature, Base64.DEFAULT),
-                "transmissionTime" to transmissionTime,
-                "countryCode" to ByteBuffer.wrap(countryCode).short
+                "txPower" to -6
             )
         )
         assertThat(body).contains(
@@ -373,19 +355,11 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                     secondDeviceId.cryptogram.asBytes(),
                     Base64.DEFAULT
                 ),
-                "rssiValues" to Base64.encodeToString(
-                    byteArrayOf(40.toByte()),
-                    Base64.DEFAULT
-                ),
-                "rssiIntervals" to listOf(0),
+                "rssiValues" to listOf(40),
+                "rssiOffsets" to listOf(0),
                 "timestamp" to "2020-04-01T14:34:43Z",
                 "duration" to 60,
-                "txPowerInProtocol" to -8,
-                "txPowerAdvertised" to 0,
-                "hmacSignature" to Base64.encodeToString(secondDeviceSignature, Base64.DEFAULT),
-                "transmissionTime" to transmissionTime + 90,
-                "countryCode" to ByteBuffer.wrap(countryCode).short
-
+                "txPower" to -8
             )
         )
         assertThat(body.countOccurrences("""{"encryptedRemoteContactId":""")).isEqualTo(2)
