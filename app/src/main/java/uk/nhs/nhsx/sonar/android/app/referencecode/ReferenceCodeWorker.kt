@@ -26,13 +26,16 @@ class ReferenceCodeWork @Inject constructor(
     suspend fun doWork(): Result =
         try {
             if (provider.get() == null) {
-                api
-                    .generate()
-                    .toCoroutine()
-                    .let { provider.set(it) }
+                doFetch()
             }
             Result.success()
         } catch (e: Exception) {
             Result.failure()
         }
+
+    private suspend fun doFetch() =
+        api
+            .generate()
+            .toCoroutine()
+            .let { provider.set(it) }
 }
