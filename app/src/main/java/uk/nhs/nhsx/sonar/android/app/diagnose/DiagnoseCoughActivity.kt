@@ -44,13 +44,7 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         setContentView(R.layout.activity_cough_diagnosis)
 
-        if (stateStorage.get() is RedState) {
-            progress.text = getString(R.string.progress_two_out_of_two)
-            confirm_diagnosis.text = getString(R.string.submit)
-        } else {
-            progress.text = getString(R.string.progress_two_thirds)
-            confirm_diagnosis.text = getString(R.string.continue_button)
-        }
+        setQuestionnaireContent()
 
         close_btn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
         close_btn.setOnClickListener {
@@ -82,6 +76,18 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         cough_diagnosis_answer.setOnCheckedChangeListener { _, _ ->
             radio_selection_error.visibility = View.GONE
+        }
+    }
+
+    private fun setQuestionnaireContent() {
+        if (stateStorage.get() is RedState) {
+            progress.text = getString(R.string.progress_two_out_of_two)
+            progress.contentDescription = getString(R.string.page2of2)
+            confirm_diagnosis.text = getString(R.string.submit)
+        } else {
+            progress.text = getString(R.string.progress_two_thirds)
+            confirm_diagnosis.text = getString(R.string.continue_button)
+            progress.contentDescription = getString(R.string.page2of3)
         }
     }
 

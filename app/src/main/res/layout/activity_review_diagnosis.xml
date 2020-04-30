@@ -31,6 +31,7 @@
                 android:letterSpacing="0.1"
                 android:paddingTop="24dp"
                 android:text="@string/progress_three_thirds"
+                android:contentDescription="@string/page_3_of_3"
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
 

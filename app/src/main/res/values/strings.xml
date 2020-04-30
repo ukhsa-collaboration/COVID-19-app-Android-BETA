@@ -183,4 +183,9 @@
     <string name="test_booking_number"><u>0800 540 4900</u></string>
     <string name="isle_of_white_only_title">This app currently only works on the Isle of Wight</string>
     <string name="isle_of_white_only_description">If you live elsewhere in the UK, please keep the app installed and we will let you know when it is ready for you to use.</string>
+    <string name="page_3_of_3">Page 3 of 3</string>
+    <string name="page2of2">Page 2 of 2</string>
+    <string name="page2of3">Page 2 of 3</string>
+    <string name="page1of2">Page 1 of 2</string>
+    <string name="page1of3">Page 1 of 3</string>
 </resources>

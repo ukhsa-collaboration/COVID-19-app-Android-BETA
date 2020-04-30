@@ -28,7 +28,8 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginEnd="16dp"
-                android:src="@drawable/nhs" />
+                android:src="@drawable/nhs"
+                android:contentDescription="@null" />
 
             <TextView
                 android:layout_width="0dp"
@@ -46,7 +47,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
                 android:background="@null"
-
                 app:srcCompat="@drawable/ic_info"
                 android:contentDescription="@string/info" />
         </LinearLayout>

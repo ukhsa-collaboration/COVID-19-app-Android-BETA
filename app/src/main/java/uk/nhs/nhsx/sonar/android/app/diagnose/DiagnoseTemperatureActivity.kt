@@ -30,9 +30,7 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_temperature_diagnosis)
 
-        if (stateStorage.get() is RedState) {
-            progress.text = getString(R.string.progress_half)
-        }
+        setProgressIndicator()
 
         confirm_diagnosis.setOnClickListener {
             when (temperature_diagnosis_answer.checkedRadioButtonId) {
@@ -55,6 +53,15 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
 
         close_btn.setOnClickListener {
             onBackPressed()
+        }
+    }
+
+    private fun setProgressIndicator() {
+        if (stateStorage.get() is RedState) {
+            progress.text = getString(R.string.progress_half)
+            progress.contentDescription = getString(R.string.page1of2)
+        } else {
+            progress.contentDescription = getString(R.string.page1of3)
         }
     }
 

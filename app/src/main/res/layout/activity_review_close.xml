@@ -32,6 +32,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:letterSpacing="0.1"
                 android:text="@string/progress_three_thirds"
+                android:contentDescription="@string/page_3_of_3"
                 android:layout_marginHorizontal="16dp"
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />

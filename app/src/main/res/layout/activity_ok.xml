@@ -90,6 +90,7 @@
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="12dp"
                     android:clickable="false"
+                    android:accessibilityHeading="true"
                     android:enabled="false">
 
                     <LinearLayout
@@ -103,7 +104,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp"
-                            android:accessibilityHeading="true"
                             android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
                             android:text="@string/status_not_feeling_well" />
 
