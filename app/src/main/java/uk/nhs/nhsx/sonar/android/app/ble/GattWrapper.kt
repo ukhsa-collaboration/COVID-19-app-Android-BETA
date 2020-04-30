@@ -116,6 +116,9 @@ class GattWrapper(
 
         coroutineScope.launch {
             lock.withLock {
+                if (subscribedDevices.isEmpty()) {
+                    return@launch
+                }
                 subscribedDevices.remove(device)
                 if (subscribedDevices.isEmpty()) {
                     Timber.d("Terminating notify job")
