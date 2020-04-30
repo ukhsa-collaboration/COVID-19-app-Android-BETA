@@ -45,7 +45,7 @@ jobs:
         env:
           BUILD_FLAVOR: Release
           PLAY_TRACK: alpha
-          GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
+          GOOGLE_SERVICES: ${{ secrets.ProdGoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
           SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}
           SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias}}
