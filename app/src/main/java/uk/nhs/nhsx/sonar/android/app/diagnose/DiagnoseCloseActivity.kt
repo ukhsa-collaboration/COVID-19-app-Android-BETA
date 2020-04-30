@@ -15,7 +15,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
-import uk.nhs.nhsx.sonar.android.app.util.NHS_SYMPTOM_CHECKER
+import uk.nhs.nhsx.sonar.android.app.util.URL_SYMPTOM_CHECKER
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
@@ -39,7 +39,7 @@ class DiagnoseCloseActivity : BaseActivity() {
         }
 
         nhs_service.setOnClickListener {
-            openUrl(NHS_SYMPTOM_CHECKER)
+            openUrl(URL_SYMPTOM_CHECKER)
         }
     }
 

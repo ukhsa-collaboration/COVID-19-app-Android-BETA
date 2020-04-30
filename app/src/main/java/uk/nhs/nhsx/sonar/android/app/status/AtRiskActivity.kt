@@ -19,9 +19,9 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDialog
-import uk.nhs.nhsx.sonar.android.app.util.INFO_PAGE
-import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
-import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
+import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
+import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_AMBER
+import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_AMBER
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.showAndExpand
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
@@ -45,15 +45,15 @@ class AtRiskActivity : BaseActivity() {
         }
 
         latest_advice_amber.setOnClickListener {
-            openUrl(LATEST_ADVICE_URL)
+            openUrl(URL_LATEST_ADVICE_AMBER)
         }
 
         nhs_service.setOnClickListener {
-            openUrl(NHS_SUPPORT_PAGE)
+            openUrl(URL_SUPPORT_AMBER)
         }
 
         toolbar_info.setOnClickListener {
-            openUrl(INFO_PAGE)
+            openUrl(URL_INFO)
         }
 
         medical_workers_card.setOnClickListener {

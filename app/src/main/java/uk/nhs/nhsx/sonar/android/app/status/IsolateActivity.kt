@@ -25,9 +25,9 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
-import uk.nhs.nhsx.sonar.android.app.util.INFO_PAGE
-import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL_RED_STATE
-import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
+import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
+import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_RED
+import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_RED
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.showAndExpand
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
@@ -64,11 +64,11 @@ class IsolateActivity : BaseActivity() {
         follow_until.text = getString(R.string.follow_until, state.until.toUiFormat())
 
         latest_advice_red.setOnClickListener {
-            openUrl(LATEST_ADVICE_URL_RED_STATE)
+            openUrl(URL_LATEST_ADVICE_RED)
         }
 
         nhs_service.setOnClickListener {
-            openUrl(NHS_SUPPORT_PAGE)
+            openUrl(URL_SUPPORT_RED)
         }
 
         book_test_card.setOnClickListener {
@@ -79,7 +79,7 @@ class IsolateActivity : BaseActivity() {
         }
 
         toolbar_info.setOnClickListener {
-            openUrl(INFO_PAGE)
+            openUrl(URL_INFO)
         }
 
         setUpdateSymptomsDialog()
