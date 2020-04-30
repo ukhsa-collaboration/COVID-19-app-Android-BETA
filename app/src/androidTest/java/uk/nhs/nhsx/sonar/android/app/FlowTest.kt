@@ -45,6 +45,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
@@ -231,6 +232,7 @@ class FlowTest {
     fun testBluetoothInteractions() {
         setUserState(DefaultState())
         setValidSonarIdAndSecretKeyAndPublicKey()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -246,6 +248,7 @@ class FlowTest {
     fun testReceivingStatusUpdateNotification() {
         setUserState(DefaultState())
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -272,6 +275,7 @@ class FlowTest {
     fun testLaunchWhenStateIsDefault() {
         setUserState(DefaultState())
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -282,6 +286,7 @@ class FlowTest {
     fun testLaunchWhenStateIsEmber() {
         setUserState(EmberState(DateTime.now(DateTimeZone.UTC).plusDays(1)))
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -297,6 +302,7 @@ class FlowTest {
             )
         )
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -312,6 +318,7 @@ class FlowTest {
             )
         )
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -326,6 +333,7 @@ class FlowTest {
             )
         )
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -421,6 +429,7 @@ class FlowTest {
     fun testResumeWhenBluetoothIsDisabled() {
         setUserState(DefaultState())
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -438,6 +447,7 @@ class FlowTest {
     fun testResumeWhenLocationAccessIsDisabled() {
         setUserState(DefaultState())
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -453,6 +463,7 @@ class FlowTest {
     fun testResumeWhenLocationPermissionIsRevoked() {
         setUserState(DefaultState())
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -476,6 +487,7 @@ class FlowTest {
     fun testEnableBluetoothThroughNotification() {
         setUserState(DefaultState())
         setValidSonarId()
+        setReferenceCode()
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
@@ -597,6 +609,11 @@ class FlowTest {
         val keyStorage = component.getKeyStorage()
         keyStorage.storeSecretKey(TestCoLocateServiceDispatcher.encodedSecretKey)
         keyStorage.storeServerPublicKey(TestCoLocateServiceDispatcher.PUBLIC_KEY)
+    }
+
+    private fun setReferenceCode() {
+        val refCodeProvider = component.getReferenceCodeProvider()
+        refCodeProvider.set(ReferenceCode(REFERENCE_CODE))
     }
 
     private fun bluetoothAdapter(): BluetoothAdapter {

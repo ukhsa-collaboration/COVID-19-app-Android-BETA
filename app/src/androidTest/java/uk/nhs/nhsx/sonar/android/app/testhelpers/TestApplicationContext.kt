@@ -329,10 +329,6 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun verifyReceivedProximityRequest() {
         var lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
 
-        if (lastRequest?.path?.contains("linking-id") == true) {
-            lastRequest = mockServer.takeRequest()
-        }
-
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.path).isEqualTo("/api/residents/$RESIDENT_ID")
         assertThat(lastRequest?.method).isEqualTo("PATCH")

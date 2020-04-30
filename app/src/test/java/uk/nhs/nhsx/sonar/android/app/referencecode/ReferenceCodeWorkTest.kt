@@ -24,15 +24,28 @@ class ReferenceCodeWorkTest {
         val refCode = ReferenceCode("REF #1001")
         deferred.resolve(refCode)
 
+        every { provider.get() } returns null
         every { api.generate() } returns deferred.promise
         every { provider.set(any()) } returns Unit
 
         val result = work.doWork()
 
         verifyAll {
+            provider.get()
             api.generate()
             provider.set(refCode)
         }
+
+        assertThat(result).isEqualTo(Result.success())
+    }
+
+    @Test
+    fun `doWork - when already fetched`() = runBlockingTest {
+        val refCode = ReferenceCode("REF #1001")
+
+        every { provider.get() } returns refCode
+
+        val result = work.doWork()
 
         assertThat(result).isEqualTo(Result.success())
     }
@@ -42,6 +55,7 @@ class ReferenceCodeWorkTest {
         val deferred = Promise.Deferred<ReferenceCode>()
         deferred.fail(Exception("Oops"))
 
+        every { provider.get() } returns null
         every { api.generate() } returns deferred.promise
 
         val result = work.doWork()

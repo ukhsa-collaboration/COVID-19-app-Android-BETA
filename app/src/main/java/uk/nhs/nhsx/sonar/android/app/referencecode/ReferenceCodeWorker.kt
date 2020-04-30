@@ -25,8 +25,12 @@ class ReferenceCodeWork @Inject constructor(
 ) {
     suspend fun doWork(): Result =
         try {
-            val refCode = api.generate().toCoroutine()
-            provider.set(refCode)
+            if (provider.get() == null) {
+                api
+                    .generate()
+                    .toCoroutine()
+                    .let { provider.set(it) }
+            }
             Result.success()
         } catch (e: Exception) {
             Result.failure()
