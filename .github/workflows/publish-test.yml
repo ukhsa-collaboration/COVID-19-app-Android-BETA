@@ -2,15 +2,17 @@ name: Publish Test
 
 on:
   push:
+    branches:
+      - master
     tags:
       - publish-test
 
 jobs:
 
-  login_to_docker:
+  pull_docker_image:
     runs-on:
-      - linux
       - self-hosted
+      - linux
       - aws
     steps:
       - name: Login to Docker
@@ -24,11 +26,14 @@ jobs:
 
   build:
     needs: login_to_docker
-    runs-on: [ "self-hosted", "linux", "aws" ]
+    runs-on:
+      - self-hosted
+      - linux
+      - aws
     container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
     steps:
-      - name: Checkout Project
+        - name: Checkout
         uses: actions/checkout@v2
         with:
           ref: publish-test

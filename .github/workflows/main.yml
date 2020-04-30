@@ -1,20 +1,16 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
-  login_to_docker:
+  pull_docker_image:
     runs-on:
-      - linux
       - self-hosted
+      - linux
       - aws
     steps:
       - name: Login to Docker
@@ -27,15 +23,16 @@ jobs:
           docker pull nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
   build:
-    # The type of runner that the job will run on
     needs: login_to_docker
-    runs-on: [ "self-hosted", "linux", "aws" ]
+    runs-on:
+      - self-hosted
+      - linux
+      - aws
     container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Cache Gradle packages
         uses: actions/cache@v1
