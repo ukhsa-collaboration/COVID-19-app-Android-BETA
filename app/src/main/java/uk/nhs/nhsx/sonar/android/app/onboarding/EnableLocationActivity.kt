@@ -9,10 +9,13 @@ import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
+import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.LocationProviderChangedReceiver
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
+import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
+import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
 open class EnableLocationActivity : AppCompatActivity(R.layout.activity_edge_case) {
@@ -30,6 +33,10 @@ open class EnableLocationActivity : AppCompatActivity(R.layout.activity_edge_cas
         edgeCaseTitle.setText(R.string.enable_location_service_title)
         edgeCaseText.setText(R.string.enable_location_service_rationale)
         takeActionButton.setText(R.string.go_to_your_settings)
+
+        toolbar_info.setOnClickListener {
+            openUrl(URL_INFO)
+        }
 
         takeActionButton.setOnClickListener {
             startActivity(Intent(ACTION_LOCATION_SOURCE_SETTINGS))

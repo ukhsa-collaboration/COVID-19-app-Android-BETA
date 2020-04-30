@@ -10,9 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
+import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
+import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
+import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
 open class GrantLocationPermissionActivity : AppCompatActivity(R.layout.activity_edge_case) {
@@ -41,6 +44,10 @@ open class GrantLocationPermissionActivity : AppCompatActivity(R.layout.activity
             if (intent.resolveActivity(packageManager) != null) {
                 startActivity(intent)
             }
+        }
+
+        toolbar_info.setOnClickListener {
+            openUrl(URL_INFO)
         }
     }
 

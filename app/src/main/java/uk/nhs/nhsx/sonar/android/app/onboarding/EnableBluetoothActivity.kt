@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
+import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStateBroadcastReceiver
+import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
+import uk.nhs.nhsx.sonar.android.app.util.openUrl
 
 open class EnableBluetoothActivity : AppCompatActivity(R.layout.activity_edge_case) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,6 +21,10 @@ open class EnableBluetoothActivity : AppCompatActivity(R.layout.activity_edge_ca
         edgeCaseTitle.setText(R.string.enable_bluetooth_title)
         edgeCaseText.setText(R.string.enable_bluetooth_rationale)
         takeActionButton.setText(R.string.enable_bluetooth)
+
+        toolbar_info.setOnClickListener {
+            openUrl(URL_INFO)
+        }
 
         takeActionButton.setOnClickListener {
             val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()

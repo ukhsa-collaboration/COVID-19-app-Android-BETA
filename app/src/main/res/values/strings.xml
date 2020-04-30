@@ -225,7 +225,7 @@
     </string>
     <string name="high_temperature">High temperature</string>
     <string name="continuous_cough">Continuous cough</string>
-    <string name="info">information</string>
+    <string name="info">Link to more information about NHS COVID-19 app</string>
     <string name="please_book_test">Please book a coronavirus test immediately. Write down your reference code and phone</string>
     <string name="test_booking_number"><u>0800 540 4900</u></string>
     <string name="isle_of_white_only_title">This app currently only works on the Isle of Wight</string>
