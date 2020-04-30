@@ -5,6 +5,7 @@ import android.security.keystore.KeyInfo
 import android.util.Base64
 import androidx.test.rule.ActivityTestRule
 import junit.framework.TestCase.fail
+import org.awaitility.kotlin.await
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.not
@@ -19,14 +20,15 @@ import uk.nhs.nhsx.sonar.android.app.http.SECRET_KEY_PREFERENCE_FILENAME
 import java.security.InvalidKeyException
 import java.security.KeyStore
 import java.security.Security
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.crypto.Mac
 import javax.crypto.SecretKeyFactory
-import kotlin.test.assertTrue
 
 private const val b64EncodedSecretKey = "5e359QJt4+iunhd7Op5/AQ=="
 private const val someOtherB64SecretKey = "8O4yb62a/zMXvkUnxkgCtQ=="
 private val message = "somthing to sign".toByteArray()
-private val expectedMessageSignature = Base64.decode("lALk5pvISLja72Od1kmRHMd9GR7Z47PJgrN+QSW61H8=", Base64.DEFAULT)
+private val expectedMessageSignature =
+    Base64.decode("lALk5pvISLja72Od1kmRHMd9GR7Z47PJgrN+QSW61H8=", Base64.DEFAULT)
 
 const val exampleServerPubPEM = """-----BEGIN PUBLIC KEY-----
 MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu1f68MqDXbKeTqZMTHsOGToO4rKn
@@ -143,7 +145,8 @@ class AndroidSecretKeyStorageTest {
         val prefs = context
             .getSharedPreferences(SECRET_KEY_PREFERENCE_FILENAME, Context.MODE_PRIVATE)
             .all
-        assertTrue(prefs.isEmpty(), "Secret key shared preferences are not empty")
+
+        await.atMost(200, MILLISECONDS).until { prefs.isEmpty() }
     }
 
     fun willNotMigrateTheKeyWhenOneAlreadyExistsInTheKeyStore() {
@@ -164,6 +167,7 @@ class AndroidSecretKeyStorageTest {
         val prefs = context
             .getSharedPreferences(SECRET_KEY_PREFERENCE_FILENAME, Context.MODE_PRIVATE)
             .all
-        assertTrue(prefs.isEmpty(), "Secret key shared preferences are not empty")
+
+        await.atMost(200, MILLISECONDS).until { prefs.isEmpty() }
     }
 }
