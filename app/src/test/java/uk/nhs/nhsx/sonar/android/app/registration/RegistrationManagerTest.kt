@@ -21,7 +21,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.WORK_NAME
+import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
@@ -43,7 +43,7 @@ class RegistrationManagerTest {
 
         verify {
             workManager.enqueueUniqueWork(
-                WORK_NAME,
+                REGISTRATION_WORK,
                 ExistingWorkPolicy.REPLACE,
                 any<OneTimeWorkRequest>()
             )
@@ -92,7 +92,7 @@ class RegistrationManagerTest {
         val workRequest = slot<OneTimeWorkRequest>()
         every {
             workManager.enqueueUniqueWork(
-                WORK_NAME,
+                REGISTRATION_WORK,
                 ExistingWorkPolicy.REPLACE,
                 capture(workRequest)
             )
@@ -102,7 +102,7 @@ class RegistrationManagerTest {
 
         verify(exactly = 2) {
             workManager.enqueueUniqueWork(
-                WORK_NAME,
+                REGISTRATION_WORK,
                 ExistingWorkPolicy.REPLACE,
                 any<OneTimeWorkRequest>()
             )

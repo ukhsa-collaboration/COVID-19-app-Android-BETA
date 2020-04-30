@@ -15,6 +15,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
+import androidx.work.WorkManager
 import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.runBlocking
 import net.danlew.android.joda.JodaTimeAndroid
@@ -36,6 +37,8 @@ import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorkLauncher.Companion.REFERENCE_CODE_WORK
+import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.PUBLIC_KEY
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.REFERENCE_CODE
@@ -414,6 +417,11 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         }
         testBluetoothModule.reset()
         testLocationHelper.reset()
+
+        WorkManager.getInstance(app).let {
+            it.cancelUniqueWork(REGISTRATION_WORK)
+            it.cancelUniqueWork(REFERENCE_CODE_WORK)
+        }
         resetTestMockServer()
     }
 }

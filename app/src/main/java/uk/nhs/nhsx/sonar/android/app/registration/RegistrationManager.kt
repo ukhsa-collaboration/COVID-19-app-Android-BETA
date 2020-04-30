@@ -46,7 +46,7 @@ class RegistrationManager @Inject constructor(
             val registrationWorkRequest = createWorkRequest(initialDelaySeconds)
 
             workManager.enqueueUniqueWork(
-                WORK_NAME,
+                REGISTRATION_WORK,
                 ExistingWorkPolicy.REPLACE,
                 registrationWorkRequest
             )
@@ -99,7 +99,7 @@ class RegistrationManager @Inject constructor(
         get() = (dispatcher + Job())
 
     companion object {
-        const val WORK_NAME = "registration"
+        const val REGISTRATION_WORK = "registration"
         const val ONE_HOUR_IN_SECONDS = 60L * 60
     }
 }

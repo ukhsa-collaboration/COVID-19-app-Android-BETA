@@ -21,6 +21,8 @@ import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorkLauncher.Companion.REFERENCE_CODE_WORK
+import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.io.File
 import java.util.zip.ZipEntry
@@ -41,7 +43,10 @@ class TestViewModel @Inject constructor(
             eventTracker.clear()
             withContext(Dispatchers.IO) {
                 FirebaseInstanceId.getInstance().deleteInstanceId()
-                WorkManager.getInstance(context).cancelUniqueWork(REGISTRATION_WORK)
+                WorkManager.getInstance(context).let {
+                    it.cancelUniqueWork(REGISTRATION_WORK)
+                    it.cancelUniqueWork(REFERENCE_CODE_WORK)
+                }
             }
 
             MainActivity.start(context)
@@ -95,8 +100,4 @@ class TestViewModel @Inject constructor(
     }
 
     fun observeConnectionEvents() = eventTracker.observeConnectionEvents()
-
-    companion object {
-        private const val REGISTRATION_WORK = "registration"
-    }
 }

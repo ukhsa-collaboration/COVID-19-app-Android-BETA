@@ -30,7 +30,7 @@ class ReferenceCodeWorkLauncher @Inject constructor(
     fun launchWork() {
         launch {
             workManager.enqueueUniqueWork(
-                "FetchReferenceCode",
+                REFERENCE_CODE_WORK,
                 ExistingWorkPolicy.KEEP,
                 createWorkRequest()
             )
@@ -47,5 +47,9 @@ class ReferenceCodeWorkLauncher @Inject constructor(
             .setInitialDelay(0, SECONDS)
             .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, MIN_BACKOFF_MILLIS, MILLISECONDS)
             .build()
+    }
+
+    companion object {
+        const val REFERENCE_CODE_WORK = "FetchReferenceCode"
     }
 }
