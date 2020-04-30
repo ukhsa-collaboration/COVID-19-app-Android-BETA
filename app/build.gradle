@@ -115,7 +115,10 @@ play {
     promoteTrack = "alpha"
     resolutionStrategy = "auto"
     outputProcessor {
-        versionNameOverride = "$versionNameOverride.$versionCode"
+        def gitcommit = findProperty('gitcommit') ?: 'unknown'
+        def versionString = "$versionNameOverride.$versionCode ($gitcommit)"
+        logger.quiet("Publishing version: $versionString")
+        versionNameOverride = versionString
     }
 }
 
