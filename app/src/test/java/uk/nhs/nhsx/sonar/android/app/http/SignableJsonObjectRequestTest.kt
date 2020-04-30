@@ -31,4 +31,22 @@ class SignableJsonObjectRequestTest {
         assertThat(headers["Sonar-Request-Timestamp"]).matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z")
         assertThat(headers).containsEntry("X-Sonar-Foundation", "someValue")
     }
+
+    @Test
+    fun `test signing of request with no body`() {
+        val request = SignableJsonObjectRequest(
+            HttpRequest(
+                method = HttpMethod.POST,
+                url = "http://somehere.com",
+                jsonBody = null,
+                secretKey = generateSignatureKey()
+            ),
+            Deferred(),
+            sonarHeaderValue = "someValue"
+        ) { Base64.getEncoder().encodeToString(it) }
+
+        val headers = request.headers
+        assertThat(headers).containsKey("Sonar-Message-Signature")
+        assertThat(headers).containsKey("Sonar-Request-Timestamp")
+    }
 }

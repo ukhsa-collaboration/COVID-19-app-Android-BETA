@@ -53,7 +53,7 @@ class SignableJsonObjectRequest(
                 val signature = generateSignature(
                     httpRequest.secretKey,
                     timestampAsString,
-                    body
+                    body ?: ByteArray(0)
                 )
 
                 mapOf(
