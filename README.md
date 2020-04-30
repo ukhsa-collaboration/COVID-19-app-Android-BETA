@@ -16,6 +16,8 @@ To set a property refer to [official gradle documentation](https://docs.gradle.o
 
     Make sure all animations are turned off on the device (not an emulator) that is running the tests.
     https://developer.android.com/training/testing/espresso/setup#set-up-environment
+    
+    Also ensure that location access is enabled on the device.
 
 1. Before pushing code run -
     ```bash
