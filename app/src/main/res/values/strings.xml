@@ -3,16 +3,25 @@
   -->
 
 <resources>
-    <string name="app_name">NHS Co-Locate</string>
-    <string name="location_permission">\u2022 your device’s <b>location</b>, to record places you’ve spent time in</string>
-    <string name="bluetooth_permission">\u2022 <b>Bluetooth</b>, to record when your device is near others using this app</string>
+    <string name="app_name">NHS COVID-19</string>
+    <string name="app_title">COVID-19</string>
+    <string name="location_permission">\u2022 your device’s <b>location</b>, to record places you’ve spent time in
+    </string>
+    <string name="bluetooth_permission">\u2022 <b>Bluetooth</b>, to record when your device is near others using this
+        app
+    </string>
     <string name="onboarding_title">Help the NHS stop the spread of coronavirus in the UK</string>
-    <string name="location_rationale">You will not be tracked and your personal identity and location history will remain protected at all times. On an Android phone, your location permission is needed for Bluetooth to work.</string>
-    <string name="explanation_link"><u>Learn more about how it works</u></string>
+    <string name="location_rationale">You will not be tracked and your personal identity and location history will
+        remain protected at all times. On an Android phone, your location permission is needed for Bluetooth to work.
+    </string>
+    <string name="explanation_link">
+        <u>Learn more about how it works</u>
+    </string>
     <string name="next_steps">You’ll be asked to consent to these permissions on the next screen.</string>
     <string name="start_now">Start Now</string>
-    <string name="bluetooth_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app. For this app to work, Bluetooth needs to be kept on at all times.</string>
-    <string name="app_title">Coronavirus</string>
+    <string name="bluetooth_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near
+        another phone with this app. For this app to work, Bluetooth needs to be kept on at all times.
+    </string>
     <string name="please_activate_bluetooth">Please activate Bluetooth</string>
     <string name="diagnosed">Have you been diagnosed with coronavirus?</string>
     <string name="next">Next</string>
@@ -26,20 +35,29 @@
     <string name="isolate_share">Sharing this information with the NHS means we can notify these people to take steps to keep themselves safe.</string>
     <string name="ok_title">How you can protect yourself and others</string>
     <string name="ok_disclaimer_title">You\'re okay right now</string>
-    <string name="ok_disclaimer_body">This is a real-time status based on people you’ve been in contact with.\n\nYou’ll get an alert if your status changes.\n\n <b>It’s important that you tell us if you develop any new symptoms.</b></string>
+    <string name="ok_disclaimer_body">This is a real-time status based on people you’ve been in contact with.\n\nYou’ll
+        get an alert if your status changes.\n\n
+        <b>It’s important that you tell us if you develop any new symptoms.</b>
+    </string>
     <string name="ok_symptom_title">If you develop symptoms</string>
-    <string name="ok_info_content">You can stay safe by washing your hands more regularly and avoiding large gatherings of people.\n\nVisit NHS 111 for more advice on protecting yourself and people you care about.\n\nThank you for helping us slow the spread of coronavirus.</string>
+    <string name="ok_info_content">You can stay safe by washing your hands more regularly and avoiding large gatherings
+        of people.\n\nVisit NHS 111 for more advice on protecting yourself and people you care about.\n\nThank you for
+        helping us slow the spread of coronavirus.
+    </string>
     <string name="ok_symptom_content">Use our online tool to check your symptoms.</string>
     <string name="check_my_symptoms">Check my symptoms</string>
     <string name="default_notification_channel_id" translatable="false">colocate-locate</string>
     <string name="please_isolate">Please isolate</string>
     <string name="start_main_activity">Start main activity</string>
-    <string name="notification_title">NHS Coronavirus</string>
-    <string name="notification_text">"Someone you've been nearby recently was just diagnosed with coronavirus.\n\nYou should isolate yourself and get tested."</string>
+    <string name="notification_title">Your advice has changed</string>
+    <string name="notification_text">Please open the app to learn what to do next. Your help saves lives.</string>
     <string name="erro_data_submission">Something went wrong, please try again later.</string>
     <string name="main_notification_channel_name">General</string>
     <string name="registration_title">Your app is set up and ready to go</string>
-    <string name="register_rationale">Keep Bluetooth and push notifications enabled for the duration of the outbreak, to help protect yourself from coronavirus.\n\nOnce the outbreak ends, you can turn off these permissions, or delete the app.</string>
+    <string name="register_rationale">Keep Bluetooth and push notifications enabled for the duration of the outbreak, to
+        help protect yourself from coronavirus.\n\nOnce the outbreak ends, you can turn off these permissions, or delete
+        the app.
+    </string>
     <string name="start_using_the_app">Start using the app</string>
     <string name="retry">Retry</string>
     <string name="permissions_required">This app cannot function without permissions</string>
@@ -85,12 +103,14 @@
     <string name="progress_two_out_of_two">2/2</string>
     <string name="progress_three_thirds">3/3</string>
     <string name="submission_error">Submission failed. Please try again</string>
-    <string name="status_latest_advice"><u>Read what to do next</u></string>
+    <string name="status_latest_advice">
+        <u>Read current advice</u>
+    </string>
     <string name="status_feeling_ok">I feel as healthy as normal</string>
     <string name="status_feeling_ok_desc">Nothing abnormal or out of the usual is going on with me</string>
     <string name="status_not_feeling_well">I feel unwell</string>
     <string name="status_not_feeling_well_desc">I have a high temperature or continuous cough and want to know what to do next</string>
-    <string name="status_initial_title">Keep following the current government advice</string>
+    <string name="status_initial_title">Follow the current advice to stop the spread of coronavirus</string>
     <string name="status_red_title">Your symptoms indicate you may have coronavirus</string>
     <string name="status_red_next_steps">Next steps</string>
     <string name="need_medical_advice">If you need urgent medical advice about your coronavirus symptoms, visit</string>
@@ -104,7 +124,6 @@
     <string name="post_code">Post code</string>
     <string name="post_code_rationale"><![CDATA[This information will be used to help your local NHS respond to the coronavirus in your area and to understand the spread of the disease across the UK. Your postcode will <b>not</b> be used to track your location.]]></string>
     <string name="valid_post_code_is_required">Please enter the first part of a valid postcode. For example: PO30, E2, M1, EH1, L36</string>
-    <string name="coronavirus">COVID-19</string>
     <string name="app_rationale">This app can let you know if you may have been near someone with coronavirus symptoms (COVID-19).</string>
     <string name="back">Back</string>
     <string name="explanation_privacy_policy_and_terms_and_conditions">Read our privacy policy and terms and conditions.</string>
@@ -127,7 +146,9 @@
     <string name="i_do_cough">I have a new continuous cough</string>
     <string name="i_do_not_cough">I don\'t have a new continuous cough</string>
     <string name="date_selection_error">Select the date from the dropdown</string>
-    <string name="update_symptoms_promt">7 days ago your cough started. Please update your symptoms to view latest advice.</string>
+    <string name="update_symptoms_prompt">Your symptoms started more than 7 days ago. Please update your symptoms to
+        view latest advice.
+    </string>
     <string name="update_my_symptoms">Update my symptoms</string>
     <string name="no_symptoms">I no longer have symptoms</string>
     <string name="recovery_dialog_title">Start following general advice</string>
@@ -151,11 +172,23 @@
     <string name="status_description_02">Feel free to use other apps as normal and you’ll be notified if your advice changes.</string>
     <string name="status_description_03">If you develop symptoms, please come back to this app.</string>
     <string name="re_enable_bluetooth_title">Please turn your Bluetooth back on</string>
-    <string name="re_enable_bluetooth_rationale">This app works only if your Bluetooth is on at all times.\n\n%1$s works using Bluetooth signals, to determine when you have been near someone else with this app who shows symptoms of Coronavirus. %1$s can alert you or others that may be at risk.</string>
+    <string name="re_enable_bluetooth_rationale">This app works only if your Bluetooth is on at all times.\n\n%1$s works
+        using Bluetooth signals, to determine when you have been near someone else with this app who shows symptoms of
+        coronavirus. %1$s can alert you or others that may be at risk.
+    </string>
     <string name="re_enable_location_title">Turn on location services on your phone to continue</string>
-    <string name="re_enable_location_rationale">To make Bluetooth work, we also need you to turn on location services. Your location will not be tracked. Your location and personal identity will remain protected.\n\nTo enable your location you need to turn on your location services on your phone.\n\n%1$s works using Bluetooth signals, to determine when you have been near someone else with this app who shows symptoms of Coronavirus.</string>
+    <string name="re_enable_location_rationale">To make Bluetooth work, we also need you to turn on location services.
+        Your location will not be tracked. Your location and personal identity will remain protected.\n\nTo enable your
+        location you need to turn on your location services on your phone.\n\n%1$s works using Bluetooth signals, to
+        determine when you have been near someone else with this app who shows symptoms of coronavirus.
+    </string>
     <string name="re_allow_location_permission_title">Allow this app to access your location to continue</string>
-    <string name="re_allow_location_permission_rationale">To make Bluetooth work, we also need you to turn on location services and give the app permission to use it. Your location will not be tracked. Your location and personal identity will remain protected.\n\nTo enable your location permissions you need to go to your Settings and allow this app to access location services.\n\n%1$s works using Bluetooth signals, to determine when you have been near someone else with this app who shows symptoms of Coronavirus.</string>
+    <string name="re_allow_location_permission_rationale">To make Bluetooth work, we also need you to turn on location
+        services and give the app permission to use it. Your location will not be tracked. Your location and personal
+        identity will remain protected.\n\nTo enable your location permissions you need to go to your Settings and allow
+        this app to access location services.\n\n%1$s works using Bluetooth signals, to determine when you have been
+        near someone else with this app who shows symptoms of coronavirus.
+    </string>
     <string name="view_reference_code">Show my reference code</string>
     <string name="reference_code">Reference code</string>
     <string name="loading">Loading…</string>
@@ -164,18 +197,32 @@
     <string name="post_code_rationale_title">Why do we need this?</string>
     <string name="enable_permissions">Enable permissions</string>
     <string name="checkin_notification_action">Open App</string>
-    <string name="checkin_notification_title">NHS Stop the Spread</string>
-    <string name="checkin_notification_text">\n\nHow are you feeling today?\nPlease open the app to update your symptoms and view your latest advice. Your help saves lives.</string>
+    <string name="checkin_notification_title">How are you feeling today?</string>
+    <string name="checkin_notification_text">Please open the app to update your symptoms and view your latest advice.
+        Your help saves lives.
+    </string>
     <string name="area_not_supported_title">Your area is not supported yet</string>
-    <string name="area_not_supported_message">This app is currently being evaluated on the Isle of Wight. It is not yet intended for use elsewhere. We are working to bring full functionality across the UK</string>
+    <string name="area_not_supported_message">This app is currently being evaluated on the Isle of Wight. It is not yet
+        intended for use elsewhere. We are working to bring full functionality across the UK
+    </string>
     <string name="device_not_supported_title">Sorry, this app is not working on your phone</string>
-    <string name="device_not_supported_rationale">Your device is not supported this could be for various reasons.</string>
-    <string name="confirm_diagnosis_text_1">This information will be used to help decide if the people you have had contact with will be advised to stay at home. To avoid more social distancing restrictions, the NHS needs accurate data on the number of people with symptoms.</string>
-    <string name="confirm_diagnosis_text_2">Together we can help save lives, protect the NHS and stop the spread of coronavirus in the UK.</string>
-    <string name="important_instructions_for_medical_workers">Important Instructions for healthcare workers</string>
+    <string name="device_not_supported_rationale">Your device is not supported this could be for various reasons.
+    </string>
+    <string name="confirm_diagnosis_text_1">This information will be used to help decide if the people you have had
+        contact with will be advised to stay at home. To avoid more social distancing restrictions, the NHS needs
+        accurate data on the number of people with symptoms.
+    </string>
+    <string name="confirm_diagnosis_text_2">Together we can help save lives, protect the NHS and stop the spread of
+        coronavirus in the UK.
+    </string>
+    <string name="important_instructions_for_medical_workers">Important instructions for healthcare workers</string>
     <string name="medical_workers_instructions_title">Turn off your Bluetooth when you put on your PPE</string>
-    <string name="medical_workers_instructions_text">Your interactions at work should not be captured when you are wearing personal protective equipment.</string>
-    <string name="isolate_will_be_notified">On %1$s, this app will notify you to update your symptoms so that you can receive the latest advice.</string>
+    <string name="medical_workers_instructions_text">Your interactions at work should not be captured when you are
+        wearing personal protective equipment.
+    </string>
+    <string name="isolate_will_be_notified">On %1$s, this app will notify you to update your symptoms so that you can
+        receive the latest advice.
+    </string>
     <string name="high_temperature">High temperature</string>
     <string name="continuous_cough">Continuous cough</string>
     <string name="info">information</string>
