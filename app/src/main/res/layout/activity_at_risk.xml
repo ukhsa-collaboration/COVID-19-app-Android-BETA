@@ -50,7 +50,7 @@
                         style="@style/TextViewSubStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
+                        android:layout_marginTop="40dp"
                         android:text="@string/status_latest_advice" />
 
                     <TextView
@@ -58,7 +58,7 @@
                         style="@style/TextViewCardSubTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp" />
+                        android:layout_marginTop="8dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -71,8 +71,7 @@
                 android:layout_marginBottom="16dp"
                 android:layout_marginHorizontal="16dp"
                 android:accessibilityHeading="true"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+
                 android:text="@string/status_today_feeling" />
 
             <com.google.android.material.card.MaterialCardView

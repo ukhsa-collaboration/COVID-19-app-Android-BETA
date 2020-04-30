@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
@@ -34,6 +33,7 @@ import uk.nhs.nhsx.sonar.android.app.util.INFO_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
+import uk.nhs.nhsx.sonar.android.app.util.showAndExpand
 import javax.inject.Inject
 
 class OkActivity : BaseActivity() {
@@ -81,7 +81,7 @@ class OkActivity : BaseActivity() {
         }
 
         medical_workers_card.setOnClickListener {
-            MedicalWorkersInstructionsDialog(this).show()
+            MedicalWorkersInstructionsDialog(this).showAndExpand()
         }
 
         toolbar_info.setOnClickListener {
@@ -141,8 +141,7 @@ class OkActivity : BaseActivity() {
         navigateTo(state)
 
         if (state is RecoveryState) {
-            recoveryDialog.show()
-            recoveryDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            recoveryDialog.showAndExpand()
         } else {
             recoveryDialog.dismiss()
         }

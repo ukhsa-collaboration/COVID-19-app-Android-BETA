@@ -23,6 +23,7 @@ import uk.nhs.nhsx.sonar.android.app.util.INFO_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.LATEST_ADVICE_URL
 import uk.nhs.nhsx.sonar.android.app.util.NHS_SUPPORT_PAGE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
+import uk.nhs.nhsx.sonar.android.app.util.showAndExpand
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 import javax.inject.Inject
 
@@ -56,7 +57,7 @@ class AtRiskActivity : BaseActivity() {
         }
 
         medical_workers_card.setOnClickListener {
-            MedicalWorkersInstructionsDialog(this).show()
+            MedicalWorkersInstructionsDialog(this).showAndExpand()
         }
     }
 

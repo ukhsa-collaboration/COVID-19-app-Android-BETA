@@ -52,8 +52,10 @@
 
                         <View
                             style="@style/HorizontalDivider"
+                            android:background="@color/color_nhsuk_grey_5"
                             android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_height="2dp"
                             android:layout_marginBottom="16dp" />
 
                         <TextView
@@ -71,7 +73,7 @@
                             style="@style/TextViewSubStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="24dp"
+                            android:layout_marginTop="40dp"
                             android:paddingStart="28dp"
                             android:paddingEnd="24dp"
 
@@ -110,7 +112,7 @@
                             android:layout_marginBottom="12dp"
                             android:accessibilityHeading="true"
                             android:text="@string/please_book_test"
-                            android:textSize="18sp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             style="@style/TextViewSubStatus"
@@ -132,7 +134,7 @@
 
                     <TextView
                         android:id="@+id/reference_code_link"
-                        style="@style/TextViewActionTitle02"
+                        style="@style/TextViewActionTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"

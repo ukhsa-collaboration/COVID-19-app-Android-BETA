@@ -47,13 +47,13 @@
         style="@style/PrimaryCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="24dp"
         android:accessibilityHeading="true"
         android:clickable="true"
         android:focusable="true">
         <TextView
             android:id="@+id/medicalWorkersInstructions"
-            style="@style/TextViewActionTitle02"
+            style="@style/TextViewActionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="16dp"
