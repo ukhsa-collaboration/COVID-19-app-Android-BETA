@@ -88,7 +88,8 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
 
 fun Context.notificationBuilder(): NotificationCompat.Builder =
     NotificationCompat.Builder(this, createNotificationChannelReturningId())
-        .setSmallIcon(R.mipmap.ic_launcher)
+        .setColor(getColor(R.color.colorPrimary))
+        .setSmallIcon(R.drawable.ic_status)
         .setContentIntent(mainActivityPendingContent(this))
 
 private fun showNotification(
@@ -103,7 +104,6 @@ private fun showNotification(
 ) {
     val builder = context
         .notificationBuilder()
-        .setSmallIcon(R.mipmap.ic_launcher)
         .setContentTitle(contentTitle)
         .setStyle(
             NotificationCompat.BigTextStyle()
@@ -113,7 +113,6 @@ private fun showNotification(
         .setContentIntent(mainActivityPendingContent(context))
         .setAutoCancel(autoCancel)
         .setOngoing(isOngoing)
-        .setColor(context.getColor(R.color.colorAccent))
         .apply {
             if (actionPendingIntent != null) {
                 addAction(0, actionTitle, actionPendingIntent)

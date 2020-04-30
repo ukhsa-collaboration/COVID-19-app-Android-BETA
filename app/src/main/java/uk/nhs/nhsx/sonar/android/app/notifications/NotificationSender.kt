@@ -10,7 +10,6 @@ import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.notificationBuilder
 import javax.inject.Inject
 
@@ -32,7 +31,6 @@ class NotificationSender @Inject constructor(private val context: Context) {
 
         val notification =
             context.notificationBuilder()
-                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(context.getString(notificationTitle))
                 .setStyle(notificationStyle)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
