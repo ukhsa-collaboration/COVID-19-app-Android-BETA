@@ -9,14 +9,13 @@ class DeviceDetection(
     private val packageManager: PackageManager
 ) {
 
-    fun isUnsupported(): Boolean =
-        bluetoothAdapter == null || !packageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE)
-    // TODO: Re-enable this condition after we understand how devices that don't support
-    // MultiAdvertisement feature (isMultipleAdvertisementSupported == false)
-    // but still does not return a null for BluetoothLeAdvertiser, which allow them to
-    // work without crashing but probably not scanning other devices as expected
+    // TODO: re-consider this condition after we understand how devices advertise
+    // without supporting MultiAdvertisement feature (isMultipleAdvertisementSupported == false)
+    // This allows for them to run without crashing but probably not advertise as expected.
     // See: https://stackoverflow.com/a/32096285/952041
+    // Here is the previous logic:
     //  || (bluetoothAdapter.isEnabled && !bluetoothAdapter.isMultipleAdvertisementSupported)
-    // Another possible condition is that one:
-    //  || (bluetoothAdapter.isEnabled && bluetoothAdapter.bluetoothLeAdvertiser == null)
+    fun isUnsupported(): Boolean =
+        bluetoothAdapter == null || !packageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE) ||
+            (bluetoothAdapter.isEnabled && bluetoothAdapter.bluetoothLeAdvertiser == null)
 }

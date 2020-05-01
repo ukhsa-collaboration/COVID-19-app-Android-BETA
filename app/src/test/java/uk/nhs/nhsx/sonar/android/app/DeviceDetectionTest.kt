@@ -38,4 +38,17 @@ class DeviceDetectionTest {
 
         assertThat(DeviceDetection(adapter, manager).isUnsupported()).isTrue()
     }
+
+    @Test
+    fun `test isUnsupported() when bluetooth is enabled and bluetoothLeAdvertiser is null`() {
+        val adapter = mockk<BluetoothAdapter>()
+        val manager = mockk<PackageManager>()
+
+        every { manager.hasSystemFeature(FEATURE_BLUETOOTH_LE) } returns true
+
+        every { adapter.isEnabled } returns true
+        every { adapter.bluetoothLeAdvertiser } returns null
+
+        assertThat(DeviceDetection(adapter, manager).isUnsupported()).isTrue()
+    }
 }
