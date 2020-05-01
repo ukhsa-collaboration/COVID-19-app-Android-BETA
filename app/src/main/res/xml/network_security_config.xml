@@ -23,9 +23,8 @@
 
     <domain-config>
         <domain includeSubdomains="true">nhs.uk</domain>
-<!--        Need to confirm the cert to pin against-->
-<!--        <pin-set>-->
-<!--            <pin digest="SHA-256">public key of cert</pin>-->
-<!--        </pin-set>-->
+        <pin-set>
+            <pin digest="SHA-256">hETpgVvaLC0bvcGG3t0cuqiHvr4XyP2MTwCiqhgRWwU=</pin>
+        </pin-set>
     </domain-config>
 </network-security-config>
