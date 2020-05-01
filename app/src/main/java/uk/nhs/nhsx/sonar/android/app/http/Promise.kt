@@ -37,17 +37,27 @@ class Promise<T : Any?> private constructor() {
                 else -> null
             }
 
-    private var successCallback: ((T) -> Unit)? = null
-    private var errorCallback: ((Exception) -> Unit)? = null
+    private class Callback<U : Any?>(val f: (U) -> Unit) {
+        private var triggered = false
 
-    fun onSuccess(callback: (T) -> Unit): Promise<T> {
-        successCallback = callback
+        fun trigger(value: U) {
+            if (triggered) return
+            triggered = true
+            f(value)
+        }
+    }
+
+    private val successCallbacks = mutableListOf<Callback<T>>()
+    private val errorCallbacks = mutableListOf<Callback<Exception>>()
+
+    fun onSuccess(function: (T) -> Unit): Promise<T> {
+        successCallbacks.add(Callback(function))
         trigger()
         return this
     }
 
-    fun onError(callback: (Exception) -> Unit): Promise<T> {
-        errorCallback = callback
+    fun onError(function: (Exception) -> Unit): Promise<T> {
+        errorCallbacks.add(Callback(function))
         trigger()
         return this
     }
@@ -69,22 +79,16 @@ class Promise<T : Any?> private constructor() {
                 .onError { continuation.resumeWith(Result.failure(it)) }
         }
 
-    private var triggered = false
-
     private fun trigger() {
-        if (triggered) return
-
         when (val s = state) {
             is Succeeded -> {
-                successCallback?.let {
-                    triggered = true
-                    it(s.value)
+                successCallbacks.forEach {
+                    it.trigger(s.value)
                 }
             }
             is Failed -> {
-                errorCallback?.let {
-                    triggered = true
-                    it(s.error)
+                errorCallbacks.forEach {
+                    it.trigger(s.error)
                 }
             }
         }
