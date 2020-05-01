@@ -17,7 +17,10 @@ import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -45,6 +48,7 @@ class Scan @Inject constructor(
         .build()
 
     private var scanDisposable: Disposable? = null
+    private var scanJob: Job? = null
 
     /*
      When the iPhone app goes into the background iOS changes how services are advertised:
@@ -92,15 +96,18 @@ class Scan @Inject constructor(
             .setLogger { level, tag, msg -> Timber.tag(tag).log(level, msg) }
             .build()
         RxBleClient.updateLogOptions(logOptions)
-        coroutineScope.launch {
-            while (running) {
+        scanJob = coroutineScope.launch {
+            while (isActive) {
                 Timber.d("scan - Starting")
                 scanDisposable = scan()
                 var attempts = 0
                 while (attempts++ < 10 && devices.isEmpty()) {
+                    if (!isActive) return@launch
                     delay(scanIntervalLength.toLong() * 1_000)
                 }
                 Timber.d("scan - Stopping")
+                if (!isActive) return@launch
+
                 scanDisposable?.dispose()
                 scanDisposable = null
 
@@ -137,9 +144,9 @@ class Scan @Inject constructor(
     }
 
     override fun stop() {
-        running = false
         scanDisposable?.dispose()
         scanDisposable = null
+        scanJob?.cancel()
     }
 
     private fun connectToDevice(

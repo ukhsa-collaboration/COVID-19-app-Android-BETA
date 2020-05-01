@@ -18,10 +18,12 @@ import io.reactivex.Single
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.withContext
 import net.lachlanmckee.timberjunit.TimberTestRule
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -45,6 +47,8 @@ class ScanTest {
     private val txPower = 47
 
     private lateinit var identifier: ByteArray
+
+    private val coroutineScope = TestCoroutineScope()
 
     @Rule
     @JvmField
@@ -77,7 +81,9 @@ class ScanTest {
                     Observable.error<RxBleConnection>(disconnectException)
                 }
         )
-        every { connection.requestMtu(BluetoothIdentifier.SIZE + 2) } returns Single.just(BluetoothIdentifier.SIZE + 2)
+        every { connection.requestMtu(BluetoothIdentifier.SIZE + 2) } returns Single.just(
+            BluetoothIdentifier.SIZE + 2
+        )
         every { connection.readRssi() } returns Single.just(rssi)
 
         identifier = ByteArray(BluetoothIdentifier.SIZE) { 1 }
@@ -86,27 +92,41 @@ class ScanTest {
         )
     }
 
+    @After
+    fun tearDown() {
+        coroutineScope.cleanupTestCoroutines()
+    }
+
     @Test
-    fun connectionWithSingularDevice() = runBlocking {
-        val coroutineScope = this
-        val scan = Scan(
-            bleClient,
-            saveContactWorker,
-            currentTimestampProvider = { timestamp },
-            bleEvents = BleEvents { Base64.getEncoder().encodeToString(it) },
-            scanIntervalLength = 1
-        )
+    fun connectionWithSingularDevice() {
+        runBlocking {
 
-        scan.start(coroutineScope)
+            val scan = Scan(
+                bleClient,
+                saveContactWorker,
+                currentTimestampProvider = { timestamp },
+                bleEvents = BleEvents { Base64.getEncoder().encodeToString(it) },
+                scanIntervalLength = 1
+            )
 
-        try {
-            withContext(Dispatchers.Default) {
-                verify(timeout = 3_000) {
-                    saveContactWorker.createOrUpdateContactEvent(coroutineScope, identifier, rssi, timestamp, txPower)
+            scan.start(coroutineScope)
+            coroutineScope.advanceTimeBy(1_000)
+
+            try {
+                withContext(Dispatchers.Default) {
+                    verify(timeout = 3_000) {
+                        saveContactWorker.createOrUpdateContactEvent(
+                            coroutineScope,
+                            identifier,
+                            rssi,
+                            timestamp,
+                            txPower
+                        )
+                    }
                 }
+            } finally {
+                scan.stop()
             }
-        } finally {
-            scan.stop()
         }
     }
 }
