@@ -60,9 +60,12 @@ jobs:
           SONAR_BASE_URL: https://test.route.cp.data.england.nhs.uk
           COMMIT_SHA: ${{ github.sha }}
 
-      - name: Tag Build Version
-        uses: richardsimko/update-tag@1.0.1
-        with:
-          tag_name: ${{ steps.publish.outputs.buildVersion }}
+      - name: Create Release
+        uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.publish.outputs.buildVersion }}
+          release_name: Test Build ${{ steps.publish.outputs.buildVersion }}
+          body: |
+            New test build
