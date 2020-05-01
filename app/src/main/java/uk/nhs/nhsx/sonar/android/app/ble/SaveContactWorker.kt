@@ -27,7 +27,8 @@ class SaveContactWorker @Inject constructor(
         scope: CoroutineScope,
         id: ByteArray,
         rssi: Int,
-        timestamp: DateTime
+        timestamp: DateTime,
+        txPowerAdvertised: Int
     ) {
         scope.launch {
             withContext(dispatcher) {
@@ -46,7 +47,7 @@ class SaveContactWorker @Inject constructor(
                             timestamp = timestamp.millis,
                             duration = 60,
                             txPowerInProtocol = bluetoothIdentifier.txPower,
-                            txPowerAdvertised = 0,
+                            txPowerAdvertised = txPowerAdvertised.toByte(),
                             transmissionTime = bluetoothIdentifier.transmissionTime,
                             countryCode = bluetoothIdentifier.countryCode,
                             hmacSignature = bluetoothIdentifier.hmacSignature

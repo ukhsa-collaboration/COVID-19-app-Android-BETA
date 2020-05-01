@@ -37,7 +37,7 @@ class Scan @Inject constructor(
 ) : Scanner {
 
     private var running = true
-    private var devices: MutableList<ScanResult> = mutableListOf()
+    private var devices: MutableList<Pair<ScanResult, Int>> = mutableListOf()
     private val connections: MutableList<Disposable?> = mutableListOf()
 
     private val coLocateServiceUuidFilter = ScanFilter.Builder()
@@ -108,9 +108,9 @@ class Scan @Inject constructor(
                 // or just after it finished
                 delay(1_000)
 
-                devices.distinctBy { it.bleDevice }.map {
+                devices.distinctBy { it.first.bleDevice }.map {
                     Timber.d("scan - Connecting to $it")
-                    connectToDevice(it, coroutineScope)
+                    connectToDevice(it.first, it.second, coroutineScope)
                 }
 
                 connections.map { it?.dispose() }
@@ -130,7 +130,7 @@ class Scan @Inject constructor(
             .subscribe(
                 {
                     Timber.d("Scan found = ${it.bleDevice}")
-                    devices.add(it)
+                    devices.add(Pair(it, it.scanRecord.txPowerLevel))
                 },
                 ::onConnectionError
             )
@@ -144,6 +144,7 @@ class Scan @Inject constructor(
 
     private fun connectToDevice(
         scanResult: ScanResult,
+        txPowerAdvertised: Int,
         coroutineScope: CoroutineScope
     ) {
         val macAddress = scanResult.bleDevice.macAddress
@@ -156,7 +157,7 @@ class Scan @Inject constructor(
                 negotiateMTU(connection)
             }
             .flatMapSingle { connection ->
-                read(connection, coroutineScope)
+                read(connection, txPowerAdvertised, coroutineScope)
             }
             .doOnSubscribe {
                 connections.add(it)
@@ -185,12 +186,12 @@ class Scan @Inject constructor(
             .andThen(Single.just(connection))
     }
 
-    private fun read(connection: RxBleConnection, scope: CoroutineScope): Single<Event> {
+    private fun read(connection: RxBleConnection, txPower: Int, scope: CoroutineScope): Single<Event> {
         return Single.zip(
             connection.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID),
             connection.readRssi(),
             BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
-                Event(characteristicValue, rssi, scope, currentTimestampProvider())
+                Event(characteristicValue, rssi, txPower, scope, currentTimestampProvider())
             }
         )
     }
@@ -211,7 +212,8 @@ class Scan @Inject constructor(
             event.scope,
             event.identifier,
             event.rssi,
-            event.timestamp
+            event.timestamp,
+            event.txPower
         )
     }
 
@@ -220,6 +222,7 @@ class Scan @Inject constructor(
     private data class Event(
         val identifier: ByteArray,
         val rssi: Int,
+        val txPower: Int,
         val scope: CoroutineScope,
         val timestamp: DateTime
     )

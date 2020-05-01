@@ -68,7 +68,7 @@ class TestRxBleClient(context: Context) : RxBleClient() {
 
     private fun createScanResult(args: ScanResultArgs): ScanResult {
         val scanRecord =
-            ScanRecordImplCompat(null, null, null, -1, Int.MIN_VALUE, null, ByteArray(0))
+            ScanRecordImplCompat(null, null, null, -1, args.txPower, null, ByteArray(0))
         val characteristicUuid = SONAR_IDENTITY_CHARACTERISTIC_UUID
 
         val characteristic =
@@ -91,7 +91,8 @@ class TestRxBleClient(context: Context) : RxBleClient() {
 data class ScanResultArgs(
     val encryptedId: ByteArray,
     val macAddress: String,
-    val rssiList: List<Int>
+    val rssiList: List<Int>,
+    val txPower: Int
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -102,6 +103,7 @@ data class ScanResultArgs(
         if (!encryptedId.contentEquals(other.encryptedId)) return false
         if (macAddress != other.macAddress) return false
         if (rssiList != other.rssiList) return false
+        if (txPower != other.txPower) return false
 
         return true
     }
@@ -110,6 +112,7 @@ data class ScanResultArgs(
         var result = encryptedId.contentHashCode()
         result = 31 * result + macAddress.hashCode()
         result = 31 * result + rssiList.hashCode()
+        result = 31 * result + txPower
         return result
     }
 }

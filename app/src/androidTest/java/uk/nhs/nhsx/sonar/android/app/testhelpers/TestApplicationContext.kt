@@ -301,12 +301,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             ScanResultArgs(
                 encryptedId = firstDeviceId.asBytes(),
                 macAddress = "06-00-00-00-00-00",
-                rssiList = listOf(10)
+                rssiList = listOf(10),
+                txPower = -5
             ),
             ScanResultArgs(
                 encryptedId = secondDeviceId.asBytes(),
                 macAddress = "07-00-00-00-00-00",
-                rssiList = listOf(40)
+                rssiList = listOf(40),
+                txPower = -1
             )
         )
 
@@ -318,7 +320,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             ScanResultArgs(
                 encryptedId = firstDeviceId.asBytes(),
                 macAddress = "06-00-00-00-00-00",
-                rssiList = listOf(20)
+                rssiList = listOf(20),
+                txPower = -5
             )
         )
 
@@ -330,7 +333,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
             ScanResultArgs(
                 encryptedId = firstDeviceId.asBytes(),
                 macAddress = "06-00-00-00-00-00",
-                rssiList = listOf(15)
+                rssiList = listOf(15),
+                txPower = -5
             )
         )
 
@@ -364,7 +368,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 "timestamp" to "2020-04-01T14:33:13Z",
                 "duration" to 700,
                 "txPowerInProtocol" to -6,
-                "txPowerAdvertised" to 0,
+                "txPowerAdvertised" to -5,
                 "hmacSignature" to Base64.encodeToString(firstDeviceSignature, Base64.DEFAULT),
                 "transmissionTime" to transmissionTime,
                 "countryCode" to ByteBuffer.wrap(countryCode).short
@@ -384,7 +388,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 "timestamp" to "2020-04-01T14:34:43Z",
                 "duration" to 60,
                 "txPowerInProtocol" to -8,
-                "txPowerAdvertised" to 0,
+                "txPowerAdvertised" to -1,
                 "hmacSignature" to Base64.encodeToString(secondDeviceSignature, Base64.DEFAULT),
                 "transmissionTime" to transmissionTime + 90,
                 "countryCode" to ByteBuffer.wrap(countryCode).short

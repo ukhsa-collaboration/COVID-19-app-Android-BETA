@@ -42,6 +42,8 @@ class ScanTest {
     private val timestamp = DateTime.now(DateTimeZone.UTC)
     private val rssi = -50
     private val period = 50L
+    private val txPower = 47
+
     private lateinit var identifier: ByteArray
 
     @Rule
@@ -63,6 +65,7 @@ class ScanTest {
 
         every { scanResult.bleDevice } returns bleDevice
         every { bleDevice.connectionState } returns RxBleConnection.RxBleConnectionState.DISCONNECTED
+        every { scanResult.scanRecord.txPowerLevel } returns txPower
         every { bleDevice.macAddress } returns "00:1B:44:11:3A:B7"
 
         every { bleDevice.establishConnection(false) } returns Observable.merge(
@@ -99,7 +102,7 @@ class ScanTest {
         try {
             withContext(Dispatchers.Default) {
                 verify(timeout = 3_000) {
-                    saveContactWorker.createOrUpdateContactEvent(coroutineScope, identifier, rssi, timestamp)
+                    saveContactWorker.createOrUpdateContactEvent(coroutineScope, identifier, rssi, timestamp, txPower)
                 }
             }
         } finally {
