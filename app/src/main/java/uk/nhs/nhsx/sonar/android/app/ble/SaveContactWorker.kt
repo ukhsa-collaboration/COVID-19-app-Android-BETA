@@ -13,10 +13,8 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEvent
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
-import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
-import java.lang.IllegalArgumentException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,33 +33,23 @@ class SaveContactWorker @Inject constructor(
             withContext(dispatcher) {
                 try {
                     Timber.e("saving ${id.size} rssi=$rssi timestamp=${timestamp.toUtcIsoFormat()}")
-                    // TODO: Clean up once iOS have added txPower
-                    val bluetoothIdentifier = when (id.size) {
-                        BluetoothIdentifier.SIZE -> {
-                            Timber.d("Correctly sized id")
-                            BluetoothIdentifier.fromBytes(id)
-                        }
-                        BluetoothIdentifier.SIZE - 1 -> {
-                            Timber.d("Id missing one byte, probably txPower from iOS")
-                            BluetoothIdentifier.fromBytes(id + byteArrayOf(0))
-                        }
-                        Cryptogram.SIZE -> {
-                            BluetoothIdentifier.fromBytes(
-                                byteArrayOf('G'.toByte(), 'B'.toByte()) + id + byteArrayOf(
-                                    0
-                                )
-                            )
-                        }
-                        else -> throw IllegalArgumentException("Identifier has wrong size, must be ${BluetoothIdentifier.SIZE} or ${BluetoothIdentifier.SIZE - 1}, was ${id.size}")
+                    if (id.size != BluetoothIdentifier.SIZE) {
+                        throw IllegalArgumentException("Identifier has wrong size, must be ${BluetoothIdentifier.SIZE}, was ${id.size}")
                     }
+                    val bluetoothIdentifier = BluetoothIdentifier.fromBytes(id)
+
                     val contactEvent =
                         ContactEvent(
-                            sonarId = bluetoothIdentifier.asBytes(),
+                            sonarId = bluetoothIdentifier.cryptogram.asBytes(),
                             rssiValues = listOf(rssi),
                             rssiTimestamps = listOf(timestamp.millis),
                             timestamp = timestamp.millis,
                             duration = 60,
-                            txPower = bluetoothIdentifier.txPower
+                            txPowerInProtocol = bluetoothIdentifier.txPower,
+                            txPowerAdvertised = 0,
+                            transmissionTime = bluetoothIdentifier.transmissionTime,
+                            countryCode = bluetoothIdentifier.countryCode,
+                            hmacSignature = bluetoothIdentifier.hmacSignature
                         )
                     contactEventDao.createOrUpdate(contactEvent)
                 } catch (e: Exception) {

@@ -10,6 +10,7 @@ import dagger.Provides
 import uk.nhs.nhsx.sonar.android.app.http.AndroidSecretKeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.DelegatingKeyStore
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdProvider
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdSigner
 import uk.nhs.nhsx.sonar.android.app.crypto.Encrypter
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.PublicKeyStorage
@@ -38,7 +39,8 @@ class CryptoModule(
     @Provides
     fun provideBluetoothCryptogramProvider(
         sonarIdProvider: SonarIdProvider,
-        encrypter: Encrypter
+        encrypter: Encrypter,
+        signer: BluetoothIdSigner
     ): BluetoothIdProvider =
-        BluetoothIdProvider(sonarIdProvider, encrypter)
+        BluetoothIdProvider(sonarIdProvider, encrypter, signer)
 }

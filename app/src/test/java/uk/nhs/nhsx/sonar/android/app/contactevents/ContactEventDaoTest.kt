@@ -28,7 +28,11 @@ class ContactEventDaoTest {
             rssiTimestamps = listOf(2000, 3000, 63_000),
             duration = 61,
             timestamp = 2000,
-            txPower = 8
+            txPowerInProtocol = 8,
+            txPowerAdvertised = 6,
+            countryCode = "GB".toByteArray(),
+            hmacSignature = ByteArray(16),
+            transmissionTime = 60
         )
 
     @Test
@@ -40,7 +44,11 @@ class ContactEventDaoTest {
                 rssiTimestamps = listOf(1000),
                 duration = 60,
                 timestamp = 1000,
-                txPower = 8
+                txPowerInProtocol = 8,
+                txPowerAdvertised = 7,
+                countryCode = "GB".toByteArray(),
+                transmissionTime = 15,
+                hmacSignature = ByteArray(16)
             )
 
             assertThat(merge(pastEvent, storedEvent)).isEqualTo(
@@ -50,7 +58,11 @@ class ContactEventDaoTest {
                     rssiTimestamps = listOf(1000, 2000, 3000, 63_000),
                     duration = 62,
                     timestamp = 1000,
-                    txPower = 8
+                    txPowerInProtocol = 8,
+                    txPowerAdvertised = 7,
+                    countryCode = "GB".toByteArray(),
+                    hmacSignature = ByteArray(16),
+                    transmissionTime = 15
                 )
             )
         }
@@ -65,7 +77,11 @@ class ContactEventDaoTest {
                 rssiTimestamps = listOf(64_000),
                 duration = 60,
                 timestamp = 64_000,
-                txPower = 8
+                txPowerInProtocol = 8,
+                countryCode = "GB".toByteArray(),
+                hmacSignature = ByteArray(16),
+                transmissionTime = 65,
+                txPowerAdvertised = 32
             )
 
             assertThat(merge(futureEvent, storedEvent)).isEqualTo(
@@ -75,7 +91,11 @@ class ContactEventDaoTest {
                     rssiTimestamps = listOf(2000, 3000, 63_000, 64_000),
                     duration = 62,
                     timestamp = 2000,
-                    txPower = 8
+                    txPowerInProtocol = 8,
+                    txPowerAdvertised = 6,
+                    countryCode = "GB".toByteArray(),
+                    hmacSignature = ByteArray(16),
+                    transmissionTime = 60
                 )
             )
         }
@@ -90,7 +110,11 @@ class ContactEventDaoTest {
                 rssiTimestamps = listOf(4000),
                 duration = 60,
                 timestamp = 4000,
-                txPower = 8
+                txPowerInProtocol = 8,
+                txPowerAdvertised = 0,
+                countryCode = "GB".toByteArray(),
+                transmissionTime = 65,
+                hmacSignature = ByteArray(16)
             )
 
             assertThat(merge(futureEvent, storedEvent)).isEqualTo(
@@ -100,7 +124,11 @@ class ContactEventDaoTest {
                     rssiTimestamps = listOf(2000, 3000, 4000, 63_000),
                     duration = 61,
                     timestamp = 2000,
-                    txPower = 8
+                    txPowerInProtocol = 8,
+                    countryCode = "GB".toByteArray(),
+                    hmacSignature = ByteArray(16),
+                    transmissionTime = 60,
+                    txPowerAdvertised = 6
                 )
             )
         }
@@ -115,7 +143,11 @@ class ContactEventDaoTest {
                 rssiTimestamps = listOf(1000, 4000, 64_000),
                 duration = 63,
                 timestamp = 1000,
-                txPower = 8
+                txPowerInProtocol = 4,
+                countryCode = "GB".toByteArray(),
+                hmacSignature = ByteArray(16),
+                transmissionTime = 45,
+                txPowerAdvertised = 4
             )
 
             assertThat(merge(longerEvent, storedEvent)).isEqualTo(
@@ -125,7 +157,11 @@ class ContactEventDaoTest {
                     rssiTimestamps = listOf(1000, 2000, 3000, 4000, 63_000, 64_000),
                     duration = 63,
                     timestamp = 1000,
-                    txPower = 8
+                    txPowerInProtocol = 4,
+                    countryCode = "GB".toByteArray(),
+                    hmacSignature = ByteArray(16),
+                    transmissionTime = 45,
+                    txPowerAdvertised = 4
                 )
             )
         }

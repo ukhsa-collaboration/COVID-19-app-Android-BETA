@@ -13,6 +13,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Seconds
 import timber.log.Timber
+import java.lang.Integer.min
 
 @Dao
 interface ContactEventDao {
@@ -63,12 +64,26 @@ fun merge(
             newEvent.rssiValues.zip(newEvent.rssiTimestamps))
             .sortedBy { it.second }
     val updatedStartTime = earliest(storedEventTimeStart, newEventTime)
+    val updatedTxPowerInProtocol = if (updatedStartTime == storedEventTimeStart) {
+        storedEvent.txPowerInProtocol
+    } else {
+        newEvent.txPowerInProtocol
+    }
+    val updatedTxPowerAdvertised = if (updatedStartTime == storedEventTimeStart) {
+        storedEvent.txPowerAdvertised
+    } else {
+        newEvent.txPowerAdvertised
+    }
+
     val lastTimestamp = DateTime(mergedRssisAndTimestamps.last().second)
     return storedEvent.copy(
         timestamp = updatedStartTime.millis,
         rssiValues = mergedRssisAndTimestamps.map { it.first },
         rssiTimestamps = mergedRssisAndTimestamps.map { it.second },
-        duration = Seconds.secondsBetween(updatedStartTime, lastTimestamp).seconds
+        duration = Seconds.secondsBetween(updatedStartTime, lastTimestamp).seconds,
+        transmissionTime = min(storedEvent.transmissionTime, newEvent.transmissionTime),
+        txPowerAdvertised = updatedTxPowerAdvertised,
+        txPowerInProtocol = updatedTxPowerInProtocol
     )
 }
 
