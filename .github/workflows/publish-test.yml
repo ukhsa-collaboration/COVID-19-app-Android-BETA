@@ -47,7 +47,7 @@ jobs:
         id: publish
         uses: ./.github/actions/publish-action
         env:
-          BUILD_FLAVOR: ApkStaging
+          BUILD_FLAVOR: StagingApk
           PLAY_TRACK: Test
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
