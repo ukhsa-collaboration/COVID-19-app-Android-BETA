@@ -26,7 +26,7 @@ class CoLocationApi(
             jsonBody = coLocationData.toJson(),
             secretKey = keyStorage.provideSecretKey()!!
         )
-        Timber.i("Sending $coLocationData")
+        Timber.i("Sending ${coLocationData.toJson()}")
 
         return httpClient.send(request).mapToUnit()
     }
