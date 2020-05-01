@@ -9,6 +9,8 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class StateFactoryTest {
@@ -17,49 +19,60 @@ class StateFactoryTest {
 
     @Test
     fun `when symptoms date is today, red state is valid until 7 days after today`() {
-        val state = StateFactory.red(today, nonEmptySetOf(Symptom.COUGH), today)
+        val state = StateFactory.decide(today, nonEmptySetOf(COUGH), today)
 
+        assertThat(state).isInstanceOf(RedState::class.java)
         assertThat(state.until).isEqualTo(DateTime(2020, 4, 17, 7, 0).toDateTime(UTC))
     }
 
     @Test
     fun `when symptoms date is yesterday, red state is valid until 6 days after today`() {
-        val state = StateFactory.red(today.minusDays(1), nonEmptySetOf(Symptom.COUGH), today)
+        val state = StateFactory.decide(today.minusDays(1), nonEmptySetOf(COUGH), today)
 
+        assertThat(state).isInstanceOf(RedState::class.java)
         assertThat(state.until).isEqualTo(DateTime(2020, 4, 16, 7, 0).toDateTime(UTC))
     }
 
     @Test
-    fun `when symptoms date is 7 days ago, red state is valid until tomorrow`() {
-        val state = StateFactory.red(today.minusDays(7), nonEmptySetOf(Symptom.COUGH), today)
-
-        assertThat(state.until).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
-    }
-
-    @Test
-    fun `when extending the state, red state is valid until tomorrow`() {
-        val state = StateFactory.extendedRed(nonEmptySetOf(Symptom.COUGH), today = today)
+    fun `checkin state is valid until next day`() {
+        val state = StateFactory.checkin(nonEmptySetOf(COUGH), today = today)
 
         assertThat(state.until).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
     }
 
     @Test
     fun `when symptoms date is 8 days ago without temperature, state should be recovery`() {
-        val state = StateFactory.decide(today.minusDays(8), nonEmptySetOf(Symptom.COUGH), today)
+        val state = StateFactory.decide(today.minusDays(8), nonEmptySetOf(COUGH), today)
 
         assertThat(state).isInstanceOf(RecoveryState::class.java)
+    }
+
+    @Test
+    fun `when symptoms date is 8 days ago with temperature, state should be red until next day`() {
+        val state = StateFactory.decide(today.minusDays(8), nonEmptySetOf(TEMPERATURE), today)
+
+        assertThat(state).isInstanceOf(RedState::class.java)
+        assertThat(state.until).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
     }
 
     @Test
     fun `when symptoms date is 7 days ago without temperature, state should be recovery`() {
-        val state = StateFactory.decide(today.minusDays(7), nonEmptySetOf(Symptom.COUGH), today)
+        val state = StateFactory.decide(today.minusDays(7), nonEmptySetOf(COUGH), today)
 
         assertThat(state).isInstanceOf(RecoveryState::class.java)
     }
 
     @Test
+    fun `when symptoms date is 7 days ago with temperature, state should be red until next day`() {
+        val state = StateFactory.decide(today.minusDays(7), nonEmptySetOf(TEMPERATURE), today)
+
+        assertThat(state).isInstanceOf(RedState::class.java)
+        assertThat(state.until).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
+    }
+
+    @Test
     fun `when symptoms date is 6 days ago with temperature, state should be red`() {
-        val state = StateFactory.decide(today.minusDays(6), nonEmptySetOf(Symptom.TEMPERATURE), today)
+        val state = StateFactory.decide(today.minusDays(6), nonEmptySetOf(TEMPERATURE), today)
 
         assertThat(state).isInstanceOf(RedState::class.java)
     }

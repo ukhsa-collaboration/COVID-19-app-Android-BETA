@@ -23,6 +23,11 @@ object UserStateSerialization {
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.toString() }
             )
+            is CheckinState -> jsonOf(
+                "type" to state.type(),
+                "until" to state.until.millis,
+                "symptoms" to state.symptoms.map { it.toString() }
+            )
             is RecoveryState -> jsonOf(
                 "type" to state.type(),
                 "until" to state.until.millis
@@ -37,6 +42,7 @@ object UserStateSerialization {
         return when (type) {
             "EmberState" -> EmberState(until)
             "RedState" -> jsonObj.getSymptoms()?.let { RedState(until, it) }
+            "CheckinState" -> jsonObj.getSymptoms()?.let { CheckinState(until, it) }
             "RecoveryState" -> RecoveryState(until)
             else -> DefaultState(until)
         }

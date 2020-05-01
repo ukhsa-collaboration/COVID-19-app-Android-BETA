@@ -19,6 +19,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.status.CheckinState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
@@ -95,13 +96,13 @@ class DiagnoseCoughViewModelTest {
     }
 
     @Test
-    fun `initial state is red then final state is red`() {
+    fun `initial state is red then final state is checkin`() {
         val tomorrowSevenAm = LocalDate.now()
             .plusDays(1)
             .toDateTime(LocalTime("7:00:00"))
             .toDateTime(UTC)
 
-        val expected = RedState(tomorrowSevenAm, nonEmptySetOf(TEMPERATURE))
+        val expected = CheckinState(tomorrowSevenAm, nonEmptySetOf(TEMPERATURE))
         every { stateStorage.get() } returns RedState(DateTime.now(UTC), nonEmptySetOf(COUGH))
         testSubject.update(hasTemperature = true, hasCough = false)
 
@@ -112,6 +113,23 @@ class DiagnoseCoughViewModelTest {
         }
     }
 
+    @Test
+    fun `initial state is checkin then final state is checkin`() {
+        val tomorrowSevenAm = LocalDate.now()
+            .plusDays(1)
+            .toDateTime(LocalTime("7:00:00"))
+            .toDateTime(UTC)
+
+        val expected = CheckinState(tomorrowSevenAm, nonEmptySetOf(TEMPERATURE))
+        every { stateStorage.get() } returns CheckinState(DateTime.now(UTC), nonEmptySetOf(COUGH))
+        testSubject.update(hasTemperature = true, hasCough = false)
+
+        verify {
+            testObserver.onChanged(
+                StateResult.Main(expected)
+            )
+        }
+    }
     @Test
     fun `initial state is Amber then final state Is red`() {
         RedState(DateTime.now(UTC).plusDays(7), nonEmptySetOf(TEMPERATURE))

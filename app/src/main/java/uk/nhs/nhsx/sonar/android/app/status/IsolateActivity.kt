@@ -52,9 +52,12 @@ class IsolateActivity : BaseActivity() {
         setContentView(R.layout.activity_isolate)
         BluetoothService.start(this)
 
-        val state: RedState = stateStorage.get() as RedState
+        val state = stateStorage.get()
 
-        symptoms.text = state.symptoms.sortedDescending().joinToString("\n") {
+        val theSymptoms =
+            if (state is RedState) state.symptoms else (state as CheckinState).symptoms
+
+        symptoms.text = theSymptoms.sortedDescending().joinToString("\n") {
             when (it) {
                 Symptom.TEMPERATURE -> getString(R.string.high_temperature)
                 Symptom.COUGH -> getString(R.string.continuous_cough)

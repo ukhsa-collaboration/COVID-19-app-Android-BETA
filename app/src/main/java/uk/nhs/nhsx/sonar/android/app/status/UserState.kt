@@ -22,6 +22,8 @@ data class EmberState(override val until: DateTime) : UserState()
 
 data class RedState(override val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
 
+data class CheckinState(override val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
+
 enum class Symptom {
     COUGH,
     TEMPERATURE

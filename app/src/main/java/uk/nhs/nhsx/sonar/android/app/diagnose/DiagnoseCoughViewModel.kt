@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Close
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Review
+import uk.nhs.nhsx.sonar.android.app.status.CheckinState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
@@ -35,6 +36,7 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
         viewModelScope.launch {
             nextStateLiveData.value = when (prevState) {
                 is RedState -> handleSimplified(hasTemperature, hasCough)
+                is CheckinState -> handleSimplified(hasTemperature, hasCough)
                 else -> handleNormal(hasTemperature, hasCough)
             }
         }
@@ -42,8 +44,8 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
 
     private fun handleSimplified(hasTemperature: Boolean, hasCough: Boolean): StateResult {
         val userState = when {
-            hasTemperature and hasCough -> StateFactory.extendedRed(nonEmptySetOf(COUGH, TEMPERATURE))
-            hasTemperature -> StateFactory.extendedRed(nonEmptySetOf(TEMPERATURE))
+            hasTemperature and hasCough -> StateFactory.checkin(nonEmptySetOf(COUGH, TEMPERATURE))
+            hasTemperature -> StateFactory.checkin(nonEmptySetOf(TEMPERATURE))
             hasCough -> RecoveryState()
             else -> DefaultState()
         }

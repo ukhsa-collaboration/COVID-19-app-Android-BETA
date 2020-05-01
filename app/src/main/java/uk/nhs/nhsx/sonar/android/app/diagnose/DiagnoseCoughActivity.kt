@@ -21,6 +21,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
+import uk.nhs.nhsx.sonar.android.app.status.CheckinState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
@@ -82,7 +83,8 @@ class DiagnoseCoughActivity : BaseActivity() {
     }
 
     private fun setQuestionnaireContent() {
-        if (stateStorage.get() is RedState) {
+        val state = stateStorage.get()
+        if (state is RedState || state is CheckinState) {
             progress.text = getString(R.string.progress_two_out_of_two)
             progress.contentDescription = getString(R.string.page2of2)
             confirm_diagnosis.text = getString(R.string.submit)
