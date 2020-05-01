@@ -77,7 +77,7 @@
                             android:paddingStart="28dp"
                             android:paddingEnd="24dp"
 
-                            android:text="@string/status_latest_advice" />
+                            android:text="@string/status_what_to_do" />
 
                         <TextView
                             android:id="@+id/follow_until"
