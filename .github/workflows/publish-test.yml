@@ -47,7 +47,7 @@ jobs:
         id: publish
         uses: ./.github/actions/publish-action
         env:
-          BUILD_FLAVOR: Staging
+          PUBLISH_BUILD_FLAVOR: publishApkStaging
           PLAY_TRACK: Test
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
@@ -60,7 +60,8 @@ jobs:
           SONAR_BASE_URL: https://test.route.cp.data.england.nhs.uk
           COMMIT_SHA: ${{ github.sha }}
 
-      - name: Create Release
+      - name: Create Test Release
+        id: create_test_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -69,3 +70,13 @@ jobs:
           release_name: Test Build ${{ steps.publish.outputs.buildVersion }}
           body: |
             New test build
+
+      - name: Upload Test APK
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_test_release.outputs.upload_url }}
+          asset_path: app/build/outputs/apk/staging/app-staging.apk
+          asset_name: app-staging.apk
+          asset_content_type: application/vnd.android.package-archive

@@ -46,7 +46,7 @@ jobs:
       - name: Publish
         uses: ./.github/actions/publish-action
         env:
-          BUILD_FLAVOR: Release
+          PUBLISH_BUILD_FLAVOR: publishRelease
           PLAY_TRACK: alpha
           GOOGLE_SERVICES: ${{ secrets.ProdGoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
