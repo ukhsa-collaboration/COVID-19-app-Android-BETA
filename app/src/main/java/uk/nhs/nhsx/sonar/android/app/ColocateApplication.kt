@@ -12,6 +12,8 @@ import androidx.work.ListenableWorker
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.iid.FirebaseInstanceId
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
 import com.polidea.rxandroidble2.exceptions.BleException
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
@@ -22,6 +24,7 @@ import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWorker
 import uk.nhs.nhsx.sonar.android.app.crypto.PROVIDER_NAME
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
 import uk.nhs.nhsx.sonar.android.app.di.DaggerApplicationComponent
+import uk.nhs.nhsx.sonar.android.app.di.module.AnalyticsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
@@ -29,8 +32,8 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
-import java.security.KeyStore
 import uk.nhs.nhsx.sonar.android.app.util.registerShakeDetector
+import java.security.KeyStore
 import java.security.Security
 
 class ColocateApplication : Application() {
@@ -105,7 +108,17 @@ class ColocateApplication : Application() {
             )
             .networkModule(NetworkModule(BuildConfig.BASE_URL, BuildConfig.SONAR_HEADER_VALUE))
             .notificationsModule(NotificationsModule())
+            .analyticsModule(AnalyticsModule(startAnalytics()))
             .build()
+
+    private fun startAnalytics(): Analytics {
+        AppCenter.start(
+            this,
+            BuildConfig.SONAR_ANALYTICS_KEY,
+            Analytics::class.java
+        )
+        return Analytics.getInstance()
+    }
 
     private fun configureBouncyCastleProvider() {
         // Remove existing built in Bouncy Castle
