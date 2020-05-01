@@ -48,6 +48,12 @@ jobs:
           TEST_SONAR_HEADER_VALUE: ${{ secrets.TestSonarHeaderValue }}
           SONAR_ANALYTICS_KEY: ${{ secrets.TestSonarAnalyticsKey }}
 
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+
       - name: Instrumentation test
         uses: ./.github/actions/instrumentation-action
         env:
