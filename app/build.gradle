@@ -170,6 +170,9 @@ dependencies {
     implementation "androidx.browser:browser:1.2.0"
     implementation 'org.bouncycastle:bcprov-jdk15on:1.64'
 
+    def appCenterSdkVersion = '3.2.1'
+    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+
     // Client
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'net.danlew:android.joda:2.10.3'
