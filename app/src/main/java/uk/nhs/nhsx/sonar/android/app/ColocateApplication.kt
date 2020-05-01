@@ -47,6 +47,7 @@ class ColocateApplication : Application() {
 
         configureBouncyCastleProvider()
 
+        startAnalytics()
         appComponent = buildApplicationComponent()
 
         configureRxJavaErrorHandler()
@@ -108,16 +109,15 @@ class ColocateApplication : Application() {
             )
             .networkModule(NetworkModule(BuildConfig.BASE_URL, BuildConfig.SONAR_HEADER_VALUE))
             .notificationsModule(NotificationsModule())
-            .analyticsModule(AnalyticsModule(startAnalytics()))
+            .analyticsModule(AnalyticsModule())
             .build()
 
-    private fun startAnalytics(): Analytics {
+    private fun startAnalytics() {
         AppCenter.start(
             this,
             BuildConfig.SONAR_ANALYTICS_KEY,
             Analytics::class.java
         )
-        return Analytics.getInstance()
     }
 
     private fun configureBouncyCastleProvider() {

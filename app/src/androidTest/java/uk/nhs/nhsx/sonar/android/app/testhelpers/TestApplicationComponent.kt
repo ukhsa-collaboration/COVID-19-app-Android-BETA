@@ -12,6 +12,8 @@ import dagger.Provides
 import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.DeviceDetection
+import uk.nhs.nhsx.sonar.android.app.analytics.AnalyticEvent
+import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.Scan
@@ -39,7 +41,8 @@ import javax.inject.Singleton
         BluetoothModule::class,
         CryptoModule::class,
         NetworkModule::class,
-        TestNotificationsModule::class
+        TestNotificationsModule::class,
+        TestAnalyticsModule::class
     ]
 )
 interface TestAppComponent : ApplicationComponent {
@@ -96,4 +99,17 @@ class TestNotificationsModule {
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
         TestTokenRetriever()
+}
+
+@Module
+class TestAnalyticsModule {
+    @Provides
+    fun provideAnalytics(): SonarAnalytics =
+        TestAnalytics()
+}
+
+class TestAnalytics : SonarAnalytics {
+    override fun trackEvent(event: AnalyticEvent) {
+        // Do nothing
+    }
 }

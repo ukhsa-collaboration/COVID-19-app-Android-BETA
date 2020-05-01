@@ -1,13 +1,12 @@
 package uk.nhs.nhsx.sonar.android.app.di.module
 
-import com.microsoft.appcenter.analytics.Analytics
 import dagger.Module
 import dagger.Provides
+import uk.nhs.nhsx.sonar.android.app.analytics.AppCenterAnalytics
+import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 
 @Module
-class AnalyticsModule(
-    private val analytics: Analytics
-) {
+class AnalyticsModule() {
     @Provides
-    fun provideAnalytics(): Analytics = analytics
+    fun provideAnalytics(): SonarAnalytics = AppCenterAnalytics()
 }

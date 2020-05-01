@@ -4,9 +4,9 @@
 
 package uk.nhs.nhsx.sonar.android.app.analytics
 
-fun registrationSucceeded(): AnalyticEvent = AnalyticEvent(
-    "Registration succeeded"
-)
+const val REGISTRATION_SUCCEEDED = "Registration succeeded"
+
+fun registrationSucceeded(): AnalyticEvent = AnalyticEvent(REGISTRATION_SUCCEEDED)
 
 fun registrationSendTokenCallFailed(statusCode: Int?): AnalyticEvent = AnalyticEvent(
     "Registration failed",

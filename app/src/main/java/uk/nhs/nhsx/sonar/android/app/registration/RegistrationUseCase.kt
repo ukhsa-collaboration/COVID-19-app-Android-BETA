@@ -6,6 +6,8 @@ package uk.nhs.nhsx.sonar.android.app.registration
 
 import com.android.volley.ClientError
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
+import uk.nhs.nhsx.sonar.android.app.analytics.registrationSucceeded
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import javax.inject.Inject
@@ -19,6 +21,7 @@ class RegistrationUseCase @Inject constructor(
     private val sonarIdProvider: SonarIdProvider,
     private val postCodeProvider: PostCodeProvider,
     private val activationCodeProvider: ActivationCodeProvider,
+    private val analytics: SonarAnalytics,
     @Named(AppModule.DEVICE_MODEL) private val deviceModel: String,
     @Named(AppModule.DEVICE_OS_VERSION) private val deviceOsVersion: String
 ) {
@@ -43,6 +46,7 @@ class RegistrationUseCase @Inject constructor(
             Timber.d("sonarId = $sonarId")
             storeSonarId(sonarId)
             Timber.d("sonarId stored")
+            analytics.trackEvent(registrationSucceeded())
             return RegistrationResult.Success
         } catch (e: ClientError) {
             // TODO: delete firebase token?

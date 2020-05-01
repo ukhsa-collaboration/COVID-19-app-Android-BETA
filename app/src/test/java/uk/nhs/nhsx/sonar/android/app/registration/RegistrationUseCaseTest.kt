@@ -18,6 +18,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.analytics.AppCenterAnalytics
+import uk.nhs.nhsx.sonar.android.app.analytics.registrationSucceeded
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import java.io.IOException
@@ -30,6 +32,7 @@ class RegistrationUseCaseTest {
     private val activationCodeProvider = mockk<ActivationCodeProvider>(relaxUnitFun = true)
     private val sonarIdProvider = mockk<SonarIdProvider>()
     private val postCodeProvider = mockk<PostCodeProvider>()
+    private val analytics = mockk<AppCenterAnalytics>()
 
     private val confirmation =
         DeviceConfirmation(
@@ -47,6 +50,7 @@ class RegistrationUseCaseTest {
             sonarIdProvider,
             postCodeProvider,
             activationCodeProvider,
+            analytics,
             DEVICE_MODEL,
             DEVICE_OS_VERSION
         )
@@ -89,6 +93,7 @@ class RegistrationUseCaseTest {
     @Test
     fun returnsSuccess() = runBlockingTest {
         every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        every { analytics.trackEvent(registrationSucceeded()) } returns Unit
 
         val result = registrationUseCase.register()
 
@@ -194,6 +199,15 @@ class RegistrationUseCaseTest {
         registrationUseCase.register()
 
         verify { sonarIdProvider.setSonarId(RESIDENT_ID) }
+    }
+
+    @Test
+    fun onSuccessSavesSendsSuccessfulRegistrationAnalyticEvent() = runBlockingTest {
+        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+
+        registrationUseCase.register()
+
+        verify { analytics.trackEvent(registrationSucceeded()) }
     }
 
     private fun confirmDeviceFails(exception: Exception) {
