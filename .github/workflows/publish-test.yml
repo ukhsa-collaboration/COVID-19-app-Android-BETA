@@ -44,6 +44,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Publish
+        id: publish
         uses: ./.github/actions/publish-action
         env:
           BUILD_FLAVOR: Staging
@@ -58,3 +59,10 @@ jobs:
           SONAR_ANALYTICS_KEY: ${{ secrets.TestSonarAnalyticsKey }}
           SONAR_BASE_URL: https://test.route.cp.data.england.nhs.uk
           COMMIT_SHA: ${{ github.sha }}
+
+      - name: Tag Build Version
+          uses: richardsimko/update-tag@master
+          with:
+            tag_name: $${{ steps.publish.outputs.buildVersion }}
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
