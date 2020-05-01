@@ -17,26 +17,58 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:orientation="vertical"
-            android:paddingTop="56dp"
-            android:paddingBottom="8dp">
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/submit_events_info"
+            <LinearLayout
+                android:id="@+id/areaNotSupported"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="@string/confirm_diagnosis_text_1"
-                android:textSize="16sp" />
+                android:layout_marginTop="32dp"
+                android:background="@color/gray"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="visible">
 
-            <TextView
+                <TextView
+                    style="@style/TextViewSubHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/isle_of_white_only_title" />
+
+                <TextView
+                    style="@style/TextViewStatusSubTittle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/isle_of_white_only_description"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/confirm_diagnosis_text_2"
-                android:textSize="16sp" />
+                android:layout_marginTop="36dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="8dp">
 
+                <TextView
+                    android:id="@+id/submit_events_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/confirm_diagnosis_text_1"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/confirm_diagnosis_text_2"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

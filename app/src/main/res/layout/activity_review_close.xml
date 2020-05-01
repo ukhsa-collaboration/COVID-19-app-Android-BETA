@@ -14,8 +14,6 @@
         android:layout_above="@id/close_review_btn"
         android:layout_below="@+id/logo">
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -23,53 +21,25 @@
             android:orientation="vertical"
             android:paddingBottom="8dp">
 
-
             <TextView
                 android:id="@+id/progress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="8dp"
+                android:contentDescription="@string/page_3_of_3"
                 android:fontFamily="@font/roboto_medium"
                 android:letterSpacing="0.1"
                 android:text="@string/progress_three_thirds"
-                android:contentDescription="@string/page_3_of_3"
-                android:layout_marginHorizontal="16dp"
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
-
-            <LinearLayout
-                android:id="@+id/areaNotSupported"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="19dp"
-                android:background="@color/gray"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="visible">
-
-                <TextView
-                    style="@style/TextViewSubHead"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="6dp"
-                    android:text="@string/isle_of_white_only_title" />
-
-                <TextView
-                    style="@style/TextViewStatusSubTittle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/isle_of_white_only_description"
-                    android:textColor="@color/black" />
-            </LinearLayout>
 
             <TextView
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="@string/you_do_not_have_symptoms" />
 
             <TextView
