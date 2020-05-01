@@ -208,8 +208,8 @@
     <string name="area_not_supported_message">This app is currently being evaluated on the Isle of Wight. It is not yet
         intended for use elsewhere. We are working to bring full functionality across the UK
     </string>
-    <string name="device_not_supported_title">Sorry, this app is not working on your phone</string>
-    <string name="device_not_supported_rationale">Your device is not supported this could be for various reasons.
+    <string name="device_not_supported_title">Sorry, this app will not work on your phone</string>
+    <string name="device_not_supported_rationale">Your device is not supported. This could be for various reasons.
     </string>
     <string name="confirm_diagnosis_text_1">This information will be used to help decide if the people you have had
         contact with will be advised to stay at home. To avoid more social distancing restrictions, the NHS needs
