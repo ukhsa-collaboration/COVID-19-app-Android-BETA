@@ -101,7 +101,7 @@ android {
 }
 
 play {
-    enabled = findProperty('play-enabled') ? true : false
+    enabled = project.hasProperty('play-enabled')
     serviceAccountCredentials = file(findProperty('PLAY_SERVICES_PUBLISH') ?: 'non-existing.json')
 
     track = "internal"

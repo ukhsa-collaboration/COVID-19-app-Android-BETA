@@ -60,7 +60,7 @@ jobs:
           COMMIT_SHA: ${{ github.sha }}
 
       - name: Tag Build Version
-        uses: richardsimko/update-tag@master
+        uses: richardsimko/update-tag@v1.0.1
         with:
           tag_name: ${{ steps.publish.outputs.buildVersion }}
         env:
