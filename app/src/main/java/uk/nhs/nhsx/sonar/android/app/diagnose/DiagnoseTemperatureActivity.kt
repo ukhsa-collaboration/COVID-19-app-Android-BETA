@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_temperature_diagnosis.confirm_dia
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_diagnosis_answer
+import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_question
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -30,7 +31,7 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_temperature_diagnosis)
 
-        setProgressIndicator()
+        setQuestionnaireContent()
 
         confirm_diagnosis.setOnClickListener {
             when (temperature_diagnosis_answer.checkedRadioButtonId) {
@@ -56,12 +57,15 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         }
     }
 
-    private fun setProgressIndicator() {
+    private fun setQuestionnaireContent() {
         if (stateStorage.get() is RedState) {
             progress.text = getString(R.string.progress_half)
             progress.contentDescription = getString(R.string.page1of2)
+            temperature_question.text = getString(R.string.temperature_question_simplified)
         } else {
+            progress.text = getString(R.string.progress_one_third)
             progress.contentDescription = getString(R.string.page1of3)
+            temperature_question.text = getString(R.string.temperature_question)
         }
     }
 

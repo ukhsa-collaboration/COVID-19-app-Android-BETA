@@ -11,6 +11,8 @@ import android.view.View
 import androidx.activity.viewModels
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.confirm_diagnosis
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_diagnosis_answer
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_question
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.new_cough_description
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
@@ -84,10 +86,14 @@ class DiagnoseCoughActivity : BaseActivity() {
             progress.text = getString(R.string.progress_two_out_of_two)
             progress.contentDescription = getString(R.string.page2of2)
             confirm_diagnosis.text = getString(R.string.submit)
+            new_cough_description.visibility = View.GONE
+            cough_question.text = getString(R.string.cough_question_simplified)
         } else {
             progress.text = getString(R.string.progress_two_thirds)
             confirm_diagnosis.text = getString(R.string.continue_button)
             progress.contentDescription = getString(R.string.page2of3)
+            new_cough_description.visibility = View.VISIBLE
+            cough_question.text = getString(R.string.cough_question)
         }
     }
 
