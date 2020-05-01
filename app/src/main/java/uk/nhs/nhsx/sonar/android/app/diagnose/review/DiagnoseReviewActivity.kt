@@ -27,6 +27,9 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.SpinnerAdapter
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setError
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setFocused
+import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setInitial
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
@@ -60,6 +63,7 @@ class DiagnoseReviewActivity : BaseActivity() {
 
             if (selectedSymptomsDate == null) {
                 date_selection_error.visibility = View.VISIBLE
+                symptoms_date_spinner.setError()
                 date_selection_error.announceForAccessibility(getString(R.string.date_selection_error))
             } else {
                 DiagnoseSubmitActivity.start(this, symptoms, selectedSymptomsDate)
@@ -100,6 +104,7 @@ class DiagnoseReviewActivity : BaseActivity() {
             val selectedDate = DateTime(timestamp, UTC)
             adapter.update(selectedDate.toLocalDate().toUiSpinnerFormat())
             symptoms_date_spinner.setSelection(SpinnerAdapter.MAX_VISIBLE_POSITION + 1)
+            symptoms_date_spinner.setFocused()
             symptomsDate = selectedDate
         }
 
@@ -135,6 +140,10 @@ class DiagnoseReviewActivity : BaseActivity() {
                         position < SpinnerAdapter.MAX_VISIBLE_POSITION -> {
                             date_selection_error.visibility = View.GONE
                             symptomsDate = DateTime.now(UTC).minusDays(position)
+                            symptoms_date_spinner.setFocused()
+                        }
+                        position == (adapter.count - 1) -> {
+                            symptoms_date_spinner.setInitial()
                         }
                     }
                 }
