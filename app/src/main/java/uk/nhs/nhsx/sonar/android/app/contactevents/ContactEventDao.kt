@@ -47,6 +47,12 @@ interface ContactEventDao {
 
     @Query("DELETE FROM ${ContactEvent.TABLE_NAME} WHERE timestamp < :timestamp")
     suspend fun clearOldEvents(timestamp: Long)
+
+    @Query("SELECT count(1) FROM ${ContactEvent.TABLE_NAME}")
+    suspend fun countEvents(): Long
+
+    @Query("SELECT count(1) FROM ${ContactEvent.TABLE_NAME} WHERE :from <= timestamp AND timestamp <= :to")
+    suspend fun countEvents(from: Long, to: Long): Long
 }
 
 fun merge(

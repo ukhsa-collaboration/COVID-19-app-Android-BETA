@@ -21,6 +21,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
+import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.ACTIVATION_CODE_TIMED_OUT
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import kotlin.test.assertEquals
 
@@ -53,13 +54,15 @@ class RegistrationManagerTest {
     @Test
     fun registerCreatesWorkRequestWithInitialDelay() {
         sut.register(INITIAL_DELAY_IN_SECONDS)
-        verify { sut.createWorkRequest(INITIAL_DELAY_IN_SECONDS) }
+        verify { sut.createWorkRequest(INITIAL_DELAY_IN_SECONDS, activationCodeTimedOut = false) }
     }
 
     @Test
     fun createWorkRequest() {
-        val workRequest = sut.createWorkRequest(INITIAL_DELAY_IN_SECONDS)
-        assertThat(workRequest.workSpec.initialDelay).isEqualTo(INITIAL_DELAY_IN_MILLISECONDS)
+        val workRequest = sut.createWorkRequest(INITIAL_DELAY_IN_SECONDS, activationCodeTimedOut = false)
+        val workSpec = workRequest.workSpec
+        assertThat(workSpec.initialDelay).isEqualTo(INITIAL_DELAY_IN_MILLISECONDS)
+        assertThat(workSpec.input.getBoolean(ACTIVATION_CODE_TIMED_OUT, true)).isFalse()
     }
 
     @Test
@@ -107,11 +110,11 @@ class RegistrationManagerTest {
                 any<OneTimeWorkRequest>()
             )
         }
-        assertEquals(
-            ONE_HOUR_IN_MILLIS,
-            workRequest.captured.workSpec.initialDelay,
-            "WorkRequest initial delay is not one hour"
-        )
+        val capturedRequest = workRequest.captured
+        val workSpec = capturedRequest.workSpec
+
+        assertEquals(ONE_HOUR_IN_MILLIS, workSpec.initialDelay, "WorkRequest initial delay is not one hour")
+        assertThat(workSpec.input.getBoolean(ACTIVATION_CODE_TIMED_OUT, false)).isTrue()
     }
 
     companion object {

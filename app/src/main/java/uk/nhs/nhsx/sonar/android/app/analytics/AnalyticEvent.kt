@@ -6,47 +6,47 @@ package uk.nhs.nhsx.sonar.android.app.analytics
 
 const val REGISTRATION_SUCCEEDED = "Registration succeeded"
 
-fun registrationSucceeded(): AnalyticEvent = AnalyticEvent(REGISTRATION_SUCCEEDED)
+fun registrationSucceeded() = AnalyticEvent(REGISTRATION_SUCCEEDED)
 
-fun registrationSendTokenCallFailed(statusCode: Int?): AnalyticEvent = AnalyticEvent(
+fun registrationSendTokenCallFailed(statusCode: Int?) = AnalyticEvent(
     "Registration failed",
     mapOf(
         "Reason" to "Registration call failed",
-        "Status code" to statusCode.toString()
+        "Status code" to statusCode?.toString()
     )
 )
 
-fun registrationFailedWaitingForFCMToken(): AnalyticEvent = AnalyticEvent(
+fun registrationFailedWaitingForFCMToken() = AnalyticEvent(
     "Registration failed",
     mapOf(
         "Reason" to "No FCM token"
     )
 )
 
-fun registrationFailedWaitingForActivationNotification(): AnalyticEvent = AnalyticEvent(
+fun registrationFailedWaitingForActivationNotification() = AnalyticEvent(
     "Registration failed",
     mapOf(
         "Reason" to "Activation notification not received"
     )
 )
 
-fun registrationFailedActivationCallFailed(statusCode: Int?): AnalyticEvent = AnalyticEvent(
+fun registrationActivationCallFailed(statusCode: Int?) = AnalyticEvent(
     "Registration failed",
     mapOf(
         "Reason" to "Activation call failed",
-        "Status code" to statusCode.toString()
+        "Status code" to statusCode?.toString()
     )
 )
 
-fun partialPostcodeProvided(): AnalyticEvent = AnalyticEvent(
+fun partialPostcodeProvided() = AnalyticEvent(
     "Partial postcode provided"
 )
 
-fun onboardingCompleted(): AnalyticEvent = AnalyticEvent(
+fun onboardingCompleted() = AnalyticEvent(
     "Onboarding completed"
 )
 
-fun collectedContactEvents(yesterday: Int, all: Int): AnalyticEvent = AnalyticEvent(
+fun collectedContactEvents(yesterday: Long, all: Long) = AnalyticEvent(
     "Collected contact events",
     mapOf(
         "Yesterday" to yesterday.toString(),
@@ -56,5 +56,5 @@ fun collectedContactEvents(yesterday: Int, all: Int): AnalyticEvent = AnalyticEv
 
 data class AnalyticEvent(
     val name: String,
-    val properties: Map<String, String>? = null
+    val properties: Map<String, String?> = mapOf()
 )

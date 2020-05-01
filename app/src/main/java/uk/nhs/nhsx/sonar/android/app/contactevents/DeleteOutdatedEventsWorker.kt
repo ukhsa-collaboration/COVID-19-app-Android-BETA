@@ -11,6 +11,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -23,9 +24,12 @@ class DeleteOutdatedEventsWorker(
     @Inject
     lateinit var contactEventDao: ContactEventDao
 
+    @Inject
+    lateinit var analytics: SonarAnalytics
+
     override suspend fun doWork(): Result {
         appComponent.inject(this)
-        return DeleteOutdatedEventsWork(contactEventDao).doWork(params.runAttemptCount)
+        return DeleteOutdatedEventsWork(contactEventDao, analytics).doWork(params.runAttemptCount)
     }
 
     companion object {

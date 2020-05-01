@@ -7,6 +7,8 @@ package uk.nhs.nhsx.sonar.android.app.status
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
+import uk.nhs.nhsx.sonar.android.app.analytics.onboardingCompleted
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
@@ -17,7 +19,8 @@ import javax.inject.Inject
 class OkViewModel @Inject constructor(
     private val onboardingStatusProvider: OnboardingStatusProvider,
     private val sonarIdProvider: SonarIdProvider,
-    private val registrationManager: RegistrationManager
+    private val registrationManager: RegistrationManager,
+    private val analytics: SonarAnalytics
 ) : ViewModel() {
 
     fun viewState(): LiveData<RegistrationState> {
@@ -27,7 +30,11 @@ class OkViewModel @Inject constructor(
     }
 
     fun onStart() {
-        onboardingStatusProvider.setOnboardingFinished(true)
+        if (!onboardingStatusProvider.isOnboardingFinished()) {
+            analytics.trackEvent(onboardingCompleted())
+            onboardingStatusProvider.setOnboardingFinished(true)
+        }
+
         if (!sonarIdProvider.hasProperSonarId()) {
             registrationManager.register()
         }

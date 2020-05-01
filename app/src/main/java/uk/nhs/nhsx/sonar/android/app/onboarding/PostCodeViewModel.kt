@@ -7,12 +7,16 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
+import uk.nhs.nhsx.sonar.android.app.analytics.partialPostcodeProvided
 import uk.nhs.nhsx.sonar.android.app.util.LiveDataEvent
 import java.util.Locale
 import javax.inject.Inject
 
-class PostCodeViewModel @Inject constructor(private val postCodeProvider: PostCodeProvider) :
-    ViewModel() {
+class PostCodeViewModel @Inject constructor(
+    private val postCodeProvider: PostCodeProvider,
+    private val analytics: SonarAnalytics
+) : ViewModel() {
 
     private val viewState = MutableLiveData<PostCodeViewState>()
     fun viewState(): LiveData<PostCodeViewState> {
@@ -28,6 +32,7 @@ class PostCodeViewModel @Inject constructor(private val postCodeProvider: PostCo
         val postCodeUpperCased = postCode.toUpperCase(Locale.UK)
         if (postCodeRegex.matches(postCodeUpperCased)) {
             postCodeProvider.setPostCode(postCodeUpperCased)
+            analytics.trackEvent(partialPostcodeProvided())
             viewState.value = PostCodeViewState.Valid
             navigation.value = LiveDataEvent(PostCodeNavigation.Permissions)
         } else {

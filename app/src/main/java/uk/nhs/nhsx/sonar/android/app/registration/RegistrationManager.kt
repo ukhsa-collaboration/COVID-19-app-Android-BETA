@@ -13,6 +13,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkRequest.MIN_BACKOFF_MILLIS
+import androidx.work.workDataOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -37,13 +38,13 @@ class RegistrationManager @Inject constructor(
     private var previousWorkInfoLiveData: LiveData<WorkInfo>? = null
     private val observer = Observer<WorkInfo> { workInfo -> handleWorkInfo(workInfo) }
 
-    fun register(initialDelaySeconds: Long = 0) {
+    fun register(initialDelaySeconds: Long = 0, activationCodeTimedOut: Boolean = false) {
         // Need it for the thread confinement and LiveData can be observed on the Main Thread only
         launch {
             Timber.tag("RegistrationUseCase")
                 .d("register initialDelaySeconds = $initialDelaySeconds")
 
-            val registrationWorkRequest = createWorkRequest(initialDelaySeconds)
+            val registrationWorkRequest = createWorkRequest(initialDelaySeconds, activationCodeTimedOut)
 
             workManager.enqueueUniqueWork(
                 REGISTRATION_WORK,
@@ -75,11 +76,11 @@ class RegistrationManager @Inject constructor(
     }
 
     private fun scheduleRegisterRetryInOneHour() {
-        register(ONE_HOUR_IN_SECONDS)
+        register(ONE_HOUR_IN_SECONDS, activationCodeTimedOut = true)
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun createWorkRequest(initialDelaySeconds: Long): OneTimeWorkRequest {
+    fun createWorkRequest(initialDelaySeconds: Long, activationCodeTimedOut: Boolean): OneTimeWorkRequest {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
@@ -92,6 +93,11 @@ class RegistrationManager @Inject constructor(
                 MIN_BACKOFF_MILLIS,
                 TimeUnit.MILLISECONDS
             )
+            .setInputData(
+                workDataOf(
+                    ACTIVATION_CODE_TIMED_OUT to activationCodeTimedOut
+                )
+            )
             .build()
     }
 
@@ -100,6 +106,7 @@ class RegistrationManager @Inject constructor(
 
     companion object {
         const val REGISTRATION_WORK = "registration"
+        const val ACTIVATION_CODE_TIMED_OUT = "activationCodeTimedOut"
         const val ONE_HOUR_IN_SECONDS = 60L * 60
     }
 }

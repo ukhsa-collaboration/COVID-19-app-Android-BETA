@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import javax.inject.Inject
 
-class RegistrationWorker(appContext: Context, workerParams: WorkerParameters) :
+class RegistrationWorker(appContext: Context, private val workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
 
     @Inject
@@ -14,7 +14,7 @@ class RegistrationWorker(appContext: Context, workerParams: WorkerParameters) :
 
     override suspend fun doWork(): Result {
         appComponent.inject(this)
-        return RegistrationWork(registrationUseCase).doWork()
+        return RegistrationWork(registrationUseCase).doWork(workerParams.inputData)
     }
 
     companion object {

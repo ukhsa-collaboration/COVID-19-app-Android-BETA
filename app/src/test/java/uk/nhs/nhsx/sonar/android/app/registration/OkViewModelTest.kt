@@ -6,6 +6,7 @@ package uk.nhs.nhsx.sonar.android.app.registration
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import io.mockk.Called
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
@@ -22,6 +23,8 @@ import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ViewState
+import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
+import uk.nhs.nhsx.sonar.android.app.analytics.onboardingCompleted
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.status.OkViewModel
 
@@ -40,8 +43,8 @@ class OkViewModelTest {
     private val sonarIdProvider = mockk<SonarIdProvider>(relaxed = true)
     private val registrationManager = mockk<RegistrationManager>(relaxed = true)
     private val observer = mockk<Observer<ViewState>>(relaxed = true)
-    private val sut =
-        OkViewModel(onboardingStatusProvider, sonarIdProvider, registrationManager)
+    private val analytics = mockk<SonarAnalytics>(relaxed = true)
+    private val sut = OkViewModel(onboardingStatusProvider, sonarIdProvider, registrationManager, analytics)
 
     @Before
     fun setUp() {
@@ -62,7 +65,20 @@ class OkViewModelTest {
         sut.onStart()
 
         verify(exactly = 1) {
+            onboardingStatusProvider.isOnboardingFinished()
             onboardingStatusProvider.setOnboardingFinished(true)
+            analytics.trackEvent(onboardingCompleted())
+        }
+    }
+
+    @Test
+    fun onStartWhenOnBoardingAlreadyFinished() {
+        every { onboardingStatusProvider.isOnboardingFinished() } returns true
+
+        sut.onStart()
+
+        verify {
+            analytics wasNot Called
         }
     }
 
