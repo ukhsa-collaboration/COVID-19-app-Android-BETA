@@ -2,8 +2,6 @@ name: Publish Alpha
 
 on:
   push:
-    branches:
-      - master
     tags:
       - publish-alpha
 

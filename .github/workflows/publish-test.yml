@@ -2,8 +2,6 @@ name: Publish Test
 
 on:
   push:
-    branches:
-      - master
     tags:
       - publish-test
 
@@ -33,7 +31,7 @@ jobs:
     container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
     steps:
-        - name: Checkout
+      - name: Checkout
         uses: actions/checkout@v2
         with:
           ref: publish-test
