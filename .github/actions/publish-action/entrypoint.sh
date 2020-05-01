@@ -43,6 +43,16 @@ if [ -z "$SIGNING_KEY_PASSWORD" ]; then
   exit 1
 fi
 
+if [ -z "$SONAR_HEADER_VALUE" ]; then
+  echo "SONAR_HEADER_VALUE is required"
+  exit 1
+fi
+
+if [ -z "$SONAR_ANALYTICS_KEY" ]; then
+  echo "SONAR_ANALYTICS_KEY is required"
+  exit 1
+fi
+
 mkdir -p build
 echo "$GOOGLE_SERVICES" > $GOOGLE_SERVICES_FILE
 echo "$PLAY_SERVICES" > "$PLAY_SERVICES_FILE"
@@ -53,6 +63,7 @@ base64 -d build/keystore.txt > "$SIGNING_KEY_STORE_FILE"
 ./gradlew "publish$BUILD_FLAVOR" --track="$PLAY_TRACK" \
    -Pgitcommit="${COMMIT_SHA:0:7}" \
    -Psonar.headerValue="$SONAR_HEADER_VALUE" \
+   -Psonar.analyticsKey="$SONAR_ANALYTICS_KEY" \
    -Psonar.baseUrl="$SONAR_BASE_URL" \
    -Pplay-enabled \
    -PPLAY_SERVICES_PUBLISH="$PLAY_SERVICES_FILE" \

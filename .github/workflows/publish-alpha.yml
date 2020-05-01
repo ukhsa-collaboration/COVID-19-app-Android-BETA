@@ -55,5 +55,6 @@ jobs:
           SIGNING_KEY_STORE_PASSWORD: ${{ secrets.signingKeyStorePassword}}
           SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword}}
           SONAR_HEADER_VALUE: ${{ secrets.ProdSonarHeaderValue }}
+          SONAR_ANALYTICS_KEY: ${{ secrets.ProdSonarAnalyticsKey }}
           SONAR_BASE_URL: https://api.svc-covid19.nhs.uk
           COMMIT_SHA: ${{ github.sha }}
