@@ -71,3 +71,8 @@ base64 -d build/keystore.txt > "$SIGNING_KEY_STORE_FILE"
    -PSIGNING_KEY_ALIAS="$SIGNING_KEY_ALIAS" \
    -PSIGNING_KEY_STORE_PASSWORD="$SIGNING_KEY_STORE_PASSWORD" \
    -PSIGNING_KEY_PASSWORD="$SIGNING_KEY_PASSWORD" \
+
+# Return Build Version
+BUILD_VERSION_FILE=app/build/version.txt
+BUILD_VERSION=$(head -n 1 $BUILD_VERSION_FILE)
+echo "::set-output name=buildVersion::$BUILD_VERSION"

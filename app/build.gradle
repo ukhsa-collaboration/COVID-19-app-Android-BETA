@@ -121,6 +121,7 @@ play {
         def versionString = "$versionNameOverride.$versionCode ($gitcommit)"
         logger.quiet("Publishing version: $versionString")
         versionNameOverride = versionString
+        file("$buildDir/version.txt").text = "$versionNameOverride"
     }
 }
 
