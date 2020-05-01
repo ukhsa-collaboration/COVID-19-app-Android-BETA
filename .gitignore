@@ -8,3 +8,5 @@ captures
 .externalNativeBuild
 .cxx
 jacoco.exec
+.envrc
+.tool-versions
