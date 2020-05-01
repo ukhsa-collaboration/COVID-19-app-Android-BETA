@@ -8,15 +8,12 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
-import uk.nhs.nhsx.sonar.android.app.status.StateFactory
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
 
 class NotificationHandler @Inject constructor(
     private val sender: NotificationSender,
-    private val stateStorage: StateStorage,
+    private val userStateStorage: UserStateStorage,
     private val activationCodeProvider: ActivationCodeProvider,
     private val registrationManager: RegistrationManager,
     private val acknowledgmentsDao: AcknowledgmentsDao,
@@ -33,12 +30,13 @@ class NotificationHandler @Inject constructor(
                     activationCodeProvider.setActivationCode(activationCode)
                     registrationManager.register()
                 }
-                isStatusUpdate(messageData) -> {
-                    val currentState = stateStorage.get()
-                    if (currentState is DefaultState || currentState is RecoveryState) {
-                        stateStorage.update(StateFactory.ember())
-                        showStatusNotification()
-                    }
+                isContactAlert(messageData) -> {
+                    userStateStorage.get()
+                        .transitionOnContactAlert()
+                        ?.let {
+                            userStateStorage.update(it)
+                            showStatusNotification()
+                        }
                 }
             }
         }
@@ -68,7 +66,7 @@ class NotificationHandler @Inject constructor(
                 acknowledgmentsDao.insert(acknowledgment)
             }
 
-    private fun isStatusUpdate(data: Map<String, String>) =
+    private fun isContactAlert(data: Map<String, String>) =
         data.containsKey(STATUS_KEY)
 
     private fun isActivation(data: Map<String, String>) =

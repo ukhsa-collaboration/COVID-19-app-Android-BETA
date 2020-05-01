@@ -590,7 +590,7 @@ class FlowTest {
     }
 
     private fun setUserState(state: UserState) {
-        component.getStateStorage().update(state)
+        component.getUserStateStorage().update(state)
     }
 
     private fun setFinishedOnboarding() {

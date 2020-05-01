@@ -17,14 +17,14 @@ import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class NotificationHandlerTest {
 
     private val sender = mockk<NotificationSender>(relaxUnitFun = true)
-    private val statusStorage = mockk<StateStorage>(relaxUnitFun = true)
+    private val statusStorage = mockk<UserStateStorage>(relaxUnitFun = true)
     private val activationCodeProvider = mockk<ActivationCodeProvider>(relaxUnitFun = true)
     private val registrationManager = mockk<RegistrationManager>(relaxUnitFun = true)
     private val ackDao = mockk<AcknowledgmentsDao>(relaxUnitFun = true)

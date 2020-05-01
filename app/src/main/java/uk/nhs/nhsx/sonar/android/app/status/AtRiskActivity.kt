@@ -30,7 +30,7 @@ import javax.inject.Inject
 class AtRiskActivity : BaseActivity() {
 
     @Inject
-    protected lateinit var stateStorage: StateStorage
+    protected lateinit var userStateStorage: UserStateStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +38,7 @@ class AtRiskActivity : BaseActivity() {
         BluetoothService.start(this)
         setContentView(R.layout.activity_at_risk)
 
-        follow_until.text = getString(R.string.follow_until, stateStorage.get().until.toUiFormat())
+        follow_until.text = getString(R.string.follow_until, userStateStorage.get().until.toUiFormat())
 
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
@@ -64,14 +64,12 @@ class AtRiskActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        val state = stateStorage.get()
-
-        if (state.hasExpired()) {
-            DefaultState().let {
-                stateStorage.update(it)
+        userStateStorage.get()
+            .transitionIfExpired()
+            ?.let {
+                userStateStorage.update(it)
                 navigateTo(it)
             }
-        }
     }
 
     companion object {

@@ -24,9 +24,9 @@ import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 @ExperimentalCoroutinesApi
@@ -35,7 +35,7 @@ class DiagnoseCoughViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val stateStorage = mockk<StateStorage>(relaxed = true)
+    private val stateStorage = mockk<UserStateStorage>(relaxed = true)
     private val testObserver = mockk<Observer<StateResult>>(relaxed = true)
     private val testDispatcher = TestCoroutineDispatcher()
     private val testSubject = DiagnoseCoughViewModel(stateStorage)

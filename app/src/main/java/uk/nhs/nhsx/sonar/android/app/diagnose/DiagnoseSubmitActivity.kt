@@ -17,17 +17,16 @@ import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
-import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.StateFactory
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.status.UserStateFactory
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import javax.inject.Inject
 
 class DiagnoseSubmitActivity : BaseActivity() {
     @Inject
-    protected lateinit var stateStorage: StateStorage
+    protected lateinit var userStateStorage: UserStateStorage
 
     @Inject
     protected lateinit var reminders: Reminders
@@ -59,13 +58,9 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private fun updateStateAndNavigate() {
-        val state = StateFactory.decide(symptomsDate, symptoms)
-
-        if (state is RedState) {
-            reminders.scheduleCheckInReminder(state.until)
-        }
-
-        stateStorage.update(state)
+        val state = UserStateFactory.decide(symptomsDate, symptoms)
+        state.scheduleCheckInReminder(reminders)
+        userStateStorage.update(state)
 
         Timber.d("Updated the state to: $state")
 

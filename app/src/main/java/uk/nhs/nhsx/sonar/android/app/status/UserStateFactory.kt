@@ -10,7 +10,7 @@ import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 
-object StateFactory {
+object UserStateFactory {
     private const val SEVEN_AM = "7:00:00"
     private const val NO_DAYS_IN_RED = 7
     private const val NO_DAYS_IN_EMBER = 14

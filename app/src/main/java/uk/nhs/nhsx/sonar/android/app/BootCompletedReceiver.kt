@@ -8,13 +8,12 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
 
 class BootCompletedReceiver : BroadcastReceiver() {
     @Inject
-    lateinit var stateStorage: StateStorage
+    lateinit var userStateStorage: UserStateStorage
 
     @Inject
     lateinit var reminders: Reminders
@@ -40,10 +39,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
     }
 
     private fun setReminder() {
-        val state = stateStorage.get()
-        if (state is RedState && !state.hasExpired()) {
-            reminders.scheduleCheckInReminder(state.until)
-        }
+        userStateStorage.get().scheduleCheckInReminder(reminders)
     }
 
     private fun startBluetoothService(context: Context) {

@@ -19,19 +19,19 @@ import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.EmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class BootCompletedReceiverTest {
 
     private val sonarIdProvider = mockk<SonarIdProvider>()
-    private val stateStorage = mockk<StateStorage>()
+    private val stateStorage = mockk<UserStateStorage>()
     private val reminders = mockk<Reminders>()
 
     private val receiver = BootCompletedReceiver().also {
         it.sonarIdProvider = sonarIdProvider
-        it.stateStorage = stateStorage
+        it.userStateStorage = stateStorage
         it.reminders = reminders
     }
 

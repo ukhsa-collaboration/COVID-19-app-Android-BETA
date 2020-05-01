@@ -17,14 +17,14 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var stateStorage: StateStorage
+    lateinit var userStateStorage: UserStateStorage
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             }
             sonarIdProvider.hasProperSonarId() -> {
                 BluetoothService.start(this)
-                navigateTo(stateStorage.get())
+                navigateTo(userStateStorage.get())
                 return
             }
             onboardingStatusProvider.isOnboardingFinished() -> {

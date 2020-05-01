@@ -30,7 +30,7 @@ import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Singleton
 
 @Singleton
@@ -49,7 +49,7 @@ interface TestAppComponent : ApplicationComponent {
     fun getSonarIdProvider(): SonarIdProvider
     fun getKeyStorage(): KeyStorage
     fun getAppDatabase(): AppDatabase
-    fun getStateStorage(): StateStorage
+    fun getUserStateStorage(): UserStateStorage
     fun getOnboardingStatusProvider(): OnboardingStatusProvider
     fun getActivationCodeProvider(): ActivationCodeProvider
     fun getReferenceCodeProvider(): ReferenceCodeProvider

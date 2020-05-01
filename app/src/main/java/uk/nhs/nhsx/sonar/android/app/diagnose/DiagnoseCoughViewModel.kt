@@ -7,25 +7,23 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Close
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Review
-import uk.nhs.nhsx.sonar.android.app.status.CheckinState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
-import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.StateFactory
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserState
+import uk.nhs.nhsx.sonar.android.app.status.UserStateFactory
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import javax.inject.Inject
 
-class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: StateStorage) :
+class DiagnoseCoughViewModel @Inject constructor(private val userStateStorage: UserStateStorage) :
     ViewModel() {
 
     private val prevState: UserState by lazy {
-        stateStorage.get()
+        userStateStorage.get()
     }
 
     private val nextStateLiveData = MutableLiveData<StateResult>()
@@ -34,9 +32,8 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
 
     fun update(hasTemperature: Boolean, hasCough: Boolean) {
         viewModelScope.launch {
-            nextStateLiveData.value = when (prevState) {
-                is RedState -> handleSimplified(hasTemperature, hasCough)
-                is CheckinState -> handleSimplified(hasTemperature, hasCough)
+            nextStateLiveData.value = when {
+                prevState.shouldIsolate() -> handleSimplified(hasTemperature, hasCough)
                 else -> handleNormal(hasTemperature, hasCough)
             }
         }
@@ -44,8 +41,8 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
 
     private fun handleSimplified(hasTemperature: Boolean, hasCough: Boolean): StateResult {
         val userState = when {
-            hasTemperature and hasCough -> StateFactory.checkin(nonEmptySetOf(COUGH, TEMPERATURE))
-            hasTemperature -> StateFactory.checkin(nonEmptySetOf(TEMPERATURE))
+            hasTemperature and hasCough -> UserStateFactory.checkin(nonEmptySetOf(COUGH, TEMPERATURE))
+            hasTemperature -> UserStateFactory.checkin(nonEmptySetOf(TEMPERATURE))
             hasCough -> RecoveryState()
             else -> DefaultState()
         }
@@ -61,7 +58,7 @@ class DiagnoseCoughViewModel @Inject constructor(private val stateStorage: State
         }
 
     private fun updateState(newState: UserState): StateResult {
-        stateStorage.update(newState)
+        userStateStorage.update(newState)
         return StateResult.Main(newState)
     }
 }

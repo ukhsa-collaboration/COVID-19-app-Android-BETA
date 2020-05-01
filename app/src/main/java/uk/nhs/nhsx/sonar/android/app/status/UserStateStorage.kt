@@ -8,7 +8,7 @@ import android.content.Context
 import androidx.core.content.edit
 import javax.inject.Inject
 
-class StateStorage @Inject constructor(context: Context) {
+class UserStateStorage @Inject constructor(context: Context) {
 
     private val storage by lazy {
         context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)

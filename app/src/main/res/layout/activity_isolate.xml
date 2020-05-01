@@ -43,7 +43,7 @@
                         android:paddingBottom="32dp">
 
                         <TextView
-                            android:id="@+id/symptoms"
+                            android:id="@+id/symptomsTextView"
                             style="@style/TextViewCardSubTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

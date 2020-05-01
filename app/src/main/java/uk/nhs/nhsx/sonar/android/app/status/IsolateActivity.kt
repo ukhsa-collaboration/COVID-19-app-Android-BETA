@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_isolate.book_test_card
 import kotlinx.android.synthetic.main.activity_isolate.follow_until
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
 import kotlinx.android.synthetic.main.activity_isolate.nhs_service
-import kotlinx.android.synthetic.main.activity_isolate.symptoms
+import kotlinx.android.synthetic.main.activity_isolate.symptomsTextView
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -36,7 +36,7 @@ import javax.inject.Inject
 class IsolateActivity : BaseActivity() {
 
     @Inject
-    protected lateinit var stateStorage: StateStorage
+    protected lateinit var userStateStorage: UserStateStorage
 
     private lateinit var updateSymptomsDialog: BottomSheetDialog
 
@@ -52,12 +52,10 @@ class IsolateActivity : BaseActivity() {
         setContentView(R.layout.activity_isolate)
         BluetoothService.start(this)
 
-        val state = stateStorage.get()
+        val state = userStateStorage.get()
+        val symptoms = state.symptoms().sortedDescending()
 
-        val theSymptoms =
-            if (state is RedState) state.symptoms else (state as CheckinState).symptoms
-
-        symptoms.text = theSymptoms.sortedDescending().joinToString("\n") {
+        symptomsTextView.text = symptoms.joinToString("\n") {
             when (it) {
                 Symptom.TEMPERATURE -> getString(R.string.high_temperature)
                 Symptom.COUGH -> getString(R.string.continuous_cough)
@@ -104,8 +102,8 @@ class IsolateActivity : BaseActivity() {
         updateSymptomsDialog.behavior.isHideable = false
 
         updateSymptomsDialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {
-            stateStorage.update(DefaultState())
-            navigateTo(stateStorage.get())
+            userStateStorage.update(DefaultState())
+            navigateTo(userStateStorage.get())
             updateSymptomsDialog.cancel()
         }
 
@@ -121,7 +119,7 @@ class IsolateActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        val state = stateStorage.get()
+        val state = userStateStorage.get()
         navigateTo(state)
 
         if (state.hasExpired()) {

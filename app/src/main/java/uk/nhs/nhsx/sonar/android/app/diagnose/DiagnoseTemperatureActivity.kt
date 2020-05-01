@@ -17,15 +17,13 @@ import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.status.CheckinState
-import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
 
 open class DiagnoseTemperatureActivity : BaseActivity() {
 
     @Inject
-    lateinit var stateStorage: StateStorage
+    lateinit var userStateStorage: UserStateStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -59,8 +57,9 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
     }
 
     private fun setQuestionnaireContent() {
-        val state = stateStorage.get()
-        if (state is RedState || state is CheckinState) {
+        val state = userStateStorage.get()
+
+        if (state.shouldIsolate()) {
             progress.text = getString(R.string.progress_half)
             progress.contentDescription = getString(R.string.page1of2)
             temperature_question.text = getString(R.string.temperature_question_simplified)

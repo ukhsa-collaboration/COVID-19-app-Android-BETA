@@ -39,7 +39,7 @@ import javax.inject.Inject
 class OkActivity : BaseActivity() {
 
     @Inject
-    lateinit var stateStorage: StateStorage
+    lateinit var userStateStorage: UserStateStorage
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<OkViewModel>
@@ -126,7 +126,7 @@ class OkActivity : BaseActivity() {
         recoveryDialog.behavior.isHideable = false
 
         recoveryDialog.findViewById<Button>(R.id.ok)?.setOnClickListener {
-            stateStorage.update(DefaultState())
+            userStateStorage.update(DefaultState())
             recoveryDialog.dismiss()
         }
         recoveryDialog.setOnCancelListener {
@@ -137,7 +137,7 @@ class OkActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        val state = stateStorage.get()
+        val state = userStateStorage.get()
         navigateTo(state)
 
         if (state is RecoveryState) {

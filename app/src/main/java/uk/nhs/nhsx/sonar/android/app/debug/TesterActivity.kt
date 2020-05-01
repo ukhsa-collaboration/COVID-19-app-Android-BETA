@@ -24,13 +24,13 @@ import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.StateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
 
 class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     @Inject
-    lateinit var stateStorage: StateStorage
+    lateinit var userStateStorage: UserStateStorage
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider
@@ -56,7 +56,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         reset_button.setOnClickListener {
-            stateStorage.clear()
+            userStateStorage.clear()
             sonarIdProvider.clear()
             onboardingStatusProvider.clear()
             viewModel.clear()

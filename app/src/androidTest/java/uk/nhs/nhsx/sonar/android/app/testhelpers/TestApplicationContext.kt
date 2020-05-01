@@ -441,7 +441,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         component.apply {
             getAppDatabase().clearAllTables()
             getOnboardingStatusProvider().setOnboardingFinished(false)
-            getStateStorage().clear()
+            getUserStateStorage().clear()
             getSonarIdProvider().clear()
             getActivationCodeProvider().clear()
         }
