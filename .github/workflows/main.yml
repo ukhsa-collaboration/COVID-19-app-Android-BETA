@@ -46,6 +46,7 @@ jobs:
         env:
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
           TEST_SONAR_HEADER_VALUE: ${{ secrets.TestSonarHeaderValue }}
+          SONAR_ANALYTICS_KEY: ${{ secrets.TestSonarAnalyticsKey }}
 
       - name: Instrumentation test
         uses: ./.github/actions/instrumentation-action
