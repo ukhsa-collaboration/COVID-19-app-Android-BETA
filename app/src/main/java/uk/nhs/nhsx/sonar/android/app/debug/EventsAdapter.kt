@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.event_error_view_item.view.error_event
 import kotlinx.android.synthetic.main.event_view.view.remote_contact_id
 import kotlinx.android.synthetic.main.event_view.view.rssi
 import kotlinx.android.synthetic.main.event_view.view.time
+import org.joda.time.Seconds
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ble.ConnectedDevice
 
@@ -25,8 +26,12 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     fun bindTo(event: ConnectedDevice) {
         itemView.remote_contact_id.text = event.id
         itemView.rssi.text = event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
-        val startTime = event.timestamp.split("T").last().replace("Z", "")
-        itemView.time.text = context.getString(R.string.started, startTime)
+        itemView.time.text = context.getString(
+            R.string.last_reading, Seconds.secondsBetween(
+                event.lastTimestamp,
+                event.timestamp
+            ).seconds
+        )
     }
 }
 

@@ -82,7 +82,7 @@
     <string name="notification_location_disabled_title">Please turn Location on</string>
     <string name="notification_location_disabled_text">This app can only protect you and others if Location is on all the time</string>
     <string name="notification_location_disabled_action">Go to your Settings</string>
-    <string name="started">Started %s</string>
+    <string name="last_reading">Last reading was %d seconds ago</string>
     <string name="temperature_question">Do you have a high temperature?</string>
     <string name="temperature_description">You don\'t need a thermometer or to know a precise temperature. If you feel hot to touch on your chest or back answer \'yes\'.</string>
     <string name="cough_question">Do you have a new continuous cough?</string>

@@ -9,7 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
-import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
+import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,23 +32,33 @@ class BleEvents @Inject constructor() {
         connectionEvents
 
     fun connectedDeviceEvent(id: ByteArray, rssiValues: List<Int>) {
-        val idString = base64Encoder(id)
-        safelyUpdateEventList {
-            eventsList.removeIf { it.id == idString }
-            eventsList.add(
-                ConnectedDevice(
-                    id = idString,
-                    timestamp = getCurrentTimeStamp(),
-                    rssiValues = rssiValues
-                )
-            )
+        val identifier = try {
+            BluetoothIdentifier.fromBytes(id)
+        } catch (e: Exception) {
+            return
         }
-    }
-
-    fun disconnectDeviceEvent(id: String? = null) {
+        val idString = base64Encoder(identifier.cryptogram.asBytes())
         safelyUpdateEventList {
-            eventsList.removeIf { it.id == id }
-            eventsList.add(ConnectedDevice(id = id, isConnectionError = true))
+            val lastEvent = eventsList.firstOrNull { it.id == idString }
+            if (lastEvent != null) {
+                eventsList.remove(lastEvent)
+                eventsList.add(
+                    lastEvent.copy(
+                        timestamp = getCurrentTimeStamp(),
+                        lastTimestamp = lastEvent.timestamp,
+                        rssiValues = rssiValues
+                    )
+                )
+            } else {
+                eventsList.add(
+                    ConnectedDevice(
+                        id = idString,
+                        timestamp = getCurrentTimeStamp(),
+                        lastTimestamp = getCurrentTimeStamp(),
+                        rssiValues = rssiValues
+                    )
+                )
+            }
         }
     }
 
@@ -72,11 +83,12 @@ class BleEvents @Inject constructor() {
     }
 }
 
-private fun getCurrentTimeStamp() = DateTime.now(DateTimeZone.UTC).toUtcIsoFormat()
+private fun getCurrentTimeStamp() = DateTime.now(DateTimeZone.UTC)
 
 data class ConnectedDevice(
     val id: String? = null,
-    val timestamp: String = "",
+    val timestamp: DateTime = DateTime.now(),
+    val lastTimestamp: DateTime = DateTime.now(),
     val rssiValues: List<Int> = emptyList(),
     val isConnectionError: Boolean = false,
     val isReadFailure: Boolean = false
