@@ -23,7 +23,7 @@ jobs:
           docker pull nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
   build:
-    needs: login_to_docker
+    needs: pull_docker_image
     runs-on:
       - self-hosted
       - linux
