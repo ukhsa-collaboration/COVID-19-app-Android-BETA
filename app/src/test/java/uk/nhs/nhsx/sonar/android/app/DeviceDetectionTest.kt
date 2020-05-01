@@ -38,17 +38,4 @@ class DeviceDetectionTest {
 
         assertThat(DeviceDetection(adapter, manager).isUnsupported()).isTrue()
     }
-
-    @Test
-    fun `test isUnsupported() when bluetooth is enabled and multiple advertisement is not supported`() {
-        val adapter = mockk<BluetoothAdapter>()
-        val manager = mockk<PackageManager>()
-
-        every { manager.hasSystemFeature(FEATURE_BLUETOOTH_LE) } returns true
-
-        every { adapter.isEnabled } returns true
-        every { adapter.isMultipleAdvertisementSupported } returns false
-
-        assertThat(DeviceDetection(adapter, manager).isUnsupported()).isTrue()
-    }
 }

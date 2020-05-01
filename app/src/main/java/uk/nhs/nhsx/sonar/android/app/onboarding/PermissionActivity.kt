@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_permission.permission_continue
 import uk.nhs.nhsx.sonar.android.app.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
@@ -38,6 +39,11 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
     private fun checkRequirements() {
         if (!isBluetoothEnabled()) {
             requestEnablingBluetooth()
+            return
+        }
+        if (deviceDetection.isUnsupported()) {
+            DeviceNotSupportedActivity.start(this)
+            finish()
             return
         }
         if (!locationHelper.locationPermissionsGranted()) {
