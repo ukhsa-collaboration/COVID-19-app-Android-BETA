@@ -117,11 +117,15 @@ play {
     promoteTrack = "Test"
     resolutionStrategy = "auto"
     outputProcessor {
-        def gitcommit = findProperty('gitcommit') ?: 'unknown'
-        def versionString = "$versionNameOverride.$versionCode($gitcommit)"
-        logger.quiet("Publishing version: $versionString")
-        versionNameOverride = versionString
-        file("$buildDir/version.txt").text = "$versionNameOverride"
+        def versionString = "$versionNameOverride.$versionCode"
+        def gitCommit = findProperty('gitcommit') ?: 'unknown'
+        def fullVersionString = "$versionString ($gitCommit)"
+
+        versionNameOverride = fullVersionString
+
+        logger.quiet("Publishing version: $fullVersionString")
+
+        file("$buildDir/version.txt").text = "$versionString"
     }
 }
 

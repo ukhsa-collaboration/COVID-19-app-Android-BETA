@@ -58,3 +58,10 @@ jobs:
           SONAR_ANALYTICS_KEY: ${{ secrets.ProdSonarAnalyticsKey }}
           SONAR_BASE_URL: https://api.svc-covid19.nhs.uk
           COMMIT_SHA: ${{ github.sha }}
+
+      - name: Tag Build Version
+        uses: richardsimko/update-tag@master
+        with:
+          tag_name: ${{ steps.publish.outputs.buildVersion }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

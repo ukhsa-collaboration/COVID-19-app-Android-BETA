@@ -63,6 +63,6 @@ jobs:
       - name: Tag Build Version
         uses: richardsimko/update-tag@master
         with:
-          tag_name: $${{ steps.publish.outputs.buildVersion }}
+          tag_name: ${{ steps.publish.outputs.buildVersion }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
