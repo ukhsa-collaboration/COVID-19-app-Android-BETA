@@ -53,6 +53,25 @@ jobs:
         env:
           SERVICE_ACCOUNT: ${{ secrets.ServiceAccount }}
 
+  publish:
+    needs: build
+    runs-on:
+      - self-hosted
+      - linux
+      - aws
+    container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v1
+        with:
+          path: /root/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
       - name: Publish
         uses: ./.github/actions/publish-action
         env:
