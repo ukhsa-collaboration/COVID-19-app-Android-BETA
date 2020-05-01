@@ -41,7 +41,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
 
     private fun setReminder() {
         val state = stateStorage.get()
-        if (state is RedState) {
+        if (state is RedState && !state.hasExpired()) {
             reminders.scheduleCheckInReminder(state.until)
         }
     }
