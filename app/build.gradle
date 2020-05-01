@@ -118,7 +118,7 @@ play {
     resolutionStrategy = "auto"
     outputProcessor {
         def gitcommit = findProperty('gitcommit') ?: 'unknown'
-        def versionString = "$versionNameOverride.$versionCode ($gitcommit)"
+        def versionString = "$versionNameOverride.$versionCode($gitcommit)"
         logger.quiet("Publishing version: $versionString")
         versionNameOverride = versionString
         file("$buildDir/version.txt").text = "$versionNameOverride"
