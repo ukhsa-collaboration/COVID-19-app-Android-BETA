@@ -80,3 +80,12 @@ jobs:
           asset_path: app/build/outputs/apk/staging/app-staging.apk
           asset_name: app-staging.apk
           asset_content_type: application/vnd.android.package-archive
+
+      - name: Notify Slack 
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
+          SLACK_COLOR: '#48CF58'
+          SLACK_USERNAME: CI
+          SLACK_TITLE: New Test Release
+          SLACK_MESSAGE: ${{ steps.create_test_release.outputs.html_url }}
