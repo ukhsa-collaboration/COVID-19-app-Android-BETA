@@ -44,6 +44,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Publish
+        id: publish
         uses: ./.github/actions/publish-action
         env:
           BUILD_FLAVOR: Release
@@ -59,7 +60,8 @@ jobs:
           SONAR_BASE_URL: https://api.svc-covid19.nhs.uk
           COMMIT_SHA: ${{ github.sha }}
 
-      - name: Create Release
+      - name: Create Alpha Release
+        id: create_alpha_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -68,3 +70,23 @@ jobs:
           release_name: Alpha Build ${{ steps.publish.outputs.buildVersion }}
           body: |
             New alpha build
+
+      - name: Upload Alpha AAB
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_alpha_release.outputs.upload_url }}
+          asset_path: app/build/outputs/bundle/release/app-release.aab
+
+          asset_name: app-release.aab
+          asset_content_type: application/octet-stream
+
+      - name: Notify Slack
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
+          SLACK_COLOR: '#138275'
+          SLACK_USERNAME: CI
+          SLACK_TITLE: New Alpha Release
+          SLACK_MESSAGE: ${{ steps.create_alpha_release.outputs.html_url }}
