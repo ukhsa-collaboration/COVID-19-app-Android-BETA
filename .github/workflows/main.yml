@@ -59,6 +59,15 @@ jobs:
         env:
           SERVICE_ACCOUNT: ${{ secrets.ServiceAccount }}
 
+      - name: Notify Slack on Failure
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
+          SLACK_COLOR: '#FFBF00'
+          SLACK_USERNAME: CI
+          SLACK_TITLE: Commit Message
+
   publish:
     needs: build
     runs-on:
