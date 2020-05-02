@@ -25,11 +25,12 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
+import uk.nhs.nhsx.sonar.android.app.util.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_RED
 import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_RED
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
-import uk.nhs.nhsx.sonar.android.app.util.showAndExpand
+import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 import javax.inject.Inject
 
@@ -38,10 +39,14 @@ class IsolateActivity : BaseActivity() {
     @Inject
     protected lateinit var userStateStorage: UserStateStorage
 
-    private lateinit var updateSymptomsDialog: BottomSheetDialog
+    @Inject
+    protected lateinit var checkInReminderNotification: CheckInReminderNotification
 
     @Inject
-    lateinit var referenceCodeViewModelFactory: ViewModelFactory<ReferenceCodeViewModel>
+    protected lateinit var referenceCodeViewModelFactory: ViewModelFactory<ReferenceCodeViewModel>
+
+    private lateinit var updateSymptomsDialog: BottomSheetDialog
+
     private val referenceCodeViewModel: ReferenceCodeViewModel by viewModels { referenceCodeViewModelFactory }
     private var referenceCodeDialog: BottomSheetDialog? = null
 
@@ -123,7 +128,8 @@ class IsolateActivity : BaseActivity() {
         navigateTo(state)
 
         if (state.hasExpired()) {
-            updateSymptomsDialog.showAndExpand()
+            updateSymptomsDialog.showExpanded()
+            checkInReminderNotification.hide()
         } else {
             updateSymptomsDialog.dismiss()
         }

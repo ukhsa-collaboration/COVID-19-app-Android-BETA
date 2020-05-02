@@ -69,6 +69,12 @@ class BluetoothNotificationHelper(val context: Context) {
 
 class CheckInReminderNotification @Inject constructor(private val context: Context) {
 
+    fun hide() {
+        NotificationManagerCompat
+            .from(context)
+            .cancel(NOTIFICATION_CHECK_IN_REMINDER)
+    }
+
     fun show() {
         val actionPendingIntent =
             PendingIntent.getActivity(context, 0, MainActivity.getIntent(context), FLAG_UPDATE_CURRENT)

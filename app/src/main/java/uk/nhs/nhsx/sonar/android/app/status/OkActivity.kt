@@ -33,7 +33,7 @@ import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_DEFAULT
 import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_DEFAULT
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
-import uk.nhs.nhsx.sonar.android.app.util.showAndExpand
+import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import javax.inject.Inject
 
 class OkActivity : BaseActivity() {
@@ -81,7 +81,7 @@ class OkActivity : BaseActivity() {
         }
 
         medical_workers_card.setOnClickListener {
-            MedicalWorkersInstructionsDialog(this).showAndExpand()
+            MedicalWorkersInstructionsDialog(this).showExpanded()
         }
 
         toolbar_info.setOnClickListener {
@@ -141,7 +141,7 @@ class OkActivity : BaseActivity() {
         navigateTo(state)
 
         if (state is RecoveryState) {
-            recoveryDialog.showAndExpand()
+            recoveryDialog.showExpanded()
         } else {
             recoveryDialog.dismiss()
         }
