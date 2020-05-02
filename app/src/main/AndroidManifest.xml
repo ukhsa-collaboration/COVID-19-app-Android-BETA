@@ -88,6 +88,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".PackageReplacedReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
         <receiver android:name=".TurnBluetoothOnReceiver" />
         <receiver android:name=".ServiceRestarterBroadcastReceiver" />
         <receiver android:name=".notifications.ReminderBroadcastReceiver">

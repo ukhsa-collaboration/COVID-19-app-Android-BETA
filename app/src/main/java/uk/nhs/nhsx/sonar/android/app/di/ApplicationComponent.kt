@@ -10,6 +10,7 @@ import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.BootCompletedReceiver
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.MainActivity
+import uk.nhs.nhsx.sonar.android.app.PackageReplacedReceiver
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWorker
 import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
@@ -78,6 +79,7 @@ interface ApplicationComponent {
     fun inject(worker: SubmitContactEventsWorker)
     fun inject(worker: ReferenceCodeWorker)
 
+    fun inject(receiver: PackageReplacedReceiver)
     fun inject(receiver: BootCompletedReceiver)
     fun inject(receiver: ReminderBroadcastReceiver)
 
