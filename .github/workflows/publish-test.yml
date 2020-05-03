@@ -1,9 +1,8 @@
 name: Publish Test
 
 on:
-  push:
-    tags:
-      - publish-test
+  repository_dispatch:
+    types: [publish-test]
 
 jobs:
 
@@ -34,7 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: publish-test
+          ref: ${{ github.event.client_payload.ref }}
 
       - name: Cache Gradle packages
         uses: actions/cache@v1
@@ -48,7 +47,7 @@ jobs:
         uses: ./.github/actions/publish-action
         env:
           BUILD_FLAVOR: StagingApk
-          PLAY_TRACK: Test
+          PLAY_TRACK: internal
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
           SIGNING_KEY_STORE: ${{ secrets.signingKeyStore}}

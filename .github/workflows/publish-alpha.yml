@@ -1,9 +1,8 @@
 name: Publish Alpha
 
 on:
-  push:
-    tags:
-      - publish-alpha
+  repository_dispatch:
+    types: [publish-alpha]
 
 jobs:
 
@@ -34,7 +33,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: publish-alpha
+          ref: ${{ github.event.client_payload.ref }}
 
       - name: Cache Gradle packages
         uses: actions/cache@v1

@@ -67,38 +67,3 @@ jobs:
           SLACK_COLOR: '#FFBF00'
           SLACK_USERNAME: CI
           SLACK_TITLE: Commit Message
-
-  publish:
-    needs: build
-    runs-on:
-      - self-hosted
-      - linux
-      - aws
-    container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v1
-        with:
-          path: /root/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
-          restore-keys: ${{ runner.os }}-gradle
-
-      - name: Publish
-        uses: ./.github/actions/publish-action
-        env:
-          BUILD_FLAVOR: StagingApk
-          PLAY_TRACK: internal
-          GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
-          PLAY_SERVICES: ${{ secrets.PlayServices }}
-          SIGNING_KEY_STORE: ${{ secrets.signingKeyStore }}
-          SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias }}
-          SIGNING_KEY_STORE_PASSWORD: ${{ secrets.signingKeyStorePassword }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword }}
-          SONAR_HEADER_VALUE: ${{ secrets.TestSonarHeaderValue }}
-          SONAR_ANALYTICS_KEY: ${{ secrets.TestSonarAnalyticsKey }}
-          SONAR_BASE_URL: https://test.route.cp.data.england.nhs.uk
-          COMMIT_SHA: ${{ github.sha }}
