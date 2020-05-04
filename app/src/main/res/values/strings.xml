@@ -75,7 +75,7 @@
     <string name="bluetooth_battery_title">Will Bluetooth affect my phone’s battery life?</string>
     <string name="bluetooth_battery_body">This app uses low energy Bluetooth which will have minimal effect on your battery life.</string>
     <string name="mock_app_name">Debug NHS</string>
-    <string name="for_debug_purposes_only">For debug purposes only.\n\nReset will clear out the registration, status, and all contact events.</string>
+    <string name="for_debug_purposes_only">For debug purposes only. Your sonar Id is:</string>
     <string name="notification_bluetooth_disabled_title">Please turn Bluetooth on</string>
     <string name="notification_bluetooth_disabled_text">This app can only protect you and others if Bluetooth is on all the time</string>
     <string name="notification_bluetooth_disabled_action">Enable Bluetooth</string>

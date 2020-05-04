@@ -11,27 +11,48 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:textSize="12sp"
+        android:textStyle="normal"
+        android:paddingVertical="4dp"
+        android:textColor="@color/text_sub_title"
         android:text="@string/for_debug_purposes_only" />
 
     <TextView
         android:id="@+id/sonar_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="normal"
+        android:textIsSelectable="true"
         android:layout_marginBottom="8dp"
         android:text="" />
 
+    <View
+        style="@style/HorizontalDivider"
+        android:background="@color/gray"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp" />
+
     <TextView
         android:id="@+id/no_events"
+        android:textSize="12sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="No events recorded." />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/events"
+        android:textSize="12sp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+
+    <View
+        style="@style/HorizontalDivider"
+        android:background="@color/gray"
+        android:layout_height="1dp"
+        android:layout_marginBottom="8dp" />
 
     <LinearLayout
         android:layout_width="match_parent"

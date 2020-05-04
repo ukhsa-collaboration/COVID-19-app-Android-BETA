@@ -50,7 +50,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        sonar_id.text = "This is ${sonarIdProvider.getSonarId()}"
+        sonar_id.text = "${sonarIdProvider.getSonarId()}"
         val adapter = EventsAdapter()
         events.adapter = adapter
         events.layoutManager = LinearLayoutManager(this)
