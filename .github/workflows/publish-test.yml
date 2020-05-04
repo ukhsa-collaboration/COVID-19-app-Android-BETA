@@ -62,7 +62,7 @@ jobs:
 
       - name: Create Test Release
         id: create_test_release
-        uses: actions/create-release@latest
+        uses: fleskesvor/create-release@feature/support-target-commitish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
