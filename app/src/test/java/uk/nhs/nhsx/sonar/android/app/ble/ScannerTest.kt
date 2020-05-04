@@ -50,8 +50,7 @@ class ScannerTest {
 
     private val coroutineScope = TestCoroutineScope()
 
-    @Rule
-    @JvmField
+    @get:Rule
     val logAllOnFailuresRule: TimberTestRule = TimberTestRule.logAllWhenTestFails()
 
     @Before

@@ -37,7 +37,9 @@ To set a property refer to [official gradle documentation](https://docs.gradle.o
 
 ## PACT tests
 
-[Pact contract tests](https://github.com/DiUS/pact-jvm) are run as part of the regular unit test suite. If one of the tests is failing and you need more output, set slf4j logging to debug: `-Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG`
+[Pact contract tests](https://github.com/DiUS/pact-jvm) are run as part of the regular unit test suite. 
+If one of the tests is failing, and you need more output, 
+set slf4j logging to debug: `-Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG`
 
 ## Running tests on Firebase from your machine
 

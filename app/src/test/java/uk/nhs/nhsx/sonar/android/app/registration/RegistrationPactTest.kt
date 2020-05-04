@@ -25,13 +25,12 @@ import java.util.concurrent.Executors
 
 @ExperimentalCoroutinesApi
 class RegistrationPactTest {
-    @Rule
-    @JvmField
+
+    @get:Rule
     val provider = PactProviderRule("registration_api", this)
 
-    @Rule
-    @JvmField
-    var rule = InstantTaskExecutorRule()
+    @get:Rule
+    val rule = InstantTaskExecutorRule()
 
     @Pact(consumer = "android_app")
     fun pact(builder: PactDslWithProvider): RequestResponsePact {

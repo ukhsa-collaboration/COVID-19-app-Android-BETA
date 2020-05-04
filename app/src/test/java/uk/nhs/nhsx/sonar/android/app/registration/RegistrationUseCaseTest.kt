@@ -62,8 +62,7 @@ class RegistrationUseCaseTest {
             DEVICE_OS_VERSION
         )
 
-    @Rule
-    @JvmField
+    @get:Rule
     val logAllOnFailuresRule: TimberTestRule = TimberTestRule.logAllWhenTestFails()
 
     @Before
