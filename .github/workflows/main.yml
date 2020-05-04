@@ -61,7 +61,7 @@ jobs:
           SERVICE_ACCOUNT: ${{ secrets.ServiceAccount }}
 
       - name: Notify Slack on Failure
-        if: ${{ failure() }}
+        if: ${{ github.ref == 'refs/heads/master' && failure() }}
         uses: rtCamp/action-slack-notify@v2.0.0
         env:
           SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
