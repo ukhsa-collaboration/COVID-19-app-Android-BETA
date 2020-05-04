@@ -36,8 +36,6 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.ref }}
 
-      - run: echo ::set-output name=commitsha::$(cd "$GITHUB_WORKSPACE" && git rev-parse --short HEAD)
-
       - name: Cache Gradle packages
         uses: actions/cache@v1
         with:
@@ -60,7 +58,7 @@ jobs:
           SONAR_HEADER_VALUE: ${{ secrets.TestSonarHeaderValue }}
           SONAR_ANALYTICS_KEY: ${{ secrets.TestSonarAnalyticsKey }}
           SONAR_BASE_URL: https://test.route.cp.data.england.nhs.uk
-          COMMIT_SHA: ${{ steps.checkout.outputs.commitsha }}
+          COMMIT_SHA: ${{ github.event.client_payload.ref }}
 
       - name: Create Test Release
         id: create_test_release
