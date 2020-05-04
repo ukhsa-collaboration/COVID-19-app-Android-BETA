@@ -11,6 +11,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun Activity.openUrl(url: String) {
     CustomTabsIntent.Builder()
+        .addDefaultShareMenuItem()
         .setToolbarColor(getColor(R.color.colorPrimary))
         .build()
         .launchUrl(this, Uri.parse(url))
@@ -48,3 +49,5 @@ const val URL_LATEST_ADVICE_AMBER =
 const val URL_SYMPTOM_CHECKER = "https://111.nhs.uk/covid-19/"
 
 const val URL_INFO = "http://covid19.nhs.uk/"
+const val URL_PRIVACY_NOTICE = "https://covid19.nhs.uk/privacy-and-data.html"
+const val URL_TERMS_OF_USE = "https://covid19.nhs.uk/our-policies.html"
