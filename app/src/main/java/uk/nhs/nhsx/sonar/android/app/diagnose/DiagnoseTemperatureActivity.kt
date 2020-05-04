@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_temperature_diagnosis.radio_selec
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_question
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.yes
-import kotlinx.android.synthetic.main.symptom_banner.close_btn
+import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -53,9 +53,10 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
             radio_selection_error.visibility = View.GONE
         }
 
-        close_btn.setOnClickListener {
-            onBackPressed()
-        }
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {

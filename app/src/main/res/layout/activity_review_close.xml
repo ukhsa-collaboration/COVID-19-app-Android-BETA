@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/close_review_btn"
-        android:layout_below="@+id/logo">
+        android:layout_below="@id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,7 +47,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="8dp"
                 android:text="@string/if_showing_other_symptoms"
                 android:textSize="16sp" />
 
@@ -57,6 +56,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
+                android:gravity="center"
+                android:minHeight="48dp"
                 android:text="@string/nhs_111_online_service" />
 
         </LinearLayout>

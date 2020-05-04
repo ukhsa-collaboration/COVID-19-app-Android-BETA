@@ -214,13 +214,8 @@
     <string name="device_not_supported_title">Sorry, this app will not work on your phone</string>
     <string name="device_not_supported_rationale">Your device is not supported. This could be for various reasons.
     </string>
-    <string name="confirm_diagnosis_text_1">This information will be used to help decide if the people you have had
-        contact with will be advised to stay at home. To avoid more social distancing restrictions, the NHS needs
-        accurate data on the number of people with symptoms.
-    </string>
-    <string name="confirm_diagnosis_text_2">Together we can help save lives, protect the NHS and stop the spread of
-        coronavirus in the UK.
-    </string>
+    <string name="confirm_diagnosis_text_1">The information you have provided will be used to help protect your community and the NHS. The NHS needs accurate data on the number of people with symptoms.</string>
+    <string name="confirm_diagnosis_text_2">Together we can help save lives, protect the NHS, and stop the spread of coronavirus in the UK.</string>
     <string name="important_instructions_for_medical_workers">Important instructions for healthcare workers</string>
     <string name="medical_workers_instructions_title">Turn off your Bluetooth when you put on your PPE</string>
     <string name="medical_workers_instructions_text">Your interactions at work should not be captured when you are

@@ -8,11 +8,6 @@
 
             <corners android:radius="2dp" />
 
-            <padding
-                android:bottom="10dp"
-                android:left="10dp"
-                android:right="10dp"
-                android:top="10dp" />
             <stroke
                 android:width="3dp"
                 android:color="@color/colorDanger" />
@@ -20,5 +15,6 @@
     </item>
     <item
         android:drawable="@drawable/ic_arrow_drop_down_black_24dp"
+        android:end="8dp"
         android:gravity="right|bottom" />
 </layer-list>

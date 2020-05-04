@@ -2,6 +2,7 @@
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -39,7 +40,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/amber_card_background"
                         android:orientation="vertical"
-                        android:paddingTop="16dp"
+                        android:paddingTop="32dp"
                         android:paddingBottom="32dp">
 
                         <TextView
@@ -47,25 +48,26 @@
                             style="@style/TextViewCardSubTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingStart="28dp"
-                            android:paddingEnd="24dp" />
+                            android:layout_marginStart="24dp"
+                            android:layout_marginEnd="16dp"
+                            tools:text="@string/high_temperature" />
 
                         <View
                             style="@style/HorizontalDivider"
-                            android:background="@color/color_nhsuk_grey_5"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="12dp"
                             android:layout_height="2dp"
-                            android:layout_marginBottom="16dp" />
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="16dp"
+                            android:background="@color/color_nhsuk_grey_5" />
 
                         <TextView
                             android:id="@+id/status_red_title"
                             style="@style/TextViewStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingStart="28dp"
-                            android:paddingEnd="24dp"
                             android:accessibilityHeading="true"
+                            android:paddingStart="24dp"
+                            android:paddingEnd="16dp"
                             android:text="@string/status_red_title" />
 
                         <TextView
@@ -73,10 +75,12 @@
                             style="@style/TextViewSubStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="40dp"
-                            android:paddingStart="28dp"
-                            android:paddingEnd="24dp"
-
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_vertical"
+                            android:letterSpacing="0.04"
+                            android:minHeight="48dp"
+                            android:paddingStart="20dp"
+                            android:paddingEnd="16dp"
                             android:text="@string/status_what_to_do" />
 
                         <TextView
@@ -84,9 +88,9 @@
                             style="@style/TextViewCardSubTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:paddingStart="28dp"
-                            android:paddingEnd="24dp" />
+                            android:paddingStart="24dp"
+                            android:paddingEnd="16dp"
+                            tools:text="@string/follow_until" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -128,8 +132,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:clickable="true"
                     android:accessibilityHeading="true"
+                    android:clickable="true"
                     android:focusable="true">
 
                     <TextView
@@ -149,8 +153,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:paddingHorizontal="16dp"
                     android:accessibilityHeading="true"
+                    android:paddingHorizontal="16dp"
                     android:text="@string/need_medical_advice"
                     android:textSize="16sp" />
 
@@ -159,8 +163,8 @@
                     style="@style/TextViewLink02"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
                     android:layout_marginBottom="32dp"
+                    android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp"
                     android:text="@string/nhs_online_service" />
 

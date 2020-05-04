@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_te
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_prompt
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
-import kotlinx.android.synthetic.main.symptom_banner.close_btn
+import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
@@ -49,10 +49,10 @@ class DiagnoseReviewActivity : BaseActivity() {
 
         setContentView(R.layout.activity_review_diagnosis)
 
-        close_btn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
-        close_btn.setOnClickListener {
-            onBackPressed()
-        }
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
 
         setSymptomsReviewAnswers()
         setSymptomsDateQuestion()

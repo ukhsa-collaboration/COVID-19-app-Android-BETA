@@ -13,7 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 
 class SpinnerAdapter(context: Context) :
-    ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, getDates(context)) {
+    ArrayAdapter<String>(context, R.layout.item_date_spinner, getDates(context)) {
 
     init {
         setDropDownViewResource(R.layout.item_date_spinner)

@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_cough_diagnosis.no
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.yes
-import kotlinx.android.synthetic.main.symptom_banner.close_btn
+import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -49,10 +49,10 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         setQuestionnaireContent()
 
-        close_btn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
-        close_btn.setOnClickListener {
-            onBackPressed()
-        }
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
 
         viewModel.observeUserState().observe({ this.lifecycle }) { result ->
             when (result) {

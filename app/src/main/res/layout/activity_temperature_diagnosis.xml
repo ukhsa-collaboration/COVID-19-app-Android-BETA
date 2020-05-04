@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/confirm_diagnosis"
-        android:layout_below="@+id/logo">
+        android:layout_below="@+id/toolbar">
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -9,7 +9,7 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_review_close.close_review_btn
 import kotlinx.android.synthetic.main.activity_review_close.nhs_service
-import kotlinx.android.synthetic.main.symptom_banner.close_btn
+import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -29,10 +29,10 @@ class DiagnoseCloseActivity : BaseActivity() {
 
         setContentView(R.layout.activity_review_close)
 
-        close_btn.setImageDrawable(getDrawable(R.drawable.ic_arrow_back))
-        close_btn.setOnClickListener {
-            onBackPressed()
-        }
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
 
         close_review_btn.setOnClickListener {
             navigateTo(userStateStorage.get())

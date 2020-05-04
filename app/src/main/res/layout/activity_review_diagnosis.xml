@@ -4,8 +4,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <include layout="@layout/symptom_banner" />
 
@@ -13,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/submit_diagnosis"
-        android:layout_below="@+id/logo">
+        android:layout_below="@+id/toolbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,11 +27,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:contentDescription="@string/page_3_of_3"
                 android:fontFamily="@font/roboto_medium"
                 android:letterSpacing="0.1"
                 android:paddingTop="24dp"
                 android:text="@string/progress_three_thirds"
-                android:contentDescription="@string/page_3_of_3"
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
 

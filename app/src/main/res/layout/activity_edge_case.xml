@@ -25,6 +25,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:baselineAlignBottom="true"
+        android:contentDescription="@null"
         android:paddingVertical="4dp"
         android:scaleType="center"
         android:src="@drawable/nhs_logo"

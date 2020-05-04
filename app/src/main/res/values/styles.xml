@@ -13,6 +13,7 @@
         <item name="android:textViewStyle">@style/AppTextView</item>
         <item name="android:windowBackground">@color/color_nhsuk_grey_5</item>
         <item name="android:windowDisablePreview">true</item>
+        <item name="titleTextColor">@color/white</item>
 
         <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
         <item name="materialCalendarFullscreenTheme">
@@ -20,6 +21,12 @@
         </item>
         <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar
         </item>
+        <item name="android:dropDownListViewStyle">@style/SpinnerStyle</item>
+    </style>
+
+    <style name="SpinnerStyle" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:divider">@color/color_nhsuk_grey_4</item>
+        <item name="android:dividerHeight">1dp</item>
     </style>
 
     <style name="AppTextView" parent="AppTheme">
@@ -40,7 +47,7 @@
     </style>
 
     <style name="TextViewStatus" parent="Widget.AppCompat.TextView">
-        <item name="android:lineSpacingMultiplier">1.18</item>
+        <item name="android:lineSpacingMultiplier">1.12</item>
         <item name="android:textSize">25sp</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -84,6 +91,7 @@
         <item name="fontFamily">@font/roboto_medium</item>
         <item name="android:textColor">@color/text_primary_color</item>
     </style>
+
     <style name="TextViewActionTitle02" parent="Widget.AppCompat.TextView">
         <item name="android:lineSpacingMultiplier">1.18</item>
         <item name="android:textSize">16sp</item>
@@ -153,5 +161,4 @@
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
     </style>
-
 </resources>
