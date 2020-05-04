@@ -114,7 +114,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         keyStore.aliases().asSequence().forEach { keyStore.deleteEntry(it) }
 
         component = DaggerTestAppComponent.builder()
-            .appModule(AppModule(app, testLocationHelper))
+            .appModule(AppModule(app, testLocationHelper, TestAnalytics()))
             .persistenceModule(PersistenceModule(app))
             .bluetoothModule(testBluetoothModule)
             .cryptoModule(

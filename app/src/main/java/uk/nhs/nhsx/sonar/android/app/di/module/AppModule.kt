@@ -12,13 +12,15 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import javax.inject.Named
 
 @Module
 class AppModule(
     private val applicationContext: Context,
-    private val locationHelper: LocationHelper
+    private val locationHelper: LocationHelper,
+    private val sonarAnalytics: SonarAnalytics
 ) {
 
     @Provides
@@ -59,6 +61,10 @@ class AppModule(
     @Provides
     fun provideWorkManager(context: Context): WorkManager =
         WorkManager.getInstance(context)
+
+    @Provides
+    fun provideSonarAnalytics(): SonarAnalytics =
+        sonarAnalytics
 
     companion object {
         const val DISPATCHER_DEFAULT = "DISPATCHER_DEFAULT"

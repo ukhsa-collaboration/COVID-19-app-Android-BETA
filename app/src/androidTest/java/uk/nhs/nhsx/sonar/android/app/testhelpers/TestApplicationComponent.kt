@@ -40,8 +40,7 @@ import javax.inject.Singleton
         BluetoothModule::class,
         CryptoModule::class,
         NetworkModule::class,
-        TestNotificationsModule::class,
-        TestAnalyticsModule::class
+        TestNotificationsModule::class
     ]
 )
 interface TestAppComponent : ApplicationComponent {
@@ -98,13 +97,6 @@ class TestNotificationsModule {
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
         TestTokenRetriever()
-}
-
-@Module
-class TestAnalyticsModule {
-    @Provides
-    fun provideAnalytics(): SonarAnalytics =
-        TestAnalytics()
 }
 
 class TestAnalytics : SonarAnalytics {

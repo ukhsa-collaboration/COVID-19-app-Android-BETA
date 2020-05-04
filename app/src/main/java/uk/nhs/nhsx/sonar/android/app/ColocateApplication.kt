@@ -20,11 +20,11 @@ import io.reactivex.plugins.RxJavaPlugins
 import net.danlew.android.joda.JodaTimeAndroid
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.analytics.AppCenterAnalytics
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWorker
 import uk.nhs.nhsx.sonar.android.app.crypto.PROVIDER_NAME
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
 import uk.nhs.nhsx.sonar.android.app.di.DaggerApplicationComponent
-import uk.nhs.nhsx.sonar.android.app.di.module.AnalyticsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
@@ -98,7 +98,7 @@ class ColocateApplication : Application() {
 
     private fun buildApplicationComponent(): ApplicationComponent =
         DaggerApplicationComponent.builder()
-            .appModule(AppModule(this, AndroidLocationHelper(this)))
+            .appModule(AppModule(this, AndroidLocationHelper(this), AppCenterAnalytics()))
             .persistenceModule(PersistenceModule(this))
             .bluetoothModule(BluetoothModule(this, scanIntervalLength = 8))
             .cryptoModule(
@@ -109,7 +109,6 @@ class ColocateApplication : Application() {
             )
             .networkModule(NetworkModule(BuildConfig.BASE_URL, BuildConfig.SONAR_HEADER_VALUE))
             .notificationsModule(NotificationsModule())
-            .analyticsModule(AnalyticsModule())
             .build()
 
     private fun startAnalytics() {

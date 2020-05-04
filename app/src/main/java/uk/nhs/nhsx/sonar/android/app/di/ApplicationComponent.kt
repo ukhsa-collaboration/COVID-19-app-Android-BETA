@@ -14,7 +14,6 @@ import uk.nhs.nhsx.sonar.android.app.PackageReplacedReceiver
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWorker
 import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
-import uk.nhs.nhsx.sonar.android.app.di.module.AnalyticsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
@@ -49,8 +48,7 @@ import javax.inject.Singleton
         BluetoothModule::class,
         CryptoModule::class,
         NetworkModule::class,
-        NotificationsModule::class,
-        AnalyticsModule::class
+        NotificationsModule::class
     ]
 )
 interface ApplicationComponent {
