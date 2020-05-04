@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -16,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_post_code.invalidPostCodeHint
 import kotlinx.android.synthetic.main.activity_post_code.postCodeContinue
 import kotlinx.android.synthetic.main.activity_post_code.postCodeEditText
 import kotlinx.android.synthetic.main.activity_post_code.postCodeRationale
+import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -23,7 +23,7 @@ import uk.nhs.nhsx.sonar.android.app.util.announce
 import uk.nhs.nhsx.sonar.android.app.util.observeEvent
 import javax.inject.Inject
 
-class PostCodeActivity : AppCompatActivity(R.layout.activity_post_code) {
+class PostCodeActivity : ColorInversionAwareActivity(R.layout.activity_post_code) {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<PostCodeViewModel>
@@ -65,6 +65,14 @@ class PostCodeActivity : AppCompatActivity(R.layout.activity_post_code) {
                 PostCodeNavigation.Permissions -> PermissionActivity.start(this)
             }
         })
+    }
+
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            postCodeContinue.setBackgroundResource(R.drawable.button_round_background_inversed)
+        } else {
+            postCodeContinue.setBackgroundResource(R.drawable.button_round_background)
+        }
     }
 
     companion object {

@@ -22,6 +22,7 @@ import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDi
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_AMBER
 import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_AMBER
+import uk.nhs.nhsx.sonar.android.app.util.dpToPx
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
@@ -70,6 +71,15 @@ class AtRiskActivity : BaseActivity() {
                 userStateStorage.update(it)
                 navigateTo(it)
             }
+    }
+
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            status_not_feeling_well.strokeWidth = 3.dpToPx
+            status_not_feeling_well.strokeColor = getColor(R.color.black)
+        } else {
+            status_not_feeling_well.strokeWidth = 0
+        }
     }
 
     companion object {

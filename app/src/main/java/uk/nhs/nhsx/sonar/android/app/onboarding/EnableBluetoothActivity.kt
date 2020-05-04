@@ -4,17 +4,17 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
 import kotlinx.android.synthetic.main.banner.toolbar_info
+import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStateBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 
-open class EnableBluetoothActivity : AppCompatActivity(R.layout.activity_edge_case) {
+open class EnableBluetoothActivity : ColorInversionAwareActivity(R.layout.activity_edge_case) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -47,6 +47,14 @@ open class EnableBluetoothActivity : AppCompatActivity(R.layout.activity_edge_ca
     override fun onResume() {
         super.onResume()
         takeActionButton.isEnabled = true
+    }
+
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            takeActionButton.setBackgroundResource(R.drawable.button_round_background_inversed)
+        } else {
+            takeActionButton.setBackgroundResource(R.drawable.button_round_background)
+        }
     }
 
     private val bluetoothStateBroadcastReceiver = BluetoothStateBroadcastReceiver { state ->

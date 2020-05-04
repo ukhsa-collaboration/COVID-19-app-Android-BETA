@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
-import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
 import kotlinx.android.synthetic.main.banner.toolbar_info
+import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.LocationProviderChangedReceiver
@@ -18,7 +18,7 @@ import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
-open class EnableLocationActivity : AppCompatActivity(R.layout.activity_edge_case) {
+open class EnableLocationActivity : ColorInversionAwareActivity(R.layout.activity_edge_case) {
 
     @Inject
     lateinit var locationHelper: LocationHelper
@@ -58,6 +58,14 @@ open class EnableLocationActivity : AppCompatActivity(R.layout.activity_edge_cas
                     finish()
                 }
             }
+    }
+
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            takeActionButton.setBackgroundResource(R.drawable.button_round_background_inversed)
+        } else {
+            takeActionButton.setBackgroundResource(R.drawable.button_round_background)
+        }
     }
 
     override fun onPause() {

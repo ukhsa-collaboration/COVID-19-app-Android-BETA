@@ -81,7 +81,7 @@
                 android:layout_marginTop="16dp"
                 android:lineSpacingMultiplier="1.2"
                 android:text="@string/enable_bluetooth_rationale"
-                android:textColor="@color/black"
+                android:textColor="@color/text_primary_color"
                 android:textSize="16sp" />
 
         </LinearLayout>

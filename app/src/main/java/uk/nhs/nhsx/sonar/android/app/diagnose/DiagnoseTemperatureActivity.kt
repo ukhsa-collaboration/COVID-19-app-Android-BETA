@@ -9,10 +9,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.confirm_diagnosis
+import kotlinx.android.synthetic.main.activity_temperature_diagnosis.no
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_question
+import kotlinx.android.synthetic.main.activity_temperature_diagnosis.yes
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -53,6 +55,18 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
 
         close_btn.setOnClickListener {
             onBackPressed()
+        }
+    }
+
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            yes.setBackgroundResource(R.drawable.radio_button_background_selector_inverse)
+            no.setBackgroundResource(R.drawable.radio_button_background_selector_inverse)
+            confirm_diagnosis.setBackgroundResource(R.drawable.button_round_background_inversed)
+        } else {
+            yes.setBackgroundResource(R.drawable.radio_button_background_selector)
+            no.setBackgroundResource(R.drawable.radio_button_background_selector)
+            confirm_diagnosis.setBackgroundResource(R.drawable.button_round_background)
         }
     }
 

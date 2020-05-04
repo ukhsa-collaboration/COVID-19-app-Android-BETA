@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
 import kotlinx.android.synthetic.main.activity_main.explanation_link
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
@@ -21,7 +20,7 @@ import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ColorInversionAwareActivity() {
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
@@ -66,6 +65,14 @@ class MainActivity : AppCompatActivity() {
 
         explanation_link.setOnClickListener {
             ExplanationActivity.start(this)
+        }
+    }
+
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            confirm_onboarding.setBackgroundResource(R.drawable.button_round_background_inversed)
+        } else {
+            confirm_onboarding.setBackgroundResource(R.drawable.button_round_background)
         }
     }
 

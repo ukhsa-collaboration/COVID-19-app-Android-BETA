@@ -20,7 +20,7 @@
         android:layout_height="24dp"
         android:layout_gravity="center_vertical"
         android:indeterminate="true"
-        app:mpb_indeterminateTint="@color/black"
+        app:mpb_indeterminateTint="@color/text_primary_color"
         app:mpb_useIntrinsicPadding="false" />
 
     <ImageView

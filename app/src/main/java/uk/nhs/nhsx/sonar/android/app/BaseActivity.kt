@@ -6,7 +6,6 @@ package uk.nhs.nhsx.sonar.android.app
 
 import android.bluetooth.BluetoothAdapter.STATE_OFF
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.disposables.Disposable
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStateBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.ble.LocationProviderChangedReceiver
@@ -17,7 +16,7 @@ import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothDisabled
 import javax.inject.Inject
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : ColorInversionAwareActivity() {
 
     private var locationSubscription: Disposable? = null
 

@@ -71,6 +71,14 @@ class DiagnoseReviewActivity : BaseActivity() {
         }
     }
 
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            submit_diagnosis.setBackgroundResource(R.drawable.button_round_background_inversed)
+        } else {
+            submit_diagnosis.setBackgroundResource(R.drawable.button_round_background)
+        }
+    }
+
     private fun setDateSpinner() {
         val adapter = SpinnerAdapter(this)
 

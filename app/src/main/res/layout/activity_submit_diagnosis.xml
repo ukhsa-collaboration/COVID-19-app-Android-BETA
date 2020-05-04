@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="@string/isle_of_white_only_description"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/text_primary_color" />
             </LinearLayout>
 
             <LinearLayout

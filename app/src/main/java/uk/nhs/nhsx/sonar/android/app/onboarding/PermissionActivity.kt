@@ -8,8 +8,8 @@ import android.bluetooth.BluetoothAdapter.ACTION_REQUEST_ENABLE
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_permission.permission_continue
+import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -19,7 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
 import javax.inject.Inject
 
-class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
+class PermissionActivity : ColorInversionAwareActivity(R.layout.activity_permission) {
 
     @Inject
     lateinit var locationHelper: LocationHelper
@@ -55,6 +55,14 @@ class PermissionActivity : AppCompatActivity(R.layout.activity_permission) {
             return
         }
         startOkActivity()
+    }
+
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            permission_continue.setBackgroundResource(R.drawable.button_round_background_inversed)
+        } else {
+            permission_continue.setBackgroundResource(R.drawable.button_round_background)
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

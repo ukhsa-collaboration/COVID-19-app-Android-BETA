@@ -43,6 +43,14 @@ class DiagnoseCloseActivity : BaseActivity() {
         }
     }
 
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            close_review_btn.setBackgroundResource(R.drawable.button_round_background_inversed)
+        } else {
+            close_review_btn.setBackgroundResource(R.drawable.button_round_background)
+        }
+    }
+
     companion object {
         fun start(context: Context) =
             context.startActivity(getIntent(context))

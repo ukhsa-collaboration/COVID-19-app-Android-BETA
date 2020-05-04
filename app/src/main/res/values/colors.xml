@@ -10,7 +10,8 @@
     <color name="colorAccent">#005EB8</color>
     <color name="white">#ffffff</color>
     <color name="gray">#D8DDE0</color>
-    <color name="black">#212B32</color>
+    <color name="black">#000000</color>
+    <color name="text_primary_color">#212B32</color>
     <color name="button_background">#007F3B</color>
     <color name="button_background_disabled">#7F007F3B</color>
 

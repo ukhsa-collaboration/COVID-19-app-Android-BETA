@@ -13,8 +13,10 @@ import kotlinx.android.synthetic.main.activity_cough_diagnosis.confirm_diagnosis
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_question
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.new_cough_description
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.no
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.yes
 import kotlinx.android.synthetic.main.symptom_banner.close_btn
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -77,6 +79,18 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         cough_diagnosis_answer.setOnCheckedChangeListener { _, _ ->
             radio_selection_error.visibility = View.GONE
+        }
+    }
+
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        if (inversionModeEnabled) {
+            yes.setBackgroundResource(R.drawable.radio_button_background_selector_inverse)
+            no.setBackgroundResource(R.drawable.radio_button_background_selector_inverse)
+            confirm_diagnosis.setBackgroundResource(R.drawable.button_round_background_inversed)
+        } else {
+            yes.setBackgroundResource(R.drawable.radio_button_background_selector)
+            no.setBackgroundResource(R.drawable.radio_button_background_selector)
+            confirm_diagnosis.setBackgroundResource(R.drawable.button_round_background)
         }
     }
 
