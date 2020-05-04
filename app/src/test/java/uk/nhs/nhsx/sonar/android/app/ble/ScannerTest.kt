@@ -104,9 +104,10 @@ class ScannerTest {
             val scan = Scanner(
                 bleClient,
                 saveContactWorker,
-                currentTimestampProvider = { timestamp },
                 bleEvents = BleEvents { Base64.getEncoder().encodeToString(it) },
-                scanIntervalLength = 1
+                currentTimestampProvider = { timestamp },
+                scanIntervalLength = 1,
+                base64Decoder = { Base64.getDecoder().decode(it) }
             )
 
             scan.start(coroutineScope)

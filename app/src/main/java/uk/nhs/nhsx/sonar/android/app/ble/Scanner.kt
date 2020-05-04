@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.ble
 
 import android.os.ParcelUuid
+import android.util.Base64
 import com.polidea.rxandroidble2.LogConstants
 import com.polidea.rxandroidble2.LogOptions
 import com.polidea.rxandroidble2.RxBleClient
@@ -18,13 +19,13 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.BuildConfig
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
 import javax.inject.Inject
@@ -36,10 +37,10 @@ class Scanner @Inject constructor(
     private val bleEvents: BleEvents,
     private val currentTimestampProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
     @Named(BluetoothModule.SCAN_INTERVAL_LENGTH)
-    private val scanIntervalLength: Int
+    private val scanIntervalLength: Int,
+    private val base64Decoder: (String) -> ByteArray = { Base64.decode(it, Base64.DEFAULT) }
 ) {
 
-    private var running = true
     private var devices: MutableList<Pair<ScanResult, Int>> = mutableListOf()
     private val connections: MutableList<Disposable?> = mutableListOf()
 
@@ -49,6 +50,9 @@ class Scanner @Inject constructor(
 
     private var scanDisposable: Disposable? = null
     private var scanJob: Job? = null
+    private val appleManufacturerId = 76
+    private val encodedBackgroundIosServiceUuid: ByteArray =
+        base64Decoder(BuildConfig.SONAR_ENCODED_BACKGROUND_IOS_SERVICE_UUID)
 
     /*
      When the iPhone app goes into the background iOS changes how services are advertised:
@@ -63,26 +67,8 @@ class Scanner @Inject constructor(
     private val coLocateBackgroundedIPhoneFilter = ScanFilter.Builder()
         .setServiceUuid(null)
         .setManufacturerData(
-            76,
-            byteArrayOf(
-                0x01, // 0
-                0x00, // 1
-                0x00, // 2
-                0x00, // 3
-                0x00, // 4
-                0x00, // 5
-                0x00, // 6
-                0x00, // 7
-                0x00, // 8
-                0x00, // 9
-                0x40, // 10
-                0x00, // 11
-                0x00, // 12
-                0x00, // 13
-                0x00, // 14
-                0x00, // 15
-                0x00 // 16
-            )
+            appleManufacturerId,
+            encodedBackgroundIosServiceUuid
         )
         .build()
 
@@ -193,7 +179,11 @@ class Scanner @Inject constructor(
             .andThen(Single.just(connection))
     }
 
-    private fun read(connection: RxBleConnection, txPower: Int, scope: CoroutineScope): Single<Event> {
+    private fun read(
+        connection: RxBleConnection,
+        txPower: Int,
+        scope: CoroutineScope
+    ): Single<Event> {
         return Single.zip(
             connection.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID),
             connection.readRssi(),
