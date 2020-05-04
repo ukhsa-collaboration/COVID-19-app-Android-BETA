@@ -23,11 +23,12 @@ class OkViewModel @Inject constructor(
     private val analytics: SonarAnalytics
 ) : ViewModel() {
 
-    fun viewState(): LiveData<RegistrationState> {
-        return Transformations.map(sonarIdProvider.hasProperSonarIdLiveData()) { hasProperSonarId ->
-            if (hasProperSonarId) Complete else InProgress
-        }
-    }
+    fun viewState(): LiveData<RegistrationState> =
+        sonarIdProvider
+            .hasProperSonarIdLiveData()
+            .map { hasProperSonarId ->
+                if (hasProperSonarId) Complete else InProgress
+            }
 
     fun onStart() {
         if (!onboardingStatusProvider.isOnboardingFinished()) {
@@ -40,6 +41,9 @@ class OkViewModel @Inject constructor(
         }
     }
 }
+
+private fun <T, U> LiveData<T>.map(function: (T) -> U): LiveData<U> =
+    Transformations.map(this, function)
 
 enum class RegistrationState {
     Complete,
