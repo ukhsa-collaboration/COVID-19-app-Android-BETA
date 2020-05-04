@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
 package testsupport
 
 import android.content.Intent

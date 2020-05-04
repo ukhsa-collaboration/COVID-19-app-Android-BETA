@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
 package uk.nhs.nhsx.sonar.android.app.diagnose
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
@@ -130,6 +134,7 @@ class DiagnoseCoughViewModelTest {
             )
         }
     }
+
     @Test
     fun `initial state is Amber then final state Is red`() {
         RedState(DateTime.now(UTC).plusDays(7), nonEmptySetOf(TEMPERATURE))

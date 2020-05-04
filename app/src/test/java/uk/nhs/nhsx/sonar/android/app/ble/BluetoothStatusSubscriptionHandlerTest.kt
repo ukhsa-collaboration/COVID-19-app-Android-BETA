@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
 package uk.nhs.nhsx.sonar.android.app.ble
 
 import io.mockk.mockk

@@ -1,10 +1,14 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
 package uk.nhs.nhsx.sonar.android.app
 
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import uk.nhs.nhsx.sonar.android.app.util.isInversionModeEnabled
 
-open class ColorInversionAwareActivity : AppCompatActivity {
+abstract class ColorInversionAwareActivity : AppCompatActivity {
 
     constructor() : super()
 
