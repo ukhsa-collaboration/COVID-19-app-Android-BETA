@@ -27,10 +27,10 @@ jobs:
       - self-hosted
       - linux
       - aws
-    container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
     steps:
       - name: Checkout
+        id: checkout
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.client_payload.ref }}
@@ -57,11 +57,11 @@ jobs:
           SONAR_HEADER_VALUE: ${{ secrets.ProdSonarHeaderValue }}
           SONAR_ANALYTICS_KEY: ${{ secrets.ProdSonarAnalyticsKey }}
           SONAR_BASE_URL: https://api.svc-covid19.nhs.uk
-          COMMIT_SHA: ${{ github.sha }}
+          COMMIT_SHA: ${{ github.event.client_payload.ref }}
 
       - name: Create Alpha Release
         id: create_alpha_release
-        uses: actions/create-release@latest
+        uses: fleskesvor/create-release@feature/support-target-commitish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

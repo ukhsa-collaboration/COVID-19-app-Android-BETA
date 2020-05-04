@@ -27,7 +27,6 @@ jobs:
       - self-hosted
       - linux
       - aws
-    container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
     steps:
       - name: Checkout
@@ -36,7 +35,7 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.ref }}
 
-      - run: echo ::set-output name=commitsha::$(cd /github/workspace && git rev-parse --short HEAD)
+      - run: echo ::set-output name=commitsha::$(git rev-parse --short HEAD)
 
       - name: Cache Gradle packages
         uses: actions/cache@v1
