@@ -23,6 +23,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
+import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
@@ -34,6 +35,9 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider
+
+    @Inject
+    lateinit var activationCodeProvider: ActivationCodeProvider
 
     @Inject
     lateinit var onboardingStatusProvider: OnboardingStatusProvider
@@ -59,6 +63,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             userStateStorage.clear()
             sonarIdProvider.clear()
             onboardingStatusProvider.clear()
+            activationCodeProvider.clear()
             viewModel.clear()
         }
 
