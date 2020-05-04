@@ -4,7 +4,6 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
-import android.content.Context
 import android.content.Intent
 import io.mockk.Called
 import io.mockk.every
@@ -14,6 +13,8 @@ import io.mockk.verifyAll
 import org.joda.time.DateTime
 import org.junit.Before
 import org.junit.Test
+import testsupport.TestIntent
+import testsupport.mockContextWithMockedAppComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
@@ -28,6 +29,7 @@ class BootCompletedReceiverTest {
     private val sonarIdProvider = mockk<SonarIdProvider>()
     private val stateStorage = mockk<UserStateStorage>()
     private val reminders = mockk<Reminders>()
+    private val context = mockContextWithMockedAppComponent()
 
     private val receiver = BootCompletedReceiver().also {
         it.sonarIdProvider = sonarIdProvider
@@ -44,7 +46,7 @@ class BootCompletedReceiverTest {
     fun `onReceive - with unknown intent action`() {
         val intent = TestIntent("SOME_OTHER_ACTION")
 
-        receiver.handle(mockk(), intent)
+        receiver.onReceive(context, intent)
 
         verifyAll {
             sonarIdProvider wasNot Called
@@ -55,14 +57,13 @@ class BootCompletedReceiverTest {
     @Test
     fun `onReceive - with sonarId, with not expired red state`() {
         val until = DateTime.now().plusDays(1)
-        val context = mockk<Context>()
 
         every { sonarIdProvider.hasProperSonarId() } returns true
         every { stateStorage.get() } returns RedState(until, nonEmptySetOf(Symptom.COUGH))
         every { reminders.scheduleCheckInReminder(any()) } returns Unit
         every { BluetoothService.start(any()) } returns Unit
 
-        receiver.handle(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
+        receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
 
         verifyAll {
             BluetoothService.start(context)
@@ -73,13 +74,12 @@ class BootCompletedReceiverTest {
     @Test
     fun `onReceive - with sonarId, with expired red state`() {
         val until = DateTime.now().minusDays(1)
-        val context = mockk<Context>()
 
         every { sonarIdProvider.hasProperSonarId() } returns true
         every { stateStorage.get() } returns RedState(until, nonEmptySetOf(Symptom.COUGH))
         every { BluetoothService.start(any()) } returns Unit
 
-        receiver.handle(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
+        receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
 
         verifyAll {
             BluetoothService.start(context)
@@ -93,7 +93,7 @@ class BootCompletedReceiverTest {
         every { stateStorage.get() } returns RedState(DateTime.now(), nonEmptySetOf(Symptom.COUGH))
         every { reminders.scheduleCheckInReminder(any()) } returns Unit
 
-        receiver.handle(mockk(), TestIntent(Intent.ACTION_BOOT_COMPLETED))
+        receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
 
         verifyAll {
             BluetoothService wasNot Called
@@ -106,14 +106,10 @@ class BootCompletedReceiverTest {
         every { sonarIdProvider.hasProperSonarId() } returns true
         every { BluetoothService.start(any()) } returns Unit
 
-        receiver.handle(mockk(), TestIntent(Intent.ACTION_BOOT_COMPLETED))
+        receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
 
         verifyAll {
             reminders wasNot Called
         }
-    }
-
-    class TestIntent(private val actionName: String) : Intent() {
-        override fun getAction() = actionName
     }
 }

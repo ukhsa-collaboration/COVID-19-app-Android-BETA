@@ -1,6 +1,5 @@
 package uk.nhs.nhsx.sonar.android.app
 
-import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -24,13 +23,9 @@ class BootCompletedReceiver : BroadcastReceiver() {
     @Inject
     lateinit var registrationManager: RegistrationManager
 
-    @SuppressLint("UnsafeProtectedBroadcastReceiver")
     override fun onReceive(context: Context, intent: Intent) {
         context.appComponent.inject(this)
-        handle(context, intent)
-    }
 
-    fun handle(context: Context, intent: Intent) {
         if (intent.action != Intent.ACTION_BOOT_COMPLETED)
             return
 

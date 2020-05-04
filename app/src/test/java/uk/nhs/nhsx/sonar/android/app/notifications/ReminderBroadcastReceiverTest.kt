@@ -4,28 +4,23 @@
 
 package uk.nhs.nhsx.sonar.android.app.notifications
 
-import android.content.Context
 import android.content.Intent
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
+import testsupport.mockContextWithMockedAppComponent
 
 class ReminderBroadcastReceiverTest {
 
     private val reminders = mockk<Reminders>(relaxed = true)
-    private val context = mockk<Context>(relaxed = true)
-    private val intent = mockk<Intent>()
-    private val applicationComponent = mockk<ApplicationComponent>(relaxed = true)
-    private val sut = ReminderBroadcastReceiver().also { it.reminders = reminders }
+    private val receiver = ReminderBroadcastReceiver().also { it.reminders = reminders }
 
     @Test
     fun onReceive() {
-        every { context.appComponent } returns applicationComponent
+        val context = mockContextWithMockedAppComponent()
+        val intent = mockk<Intent>()
 
-        sut.onReceive(context, intent)
+        receiver.onReceive(context, intent)
 
         verify(exactly = 1) { reminders.handleReminderBroadcast(intent) }
     }

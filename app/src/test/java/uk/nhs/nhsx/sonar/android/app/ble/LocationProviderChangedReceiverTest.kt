@@ -1,12 +1,12 @@
 package uk.nhs.nhsx.sonar.android.app.ble
 
 import android.app.Activity
-import android.content.Intent
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import testsupport.TestIntent
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 
 class LocationProviderChangedReceiverTest {
@@ -62,8 +62,4 @@ class LocationProviderChangedReceiverTest {
 
         assertThat(latestStatus).isNull()
     }
-}
-
-class TestIntent(private val actionValue: String?) : Intent() {
-    override fun getAction(): String? = actionValue
 }
