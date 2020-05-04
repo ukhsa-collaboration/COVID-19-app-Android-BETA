@@ -56,7 +56,7 @@ class BluetoothIdProvider @Inject constructor(
     private fun currentCryptogramExpired(currentDate: DateTime): Boolean {
         if (latestDate == null) return true
         val expiryDate = latestDate!!.startOfNextDay()
-        return currentDate.isAfter(expiryDate)
+        return currentDate.isAfter(expiryDate) || currentDate.isBefore(latestDate)
     }
 
     private fun generateCryptogram(): Cryptogram {

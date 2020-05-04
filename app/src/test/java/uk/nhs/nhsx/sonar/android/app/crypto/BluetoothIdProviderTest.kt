@@ -85,6 +85,13 @@ class BluetoothIdProviderTest {
     }
 
     @Test
+    fun `creates a new cryptogram if current time is before the validity period`() {
+        val cryptogram = idProvider.provideBluetoothPayload().cryptogram
+        every { currentDateProvider.invoke() } returns startTime.minus(Hours.hours(25))
+        assertThat(cryptogram).isNotEqualTo(idProvider.provideBluetoothPayload().cryptogram)
+    }
+
+    @Test
     fun `contains correct country code`() {
         val payload = idProvider.provideBluetoothPayload()
         assertThat(payload.countryCode).isEqualTo(countryCode)
