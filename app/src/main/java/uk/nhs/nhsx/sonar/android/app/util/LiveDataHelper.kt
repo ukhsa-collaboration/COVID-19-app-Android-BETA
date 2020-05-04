@@ -19,14 +19,13 @@ open class LiveDataEvent<out T>(private val content: T) {
     /**
      * Returns the content and prevents its use again.
      */
-    fun getContentIfNotHandled(): T? {
-        return if (hasBeenHandled) {
+    fun getContentIfNotHandled(): T? =
+        if (hasBeenHandled) {
             null
         } else {
             hasBeenHandled = true
             content
         }
-    }
 
     /**
      * Returns the content, even if it's already been handled.

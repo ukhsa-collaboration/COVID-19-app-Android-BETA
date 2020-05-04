@@ -26,8 +26,8 @@ class TestBluetoothDevice(macAddress: String, services: RxBleDeviceServices, rss
     private val connection = TestBluetoothConnection(services, rssiList)
     private val connectionStateBehaviorSubject = BehaviorSubject.createDefault(DISCONNECTED)
 
-    override fun establishConnection(autoConnect: Boolean): Observable<RxBleConnection> {
-        return Observable.defer {
+    override fun establishConnection(autoConnect: Boolean): Observable<RxBleConnection> =
+        Observable.defer {
             if (isConnected.compareAndSet(false, true)) {
                 emitConnectionWithoutCompleting()
                     .doOnSubscribe {
@@ -44,7 +44,6 @@ class TestBluetoothDevice(macAddress: String, services: RxBleDeviceServices, rss
                 Observable.error(BleAlreadyConnectedException(macAddress))
             }
         }
-    }
 
     override fun getConnectionState(): RxBleConnection.RxBleConnectionState =
         observeConnectionStateChanges().blockingFirst()
@@ -52,13 +51,11 @@ class TestBluetoothDevice(macAddress: String, services: RxBleDeviceServices, rss
     override fun observeConnectionStateChanges(): Observable<RxBleConnection.RxBleConnectionState> =
         connectionStateBehaviorSubject.distinctUntilChanged()
 
-    override fun establishConnection(autoConnect: Boolean, operationTimeout: Timeout): Observable<RxBleConnection> {
-        return establishConnection(autoConnect)
-    }
+    override fun establishConnection(autoConnect: Boolean, operationTimeout: Timeout): Observable<RxBleConnection> =
+        establishConnection(autoConnect)
 
-    private fun emitConnectionWithoutCompleting(): Observable<RxBleConnection> {
-        return Observable.never<RxBleConnection>().startWith(connection)
-    }
+    private fun emitConnectionWithoutCompleting(): Observable<RxBleConnection> =
+        Observable.never<RxBleConnection>().startWith(connection)
 }
 
 class TestBluetoothConnection(services: RxBleDeviceServices, private val rssiList: List<Int>) :

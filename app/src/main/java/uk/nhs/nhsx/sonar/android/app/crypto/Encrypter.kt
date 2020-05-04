@@ -22,9 +22,8 @@ class Encrypter @Inject constructor(
     private val keyStorage: PublicKeyStorage,
     private val ephemeralKeyProvider: EphemeralKeyProvider
 ) {
-    fun canEncrypt(): Boolean {
-        return keyStorage.providePublicKey() != null
-    }
+    fun canEncrypt(): Boolean =
+        keyStorage.providePublicKey() != null
 
     fun encrypt(
         encodedStartDate: ByteArray,

@@ -30,9 +30,12 @@ data class ContactEvent(
         const val TABLE_NAME = "contactEventsV2"
     }
 
-    override fun toString(): String {
-        return "ContactEvent(sonarid=$sonarId, rssiValues=${rssiValues.joinToString(",","[","]")}. rssiTimestamps=${rssiTimestamps.joinToString(",", "[", "]")}, timestamp=$timestamp"
-    }
+    override fun toString(): String =
+        "ContactEvent(sonarid=$sonarId, rssiValues=${rssiValues.joinToString(
+            ",",
+            "[",
+            "]"
+        )}. rssiTimestamps=${rssiTimestamps.joinToString(",", "[", "]")}, timestamp=$timestamp"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

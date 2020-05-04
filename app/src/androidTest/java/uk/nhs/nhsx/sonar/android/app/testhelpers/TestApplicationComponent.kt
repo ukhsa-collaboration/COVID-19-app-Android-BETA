@@ -78,13 +78,12 @@ class TestBluetoothModule(
 
     var simulateUnsupportedDevice = false
 
-    override fun provideDeviceDetection(): DeviceDetection {
-        return if (simulateUnsupportedDevice) {
+    override fun provideDeviceDetection(): DeviceDetection =
+        if (simulateUnsupportedDevice) {
             DeviceDetection(null, appContext.packageManager)
         } else {
             super.provideDeviceDetection()
         }
-    }
 
     fun reset() {
         simulateUnsupportedDevice = false

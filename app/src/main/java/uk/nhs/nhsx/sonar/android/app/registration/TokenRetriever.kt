@@ -18,8 +18,8 @@ interface TokenRetriever {
 }
 
 class FirebaseTokenRetriever @Inject constructor() : TokenRetriever {
-    override suspend fun retrieveToken(): Token {
-        return suspendCoroutine { cont ->
+    override suspend fun retrieveToken(): Token =
+        suspendCoroutine { cont ->
             FirebaseInstanceId.getInstance().instanceId
                 .addOnCompleteListener { task ->
                     try {
@@ -40,5 +40,4 @@ class FirebaseTokenRetriever @Inject constructor() : TokenRetriever {
                     }
                 }
         }
-    }
 }

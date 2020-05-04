@@ -113,8 +113,8 @@ class Scanner @Inject constructor(
         }
     }
 
-    private fun scan(): Disposable? {
-        return rxBleClient
+    private fun scan(): Disposable? =
+        rxBleClient
             .scanBleDevices(
                 settings,
                 coLocateBackgroundedIPhoneFilter,
@@ -127,7 +127,6 @@ class Scanner @Inject constructor(
                 },
                 ::onConnectionError
             )
-    }
 
     fun stop() {
         scanDisposable?.dispose()
@@ -183,15 +182,14 @@ class Scanner @Inject constructor(
         connection: RxBleConnection,
         txPower: Int,
         scope: CoroutineScope
-    ): Single<Event> {
-        return Single.zip(
+    ): Single<Event> =
+        Single.zip(
             connection.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID),
             connection.readRssi(),
             BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
                 Event(characteristicValue, rssi, txPower, scope, currentTimestampProvider())
             }
         )
-    }
 
     private fun onConnectionError(e: Throwable) {
         bleEvents.scanFailureEvent()

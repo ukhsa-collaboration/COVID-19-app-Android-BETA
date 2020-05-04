@@ -19,17 +19,16 @@ class PostCodeViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val viewState = MutableLiveData<PostCodeViewState>()
-    fun viewState(): LiveData<PostCodeViewState> {
-        return viewState
-    }
+    fun viewState(): LiveData<PostCodeViewState> =
+        viewState
 
     private val navigation = MutableLiveData<LiveDataEvent<PostCodeNavigation>>()
-    fun navigation(): LiveData<LiveDataEvent<PostCodeNavigation>> {
-        return navigation
-    }
+    fun navigation(): LiveData<LiveDataEvent<PostCodeNavigation>> =
+        navigation
 
     fun onContinue(postCode: String) {
         val postCodeUpperCased = postCode.toUpperCase(Locale.UK)
+
         if (postCodeRegex.matches(postCodeUpperCased)) {
             postCodeProvider.setPostCode(postCodeUpperCased)
             analytics.trackEvent(partialPostcodeProvided())

@@ -19,15 +19,14 @@ class SpinnerAdapter(context: Context) :
         setDropDownViewResource(R.layout.item_date_spinner)
     }
 
-    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return if (isVisibleItem(position)) {
+    override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View =
+        if (isVisibleItem(position)) {
             super.getDropDownView(position, convertView, parent)
         } else {
             View(context).apply {
                 visibility = View.GONE
             }
         }
-    }
 
     private fun isVisibleItem(position: Int) = position <= MAX_VISIBLE_POSITION
 

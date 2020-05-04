@@ -37,8 +37,8 @@ class RegistrationPactTest {
     val rule = InstantTaskExecutorRule()
 
     @Pact(consumer = "android_app")
-    fun pact(builder: PactDslWithProvider): RequestResponsePact {
-        return builder
+    fun pact(builder: PactDslWithProvider): RequestResponsePact =
+        builder
             .given("no existing registration")
             // request
             .uponReceiving("a registration request")
@@ -49,7 +49,6 @@ class RegistrationPactTest {
             .willRespondWith()
             .status(HttpStatus.SC_NO_CONTENT)
             .toPact()
-    }
 
     @Test
     @PactVerification
@@ -67,12 +66,11 @@ class RegistrationPactTest {
         assertThat(request.isSuccess).isTrue()
     }
 
-    private fun testQueue(): RequestQueue {
-        return RequestQueue(
+    private fun testQueue(): RequestQueue =
+        RequestQueue(
             NoCache(),
             BasicNetwork(HurlStack()),
             1,
             ExecutorDelivery(Executors.newSingleThreadExecutor())
         ).apply { start() }
-    }
 }

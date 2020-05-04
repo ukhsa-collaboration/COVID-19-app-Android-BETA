@@ -47,12 +47,11 @@ object UserStateFactory {
     private fun latest(a: DateTime, b: DateTime) =
         if (a.isAfter(b)) a else b
 
-    private fun isMoreThanSevenDays(symptomsDate: LocalDate, today: LocalDate): Boolean {
-        return !symptomsDate
+    private fun isMoreThanSevenDays(symptomsDate: LocalDate, today: LocalDate): Boolean =
+        !symptomsDate
             .atSevenAm()
             .plusDays(NO_DAYS_IN_RED)
             .isAfter(today.atSevenAm())
-    }
 
     private fun doesNotHaveTemperature(symptoms: Set<Symptom>): Boolean =
         Symptom.TEMPERATURE !in symptoms

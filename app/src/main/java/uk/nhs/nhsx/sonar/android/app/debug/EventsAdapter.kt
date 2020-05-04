@@ -89,10 +89,9 @@ class EventsAdapter :
 }
 
 class EventItemDiffCallback : DiffUtil.ItemCallback<ConnectedDevice>() {
-    override fun areItemsTheSame(oldItem: ConnectedDevice, newItem: ConnectedDevice) =
+    override fun areItemsTheSame(oldItem: ConnectedDevice, newItem: ConnectedDevice): Boolean =
         oldItem == newItem
 
-    override fun areContentsTheSame(oldItem: ConnectedDevice, newItem: ConnectedDevice): Boolean {
-        return oldItem == newItem
-    }
+    override fun areContentsTheSame(oldItem: ConnectedDevice, newItem: ConnectedDevice): Boolean =
+        oldItem == newItem
 }
