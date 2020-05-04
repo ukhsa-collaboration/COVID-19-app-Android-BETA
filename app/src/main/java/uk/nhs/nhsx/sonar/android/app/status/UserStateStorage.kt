@@ -23,7 +23,7 @@ class UserStateStorage @Inject constructor(context: Context) {
     fun get(): UserState =
         storage.getString(PREF_USER_STATE, null)
             ?.let { UserStateSerialization.deserialize(it) }
-            ?: DefaultState()
+            ?: DefaultState
 
     fun clear() {
         storage.edit { clear() }

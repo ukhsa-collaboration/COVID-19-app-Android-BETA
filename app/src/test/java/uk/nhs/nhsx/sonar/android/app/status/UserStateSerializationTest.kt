@@ -17,20 +17,18 @@ class UserStateSerializationTest {
 
     @Test
     fun `serialize default state`() {
-        val until = DateTime(1587241302261L, UTC)
-        val defaultState = DefaultState(until)
+        val defaultState = DefaultState
 
         assertThat(serialize(defaultState))
-            .isEqualTo("""{"type":"DefaultState","until":1587241302261}""")
+            .isEqualTo("""{"type":"DefaultState"}""")
     }
 
     @Test
     fun `serialize recovery state`() {
-        val until = DateTime(1587241302261L, UTC)
-        val defaultState = RecoveryState(until)
+        val defaultState = RecoveryState
 
         assertThat(serialize(defaultState))
-            .isEqualTo("""{"type":"RecoveryState","until":1587241302261}""")
+            .isEqualTo("""{"type":"RecoveryState"}""")
     }
 
     @Test
@@ -64,18 +62,26 @@ class UserStateSerializationTest {
 
     @Test
     fun `deserialize default state`() {
-        val until = DateTime(1587241302261L, UTC)
+        assertThat(deserialize("""{"type":"DefaultState"}"""))
+            .isEqualTo(DefaultState)
+    }
 
+    @Test
+    fun `deserialize default state - with legacy until timestamp`() {
         assertThat(deserialize("""{"until":1587241302261,"type":"DefaultState"}"""))
-            .isEqualTo(DefaultState(until))
+            .isEqualTo(DefaultState)
     }
 
     @Test
     fun `deserialize recovery state`() {
-        val until = DateTime(1587241302262L, UTC)
+        assertThat(deserialize("""{"type":"RecoveryState"}"""))
+            .isEqualTo(RecoveryState)
+    }
 
+    @Test
+    fun `deserialize recovery state - with legacy until timestamp`() {
         assertThat(deserialize("""{"until":1587241302262,"type":"RecoveryState"}"""))
-            .isEqualTo(RecoveryState(until))
+            .isEqualTo(RecoveryState)
     }
 
     @Test

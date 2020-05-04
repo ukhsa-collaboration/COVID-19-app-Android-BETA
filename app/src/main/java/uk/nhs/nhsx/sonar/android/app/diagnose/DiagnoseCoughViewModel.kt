@@ -43,8 +43,8 @@ class DiagnoseCoughViewModel @Inject constructor(private val userStateStorage: U
         val userState = when {
             hasTemperature and hasCough -> UserStateFactory.checkin(nonEmptySetOf(COUGH, TEMPERATURE))
             hasTemperature -> UserStateFactory.checkin(nonEmptySetOf(TEMPERATURE))
-            hasCough -> RecoveryState()
-            else -> DefaultState()
+            hasCough -> RecoveryState
+            else -> DefaultState
         }
         return updateState(userState)
     }

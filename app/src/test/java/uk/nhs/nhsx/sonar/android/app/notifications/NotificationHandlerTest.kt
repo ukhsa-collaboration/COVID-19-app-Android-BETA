@@ -67,7 +67,7 @@ class NotificationHandlerTest {
     @Test
     fun testOnMessageReceived_StatusUpdate() {
         val messageData = mapOf("status" to "POTENTIAL")
-        every { statusStorage.get() } returns DefaultState()
+        every { statusStorage.get() } returns DefaultState
 
         handler.handle(messageData)
 
@@ -109,7 +109,7 @@ class NotificationHandlerTest {
     @Test
     fun testOnMessageReceived_WithAcknowledgmentUrl() {
         every { ackDao.tryFind(any()) } returns null
-        every { statusStorage.get() } returns DefaultState()
+        every { statusStorage.get() } returns DefaultState
 
         val messageData =
             mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/100")

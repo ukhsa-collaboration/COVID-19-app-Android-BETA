@@ -67,7 +67,7 @@ class IsolateActivity : BaseActivity() {
             }
         }
 
-        follow_until.text = getString(R.string.follow_until, state.until.toUiFormat())
+        follow_until.text = getString(R.string.follow_until, state.until().toUiFormat())
 
         latest_advice_red.setOnClickListener {
             openUrl(URL_LATEST_ADVICE_RED)
@@ -107,7 +107,7 @@ class IsolateActivity : BaseActivity() {
         updateSymptomsDialog.behavior.isHideable = false
 
         updateSymptomsDialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {
-            userStateStorage.update(DefaultState())
+            userStateStorage.update(DefaultState)
             navigateTo(userStateStorage.get())
             updateSymptomsDialog.cancel()
         }

@@ -5,15 +5,21 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone.UTC
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 
 sealed class UserState {
-    abstract val until: DateTime
+    fun until(): DateTime? =
+        when (this) {
+            is DefaultState -> null
+            is RecoveryState -> null
+            is EmberState -> until
+            is RedState -> until
+            is CheckinState -> until
+        }
 
     fun hasExpired(): Boolean =
-        until.isBeforeNow
+        until()?.isBeforeNow == true
 
     fun isOk(): Boolean =
         this is DefaultState || this is RecoveryState
@@ -28,7 +34,7 @@ sealed class UserState {
         if (isOk()) UserStateFactory.ember() else null
 
     fun transitionIfExpired(): UserState? =
-        if (hasExpired()) DefaultState() else null
+        if (hasExpired()) DefaultState else null
 
     fun scheduleCheckInReminder(reminders: Reminders) =
         when {
@@ -44,11 +50,11 @@ sealed class UserState {
         }
 }
 
-data class DefaultState(override val until: DateTime = DateTime.now(UTC)) : UserState()
-data class RecoveryState(override val until: DateTime = DateTime.now(UTC)) : UserState()
-data class EmberState(override val until: DateTime) : UserState()
-data class RedState(override val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
-data class CheckinState(override val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
+object DefaultState : UserState()
+object RecoveryState : UserState()
+data class EmberState(val until: DateTime) : UserState()
+data class RedState(val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
+data class CheckinState(val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
 
 enum class Symptom {
     COUGH,

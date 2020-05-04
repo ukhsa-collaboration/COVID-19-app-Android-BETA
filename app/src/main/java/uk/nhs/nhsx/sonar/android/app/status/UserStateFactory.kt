@@ -21,7 +21,7 @@ object UserStateFactory {
         today: LocalDate = LocalDate.now()
     ): UserState =
         if (doesNotHaveTemperature(symptoms) && isMoreThanSevenDays(symptomsDate, today)) {
-            RecoveryState()
+            RecoveryState
         } else {
             red(symptomsDate, symptoms, today)
         }

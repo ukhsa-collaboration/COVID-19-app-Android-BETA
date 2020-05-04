@@ -22,7 +22,7 @@ class UserStateFactoryTest {
         val state = UserStateFactory.decide(today, nonEmptySetOf(COUGH), today)
 
         assertThat(state).isInstanceOf(RedState::class.java)
-        assertThat(state.until).isEqualTo(DateTime(2020, 4, 17, 7, 0).toDateTime(UTC))
+        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 17, 7, 0).toDateTime(UTC))
     }
 
     @Test
@@ -30,14 +30,14 @@ class UserStateFactoryTest {
         val state = UserStateFactory.decide(today.minusDays(1), nonEmptySetOf(COUGH), today)
 
         assertThat(state).isInstanceOf(RedState::class.java)
-        assertThat(state.until).isEqualTo(DateTime(2020, 4, 16, 7, 0).toDateTime(UTC))
+        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 16, 7, 0).toDateTime(UTC))
     }
 
     @Test
     fun `checkin state is valid until next day`() {
         val state = UserStateFactory.checkin(nonEmptySetOf(COUGH), today = today)
 
-        assertThat(state.until).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
+        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
     }
 
     @Test
@@ -52,7 +52,7 @@ class UserStateFactoryTest {
         val state = UserStateFactory.decide(today.minusDays(8), nonEmptySetOf(TEMPERATURE), today)
 
         assertThat(state).isInstanceOf(RedState::class.java)
-        assertThat(state.until).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
+        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
     }
 
     @Test
@@ -67,7 +67,7 @@ class UserStateFactoryTest {
         val state = UserStateFactory.decide(today.minusDays(7), nonEmptySetOf(TEMPERATURE), today)
 
         assertThat(state).isInstanceOf(RedState::class.java)
-        assertThat(state.until).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
+        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
     }
 
     @Test
@@ -81,6 +81,6 @@ class UserStateFactoryTest {
     fun `ember state is valid until 13 days after  today`() {
         val state = UserStateFactory.ember(today = today)
 
-        assertThat(state.until).isEqualTo(DateTime(2020, 4, 23, 7, 0).toDateTime(UTC))
+        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 23, 7, 0).toDateTime(UTC))
     }
 }

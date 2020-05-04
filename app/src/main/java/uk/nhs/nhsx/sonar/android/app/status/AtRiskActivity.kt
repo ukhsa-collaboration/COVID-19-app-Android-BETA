@@ -39,7 +39,7 @@ class AtRiskActivity : BaseActivity() {
         BluetoothService.start(this)
         setContentView(R.layout.activity_at_risk)
 
-        follow_until.text = getString(R.string.follow_until, userStateStorage.get().until.toUiFormat())
+        follow_until.text = getString(R.string.follow_until, userStateStorage.get().until().toUiFormat())
 
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)

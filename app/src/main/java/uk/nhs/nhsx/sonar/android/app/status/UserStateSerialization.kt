@@ -11,8 +11,10 @@ object UserStateSerialization {
     fun serialize(state: UserState): String =
         when (state) {
             is DefaultState -> jsonOf(
-                "type" to state.type(),
-                "until" to state.until.millis
+                "type" to state.type()
+            )
+            is RecoveryState -> jsonOf(
+                "type" to state.type()
             )
             is EmberState -> jsonOf(
                 "type" to state.type(),
@@ -28,27 +30,34 @@ object UserStateSerialization {
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.toString() }
             )
-            is RecoveryState -> jsonOf(
-                "type" to state.type(),
-                "until" to state.until.millis
-            )
         }
 
     fun deserialize(json: String): UserState? {
         val jsonObj = JSONObject(json)
-        val type = jsonObj.getString("type")
-        val until = DateTime(jsonObj.getLong("until"), DateTimeZone.UTC)
 
-        return when (type) {
-            "EmberState" -> EmberState(until)
-            "RedState" -> jsonObj.getSymptoms()?.let { RedState(until, it) }
-            "CheckinState" -> jsonObj.getSymptoms()?.let { CheckinState(until, it) }
-            "RecoveryState" -> RecoveryState(until)
-            else -> DefaultState(until)
+        return when (jsonObj.getString("type")) {
+            "EmberState" -> jsonObj.getEmberState()
+            "RedState" -> jsonObj.getRedState()
+            "CheckinState" -> jsonObj.getCheckinState()
+            "RecoveryState" -> RecoveryState
+            else -> DefaultState
         }
     }
 
-    private fun UserState.type() = javaClass.simpleName
+    private fun JSONObject.getEmberState() =
+        EmberState(getUntil())
+
+    private fun JSONObject.getRedState() =
+        getSymptoms()?.let { RedState(getUntil(), it) }
+
+    private fun JSONObject.getCheckinState() =
+        getSymptoms()?.let { CheckinState(getUntil(), it) }
+
+    private fun UserState.type() =
+        javaClass.simpleName
+
+    private fun JSONObject.getUntil(): DateTime =
+        DateTime(getLong("until"), DateTimeZone.UTC)
 
     private fun JSONObject.getSymptoms(): NonEmptySet<Symptom>? {
         val array = getJSONArray("symptoms")

@@ -230,7 +230,7 @@ class FlowTest {
     }
 
     fun testBluetoothInteractions() {
-        setUserState(DefaultState())
+        setUserState(DefaultState)
         setValidSonarIdAndSecretKeyAndPublicKey()
         setReferenceCode()
 
@@ -246,7 +246,7 @@ class FlowTest {
     }
 
     fun testReceivingStatusUpdateNotification() {
-        setUserState(DefaultState())
+        setUserState(DefaultState)
         setValidSonarId()
         setReferenceCode()
 
@@ -273,7 +273,7 @@ class FlowTest {
     }
 
     fun testLaunchWhenStateIsDefault() {
-        setUserState(DefaultState())
+        setUserState(DefaultState)
         setValidSonarId()
         setReferenceCode()
 
@@ -427,7 +427,7 @@ class FlowTest {
     }
 
     fun testResumeWhenBluetoothIsDisabled() {
-        setUserState(DefaultState())
+        setUserState(DefaultState)
         setValidSonarId()
         setReferenceCode()
 
@@ -445,7 +445,7 @@ class FlowTest {
     }
 
     fun testResumeWhenLocationAccessIsDisabled() {
-        setUserState(DefaultState())
+        setUserState(DefaultState)
         setValidSonarId()
         setReferenceCode()
 
@@ -461,7 +461,7 @@ class FlowTest {
     }
 
     fun testResumeWhenLocationPermissionIsRevoked() {
-        setUserState(DefaultState())
+        setUserState(DefaultState)
         setValidSonarId()
         setReferenceCode()
 
@@ -485,7 +485,7 @@ class FlowTest {
     }
 
     fun testEnableBluetoothThroughNotification() {
-        setUserState(DefaultState())
+        setUserState(DefaultState)
         setValidSonarId()
         setReferenceCode()
 

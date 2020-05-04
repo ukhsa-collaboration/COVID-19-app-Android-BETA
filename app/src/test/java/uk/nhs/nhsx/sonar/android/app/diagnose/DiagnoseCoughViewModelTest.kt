@@ -49,7 +49,7 @@ class DiagnoseCoughViewModelTest {
 
     @Test
     fun `initial state is blue then final state is blue`() {
-        every { stateStorage.get() } returns DefaultState()
+        every { stateStorage.get() } returns DefaultState
         testSubject.update(hasTemperature = false, hasCough = false)
 
         verify {
@@ -59,7 +59,7 @@ class DiagnoseCoughViewModelTest {
 
     @Test
     fun `initial state is blue then final state is red`() {
-        every { stateStorage.get() } returns DefaultState()
+        every { stateStorage.get() } returns DefaultState
         testSubject.update(hasTemperature = true, hasCough = false)
 
         verify {
@@ -71,7 +71,7 @@ class DiagnoseCoughViewModelTest {
 
     @Test
     fun `initial state is red then final state Is blue`() {
-        val expected = DefaultState()
+        val expected = DefaultState
         every { stateStorage.get() } returns RedState(DateTime.now(UTC), nonEmptySetOf(COUGH))
         testSubject.update(hasTemperature = false, hasCough = false)
 
@@ -84,7 +84,7 @@ class DiagnoseCoughViewModelTest {
 
     @Test
     fun `initial state is red then final state is recovery`() {
-        val expected = RecoveryState()
+        val expected = RecoveryState
         every { stateStorage.get() } returns RedState(DateTime.now(UTC), nonEmptySetOf(COUGH))
         testSubject.update(hasTemperature = false, hasCough = true)
 

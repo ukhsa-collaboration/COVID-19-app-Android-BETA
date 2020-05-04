@@ -55,7 +55,7 @@ class UserStateTest {
 
     @Test
     fun `test DefaultState`() {
-        val defaultState = DefaultState()
+        val defaultState = DefaultState
 
         assertThat(defaultState.isOk()).isTrue()
         assertThat(defaultState.isAtRisk()).isFalse()
@@ -67,7 +67,7 @@ class UserStateTest {
     @Test
     fun `test DefaultState when not expired`() {
         val reminders = mockk<Reminders>(relaxUnitFun = true)
-        val notExpired = DefaultState(until = DateTime.now().plusSeconds(2))
+        val notExpired = DefaultState
 
         assertThat(notExpired.hasExpired()).isFalse()
         assertThat(notExpired.transitionIfExpired()).isNull()
@@ -79,7 +79,7 @@ class UserStateTest {
     @Test
     fun `test DefaultState when expired`() {
         val reminders = mockk<Reminders>()
-        val expired = DefaultState(until = DateTime.now().minusSeconds(1))
+        val expired = DefaultState
 
         assertThat(expired.hasExpired()).isTrue()
         assertThat(expired.transitionIfExpired()).isInstanceOf(DefaultState::class.java)
