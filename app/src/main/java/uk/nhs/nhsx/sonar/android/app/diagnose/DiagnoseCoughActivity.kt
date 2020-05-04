@@ -23,6 +23,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
@@ -97,7 +98,7 @@ class DiagnoseCoughActivity : BaseActivity() {
     private fun setQuestionnaireContent() {
         val state = userStateStorage.get()
 
-        if (state.shouldIsolate()) {
+        if (state.displayState() == ISOLATE) {
             progress.text = getString(R.string.progress_two_out_of_two)
             progress.contentDescription = getString(R.string.page2of2)
             confirm_diagnosis.text = getString(R.string.submit)

@@ -5,20 +5,29 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import android.app.Activity
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState.AT_RISK
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState.OK
 
 fun Activity.navigateTo(state: UserState) {
-    when {
-        state.isOk() && this !is OkActivity -> {
+    when (state.displayState()) {
+        OK -> {
+            if (this is OkActivity) return
+
             OkActivity.start(this)
             finish()
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
-        state.isAtRisk() && this !is AtRiskActivity -> {
+        AT_RISK -> {
+            if (this is AtRiskActivity) return
+
             AtRiskActivity.start(this)
             finish()
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
-        state.shouldIsolate() && this !is IsolateActivity -> {
+        ISOLATE -> {
+            if (this is IsolateActivity) return
+
             IsolateActivity.start(this)
             finish()
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

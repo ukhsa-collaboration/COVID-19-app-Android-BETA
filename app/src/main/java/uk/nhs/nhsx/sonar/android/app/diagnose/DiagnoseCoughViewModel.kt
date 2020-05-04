@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Close
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Review
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
@@ -32,8 +33,8 @@ class DiagnoseCoughViewModel @Inject constructor(private val userStateStorage: U
 
     fun update(hasTemperature: Boolean, hasCough: Boolean) {
         viewModelScope.launch {
-            nextStateLiveData.value = when {
-                prevState.shouldIsolate() -> handleSimplified(hasTemperature, hasCough)
+            nextStateLiveData.value = when (prevState.displayState()) {
+                ISOLATE -> handleSimplified(hasTemperature, hasCough)
                 else -> handleNormal(hasTemperature, hasCough)
             }
         }
