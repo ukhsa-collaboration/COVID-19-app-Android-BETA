@@ -35,7 +35,8 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: ${{ github.event.client_payload.ref }}
-        run: echo ::set-output name=commitsha::$(git rev-parse --short HEAD)
+
+      - run: echo ::set-output name=commitsha::$(git rev-parse --short HEAD)
 
       - name: Cache Gradle packages
         uses: actions/cache@v1
