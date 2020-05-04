@@ -41,6 +41,10 @@ To set a property refer to [official gradle documentation](https://docs.gradle.o
 If one of the tests is failing, and you need more output, 
 set slf4j logging to debug: `-Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG`
 
+### Are your pact tests failing with "problem accessing trust store"?
+
+This is a sign that you are registering encryption provider in a test but are not de-registering it after. Pact will then try to create a client using the Apache `SSLSocketFactory`. This will in turn try to use the encryption provider as the certificate trust store, resulting in the error you see. To fix, de-register the encryption provider after use in tests.
+
 ## Running tests on Firebase from your machine
 
 Make sure your APKs are built -
