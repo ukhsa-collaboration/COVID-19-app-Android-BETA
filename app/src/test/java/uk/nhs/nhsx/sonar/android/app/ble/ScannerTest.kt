@@ -33,7 +33,7 @@ import java.util.Base64
 import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
-class ScanTest {
+class ScannerTest {
 
     private val bleClient = mockk<RxBleClient>()
     private val scanResult = mockk<ScanResult>()
@@ -101,7 +101,7 @@ class ScanTest {
     fun connectionWithSingularDevice() {
         runBlocking {
 
-            val scan = Scan(
+            val scan = Scanner(
                 bleClient,
                 saveContactWorker,
                 currentTimestampProvider = { timestamp },

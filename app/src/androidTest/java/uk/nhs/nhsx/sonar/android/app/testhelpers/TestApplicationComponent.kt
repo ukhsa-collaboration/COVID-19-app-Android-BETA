@@ -16,7 +16,6 @@ import uk.nhs.nhsx.sonar.android.app.analytics.AnalyticEvent
 import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
-import uk.nhs.nhsx.sonar.android.app.ble.Scan
 import uk.nhs.nhsx.sonar.android.app.ble.Scanner
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
@@ -69,8 +68,8 @@ class TestBluetoothModule(
         rxBleClient: RxBleClient,
         saveContactWorker: SaveContactWorker,
         bleEvents: BleEvents
-    ): Scanner =
-        Scan(
+    ) =
+        Scanner(
             rxBleClient,
             saveContactWorker,
             bleEvents,

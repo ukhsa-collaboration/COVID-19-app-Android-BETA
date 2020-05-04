@@ -15,7 +15,6 @@ import dagger.Provides
 import uk.nhs.nhsx.sonar.android.app.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
-import uk.nhs.nhsx.sonar.android.app.ble.Scan
 import uk.nhs.nhsx.sonar.android.app.ble.Scanner
 import javax.inject.Named
 
@@ -46,7 +45,7 @@ open class BluetoothModule(
         saveContactWorker: SaveContactWorker,
         bleEvents: BleEvents
     ): Scanner =
-        Scan(
+        Scanner(
             rxBleClient,
             saveContactWorker,
             bleEvents,
