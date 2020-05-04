@@ -14,6 +14,7 @@ import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.ECPointUtil
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
 import org.joda.time.DateTime
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
@@ -65,16 +66,21 @@ class EncrypterTest {
     val ephemeralKeyProvider = mockk<EphemeralKeyProvider>()
     val keyStorage = mockk<KeyStorage>()
     val encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
+    val bouncyCastleProvider = org.bouncycastle.jce.provider.BouncyCastleProvider()
 
     @Before
     fun setUp() {
-        val bouncyCastleProvider = org.bouncycastle.jce.provider.BouncyCastleProvider()
         Security.insertProviderAt(bouncyCastleProvider, 1)
         every { keyStorage.providePublicKey() } returns loadPublicKey(exampleServerPubPEM)
         every { ephemeralKeyProvider.provideEphemeralKeys() } returns KeyPair(
             loadPublicKey(exampleLocalPubPEM),
             loadPrivateKey(exampleLocalPrivPEM)
         )
+    }
+
+    @After
+    fun tearDown() {
+        Security.removeProvider(bouncyCastleProvider.name)
     }
 
     @Test
