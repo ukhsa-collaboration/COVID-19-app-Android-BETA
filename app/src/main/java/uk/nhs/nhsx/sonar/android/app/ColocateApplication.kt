@@ -6,8 +6,6 @@ package uk.nhs.nhsx.sonar.android.app
 
 import android.app.Application
 import android.content.Context
-import android.widget.Toast
-import androidx.annotation.StringRes
 import androidx.work.ListenableWorker
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -131,6 +129,3 @@ val ListenableWorker.appComponent: ApplicationComponent
 
 val Context.appComponent: ApplicationComponent
     get() = (applicationContext as ColocateApplication).appComponent
-
-fun Context.showToast(@StringRes stringResource: Int, duration: Int = Toast.LENGTH_LONG) =
-    Toast.makeText(this, getString(stringResource), duration).show()
