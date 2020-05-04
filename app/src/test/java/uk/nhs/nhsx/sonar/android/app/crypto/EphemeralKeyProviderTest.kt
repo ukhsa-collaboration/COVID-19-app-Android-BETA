@@ -7,7 +7,9 @@ package uk.nhs.nhsx.sonar.android.app.crypto
 import org.assertj.core.api.Assertions.assertThat
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.ECPointUtil
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.security.KeyFactory
@@ -15,16 +17,18 @@ import java.security.Security
 import java.security.spec.ECPublicKeySpec
 
 class EphemeralKeyProviderTest {
-    init {
-        val bouncyCastleProvider = org.bouncycastle.jce.provider.BouncyCastleProvider()
-        Security.insertProviderAt(bouncyCastleProvider, 1)
-    }
 
-    lateinit var provider: EphemeralKeyProvider
+    private val bouncyCastleProvider = BouncyCastleProvider()
+    private val provider = EphemeralKeyProvider()
 
     @Before
     fun setUp() {
-        provider = EphemeralKeyProvider()
+        Security.insertProviderAt(bouncyCastleProvider, 1)
+    }
+
+    @After
+    fun tearDown() {
+        Security.removeProvider(bouncyCastleProvider.name)
     }
 
     @Test

@@ -13,9 +13,15 @@ import java.security.spec.ECGenParameterSpec
 import javax.inject.Inject
 
 class EphemeralKeyProvider @Inject constructor() {
-    private val generator: KeyPairGenerator = KeyPairGenerator.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME).also {
-        val parameterSpec = ECGenParameterSpec(EC_STANDARD_CURVE_NAME)
-        it.initialize(parameterSpec, SecureRandom())
+
+    // lazy evaluation here so that the security provider
+    // doesn't have to be registered until the first call to `provideEphemeralKeys`
+    // instead of requiring it at construction time
+    private val generator: KeyPairGenerator by lazy {
+        KeyPairGenerator.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME).also {
+            val parameterSpec = ECGenParameterSpec(EC_STANDARD_CURVE_NAME)
+            it.initialize(parameterSpec, SecureRandom())
+        }
     }
 
     fun provideEphemeralKeys(): KeyPair = generator.generateKeyPair()

@@ -12,6 +12,7 @@ import org.joda.time.DateTime
 import org.joda.time.Hours
 import org.joda.time.Minutes
 import org.joda.time.Seconds
+import org.junit.AfterClass
 import org.junit.Before
 import org.junit.BeforeClass
 import org.junit.Test
@@ -39,20 +40,28 @@ class BluetoothIdProviderTest {
         signer,
         currentDateProvider
     )
-    companion object {
 
-        @BeforeClass
+    companion object {
         @JvmStatic
+        @BeforeClass
         fun setUpBouncyCastle() {
             Security.insertProviderAt(BouncyCastleProvider(), 1)
         }
+
+        @JvmStatic
+        @AfterClass
+        fun removeBouncyCastle() {
+            Security.removeProvider(BouncyCastleProvider().name)
+        }
     }
+
     private val startTime = DateTime.parse("2020-04-24T14:00:00Z")
     private val publicKeyBytes = Base64.getDecoder()
         .decode("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu1f68MqDXbKeTqZMTHsOGToO4rKnPClXe/kE+oWqlaWZQv4J1E98cUNdpzF9JIFRPMCNdGOvTr4UB+BhQv9GWg==")
     private val countryCode = "GB".toByteArray()
 
-    private val secretKey = SecretKeySpec(Base64.getDecoder().decode("ddYTB7doP61hMnChfcWBVvvZsP5l5ypar5eeFQrBfY8="), "HMACSHA256")
+    private val secretKey =
+        SecretKeySpec(Base64.getDecoder().decode("ddYTB7doP61hMnChfcWBVvvZsP5l5ypar5eeFQrBfY8="), "HMACSHA256")
 
     @Before
     fun setUp() {

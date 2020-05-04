@@ -12,6 +12,7 @@ import org.bouncycastle.crypto.generators.KDF2BytesGenerator
 import org.bouncycastle.crypto.params.KDFParameters
 import org.bouncycastle.jce.ECNamedCurveTable
 import org.bouncycastle.jce.ECPointUtil
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.bouncycastle.jce.spec.ECNamedCurveSpec
 import org.joda.time.DateTime
 import org.junit.After
@@ -63,10 +64,10 @@ private val knownYCoordinate = "9F5054033AB40BECEEC90DEEA6D3D9F34572F123061BDC6A
 
 class EncrypterTest {
 
-    val ephemeralKeyProvider = mockk<EphemeralKeyProvider>()
-    val keyStorage = mockk<KeyStorage>()
-    val encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
-    val bouncyCastleProvider = org.bouncycastle.jce.provider.BouncyCastleProvider()
+    private val ephemeralKeyProvider = mockk<EphemeralKeyProvider>()
+    private val keyStorage = mockk<KeyStorage>()
+    private val encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
+    private val bouncyCastleProvider = BouncyCastleProvider()
 
     @Before
     fun setUp() {
