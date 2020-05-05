@@ -66,7 +66,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private fun updateStateAndNavigate() {
-        val state = UserStateFactory.decide(symptomsDate, symptoms)
+        val state = UserStateFactory.questionnaire(symptomsDate, symptoms)
         state.scheduleCheckInReminder(reminders)
         userStateStorage.update(state)
 

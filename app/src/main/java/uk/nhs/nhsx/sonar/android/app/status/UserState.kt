@@ -33,7 +33,7 @@ sealed class UserState {
 
     fun transitionOnContactAlert(): UserState? =
         when (displayState()) {
-            OK -> UserStateFactory.ember()
+            OK -> UserStateFactory.buildEmber()
             else -> null
         }
 

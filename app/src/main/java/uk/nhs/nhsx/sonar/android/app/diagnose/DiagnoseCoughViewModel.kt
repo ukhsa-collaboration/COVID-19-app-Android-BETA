@@ -10,10 +10,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Close
+import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Main
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Review
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
-import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
@@ -21,7 +20,6 @@ import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateFactory
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
-import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import javax.inject.Inject
 
 class DiagnoseCoughViewModel @Inject constructor(private val userStateStorage: UserStateStorage) :
@@ -37,35 +35,28 @@ class DiagnoseCoughViewModel @Inject constructor(private val userStateStorage: U
 
     fun update(hasTemperature: Boolean, hasCough: Boolean) {
         viewModelScope.launch {
+
+            val symptoms = symptoms(hasTemperature, hasCough)
+
             nextStateLiveData.value = when (prevState.displayState()) {
-                ISOLATE -> handleSimplified(hasTemperature, hasCough)
-                else -> handleNormal(hasTemperature, hasCough)
+                ISOLATE -> Main(updateState(symptoms))
+                else -> {
+                    if (symptoms.isEmpty()) Close else Review(NonEmptySet.create(symptoms)!!)
+                }
             }
         }
     }
 
-    private fun handleSimplified(hasTemperature: Boolean, hasCough: Boolean): StateResult {
-        val userState = when {
-            hasTemperature and hasCough -> UserStateFactory.checkin(nonEmptySetOf(COUGH, TEMPERATURE))
-            hasTemperature -> UserStateFactory.checkin(nonEmptySetOf(TEMPERATURE))
-            hasCough -> RecoveryState
-            else -> DefaultState
-        }
-        return updateState(userState)
-    }
-
-    private fun handleNormal(hasTemperature: Boolean, hasCough: Boolean): StateResult =
-        when {
-            hasTemperature and hasCough -> Review(nonEmptySetOf(TEMPERATURE, COUGH))
-            hasTemperature -> Review(nonEmptySetOf(TEMPERATURE))
-            hasCough -> Review(nonEmptySetOf(COUGH))
-            else -> Close
+    private fun updateState(symptoms: Set<Symptom>): UserState =
+        UserStateFactory.checkinQuestionnaire(symptoms).also {
+            userStateStorage.update(it)
         }
 
-    private fun updateState(newState: UserState): StateResult {
-        userStateStorage.update(newState)
-        return StateResult.Main(newState)
-    }
+    private fun symptoms(hasTemperature: Boolean, hasCough: Boolean): Set<Symptom> =
+        listOfNotNull(
+            if (hasTemperature) TEMPERATURE else null,
+            if (hasCough) COUGH else null
+        ).toSet()
 }
 
 sealed class StateResult {

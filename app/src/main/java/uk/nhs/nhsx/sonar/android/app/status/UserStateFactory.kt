@@ -15,7 +15,7 @@ object UserStateFactory {
     private const val NO_DAYS_IN_RED = 7
     private const val NO_DAYS_IN_EMBER = 14
 
-    fun decide(
+    fun questionnaire(
         symptomsDate: LocalDate,
         symptoms: NonEmptySet<Symptom>,
         today: LocalDate = LocalDate.now()
@@ -23,16 +23,26 @@ object UserStateFactory {
         if (doesNotHaveTemperature(symptoms) && isMoreThanSevenDays(symptomsDate, today)) {
             RecoveryState
         } else {
-            red(symptomsDate, symptoms, today)
+            buildRed(symptomsDate, symptoms, today)
         }
 
-    fun checkin(symptoms: NonEmptySet<Symptom>, today: LocalDate = LocalDate.now()): CheckinState =
-        CheckinState(today.after(1).day().toUtc(), symptoms)
+    fun checkinQuestionnaire(
+        symptoms: Set<Symptom>,
+        today: LocalDate = LocalDate.now()
+    ): UserState =
+        when {
+            hasTemperature(symptoms) -> buildCheckin(NonEmptySet.create(symptoms)!!, today)
+            hasCough(symptoms) -> RecoveryState
+            else -> DefaultState
+        }
 
-    fun ember(today: LocalDate = LocalDate.now()): EmberState =
+    fun buildEmber(today: LocalDate = LocalDate.now()): EmberState =
         EmberState(today.after(NO_DAYS_IN_EMBER - 1).days().toUtc())
 
-    private fun red(
+    private fun buildCheckin(symptoms: NonEmptySet<Symptom>, today: LocalDate = LocalDate.now()): CheckinState =
+        CheckinState(today.after(1).day().toUtc(), symptoms)
+
+    private fun buildRed(
         symptomsDate: LocalDate,
         symptoms: NonEmptySet<Symptom>,
         today: LocalDate = LocalDate.now()
@@ -54,7 +64,13 @@ object UserStateFactory {
             .isAfter(today.atSevenAm())
 
     private fun doesNotHaveTemperature(symptoms: Set<Symptom>): Boolean =
-        Symptom.TEMPERATURE !in symptoms
+        !hasTemperature(symptoms)
+
+    private fun hasTemperature(symptoms: Set<Symptom>): Boolean =
+        Symptom.TEMPERATURE in symptoms
+
+    private fun hasCough(symptoms: Set<Symptom>): Boolean =
+        Symptom.COUGH in symptoms
 
     private fun LocalDate.atSevenAm(): DateTime =
         toDateTime(LocalTime.parse(SEVEN_AM))
