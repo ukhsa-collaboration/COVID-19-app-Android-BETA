@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.http
 import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Failed
 import uk.nhs.nhsx.sonar.android.app.http.Promise.State.InProgress
 import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Succeeded
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.suspendCoroutine
 
 class Promise<T : Any?> private constructor() {
@@ -38,12 +39,12 @@ class Promise<T : Any?> private constructor() {
             }
 
     private class Callback<U : Any?>(val f: (U) -> Unit) {
-        private var triggered = false
+        private val triggered = AtomicBoolean(false)
 
         fun trigger(value: U) {
-            if (triggered) return
-            triggered = true
-            f(value)
+            if (triggered.compareAndSet(false, true)) {
+                f(value)
+            }
         }
     }
 
