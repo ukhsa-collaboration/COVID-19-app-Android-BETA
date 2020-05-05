@@ -26,8 +26,8 @@ import org.awaitility.kotlin.until
 import org.awaitility.kotlin.untilNotNull
 import org.joda.time.DateTime
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.SonarApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
+import uk.nhs.nhsx.sonar.android.app.SonarApplication
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 import uk.nhs.nhsx.sonar.android.app.crypto.encodeAsSecondsSinceEpoch
@@ -38,8 +38,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorkLauncher.Companion.REFERENCE_CODE_WORK
-import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.PUBLIC_KEY
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.REFERENCE_CODE
@@ -344,7 +342,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun verifyReceivedProximityRequest() {
-        var lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
+        val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
         assertThat(lastRequest?.path).isEqualTo("/api/residents/$RESIDENT_ID")
@@ -448,10 +446,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         testBluetoothModule.reset()
         testLocationHelper.reset()
 
-        WorkManager.getInstance(app).let {
-            it.cancelUniqueWork(REGISTRATION_WORK)
-            it.cancelUniqueWork(REFERENCE_CODE_WORK)
-        }
+        WorkManager.getInstance(app).cancelAllWork()
         resetTestMockServer()
     }
 }

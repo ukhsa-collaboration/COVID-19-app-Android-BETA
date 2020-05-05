@@ -240,4 +240,6 @@
     <string name="cough_question_simplified">Do you still have a continuous cough?</string>
     <string name="temperature_question_simplified">Do you still have a high temperature?</string>
     <string name="more_information">More information</string>
+    <string name="submit_confirmation">I confirm that the information I have entered is accurate</string>
+    <string name="please_confirm_the_information">Please confirm that the information you have entered is accurate</string>
 </resources>

@@ -18,6 +18,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -46,11 +47,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.AmberState
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserState
+import uk.nhs.nhsx.sonar.android.app.testhelpers.SetChecked.Companion.setChecked
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestAppComponent
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher
@@ -308,6 +310,7 @@ class FlowTest {
 
         checkIsolateActivityIsShown()
         checkDisplayOfReferenceCode()
+        checkMedicalWorkersInstructionsNotDisplayed()
     }
 
     fun testLaunchWhenStateIsRedAndExpired() {
@@ -585,8 +588,7 @@ class FlowTest {
     }
 
     private fun checkMedicalWorkersInstructionsNotDisplayed() {
-        val notDisplayed = matches(not(isDisplayed()))
-        onView(withId(R.id.medicalWorkersInstructions)).check(notDisplayed)
+        onView(withId(R.id.medicalWorkersInstructions)).check(doesNotExist())
     }
 
     private fun setUserState(state: UserState) {
@@ -707,6 +709,10 @@ class FlowTest {
 
         // Confirmation Step
         onView(withId(R.id.submit_events_info)).check(matches(isDisplayed()))
+        onView(withId(R.id.submit_diagnosis)).perform(click())
+
+        onView(withId(R.id.needConfirmationHint)).check(matches(isDisplayed()))
+        onView(withId(R.id.confirmationCheckbox)).perform(scrollTo(), setChecked(true))
         onView(withId(R.id.submit_diagnosis)).perform(click())
 
         // Red State

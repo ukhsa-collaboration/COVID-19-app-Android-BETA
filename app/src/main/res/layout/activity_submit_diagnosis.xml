@@ -4,12 +4,14 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include layout="@layout/symptom_banner" />
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/submit_diagnosis"
@@ -51,6 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="36dp"
+                android:layout_marginBottom="32dp"
                 android:orientation="vertical"
                 android:paddingHorizontal="16dp"
                 android:paddingBottom="8dp">
@@ -70,6 +73,33 @@
                     android:textSize="16sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/needConfirmationHint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/please_confirm_the_information"
+                android:textColor="@color/colorDanger"
+                android:textSize="16sp"
+                android:visibility="invisible"
+                tools:visibility="visible" />
+
+            <CheckBox
+                android:id="@+id/confirmationCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="top"
+                android:lineSpacingMultiplier="1.2"
+                android:minHeight="48dp"
+                android:paddingTop="4dp"
+                android:text="@string/submit_confirmation"
+                android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
 

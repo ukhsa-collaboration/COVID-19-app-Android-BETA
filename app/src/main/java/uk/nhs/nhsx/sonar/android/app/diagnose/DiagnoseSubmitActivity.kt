@@ -7,7 +7,17 @@ package uk.nhs.nhsx.sonar.android.app.diagnose
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View.FOCUS_DOWN
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
+import android.view.accessibility.AccessibilityEvent
+import androidx.core.content.ContextCompat
+import androidx.core.view.postDelayed
+import androidx.core.widget.CompoundButtonCompat
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
+import kotlinx.android.synthetic.main.activity_submit_diagnosis.confirmationCheckbox
+import kotlinx.android.synthetic.main.activity_submit_diagnosis.needConfirmationHint
+import kotlinx.android.synthetic.main.activity_submit_diagnosis.scrollView
 import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
@@ -51,7 +61,28 @@ class DiagnoseSubmitActivity : BaseActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
+        confirmationCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                CompoundButtonCompat.setButtonTintList(
+                    confirmationCheckbox,
+                    getColorStateList(R.color.checkbox_colors)
+                )
+                needConfirmationHint.visibility = INVISIBLE
+            }
+        }
+
         submit_diagnosis.setOnClickListener {
+            if (!confirmationCheckbox.isChecked) {
+                needConfirmationHint.visibility = VISIBLE
+                scrollView.fullScroll(FOCUS_DOWN)
+                needConfirmationHint.postDelayed(50) {
+                    needConfirmationHint.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                    val errorStateList = ContextCompat.getColorStateList(this, R.color.colorDanger)
+                    CompoundButtonCompat.setButtonTintList(confirmationCheckbox, errorStateList)
+                }
+                return@setOnClickListener
+            }
+            needConfirmationHint.visibility = INVISIBLE
             SubmitContactEventsWorker.schedule(this, symptomsDate)
             updateStateAndNavigate()
         }
