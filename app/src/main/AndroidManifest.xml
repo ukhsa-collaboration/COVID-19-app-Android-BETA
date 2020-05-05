@@ -71,6 +71,7 @@
         <activity android:name=".edgecases.ReEnableLocationActivity" />
         <activity android:name=".edgecases.DeviceNotSupportedActivity" />
         <activity android:name=".diagnose.DiagnoseSubmitActivity" />
+        <activity android:name=".edgecases.TabletNotSupportedActivity" />
 
         <service
             android:name=".ble.BluetoothService"

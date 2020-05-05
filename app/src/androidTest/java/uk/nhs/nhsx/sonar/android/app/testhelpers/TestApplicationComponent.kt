@@ -4,6 +4,7 @@
 
 package uk.nhs.nhsx.sonar.android.app.testhelpers
 
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import com.polidea.rxandroidble2.RxBleClient
 import dagger.Component
@@ -78,15 +79,19 @@ class TestBluetoothModule(
 
     var simulateUnsupportedDevice = false
 
+    var simulateTablet = false
+
     override fun provideDeviceDetection(): DeviceDetection =
-        if (simulateUnsupportedDevice) {
-            DeviceDetection(null, appContext.packageManager)
+        if (simulateUnsupportedDevice || simulateTablet) {
+            val adapter = if (simulateUnsupportedDevice) null else BluetoothAdapter.getDefaultAdapter()
+            DeviceDetection(adapter, appContext, simulateTablet)
         } else {
             super.provideDeviceDetection()
         }
 
     fun reset() {
         simulateUnsupportedDevice = false
+        simulateTablet = false
     }
 }
 

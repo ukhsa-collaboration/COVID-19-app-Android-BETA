@@ -37,7 +37,7 @@ open class BluetoothModule(
 
     @Provides
     open fun provideDeviceDetection(): DeviceDetection =
-        DeviceDetection(BluetoothAdapter.getDefaultAdapter(), applicationContext.packageManager)
+        DeviceDetection(BluetoothAdapter.getDefaultAdapter(), applicationContext)
 
     @Provides
     open fun provideScanner(

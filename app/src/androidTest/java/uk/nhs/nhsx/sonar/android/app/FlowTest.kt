@@ -103,6 +103,7 @@ class FlowTest {
         val tests = listOf(
             ::testUnsupportedDevice,
             ::testUnsupportedDeviceOnThePermissionScreen,
+            ::testTabletNotSupported,
             ::testRegistration,
             ::testRegistrationRetry,
             ::testBluetoothInteractions,
@@ -133,6 +134,14 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkViewHasText(R.id.edgeCaseTitle, R.string.device_not_supported_title)
+    }
+
+    fun testTabletNotSupported() {
+        testAppContext.simulateTablet()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkViewHasText(R.id.edgeCaseTitle, R.string.tablet_support_title)
     }
 
     fun testUnsupportedDeviceOnThePermissionScreen() {

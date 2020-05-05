@@ -54,3 +54,5 @@ val Int.dpToPx: Int
 
 val Int.pxToDp: Int
     get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+fun Context.smallestScreenWidth(): Int = resources.configuration.smallestScreenWidthDp

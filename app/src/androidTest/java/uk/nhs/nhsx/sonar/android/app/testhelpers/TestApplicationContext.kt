@@ -409,6 +409,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         testBluetoothModule.simulateUnsupportedDevice = true
     }
 
+    fun simulateTablet() {
+        testBluetoothModule.simulateTablet = true
+    }
+
     fun disableLocationAccess() {
         testLocationHelper.locationEnabled = false
         app.sendBroadcast(Intent(testLocationHelper.providerChangedIntentAction))

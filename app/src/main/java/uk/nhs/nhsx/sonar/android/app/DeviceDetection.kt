@@ -5,12 +5,14 @@
 package uk.nhs.nhsx.sonar.android.app
 
 import android.bluetooth.BluetoothAdapter
-import android.content.pm.PackageManager
+import android.content.Context
 import android.content.pm.PackageManager.FEATURE_BLUETOOTH_LE
+import uk.nhs.nhsx.sonar.android.app.util.smallestScreenWidth
 
 class DeviceDetection(
     private val bluetoothAdapter: BluetoothAdapter?,
-    private val packageManager: PackageManager
+    private val context: Context,
+    private val simulateTablet: Boolean = false
 ) {
 
     // TODO: re-consider this condition after we understand how devices advertise
@@ -26,6 +28,13 @@ class DeviceDetection(
     // and if they scan correctly
 
     fun isUnsupported(): Boolean =
-        bluetoothAdapter == null || !packageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE) ||
+        bluetoothAdapter == null || !context.packageManager.hasSystemFeature(FEATURE_BLUETOOTH_LE) ||
             (bluetoothAdapter.isEnabled && bluetoothAdapter.bluetoothLeAdvertiser == null)
+
+    fun isTablet(): Boolean =
+        simulateTablet || context.smallestScreenWidth() >= TABLET_MINIMUM_SCREEN_WIDTH
+
+    companion object {
+        const val TABLET_MINIMUM_SCREEN_WIDTH = 600
+    }
 }
