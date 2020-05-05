@@ -25,7 +25,7 @@ import org.junit.Rule
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.status.CheckinState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.EmberState
+import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
@@ -138,7 +138,7 @@ class DiagnoseCoughViewModelTest {
     @Test
     fun `initial state is Amber then final state Is red`() {
         RedState(DateTime.now(UTC).plusDays(7), nonEmptySetOf(TEMPERATURE))
-        every { stateStorage.get() } returns EmberState(DateTime.now(UTC))
+        every { stateStorage.get() } returns AmberState(DateTime.now(UTC))
         testSubject.update(hasTemperature = true, hasCough = false)
 
         verify {
@@ -148,7 +148,7 @@ class DiagnoseCoughViewModelTest {
 
     @Test
     fun `initial state is Amber then final state Is Amber`() {
-        every { stateStorage.get() } returns EmberState(DateTime.now(UTC))
+        every { stateStorage.get() } returns AmberState(DateTime.now(UTC))
         testSubject.update(hasTemperature = false, hasCough = false)
 
         verify {

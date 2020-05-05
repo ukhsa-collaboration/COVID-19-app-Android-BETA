@@ -13,7 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 object UserStateFactory {
     private const val SEVEN_AM = "7:00:00"
     private const val NO_DAYS_IN_RED = 7
-    private const val NO_DAYS_IN_EMBER = 14
+    private const val NO_DAYS_IN_AMBER = 14
 
     fun questionnaire(
         symptomsDate: LocalDate,
@@ -36,8 +36,8 @@ object UserStateFactory {
             else -> DefaultState
         }
 
-    fun buildEmber(today: LocalDate = LocalDate.now()): EmberState =
-        EmberState(today.after(NO_DAYS_IN_EMBER - 1).days().toUtc())
+    fun buildAmber(today: LocalDate = LocalDate.now()): AmberState =
+        AmberState(today.after(NO_DAYS_IN_AMBER - 1).days().toUtc())
 
     private fun buildCheckin(symptoms: NonEmptySet<Symptom>, today: LocalDate = LocalDate.now()): CheckinState =
         CheckinState(today.after(1).day().toUtc(), symptoms)

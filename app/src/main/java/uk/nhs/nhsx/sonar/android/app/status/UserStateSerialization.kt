@@ -20,7 +20,7 @@ object UserStateSerialization {
             is RecoveryState -> jsonOf(
                 "type" to state.type()
             )
-            is EmberState -> jsonOf(
+            is AmberState -> jsonOf(
                 "type" to state.type(),
                 "until" to state.until.millis
             )
@@ -40,7 +40,7 @@ object UserStateSerialization {
         val jsonObj = JSONObject(json)
 
         return when (jsonObj.getString("type")) {
-            "EmberState" -> jsonObj.getEmberState()
+            "AmberState", "EmberState" -> jsonObj.getAmberState()
             "RedState" -> jsonObj.getRedState()
             "CheckinState" -> jsonObj.getCheckinState()
             "RecoveryState" -> RecoveryState
@@ -48,8 +48,8 @@ object UserStateSerialization {
         }
     }
 
-    private fun JSONObject.getEmberState() =
-        EmberState(getUntil())
+    private fun JSONObject.getAmberState() =
+        AmberState(getUntil())
 
     private fun JSONObject.getRedState() =
         getSymptoms()?.let { RedState(getUntil(), it) }

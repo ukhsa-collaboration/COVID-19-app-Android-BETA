@@ -15,7 +15,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.EmberState
+import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
@@ -73,15 +73,15 @@ class NotificationHandlerTest {
 
         verifyAll {
             statusStorage.get()
-            statusStorage.update(any<EmberState>())
+            statusStorage.update(any<AmberState>())
             sender.send(10001, R.string.notification_title, R.string.notification_text, any())
         }
     }
 
     @Test
-    fun testOnMessageReceived_InEmberState() {
+    fun testOnMessageReceived_InAmberState() {
         val messageData = mapOf("status" to "POTENTIAL")
-        every { statusStorage.get() } returns EmberState(DateTime.now())
+        every { statusStorage.get() } returns AmberState(DateTime.now())
 
         handler.handle(messageData)
 
@@ -89,7 +89,7 @@ class NotificationHandlerTest {
             statusStorage.get()
             sender wasNot Called
         }
-        verify(exactly = 0) { statusStorage.update(any<EmberState>()) }
+        verify(exactly = 0) { statusStorage.update(any<AmberState>()) }
     }
 
     @Test
@@ -103,7 +103,7 @@ class NotificationHandlerTest {
             statusStorage.get()
             sender wasNot Called
         }
-        verify(exactly = 0) { statusStorage.update(any<EmberState>()) }
+        verify(exactly = 0) { statusStorage.update(any<AmberState>()) }
     }
 
     @Test
@@ -118,7 +118,7 @@ class NotificationHandlerTest {
 
         verifyAll {
             statusStorage.get()
-            statusStorage.update(any<EmberState>())
+            statusStorage.update(any<AmberState>())
             sender.send(10001, R.string.notification_title, R.string.notification_text, any())
             ackApi.send("https://api.example.com/ack/100")
             ackDao.tryFind("https://api.example.com/ack/100")

@@ -47,7 +47,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.EmberState
+import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserState
@@ -107,7 +107,7 @@ class FlowTest {
             ::testReceivingStatusUpdateNotification,
             ::testExplanation,
             ::testLaunchWhenStateIsDefault,
-            ::testLaunchWhenStateIsEmber,
+            ::testLaunchWhenStateIsAmber,
             ::testLaunchWhenStateIsRed,
             ::testLaunchWhenStateIsRedAndExpired,
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
@@ -283,8 +283,8 @@ class FlowTest {
         checkDisplayOfMedicalWorkersInstructions()
     }
 
-    fun testLaunchWhenStateIsEmber() {
-        setUserState(EmberState(DateTime.now(DateTimeZone.UTC).plusDays(1)))
+    fun testLaunchWhenStateIsAmber() {
+        setUserState(AmberState(DateTime.now(DateTimeZone.UTC).plusDays(1)))
         setValidSonarId()
         setReferenceCode()
 

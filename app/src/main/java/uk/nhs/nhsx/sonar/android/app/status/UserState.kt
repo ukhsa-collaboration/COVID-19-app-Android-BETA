@@ -16,7 +16,7 @@ sealed class UserState {
         when (this) {
             is DefaultState -> null
             is RecoveryState -> null
-            is EmberState -> until
+            is AmberState -> until
             is RedState -> until
             is CheckinState -> until
         }
@@ -27,13 +27,13 @@ sealed class UserState {
     fun displayState(): DisplayState =
         when (this) {
             is DefaultState, is RecoveryState -> OK
-            is EmberState -> AT_RISK
+            is AmberState -> AT_RISK
             is RedState, is CheckinState -> ISOLATE
         }
 
     fun transitionOnContactAlert(): UserState? =
         when (displayState()) {
-            OK -> UserStateFactory.buildEmber()
+            OK -> UserStateFactory.buildAmber()
             else -> null
         }
 
@@ -56,7 +56,7 @@ sealed class UserState {
 
 object DefaultState : UserState()
 object RecoveryState : UserState()
-data class EmberState(val until: DateTime) : UserState()
+data class AmberState(val until: DateTime) : UserState()
 data class RedState(val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
 data class CheckinState(val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
 

@@ -101,8 +101,8 @@ class UserStateFactoryTest {
     }
 
     @Test
-    fun `ember state is valid until 13 days after  today`() {
-        val state = UserStateFactory.buildEmber(today = today)
+    fun `amber state is valid until 13 days after  today`() {
+        val state = UserStateFactory.buildAmber(today = today)
 
         assertThat(state.until()).isEqualTo(DateTime(2020, 4, 23, 7, 0).toDateTime(UTC))
     }

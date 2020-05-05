@@ -17,36 +17,32 @@ class UserStateSerializationTest {
 
     @Test
     fun `serialize default state`() {
-        val defaultState = DefaultState
 
-        assertThat(serialize(defaultState))
+        assertThat(serialize(DefaultState))
             .isEqualTo("""{"type":"DefaultState"}""")
     }
 
     @Test
     fun `serialize recovery state`() {
-        val defaultState = RecoveryState
 
-        assertThat(serialize(defaultState))
+        assertThat(serialize(RecoveryState))
             .isEqualTo("""{"type":"RecoveryState"}""")
     }
 
     @Test
-    fun `serialize ember state`() {
+    fun `serialize amber state`() {
         val until = DateTime(1587241302262L, UTC)
-        val emberState = EmberState(until)
 
-        assertThat(serialize(emberState))
-            .isEqualTo("""{"type":"EmberState","until":1587241302262}""")
+        assertThat(serialize(AmberState(until)))
+            .isEqualTo("""{"type":"AmberState","until":1587241302262}""")
     }
 
     @Test
     fun `serialize red state`() {
         val until = DateTime(1587241302263L, UTC)
         val symptoms = nonEmptySetOf(Symptom.COUGH, Symptom.TEMPERATURE)
-        val redState = RedState(until, symptoms)
 
-        assertThat(serialize(redState))
+        assertThat(serialize(RedState(until, symptoms)))
             .isEqualTo("""{"type":"RedState","symptoms":["COUGH","TEMPERATURE"],"until":1587241302263}""")
     }
 
@@ -54,9 +50,8 @@ class UserStateSerializationTest {
     fun `serialize checkin state`() {
         val until = DateTime(1587241302263L, UTC)
         val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        val redState = CheckinState(until, symptoms)
 
-        assertThat(serialize(redState))
+        assertThat(serialize(CheckinState(until, symptoms)))
             .isEqualTo("""{"type":"CheckinState","symptoms":["TEMPERATURE"],"until":1587241302263}""")
     }
 
@@ -85,11 +80,19 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize ember state`() {
+    fun `deserialize ember(typo) state`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"EmberState"}"""))
-            .isEqualTo(EmberState(until))
+            .isEqualTo(AmberState(until))
+    }
+
+    @Test
+    fun `deserialize amber state`() {
+        val until = DateTime(1587241302262L, UTC)
+
+        assertThat(deserialize("""{"until":1587241302262,"type":"AmberState"}"""))
+            .isEqualTo(AmberState(until))
     }
 
     @Test
