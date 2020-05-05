@@ -28,7 +28,7 @@ import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import java.util.concurrent.Executors
 
 @ExperimentalCoroutinesApi
-class RegistrationPactTest {
+class RegistrationStartPactTest {
 
     @get:Rule
     val provider = PactProviderRule("registration_api", this)
@@ -52,7 +52,7 @@ class RegistrationPactTest {
 
     @Test
     @PactVerification
-    fun `verifies pact with resident api provider`() {
+    fun `verifies contract for starting a registration`() {
         val encryptionKeyStorage = mockk<KeyStorage>(relaxed = true)
         val httpClient = HttpClient(testQueue(), "some-header")
         val residentApi = ResidentApi(

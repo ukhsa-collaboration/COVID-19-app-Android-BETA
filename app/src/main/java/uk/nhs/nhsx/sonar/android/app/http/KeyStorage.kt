@@ -58,9 +58,9 @@ class SharedPreferencesPublicKeyStorage(
             .getString(PREF_PUBLIC_KEY, null)
             ?: return null
 
-        val ecKeyFactory = KeyFactory.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME)
         val decoded = Base64.decode(keyAsString, Base64.DEFAULT)
         val pubKeySpec = X509EncodedKeySpec(decoded)
+        val ecKeyFactory = KeyFactory.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME)
         return ecKeyFactory.generatePublic(pubKeySpec)
     }
 
