@@ -26,7 +26,7 @@ import org.awaitility.kotlin.until
 import org.awaitility.kotlin.untilNotNull
 import org.joda.time.DateTime
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.ColocateApplication
+import uk.nhs.nhsx.sonar.android.app.SonarApplication
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
@@ -41,10 +41,10 @@ import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorkLauncher.Companion.REFERENCE_CODE_WORK
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.PUBLIC_KEY
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.REFERENCE_CODE
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.RESIDENT_ID
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.SECRET_KEY
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.PUBLIC_KEY
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.REFERENCE_CODE
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.RESIDENT_ID
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.SECRET_KEY
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import java.nio.ByteBuffer
 import java.security.KeyStore
@@ -55,7 +55,7 @@ import kotlin.random.Random
 class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
     private val testActivity = rule.activity
-    val app = rule.activity.application as ColocateApplication
+    val app = rule.activity.application as SonarApplication
     val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     private val notificationService = NotificationService()
@@ -99,7 +99,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     )
 
     private val testLocationHelper = TestLocationHelper(AndroidLocationHelper(app))
-    private var testDispatcher = TestCoLocateServiceDispatcher()
+    private var testDispatcher = TestSonarServiceDispatcher()
     private var mockServer = MockWebServer()
 
     val component: TestAppComponent
@@ -430,7 +430,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     private fun resetTestMockServer() {
-        testDispatcher = TestCoLocateServiceDispatcher()
+        testDispatcher = TestSonarServiceDispatcher()
         mockServer.shutdown()
         mockServer = MockWebServer()
         mockServer.dispatcher = testDispatcher

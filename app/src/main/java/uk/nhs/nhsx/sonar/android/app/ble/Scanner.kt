@@ -44,7 +44,7 @@ class Scanner @Inject constructor(
     private var devices: MutableList<Pair<ScanResult, Int>> = mutableListOf()
     private val connections: MutableList<Disposable?> = mutableListOf()
 
-    private val coLocateServiceUuidFilter = ScanFilter.Builder()
+    private val sonarServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(SONAR_SERVICE_UUID))
         .build()
 
@@ -64,7 +64,7 @@ class Scanner @Inject constructor(
         The below filter is based on observation of the advertising packets produced by an iPhone running
         the app in the background.
        */
-    private val coLocateBackgroundedIPhoneFilter = ScanFilter.Builder()
+    private val sonarBackgroundedIPhoneFilter = ScanFilter.Builder()
         .setServiceUuid(null)
         .setManufacturerData(
             appleManufacturerId,
@@ -117,8 +117,8 @@ class Scanner @Inject constructor(
         rxBleClient
             .scanBleDevices(
                 settings,
-                coLocateBackgroundedIPhoneFilter,
-                coLocateServiceUuidFilter
+                sonarBackgroundedIPhoneFilter,
+                sonarServiceUuidFilter
             )
             .subscribe(
                 {

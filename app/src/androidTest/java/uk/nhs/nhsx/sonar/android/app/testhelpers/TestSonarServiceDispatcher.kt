@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 
-class TestCoLocateServiceDispatcher : Dispatcher() {
+class TestSonarServiceDispatcher : Dispatcher() {
 
     private var delay = 0L
     private var shouldSimulateError = false
@@ -44,7 +44,7 @@ class TestCoLocateServiceDispatcher : Dispatcher() {
                         setBody("""{"linkingId":"$REFERENCE_CODE"}""")
                     }
                     else -> MockResponse().apply {
-                        setBody("Unexpected request reached TestCoLocateServiceDispatcher class")
+                        setBody("Unexpected request reached TestSonarServiceDispatcher class")
                         setResponseCode(500)
                     }
                 }

@@ -34,7 +34,7 @@ import uk.nhs.nhsx.sonar.android.app.util.registerShakeDetector
 import java.security.KeyStore
 import java.security.Security
 
-class ColocateApplication : Application() {
+class SonarApplication : Application() {
 
     lateinit var appComponent: ApplicationComponent
 
@@ -125,7 +125,7 @@ class ColocateApplication : Application() {
 }
 
 val ListenableWorker.appComponent: ApplicationComponent
-    get() = (applicationContext as ColocateApplication).appComponent
+    get() = (applicationContext as SonarApplication).appComponent
 
 val Context.appComponent: ApplicationComponent
-    get() = (applicationContext as ColocateApplication).appComponent
+    get() = (applicationContext as SonarApplication).appComponent

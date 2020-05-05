@@ -53,8 +53,8 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestAppComponent
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestCoLocateServiceDispatcher.Companion.REFERENCE_CODE
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.REFERENCE_CODE
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import kotlin.test.fail
@@ -600,15 +600,15 @@ class FlowTest {
 
     private fun setValidSonarId() {
         val sonarIdProvider = component.getSonarIdProvider()
-        sonarIdProvider.setSonarId(TestCoLocateServiceDispatcher.RESIDENT_ID)
+        sonarIdProvider.setSonarId(TestSonarServiceDispatcher.RESIDENT_ID)
     }
 
     private fun setValidSonarIdAndSecretKeyAndPublicKey() {
         setValidSonarId()
 
         val keyStorage = component.getKeyStorage()
-        keyStorage.storeSecretKey(TestCoLocateServiceDispatcher.encodedSecretKey)
-        keyStorage.storeServerPublicKey(TestCoLocateServiceDispatcher.PUBLIC_KEY)
+        keyStorage.storeSecretKey(TestSonarServiceDispatcher.encodedSecretKey)
+        keyStorage.storeServerPublicKey(TestSonarServiceDispatcher.PUBLIC_KEY)
     }
 
     private fun setReferenceCode() {
