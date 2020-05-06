@@ -61,12 +61,14 @@ class DiagnoseSubmitActivity : BaseActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
+        val checkboxColors = ContextCompat.getColorStateList(this, R.color.checkbox_colors)
+        val checkboxErrorColors = ContextCompat.getColorStateList(this, R.color.colorDanger)
+        CompoundButtonCompat.setButtonTintList(confirmationCheckbox, checkboxColors)
+
         confirmationCheckbox.setOnCheckedChangeListener { _, isChecked ->
+            CompoundButtonCompat.setButtonTintList(confirmationCheckbox, checkboxColors)
+
             if (isChecked) {
-                CompoundButtonCompat.setButtonTintList(
-                    confirmationCheckbox,
-                    getColorStateList(R.color.checkbox_colors)
-                )
                 needConfirmationHint.visibility = INVISIBLE
             }
         }
@@ -77,8 +79,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
                 scrollView.fullScroll(FOCUS_DOWN)
                 needConfirmationHint.postDelayed(50) {
                     needConfirmationHint.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
-                    val errorStateList = ContextCompat.getColorStateList(this, R.color.colorDanger)
-                    CompoundButtonCompat.setButtonTintList(confirmationCheckbox, errorStateList)
+                    CompoundButtonCompat.setButtonTintList(confirmationCheckbox, checkboxErrorColors)
                 }
                 return@setOnClickListener
             }
