@@ -8,28 +8,11 @@ on:
 
 jobs:
 
-  pull_docker_image:
-    runs-on:
-      - self-hosted
-      - linux
-      - aws
-    steps:
-      - name: Login to Docker
-        run: |
-          docker login -u "${{secrets.docker_username}}" \
-          -p "${{secrets.docker_password}}" \
-          "nhsxpivotal.azurecr.io"
-      - name: Pull Image
-        run: |
-          docker pull nhsxpivotal.azurecr.io/sonar-colocate-services-image
-
   build:
-    needs: pull_docker_image
     runs-on:
       - self-hosted
       - linux
       - aws
-    container: nhsxpivotal.azurecr.io/sonar-colocate-services-image
 
     steps:
       - name: Checkout

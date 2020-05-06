@@ -16,7 +16,7 @@ $ export GITHUB_USER_TOKEN = <user>:token
 In order to publish a new build, you need to run `trigger.sh` script.
 
 Script needs two arguments:
- - First one is the publish track. valid values are `test` or `alpha`
+ - First one is the publish track. valid values are `test`, `staging` or `alpha`
  - Second one is a git ref. it can be a commit sha, tag or any other valid git ref.
 
 ### Publish Test Build (Using test endpoints)

@@ -11,8 +11,8 @@ validate "$ref" "ref"
 validate "$GITHUB_USER_TOKEN" "GITHUB_USER_TOKEN"	
 
 
-if [[ "$track" != "test" && "$track" != "alpha" ]]; then
-  >&2 echo "Invalid track. Select 'test' or 'alpha'"
+if [[ "$track" != "test" && "$track" != "staging" && "$track" != "alpha" ]]; then
+  >&2 echo "Invalid track. Select 'test', 'staging' or 'alpha'"
   exit 1
 fi
 
