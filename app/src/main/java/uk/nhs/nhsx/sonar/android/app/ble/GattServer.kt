@@ -99,9 +99,8 @@ class GattServer @Inject constructor(
             }
         }
 
-        server = bluetoothManager.openGattServer(context, callback).also {
-            it.addService(service)
-        }
+        server = bluetoothManager.openGattServer(context, callback)
+        server?.addService(service)
 
         gattWrapper = GattWrapper(
             server,
