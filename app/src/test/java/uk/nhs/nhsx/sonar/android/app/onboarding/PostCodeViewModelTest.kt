@@ -38,7 +38,7 @@ class PostCodeViewModelTest {
         }
         verify(exactly = 0) {
             navigationObserver.onChanged(any())
-            postCodeProvider.setPostCode(any())
+            postCodeProvider.set(any())
         }
     }
 
@@ -65,7 +65,7 @@ class PostCodeViewModelTest {
         verifyAll {
             observer.onChanged(PostCodeViewState.Valid)
             navigationObserver.onChanged(PostCodeNavigation.Permissions)
-            postCodeProvider.setPostCode(validPostCode)
+            postCodeProvider.set(validPostCode)
             analytics.trackEvent(partialPostcodeProvided())
         }
     }

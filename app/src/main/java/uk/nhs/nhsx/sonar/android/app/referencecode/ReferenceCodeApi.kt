@@ -21,7 +21,7 @@ class ReferenceCodeApi(
 
     fun generate(): Promise<ReferenceCode> {
         val secretKey = secretKeyStorage.provideSecretKey()
-        val sonarId = sonarIdProvider.getSonarId()
+        val sonarId = sonarIdProvider.get()
         val url = "$baseUrl/api/residents/$sonarId/linking-id"
 
         return httpClient

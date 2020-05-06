@@ -28,14 +28,14 @@ class NotificationHandler @Inject constructor(
             when {
                 isActivation(messageData) -> {
                     val activationCode = messageData.getValue(ACTIVATION_CODE_KEY)
-                    activationCodeProvider.setActivationCode(activationCode)
+                    activationCodeProvider.set(activationCode)
                     registrationManager.register()
                 }
                 isContactAlert(messageData) -> {
                     userStateStorage.get()
                         .let { UserStateTransitions.transitionOnContactAlert(it) }
                         ?.let {
-                            userStateStorage.update(it)
+                            userStateStorage.set(it)
                             showStatusNotification()
                         }
                 }

@@ -54,7 +54,7 @@ class SubmitContactEventsWorkTest {
         val symptomsDate = "2020-04-24T11:04:10Z"
         val saveDeferred = Deferred<Unit>()
 
-        every { sonarIdProvider.getSonarId() } returns residentId
+        every { sonarIdProvider.get() } returns residentId
         coEvery { coLocationDataProvider.getEvents() } returns events
         every { coLocationApi.save(any()) } returns saveDeferred.promise
         coEvery { coLocationDataProvider.clearData() } returns Unit
@@ -75,7 +75,7 @@ class SubmitContactEventsWorkTest {
         val symptomsDate = "2020-04-24T11:04:10Z"
         val saveDeferred = Deferred<Unit>()
 
-        every { sonarIdProvider.getSonarId() } returns residentId
+        every { sonarIdProvider.get() } returns residentId
         coEvery { coLocationDataProvider.getEvents() } returns events
         every { coLocationApi.save(any()) } returns saveDeferred.promise
 

@@ -56,6 +56,12 @@ class UserStateSerializationTest {
     }
 
     @Test
+    fun `deserialize null`() {
+        assertThat(deserialize(null))
+            .isEqualTo(DefaultState)
+    }
+
+    @Test
     fun `deserialize default state`() {
         assertThat(deserialize("""{"type":"DefaultState"}"""))
             .isEqualTo(DefaultState)
@@ -114,6 +120,6 @@ class UserStateSerializationTest {
     @Test
     fun `deserialize invalid red state`() {
         assertThat(deserialize("""{"until":1587241302262,"symptoms":[],"type":"RedState"}"""))
-            .isNull()
+            .isEqualTo(DefaultState)
     }
 }

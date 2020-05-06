@@ -69,22 +69,22 @@ class RegistrationUseCaseTest {
     fun setupFirstEntry() {
         Timber.plant(Timber.DebugTree())
 
-        every { sonarIdProvider.getSonarId() } returns ""
+        every { sonarIdProvider.get() } returns ""
         every { sonarIdProvider.hasProperSonarId() } returns false
-        every { sonarIdProvider.setSonarId(any()) } returns Unit
+        every { sonarIdProvider.set(any()) } returns Unit
         coEvery { tokenRetriever.retrieveToken() } returns FIREBASE_TOKEN
 
         val registrationDeferred = Deferred<Unit>()
         registrationDeferred.resolve(Unit)
         every { residentApi.register(FIREBASE_TOKEN) } returns registrationDeferred.promise
 
-        every { activationCodeProvider.getActivationCode() } returns ""
+        every { activationCodeProvider.get() } returns ""
 
         val confirmationDeferred = Deferred<Registration>()
         confirmationDeferred.resolve(Registration(RESIDENT_ID))
         every { residentApi.confirmDevice(confirmation) } returns confirmationDeferred.promise
 
-        every { postCodeProvider.getPostCode() } returns POST_CODE
+        every { postCodeProvider.get() } returns POST_CODE
     }
 
     @Test
@@ -98,7 +98,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun returnsSuccess() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        every { activationCodeProvider.get() } returns ACTIVATION_CODE
 
         val result = registrationUseCase.register(workDataOf())
 
@@ -115,7 +115,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun ifActivationCodeIsAbsent_RegistersDevice() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ""
+        every { activationCodeProvider.get() } returns ""
 
         registrationUseCase.register(workDataOf())
 
@@ -164,7 +164,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun ifActivationCodeIsPresentAndTokenRetrievalFailed() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        every { activationCodeProvider.get() } returns ACTIVATION_CODE
         coEvery { tokenRetriever.retrieveToken() } throws RuntimeException("Firebase is not available")
 
         val result = registrationUseCase.register(workDataOf())
@@ -175,7 +175,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun ifActivationCodeIsPresentRegistersResident() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        every { activationCodeProvider.get() } returns ACTIVATION_CODE
         registrationUseCase.register(workDataOf())
 
         verify { residentApi.confirmDevice(confirmation) }
@@ -183,7 +183,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun onResidentRegistrationClientErrorClearsActivationCode() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        every { activationCodeProvider.get() } returns ACTIVATION_CODE
         confirmDeviceFails(ClientError())
 
         registrationUseCase.register(workDataOf())
@@ -193,7 +193,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun onResidentRegistrationClientErrorReturnsError() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        every { activationCodeProvider.get() } returns ACTIVATION_CODE
         confirmDeviceFails(ClientError(buildNetworkResponse(statusCode = 400)))
 
         val result = registrationUseCase.register(workDataOf())
@@ -204,7 +204,7 @@ class RegistrationUseCaseTest {
 
     @Test
     fun onResidentRegistrationAllOtherErrors() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        every { activationCodeProvider.get() } returns ACTIVATION_CODE
         confirmDeviceFails(VolleyError(buildNetworkResponse(statusCode = 503)))
 
         val result = registrationUseCase.register(workDataOf())
@@ -218,16 +218,16 @@ class RegistrationUseCaseTest {
 
     @Test
     fun onSuccessSavesSonarId() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        every { activationCodeProvider.get() } returns ACTIVATION_CODE
 
         registrationUseCase.register(workDataOf())
 
-        verify { sonarIdProvider.setSonarId(RESIDENT_ID) }
+        verify { sonarIdProvider.set(RESIDENT_ID) }
     }
 
     @Test
     fun onSuccessSavesSendsSuccessfulRegistrationAnalyticEvent() = runBlockingTest {
-        every { activationCodeProvider.getActivationCode() } returns ACTIVATION_CODE
+        every { activationCodeProvider.get() } returns ACTIVATION_CODE
 
         registrationUseCase.register(workDataOf())
 

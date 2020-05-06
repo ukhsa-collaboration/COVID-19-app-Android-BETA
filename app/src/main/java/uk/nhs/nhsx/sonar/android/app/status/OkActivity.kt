@@ -127,7 +127,7 @@ class OkActivity : BaseActivity() {
         recoveryDialog.behavior.isHideable = false
 
         recoveryDialog.findViewById<Button>(R.id.ok)?.setOnClickListener {
-            userStateStorage.update(DefaultState)
+            userStateStorage.set(DefaultState)
             recoveryDialog.dismiss()
         }
         recoveryDialog.setOnCancelListener {

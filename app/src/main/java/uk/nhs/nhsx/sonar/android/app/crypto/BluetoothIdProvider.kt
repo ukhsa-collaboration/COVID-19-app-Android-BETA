@@ -9,7 +9,6 @@ import org.joda.time.DateTimeZone
 import org.joda.time.Period
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import java.lang.IllegalStateException
 import java.nio.ByteBuffer
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -65,7 +64,7 @@ class BluetoothIdProvider @Inject constructor(
         }
         val encodedStartDate = latestDate!!.withTimeAtStartOfDay().encodeAsSecondsSinceEpoch()
         val encodedEndDate = latestDate!!.startOfNextDay().encodeAsSecondsSinceEpoch()
-        val residentIdBytes = Identifier.fromString(sonarIdProvider.getSonarId()).asBytes
+        val residentIdBytes = Identifier.fromString(sonarIdProvider.get()).asBytes
         return encrypter.encrypt(encodedStartDate, encodedEndDate, residentIdBytes, countryCode)
     }
 

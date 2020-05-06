@@ -601,17 +601,17 @@ class FlowTest {
     }
 
     private fun setUserState(state: UserState) {
-        component.getUserStateStorage().update(state)
+        component.getUserStateStorage().set(state)
     }
 
     private fun setFinishedOnboarding() {
         val storage = component.getOnboardingStatusProvider()
-        storage.setOnboardingFinished(true)
+        storage.set(true)
     }
 
     private fun setValidSonarId() {
         val sonarIdProvider = component.getSonarIdProvider()
-        sonarIdProvider.setSonarId(TestSonarServiceDispatcher.RESIDENT_ID)
+        sonarIdProvider.set(TestSonarServiceDispatcher.RESIDENT_ID)
     }
 
     private fun setValidSonarIdAndSecretKeyAndPublicKey() {

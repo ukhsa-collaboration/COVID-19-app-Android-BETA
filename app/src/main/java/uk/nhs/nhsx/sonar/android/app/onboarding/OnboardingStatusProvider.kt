@@ -6,25 +6,19 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 
 import android.content.Context
 import androidx.core.content.edit
+import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceProvider
 import javax.inject.Inject
 
-class OnboardingStatusProvider @Inject constructor(context: Context) {
+class OnboardingStatusProvider @Inject constructor(context: Context) :
+    SharedPreferenceProvider<Boolean>(
+        context,
+        preferenceName = "onboarding",
+        preferenceKey = "ONBOARDING_FINISHED"
+    ) {
 
-    private val sharedPreferences by lazy {
-        context.getSharedPreferences("onboarding", Context.MODE_PRIVATE)
-    }
+    override fun get(): Boolean =
+        sharedPreferences.getBoolean(preferenceKey, false)
 
-    fun isOnboardingFinished(): Boolean =
-        sharedPreferences.getBoolean(KEY, false)
-
-    fun setOnboardingFinished(finished: Boolean) =
-        sharedPreferences.edit { putBoolean(KEY, finished) }
-
-    fun clear() {
-        sharedPreferences.edit { clear() }
-    }
-
-    companion object {
-        private const val KEY = "ONBOARDING_FINISHED"
-    }
+    override fun set(value: Boolean) =
+        sharedPreferences.edit { putBoolean(preferenceKey, value) }
 }

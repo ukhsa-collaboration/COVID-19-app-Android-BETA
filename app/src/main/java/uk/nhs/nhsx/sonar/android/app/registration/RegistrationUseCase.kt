@@ -39,7 +39,7 @@ class RegistrationUseCase @Inject constructor(
                 Timber.d("Already registered")
                 return RegistrationResult.Success
             }
-            val activationCode = activationCodeProvider.getActivationCode()
+            val activationCode = activationCodeProvider.get()
             if (activationCode.isEmpty()) {
                 if (inputData.getBoolean(ACTIVATION_CODE_TIMED_OUT, false)) {
                     analytics.trackEvent(registrationFailedWaitingForActivationNotification())
@@ -53,7 +53,7 @@ class RegistrationUseCase @Inject constructor(
             }
             val firebaseToken = getFirebaseToken()
             val sonarId =
-                registerResident(activationCode, firebaseToken, postCodeProvider.getPostCode())
+                registerResident(activationCode, firebaseToken, postCodeProvider.get())
             Timber.d("sonarId = $sonarId")
             storeSonarId(sonarId)
             Timber.d("sonarId stored")
@@ -104,7 +104,7 @@ class RegistrationUseCase @Inject constructor(
     }
 
     private fun storeSonarId(sonarId: String) {
-        sonarIdProvider.setSonarId(sonarId)
+        sonarIdProvider.set(sonarId)
     }
 
     private fun Exception.getStatusCode(): Int? =

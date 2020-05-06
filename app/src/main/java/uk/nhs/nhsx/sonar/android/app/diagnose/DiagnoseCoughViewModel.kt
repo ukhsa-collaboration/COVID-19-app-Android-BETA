@@ -50,7 +50,7 @@ class DiagnoseCoughViewModel @Inject constructor(private val userStateStorage: U
 
     private fun updateState(symptoms: Set<Symptom>): UserState =
         UserStateTransitions.diagnoseForCheckin(symptoms).also {
-            userStateStorage.update(it)
+            userStateStorage.set(it)
         }
 
     private fun symptoms(hasTemperature: Boolean, hasCough: Boolean): Set<Symptom> =

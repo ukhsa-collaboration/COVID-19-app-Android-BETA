@@ -10,13 +10,13 @@ import androidx.lifecycle.LiveData
 abstract class SharedPreferenceLiveData<T>(
     val sharedPrefs: SharedPreferences,
     val key: String,
-    val defValue: T
+    private val defaultValue: T
 ) : LiveData<T>() {
 
     private val preferenceChangeListener =
         SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == this.key) {
-                value = getValueFromPreferences(key, defValue)
+                value = getValueFromPreferences(key, defaultValue)
             }
         }
 
@@ -24,7 +24,7 @@ abstract class SharedPreferenceLiveData<T>(
 
     override fun onActive() {
         super.onActive()
-        value = getValueFromPreferences(key, defValue)
+        value = getValueFromPreferences(key, defaultValue)
         sharedPrefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener)
     }
 

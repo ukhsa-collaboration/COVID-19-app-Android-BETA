@@ -14,8 +14,8 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.AmberState
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
@@ -59,7 +59,7 @@ class NotificationHandlerTest {
         handler.handle(messageData)
 
         verify {
-            activationCodeProvider.setActivationCode("code-023")
+            activationCodeProvider.set("code-023")
             registrationManager.register()
         }
     }
@@ -73,7 +73,7 @@ class NotificationHandlerTest {
 
         verifyAll {
             statusStorage.get()
-            statusStorage.update(any<AmberState>())
+            statusStorage.set(any<AmberState>())
             sender.send(10001, R.string.notification_title, R.string.notification_text, any())
         }
     }
@@ -89,7 +89,7 @@ class NotificationHandlerTest {
             statusStorage.get()
             sender wasNot Called
         }
-        verify(exactly = 0) { statusStorage.update(any<AmberState>()) }
+        verify(exactly = 0) { statusStorage.set(any<AmberState>()) }
     }
 
     @Test
@@ -103,7 +103,7 @@ class NotificationHandlerTest {
             statusStorage.get()
             sender wasNot Called
         }
-        verify(exactly = 0) { statusStorage.update(any<AmberState>()) }
+        verify(exactly = 0) { statusStorage.set(any<AmberState>()) }
     }
 
     @Test
@@ -118,7 +118,7 @@ class NotificationHandlerTest {
 
         verifyAll {
             statusStorage.get()
-            statusStorage.update(any<AmberState>())
+            statusStorage.set(any<AmberState>())
             sender.send(10001, R.string.notification_title, R.string.notification_text, any())
             ackApi.send("https://api.example.com/ack/100")
             ackDao.tryFind("https://api.example.com/ack/100")

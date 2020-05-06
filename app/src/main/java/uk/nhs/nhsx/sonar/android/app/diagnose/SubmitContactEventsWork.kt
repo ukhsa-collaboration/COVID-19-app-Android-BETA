@@ -39,7 +39,7 @@ class SubmitContactEventsWork @Inject constructor(
             val symptomsTimestamp = data.getString(SYMPTOMS_DATE)!!
 
             val coLocationData = CoLocationData(
-                sonarId = sonarIdProvider.getSonarId(),
+                sonarId = sonarIdProvider.get(),
                 symptomsTimestamp = symptomsTimestamp,
                 contactEvents = coLocationDataProvider.getEvents()
             )

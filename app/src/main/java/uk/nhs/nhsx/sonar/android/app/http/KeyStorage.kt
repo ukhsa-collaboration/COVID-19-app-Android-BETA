@@ -8,6 +8,7 @@ import android.content.Context
 import android.security.keystore.KeyProperties
 import android.security.keystore.KeyProtection
 import android.util.Base64
+import androidx.core.content.edit
 import uk.nhs.nhsx.sonar.android.app.crypto.ELLIPTIC_CURVE
 import uk.nhs.nhsx.sonar.android.app.crypto.PROVIDER_NAME
 import java.security.KeyFactory
@@ -46,30 +47,26 @@ const val PREF_PUBLIC_KEY = "public_key"
 const val SECRET_KEY_PREFERENCE_FILENAME = "key"
 const val PREF_SECRET_KEY = "encryption_key"
 
-class SharedPreferencesPublicKeyStorage(
-    private val context: Context
-) : PublicKeyStorage {
-    override fun providePublicKey(): PublicKey? {
-        val keyAsString = context
-            .getSharedPreferences(
-                PUBLIC_KEY_FILENAME,
-                Context.MODE_PRIVATE
-            )
-            .getString(PREF_PUBLIC_KEY, null)
-            ?: return null
+class SharedPreferencesPublicKeyStorage(context: Context) : PublicKeyStorage {
 
-        val decoded = Base64.decode(keyAsString, Base64.DEFAULT)
-        val pubKeySpec = X509EncodedKeySpec(decoded)
-        val ecKeyFactory = KeyFactory.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME)
-        return ecKeyFactory.generatePublic(pubKeySpec)
-    }
-
-    override fun storeServerPublicKey(encodedKey: String) {
+    private val sharedPreferences by lazy {
         context.getSharedPreferences(PUBLIC_KEY_FILENAME, Context.MODE_PRIVATE)
-            .edit()
-            .putString(PREF_PUBLIC_KEY, encodedKey)
-            .apply()
     }
+
+    override fun providePublicKey(): PublicKey? =
+        sharedPreferences
+            .getString(PREF_PUBLIC_KEY, null)
+            ?.let { keyAsString ->
+                val decoded = keyAsString.base64Decode()
+                val pubKeySpec = X509EncodedKeySpec(decoded)
+                val ecKeyFactory = KeyFactory.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME)
+
+                ecKeyFactory.generatePublic(pubKeySpec)
+            }
+
+    override fun storeServerPublicKey(encodedKey: String) =
+        sharedPreferences
+            .edit { putString(PREF_PUBLIC_KEY, encodedKey) }
 }
 
 private const val APP_SECRET_KEY_ALIAS = "secretKey"
@@ -78,40 +75,48 @@ class AndroidSecretKeyStorage(
     private val keyStore: KeyStore,
     private val context: Context
 ) : SecretKeyStorage {
+
     override fun provideSecretKey(): SecretKey? {
-        val sharedPrefsKey = context
-            .getSharedPreferences(SECRET_KEY_PREFERENCE_FILENAME, Context.MODE_PRIVATE)
-            .getString(PREF_SECRET_KEY, null)
-        val keyStoreKey = keyStore.getKey(APP_SECRET_KEY_ALIAS, null) as SecretKey?
+        val sharedPrefsKey = getFromSharedPreferences()
+        val keyStoreKey = getFromKeyStore()
+        val hasAlreadyBeenMigrated = (sharedPrefsKey == null)
 
-        if (sharedPrefsKey == null) return keyStoreKey
+        if (hasAlreadyBeenMigrated) {
+            return keyStoreKey
+        }
 
+        return migrateSharedPreferencesToKeystore(keyStoreKey, sharedPrefsKey!!)
+    }
+
+    override fun storeSecretKey(encodedKey: String) {
+        val rawKey = encodedKey.base64Decode()
+        val secretKeyEntry = KeyStore.SecretKeyEntry(
+            SecretKeySpec(rawKey, KeyProperties.KEY_ALGORITHM_HMAC_SHA256)
+        )
+        keyStore.setEntry(APP_SECRET_KEY_ALIAS, secretKeyEntry, protectionParameters)
+    }
+
+    private val protectionParameters = KeyProtection.Builder(KeyProperties.PURPOSE_SIGN)
+        .setDigests(KeyProperties.DIGEST_SHA256)
+        .build()
+
+    private fun migrateSharedPreferencesToKeystore(keyStoreKey: SecretKey?, sharedPrefsKey: String): SecretKey? {
         context.deleteSharedPreferences(SECRET_KEY_PREFERENCE_FILENAME)
+
         if (keyStoreKey == null) {
             storeSecretKey(sharedPrefsKey)
-            return keyStore.getKey(APP_SECRET_KEY_ALIAS, null) as SecretKey?
+            return getFromKeyStore()
         }
         return keyStoreKey
     }
 
-    override fun storeSecretKey(encodedKey: String) {
-        val rawKey = Base64.decode(
-            encodedKey,
-            Base64.DEFAULT
-        )
-        keyStore.setEntry(
-            APP_SECRET_KEY_ALIAS,
-            KeyStore.SecretKeyEntry(
-                SecretKeySpec(
-                    rawKey,
-                    KeyProperties.KEY_ALGORITHM_HMAC_SHA256
-                )
-            ),
-            KeyProtection.Builder(KeyProperties.PURPOSE_SIGN)
-                .setDigests(
-                    KeyProperties.DIGEST_SHA256
-                )
-                .build()
-        )
-    }
+    private fun getFromSharedPreferences(): String? =
+        context
+            .getSharedPreferences(SECRET_KEY_PREFERENCE_FILENAME, Context.MODE_PRIVATE)
+            .getString(PREF_SECRET_KEY, null)
+
+    private fun getFromKeyStore(): SecretKey? =
+        keyStore.getKey(APP_SECRET_KEY_ALIAS, null) as SecretKey?
 }
+
+private fun String.base64Decode() = Base64.decode(this, Base64.DEFAULT)

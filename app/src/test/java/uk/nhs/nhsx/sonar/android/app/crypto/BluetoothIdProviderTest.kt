@@ -66,7 +66,7 @@ class BluetoothIdProviderTest {
     @Before
     fun setUp() {
         every { sonarIdProvider.hasProperSonarId() } returns true
-        every { sonarIdProvider.getSonarId() } returns "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+        every { sonarIdProvider.get() } returns "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
         val ecKeyFactory = KeyFactory.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME)
         every { keyStorage.providePublicKey() } returns ecKeyFactory.generatePublic(
             X509EncodedKeySpec(publicKeyBytes)

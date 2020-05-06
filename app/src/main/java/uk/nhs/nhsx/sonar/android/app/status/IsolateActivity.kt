@@ -109,7 +109,7 @@ class IsolateActivity : BaseActivity() {
         updateSymptomsDialog.behavior.isHideable = false
 
         updateSymptomsDialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {
-            userStateStorage.update(DefaultState)
+            userStateStorage.set(DefaultState)
             navigateTo(userStateStorage.get())
             updateSymptomsDialog.cancel()
         }

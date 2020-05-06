@@ -260,9 +260,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val keyStorage = component.getKeyStorage()
 
         await until {
-            idProvider.getSonarId().isNotEmpty()
+            idProvider.get().isNotEmpty()
         }
-        assertThat(idProvider.getSonarId()).isEqualTo(RESIDENT_ID)
+        assertThat(idProvider.get()).isEqualTo(RESIDENT_ID)
 
         await untilNotNull {
             keyStorage.provideSecretKey()
@@ -442,7 +442,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun reset() {
         component.apply {
             getAppDatabase().clearAllTables()
-            getOnboardingStatusProvider().setOnboardingFinished(false)
+            getOnboardingStatusProvider().set(false)
             getUserStateStorage().clear()
             getSonarIdProvider().clear()
             getActivationCodeProvider().clear()

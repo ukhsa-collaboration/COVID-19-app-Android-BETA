@@ -36,16 +36,21 @@ object UserStateSerialization {
             )
         }
 
-    fun deserialize(json: String): UserState? {
+    fun deserialize(json: String?): UserState {
+        if (json == null) return DefaultState
+
         val jsonObj = JSONObject(json)
 
-        return when (jsonObj.getString("type")) {
-            "AmberState", "EmberState" -> jsonObj.getAmberState()
-            "RedState" -> jsonObj.getRedState()
-            "CheckinState" -> jsonObj.getCheckinState()
-            "RecoveryState" -> RecoveryState
-            else -> DefaultState
-        }
+        val deserialized =
+            when (jsonObj.getString("type")) {
+                "AmberState", "EmberState" -> jsonObj.getAmberState()
+                "RedState" -> jsonObj.getRedState()
+                "CheckinState" -> jsonObj.getCheckinState()
+                "RecoveryState" -> RecoveryState
+                else -> DefaultState
+            }
+
+        return deserialized ?: DefaultState
     }
 
     private fun JSONObject.getAmberState() =

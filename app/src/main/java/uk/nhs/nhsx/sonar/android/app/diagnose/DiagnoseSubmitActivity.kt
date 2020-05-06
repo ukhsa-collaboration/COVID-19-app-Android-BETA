@@ -99,7 +99,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     private fun updateStateAndNavigate() {
         val state = UserStateTransitions.diagnose(symptomsDate, symptoms)
         state.scheduleCheckInReminder(reminders)
-        userStateStorage.update(state)
+        userStateStorage.set(state)
 
         Timber.d("Updated the state to: $state")
 

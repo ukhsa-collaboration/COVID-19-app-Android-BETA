@@ -57,20 +57,20 @@ class OkViewModelTest {
     @Test
     fun onStartSetsOnboardingFinished() {
         every { sonarIdProvider.hasProperSonarId() } returns false
-        every { onboardingStatusProvider.isOnboardingFinished() } returns false
+        every { onboardingStatusProvider.get() } returns false
 
         sut.onStart()
 
         verify(exactly = 1) {
-            onboardingStatusProvider.isOnboardingFinished()
-            onboardingStatusProvider.setOnboardingFinished(true)
+            onboardingStatusProvider.get()
+            onboardingStatusProvider.set(true)
             analytics.trackEvent(onboardingCompleted())
         }
     }
 
     @Test
     fun onStartWhenOnBoardingAlreadyFinished() {
-        every { onboardingStatusProvider.isOnboardingFinished() } returns true
+        every { onboardingStatusProvider.get() } returns true
 
         sut.onStart()
 
@@ -82,7 +82,7 @@ class OkViewModelTest {
     @Test
     fun onStartStartsRegistration() {
         every { sonarIdProvider.hasProperSonarId() } returns false
-        every { onboardingStatusProvider.isOnboardingFinished() } returns false
+        every { onboardingStatusProvider.get() } returns false
 
         sut.onStart()
 
@@ -94,7 +94,7 @@ class OkViewModelTest {
     @Test
     fun onStartIfAlreadyRegisteredSkipsRegistration() {
         every { sonarIdProvider.hasProperSonarId() } returns true
-        every { onboardingStatusProvider.isOnboardingFinished() } returns false
+        every { onboardingStatusProvider.get() } returns false
 
         sut.onStart()
 

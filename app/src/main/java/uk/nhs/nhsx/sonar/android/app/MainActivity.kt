@@ -55,7 +55,7 @@ class MainActivity : ColorInversionAwareActivity() {
                 navigateTo(userStateStorage.get())
                 return
             }
-            onboardingStatusProvider.isOnboardingFinished() -> {
+            onboardingStatusProvider.get() -> {
                 OkActivity.start(this)
                 finish()
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

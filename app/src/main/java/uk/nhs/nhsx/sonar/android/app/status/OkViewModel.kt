@@ -5,7 +5,6 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 import uk.nhs.nhsx.sonar.android.app.analytics.onboardingCompleted
@@ -14,6 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
+import uk.nhs.nhsx.sonar.android.app.util.map
 import javax.inject.Inject
 
 class OkViewModel @Inject constructor(
@@ -31,9 +31,9 @@ class OkViewModel @Inject constructor(
             }
 
     fun onStart() {
-        if (!onboardingStatusProvider.isOnboardingFinished()) {
+        if (!onboardingStatusProvider.get()) {
             analytics.trackEvent(onboardingCompleted())
-            onboardingStatusProvider.setOnboardingFinished(true)
+            onboardingStatusProvider.set(true)
         }
 
         if (!sonarIdProvider.hasProperSonarId()) {
@@ -41,9 +41,6 @@ class OkViewModel @Inject constructor(
         }
     }
 }
-
-private fun <T, U> LiveData<T>.map(function: (T) -> U): LiveData<U> =
-    Transformations.map(this, function)
 
 enum class RegistrationState {
     Complete,

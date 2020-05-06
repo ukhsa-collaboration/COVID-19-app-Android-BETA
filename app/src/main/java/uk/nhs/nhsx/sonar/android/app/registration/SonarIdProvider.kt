@@ -5,38 +5,26 @@
 package uk.nhs.nhsx.sonar.android.app.registration
 
 import android.content.Context
-import androidx.core.content.edit
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceStringLiveData
+import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceStringProvider
+import uk.nhs.nhsx.sonar.android.app.util.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SonarIdProvider @Inject constructor(context: Context) {
-
-    private val sharedPreferences by lazy {
-        context.getSharedPreferences("residentId", Context.MODE_PRIVATE)
-    }
-
-    fun getSonarId(): String =
-        sharedPreferences.getString(KEY, "")!!
+class SonarIdProvider @Inject constructor(context: Context) :
+    SharedPreferenceStringProvider(context, PREF_NAME, PREF_KEY) {
 
     fun hasProperSonarId(): Boolean =
-        getSonarId().isNotEmpty()
+        get().isNotEmpty()
 
-    fun setSonarId(sonarId: String) =
-        sharedPreferences.edit { putString(KEY, sonarId) }
-
-    fun clear() =
-        sharedPreferences.edit { clear() }
-
-    fun hasProperSonarIdLiveData(): LiveData<Boolean> {
-        val sonarIdLiveData = SharedPreferenceStringLiveData(sharedPreferences, KEY, "")
-        return Transformations.map(sonarIdLiveData) { sonarId -> sonarId.isNotEmpty() }
-    }
+    fun hasProperSonarIdLiveData(): LiveData<Boolean> =
+        SharedPreferenceStringLiveData(sharedPreferences, PREF_KEY, "")
+            .map { sonarId -> sonarId.isNotEmpty() }
 
     companion object {
-        private const val KEY = "RESIDENT_ID"
+        private const val PREF_NAME = "residentId"
+        private const val PREF_KEY = "RESIDENT_ID"
     }
 }

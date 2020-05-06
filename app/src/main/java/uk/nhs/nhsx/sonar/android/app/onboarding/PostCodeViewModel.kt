@@ -30,7 +30,7 @@ class PostCodeViewModel @Inject constructor(
         val postCodeUpperCased = postCode.toUpperCase(Locale.UK)
 
         if (postCodeRegex.matches(postCodeUpperCased)) {
-            postCodeProvider.setPostCode(postCodeUpperCased)
+            postCodeProvider.set(postCodeUpperCased)
             analytics.trackEvent(partialPostcodeProvided())
             viewState.value = PostCodeViewState.Valid
             navigation.value = LiveDataEvent(PostCodeNavigation.Permissions)

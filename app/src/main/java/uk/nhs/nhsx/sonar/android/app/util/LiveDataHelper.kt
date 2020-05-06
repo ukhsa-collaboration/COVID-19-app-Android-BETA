@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.util
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.Transformations
 
 /**
  * Used as a wrapper for data that is exposed via a LiveData that represents an event.
@@ -43,3 +44,6 @@ inline fun <T> LiveData<LiveDataEvent<T>>.observeEvent(
 inline fun <T> LiveData<LiveDataEvent<T>>.observeEventForever(crossinline onEventUnhandledContent: (T) -> Unit) {
     observeForever { it?.getContentIfNotHandled()?.let(onEventUnhandledContent) }
 }
+
+fun <T, U> LiveData<T>.map(function: (T) -> U): LiveData<U> =
+    Transformations.map(this, function)

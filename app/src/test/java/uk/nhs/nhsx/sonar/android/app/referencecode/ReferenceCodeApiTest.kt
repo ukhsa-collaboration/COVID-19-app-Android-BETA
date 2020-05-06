@@ -33,13 +33,13 @@ class ReferenceCodeApiTest {
     @Test
     fun test() {
         every { secretKeyStorage.provideSecretKey() } returns generateSignatureKey()
-        every { sonarIdProvider.getSonarId() } returns "some-sonar-id-101"
+        every { sonarIdProvider.get() } returns "some-sonar-id-101"
 
         val promise = api.generate()
 
         verifyAll {
             secretKeyStorage.provideSecretKey()
-            sonarIdProvider.getSonarId()
+            sonarIdProvider.get()
         }
         assertThat(promise.isInProgress).isTrue()
 
