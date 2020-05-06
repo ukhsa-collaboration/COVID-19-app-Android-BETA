@@ -12,6 +12,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'com.github.triplet.play'
+apply plugin: 'au.com.dius.pact'
 apply from: "$rootDir/ktlint.gradle"
 
 android {
@@ -98,6 +99,14 @@ android {
         }
 
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+}
+
+pact {
+    publish {
+        version = 'git rev-parse --short HEAD'.execute().text.trim()
+        pactBrokerUrl = findProperty("pactbroker.url") ?: 'http://localhost:9292'
+        tags = ['git tag --points-at HEAD'.execute().text.trim()]
     }
 }
 
