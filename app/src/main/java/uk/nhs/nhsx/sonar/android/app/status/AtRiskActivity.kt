@@ -22,7 +22,7 @@ import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDi
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_AMBER
 import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_AMBER
-import uk.nhs.nhsx.sonar.android.app.util.dpToPx
+import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
@@ -39,7 +39,8 @@ class AtRiskActivity : BaseActivity() {
         BluetoothService.start(this)
         setContentView(R.layout.activity_at_risk)
 
-        follow_until.text = getString(R.string.follow_until, userStateStorage.get().until().toUiFormat())
+        follow_until.text =
+            getString(R.string.follow_until, userStateStorage.get().until().toUiFormat())
 
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
@@ -74,12 +75,8 @@ class AtRiskActivity : BaseActivity() {
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
-        if (inversionModeEnabled) {
-            status_not_feeling_well.strokeWidth = 3.dpToPx
-            status_not_feeling_well.strokeColor = getColor(R.color.black)
-        } else {
-            status_not_feeling_well.strokeWidth = 0
-        }
+        status_not_feeling_well.cardColourInversion(inversionModeEnabled)
+        medical_workers_card.cardColourInversion(inversionModeEnabled)
     }
 
     companion object {

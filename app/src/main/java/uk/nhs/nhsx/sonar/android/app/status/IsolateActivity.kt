@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_isolate.book_test_card
 import kotlinx.android.synthetic.main.activity_isolate.follow_until
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
 import kotlinx.android.synthetic.main.activity_isolate.nhs_service
+import kotlinx.android.synthetic.main.activity_isolate.reference_link_card
 import kotlinx.android.synthetic.main.activity_isolate.symptomsTextView
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -29,6 +30,7 @@ import uk.nhs.nhsx.sonar.android.app.util.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_RED
 import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_RED
+import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
@@ -133,6 +135,11 @@ class IsolateActivity : BaseActivity() {
         } else {
             updateSymptomsDialog.dismiss()
         }
+    }
+
+    override fun handleInversion(inversionModeEnabled: Boolean) {
+        book_test_card.cardColourInversion(inversionModeEnabled)
+        reference_link_card.cardColourInversion(inversionModeEnabled)
     }
 
     override fun onPause() {

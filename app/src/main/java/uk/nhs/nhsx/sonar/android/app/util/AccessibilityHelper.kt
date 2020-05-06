@@ -11,7 +11,9 @@ import android.provider.Settings.SettingNotFoundException
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import androidx.annotation.StringRes
+import com.google.android.material.card.MaterialCardView
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.R
 
 fun Context.announce(@StringRes stringRes: Int) {
     val accessibilityEvent = AccessibilityEvent.obtain().apply {
@@ -56,3 +58,13 @@ val Int.pxToDp: Int
     get() = (this / Resources.getSystem().displayMetrics.density).toInt()
 
 fun Context.smallestScreenWidth(): Int = resources.configuration.smallestScreenWidthDp
+
+fun MaterialCardView.cardColourInversion(isOn: Boolean) {
+    when (isOn) {
+        true -> {
+            strokeWidth = 3.dpToPx
+            strokeColor = context.getColor(R.color.black)
+        }
+        false -> strokeWidth = 0
+    }
+}
