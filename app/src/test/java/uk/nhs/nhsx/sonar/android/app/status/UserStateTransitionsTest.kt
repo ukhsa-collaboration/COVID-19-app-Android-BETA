@@ -21,87 +21,78 @@ class UserStateTransitionsTest {
 
     private val today = LocalDate(2020, 4, 10)
 
-    @Test
-    fun `diagnose - when symptoms date is today, red state is valid until 7 days after today`() {
-        val state = diagnose(today, nonEmptySetOf(COUGH), today)
+    private val symptomsWithoutTemperature = nonEmptySetOf(COUGH)
+    private val symptomsWithTemperature = nonEmptySetOf(TEMPERATURE)
 
-        assertThat(state).isInstanceOf(RedState::class.java)
-        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 17, 7, 0).toDateTime(UTC))
+    @Test
+    fun `diagnose - when symptoms date is 7 days ago or more, and no temperature`() {
+        val `7 days ago or more` = today.minusDays(7)
+
+        val state = diagnose(DefaultState, `7 days ago or more`, symptomsWithoutTemperature, today)
+
+        assertThat(state).isEqualTo(RecoveryState)
     }
 
     @Test
-    fun `diagnose - when symptoms date is yesterday, red state is valid until 6 days after today`() {
-        val state = diagnose(today.minusDays(1), nonEmptySetOf(COUGH), today)
+    fun `diagnose - when symptoms date is 7 days ago or more, with temperature`() {
+        val `7 days ago or more` = today.minusDays(7)
+        val `7 days after symptoms` = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        assertThat(state).isInstanceOf(RedState::class.java)
-        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 16, 7, 0).toDateTime(UTC))
+        val state = diagnose(DefaultState, `7 days ago or more`, symptomsWithTemperature, today)
+
+        assertThat(state).isEqualTo(RedState(`7 days after symptoms`, symptomsWithTemperature))
     }
 
     @Test
-    fun `diagnose - when symptoms date is 8 days ago without temperature, state should be recovery`() {
-        val state = diagnose(today.minusDays(8), nonEmptySetOf(COUGH), today)
+    fun `diagnose - when symptoms date is less than 7 days ago, and no temperature`() {
+        val `less than 7 days ago` = today.minusDays(6)
+        val `7 days after symptoms` = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        assertThat(state).isInstanceOf(RecoveryState::class.java)
+        val state = diagnose(DefaultState, `less than 7 days ago`, symptomsWithoutTemperature, today)
+
+        assertThat(state).isEqualTo(RedState(`7 days after symptoms`, symptomsWithoutTemperature))
     }
 
     @Test
-    fun `diagnose - when symptoms date is 8 days ago with temperature, state should be red until next day`() {
-        val state = diagnose(today.minusDays(8), nonEmptySetOf(TEMPERATURE), today)
+    fun `diagnose - when symptoms date is less than 7 days ago, with temperature`() {
+        val `less than 7 days ago` = today.minusDays(6)
+        val `7 days after symptoms` = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        assertThat(state).isInstanceOf(RedState::class.java)
-        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
+        val state = diagnose(DefaultState, `less than 7 days ago`, symptomsWithTemperature, today)
+
+        assertThat(state).isEqualTo(RedState(`7 days after symptoms`, symptomsWithTemperature))
     }
 
     @Test
-    fun `diagnose - when symptoms date is 7 days ago without temperature, state should be recovery`() {
-        val state = diagnose(today.minusDays(7), nonEmptySetOf(COUGH), today)
+    fun `diagnoseForCheckin - with temperature`() {
+        val tomorrow = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        assertThat(state).isInstanceOf(RecoveryState::class.java)
+        val state = diagnoseForCheckin(setOf(TEMPERATURE), today)
+
+        assertThat(state).isEqualTo(CheckinState(tomorrow, nonEmptySetOf(TEMPERATURE)))
     }
 
     @Test
-    fun `diagnose - when symptoms date is 7 days ago with temperature, state should be red until next day`() {
-        val state = diagnose(today.minusDays(7), nonEmptySetOf(TEMPERATURE), today)
+    fun `diagnoseForCheckin - with cough and temperature`() {
+        val tomorrow = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        assertThat(state).isInstanceOf(RedState::class.java)
-        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
+        val state = diagnoseForCheckin(setOf(COUGH, TEMPERATURE), today)
+
+        assertThat(state).isEqualTo(CheckinState(tomorrow, nonEmptySetOf(COUGH, TEMPERATURE)))
     }
 
     @Test
-    fun `diagnose - when symptoms date is 6 days ago with temperature, state should be red`() {
-        val state = diagnose(today.minusDays(6), nonEmptySetOf(TEMPERATURE), today)
+    fun `diagnoseForCheckin - with cough`() {
+        val state = diagnoseForCheckin(setOf(COUGH), today)
 
-        assertThat(state).isInstanceOf(RedState::class.java)
+        assertThat(state).isEqualTo(RecoveryState)
     }
 
     @Test
-    fun `diagnoseForChecking - with temperature - state should be checkin until tomorrow`() {
-        val state = diagnoseForCheckin(nonEmptySetOf(TEMPERATURE), today = today)
+    fun `diagnoseForCheckin - with no symptoms`() {
+        val state = diagnoseForCheckin(emptySet(), today)
 
-        assertThat(state).isInstanceOf(CheckinState::class.java)
-        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
-    }
-
-    @Test
-    fun `diagnoseForChecking - with cough and temperature - state should be checkin until tomorrow`() {
-        val state = diagnoseForCheckin(setOf(COUGH, TEMPERATURE), today = today)
-
-        assertThat(state).isInstanceOf(CheckinState::class.java)
-        assertThat(state.until()).isEqualTo(DateTime(2020, 4, 11, 7, 0).toDateTime(UTC))
-    }
-
-    @Test
-    fun `diagnoseForChecking - with cough - state should be recovery`() {
-        val state = diagnoseForCheckin(setOf(COUGH), today = today)
-
-        assertThat(state).isInstanceOf(RecoveryState::class.java)
-    }
-
-    @Test
-    fun `diagnoseForChecking - with no symptoms - state should be default`() {
-        val state = diagnoseForCheckin(emptySet(), today = today)
-
-        assertThat(state).isInstanceOf(DefaultState::class.java)
+        assertThat(state).isEqualTo(DefaultState)
     }
 
     private val amberState = buildAmberState()
