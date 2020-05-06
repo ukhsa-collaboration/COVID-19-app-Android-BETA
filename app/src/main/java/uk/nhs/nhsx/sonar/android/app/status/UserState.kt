@@ -54,9 +54,11 @@ sealed class UserState {
 
     fun displayState(): DisplayState =
         when (this) {
-            is DefaultState, is RecoveryState -> OK
+            is DefaultState -> OK
+            is RecoveryState -> OK
             is AmberState -> AT_RISK
-            is RedState, is CheckinState -> ISOLATE
+            is RedState -> ISOLATE
+            is CheckinState -> ISOLATE
         }
 
     fun scheduleCheckInReminder(reminders: Reminders) =

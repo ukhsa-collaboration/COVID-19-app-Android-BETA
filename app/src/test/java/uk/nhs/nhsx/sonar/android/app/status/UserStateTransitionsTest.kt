@@ -13,7 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnose
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnoseForCheckin
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionIfExpired
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.expireAmberState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnContactAlert
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
@@ -122,15 +122,15 @@ class UserStateTransitionsTest {
     }
 
     @Test
-    fun `test transitionIfExpired`() {
-        assertThat(transitionIfExpired(DefaultState)).isNull()
-        assertThat(transitionIfExpired(RecoveryState)).isNull()
-        assertThat(transitionIfExpired(amberState)).isNull()
-        assertThat(transitionIfExpired(redState)).isNull()
-        assertThat(transitionIfExpired(checkinState)).isNull()
+    fun `test expireAmberState`() {
+        assertThat(expireAmberState(DefaultState)).isEqualTo(DefaultState)
+        assertThat(expireAmberState(RecoveryState)).isEqualTo(RecoveryState)
+        assertThat(expireAmberState(amberState)).isEqualTo(amberState)
+        assertThat(expireAmberState(redState)).isEqualTo(redState)
+        assertThat(expireAmberState(checkinState)).isEqualTo(checkinState)
+        assertThat(expireAmberState(expiredRedState)).isEqualTo(expiredRedState)
+        assertThat(expireAmberState(expiredCheckinState)).isEqualTo(expiredCheckinState)
 
-        assertThat(transitionIfExpired(expiredAmberState)).isEqualTo(DefaultState)
-        assertThat(transitionIfExpired(expiredRedState)).isEqualTo(DefaultState)
-        assertThat(transitionIfExpired(expiredCheckinState)).isEqualTo(DefaultState)
+        assertThat(expireAmberState(expiredAmberState)).isEqualTo(DefaultState)
     }
 }

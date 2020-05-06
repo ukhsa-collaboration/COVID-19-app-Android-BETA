@@ -20,7 +20,7 @@ fun DateTime?.toUiFormat(): String = this?.toString(STATE_UI_DATE) ?: "-"
 
 fun LocalDate.toUiSpinnerFormat(): String = toString(SPINNER_DATE_TIME_FORMAT)
 
-fun LocalDate.isMoreThan(days: Int, from: LocalDate): Boolean =
+fun LocalDate.isEarlierThan(days: Int, from: LocalDate): Boolean =
     !this
         .atSevenAm()
         .plusDays(days)

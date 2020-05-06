@@ -66,12 +66,12 @@ class AtRiskActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        userStateStorage.get()
-            .let { UserStateTransitions.transitionIfExpired(it) }
-            ?.let {
-                userStateStorage.update(it)
-                navigateTo(it)
-            }
+        val oldState = userStateStorage.get()
+        navigateTo(oldState)
+
+        val newState = UserStateTransitions.expireAmberState(oldState)
+        userStateStorage.set(newState)
+        navigateTo(newState)
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {

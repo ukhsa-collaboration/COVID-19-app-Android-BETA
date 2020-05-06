@@ -3,7 +3,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 import org.joda.time.LocalDate
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
-import uk.nhs.nhsx.sonar.android.app.util.isMoreThan
+import uk.nhs.nhsx.sonar.android.app.util.isEarlierThan
 
 object UserStateTransitions {
 
@@ -12,14 +12,10 @@ object UserStateTransitions {
         symptoms: NonEmptySet<Symptom>,
         today: LocalDate = LocalDate.now()
     ): UserState =
-        if (doesNotHaveTemperature(symptoms) && symptomsDate.isMoreThan(days = NO_DAYS_IN_RED, from = today)) {
+        if (doesNotHaveTemperature(symptoms) && symptomsDate.isEarlierThan(days = NO_DAYS_IN_RED, from = today)) {
             RecoveryState
         } else {
-            UserState.red(
-                symptomsDate,
-                symptoms,
-                today
-            )
+            UserState.red(symptomsDate, symptoms, today)
         }
 
     fun diagnoseForCheckin(
@@ -27,22 +23,26 @@ object UserStateTransitions {
         today: LocalDate = LocalDate.now()
     ): UserState =
         when {
-            hasTemperature(symptoms) -> UserState.checkin(
-                NonEmptySet.create(symptoms)!!,
-                today
-            )
-            hasCough(symptoms) -> RecoveryState
-            else -> DefaultState
+            hasTemperature(symptoms) ->
+                UserState.checkin(NonEmptySet.create(symptoms)!!, today)
+            hasCough(symptoms) ->
+                RecoveryState
+            else ->
+                DefaultState
         }
 
     fun transitionOnContactAlert(currentState: UserState): UserState? =
-        when (currentState.displayState()) {
-            DisplayState.OK -> UserState.amber()
+        when (currentState) {
+            DefaultState -> UserState.amber()
+            RecoveryState -> UserState.amber()
             else -> null
         }
 
-    fun transitionIfExpired(currentState: UserState): UserState? =
-        if (currentState.hasExpired()) DefaultState else null
+    fun expireAmberState(currentState: UserState): UserState =
+        if (currentState is AmberState && currentState.hasExpired())
+            DefaultState
+        else
+            currentState
 
     private fun doesNotHaveTemperature(symptoms: Set<Symptom>): Boolean =
         !hasTemperature(symptoms)
