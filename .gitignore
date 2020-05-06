@@ -1,0 +1,15 @@
+*.iml
+.gradle
+local.properties
+.idea/
+.DS_Store
+build
+captures
+.externalNativeBuild
+.cxx
+jacoco.exec
+.envrc
+.tool-versions
+
+## Pacts folder
+app/target/pacts

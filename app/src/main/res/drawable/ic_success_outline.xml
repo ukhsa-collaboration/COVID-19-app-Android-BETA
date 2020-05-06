@@ -1,0 +1,14 @@
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="24dp"
+        android:height="24dp"
+        android:viewportWidth="24"
+        android:viewportHeight="24">
+    <path
+        android:pathData="M12,1C5.9277,1 1,5.9277 1,12C1,18.0723 5.9277,23 12,23C18.0723,23 23,18.0723 23,12C23,5.9277 18.0723,1 12,1ZM12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2ZM5,12L10,17L19,8L17.59,6.58L10,14.17L6.41,10.59L5,12Z"
+        android:fillColor="#212B32"
+        android:fillType="evenOdd"/>
+</vector>

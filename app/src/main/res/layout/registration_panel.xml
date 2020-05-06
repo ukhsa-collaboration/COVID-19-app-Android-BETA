@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="60dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    tools:orientation="horizontal"
+    tools:parentTag="android.widget.FrameLayout">
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/registrationProgressBar"
+        style="@style/Widget.MaterialProgressBar.ProgressBar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:indeterminate="true"
+        app:mpb_indeterminateTint="@color/text_primary_color"
+        app:mpb_useIntrinsicPadding="false" />
+
+    <ImageView
+        android:id="@+id/registrationStatusIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_warning_outline"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/registrationStatusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="32dp"
+        android:accessibilityLiveRegion="polite"
+        android:text="@string/registration_finalising_setup"
+        android:textSize="14sp" />
+</merge>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <debug-overrides>
+        <trust-anchors>
+            <!-- Trust user added CAs while debuggable only -->
+            <certificates src="user" />
+        </trust-anchors>
+    </debug-overrides>
+
+<!--    This entry is needed for testing on device with okhttp/mockwebserver -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+    </domain-config>
+
+    <domain-config>
+        <domain includeSubdomains="true">nhs.uk</domain>
+        <pin-set>
+            <pin digest="SHA-256">hETpgVvaLC0bvcGG3t0cuqiHvr4XyP2MTwCiqhgRWwU=</pin>
+        </pin-set>
+    </domain-config>
+</network-security-config>

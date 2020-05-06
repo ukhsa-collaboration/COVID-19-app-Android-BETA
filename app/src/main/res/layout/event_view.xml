@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:paddingHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    tools:context="uk.nhs.nhsx.sonar.android.app.MainActivity">
+
+    <TextView
+        android:id="@+id/remote_contact_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        tools:text="d64b2fdf-81e9-4f61-b9a3-70a8d01cffcf"
+        />
+
+    <TextView
+        android:id="@+id/rssi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="[-57,-49,-49,-49,-49,-49,-49,-49,-49,-49,-49]"
+        />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="2020-04-21T21:30:39 - duration 4s"
+        />
+</LinearLayout>

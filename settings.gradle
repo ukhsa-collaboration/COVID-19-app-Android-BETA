@@ -1,0 +1,6 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
+rootProject.name = 'sonar-colocate-android'
+include ':app'

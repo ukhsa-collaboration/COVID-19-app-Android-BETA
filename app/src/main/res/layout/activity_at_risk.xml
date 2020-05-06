@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/banner" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="32dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/status_amber"
+                style="@style/PrimaryCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/amber_card_background"
+                    android:orientation="vertical"
+                    android:paddingTop="32dp"
+                    android:paddingBottom="32dp">
+
+                    <TextView
+                        android:id="@+id/status_amber_title"
+                        style="@style/TextViewStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:accessibilityHeading="true"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="16dp"
+                        android:text="@string/status_amber_title" />
+
+                    <TextView
+                        android:id="@+id/latest_advice_amber"
+                        style="@style/TextViewSubStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="36dp"
+                        android:gravity="center_vertical"
+                        android:letterSpacing="0.04"
+                        android:minHeight="48dp"
+                        android:paddingStart="20dp"
+                        android:paddingEnd="16dp"
+                        android:text="@string/status_what_to_do" />
+
+                    <TextView
+                        android:id="@+id/follow_until"
+                        style="@style/TextViewCardSubTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="16dp"
+                        tools:text="@string/follow_until" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/status_today_feeling"
+                style="@style/TextViewSubHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="16dp"
+                android:accessibilityHeading="true"
+
+                android:text="@string/status_today_feeling" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/status_not_feeling_well"
+                style="@style/PrimaryCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:accessibilityHeading="true"
+                android:clickable="true"
+                android:focusable="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        style="@style/TextViewActionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
+                        android:text="@string/status_not_feeling_well"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        style="@style/TextViewActionSubTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/status_not_feeling_well_desc" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <include layout="@layout/status_footer_view" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

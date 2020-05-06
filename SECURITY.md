@@ -68,3 +68,5 @@ You must:
 This policy is designed to be compatible with common vulnerability disclosure good practice. It does not give you permission to act in any manner that is inconsistent with the law, or which might cause NHSX or partner organisations to be in breach of any legal obligations.
 
 NHSX will not seek prosecution of any security researcher who has acted in good faith and in accordance with this disclosure policy.
+
+

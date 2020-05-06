@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<lint>
+    <!-- We're not using the X509LDAPCertStoreSpi -->
+    <issue id="InvalidPackage">
+        <ignore path="**/bcprov-jdk15on-*.jar" />
+    </issue>
+</lint>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/symptom_banner" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/confirm_diagnosis"
+        android:layout_below="@+id/toolbar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:paddingBottom="8dp">
+
+            <TextView
+                android:id="@+id/progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:fontFamily="@font/roboto_medium"
+                android:letterSpacing="0.1"
+                android:paddingTop="24dp"
+                android:text="@string/progress_two_out_of_two"
+                android:textColor="@color/text_sub_title"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/cough_question"
+                style="@style/TextViewSubHead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/progress"
+                android:accessibilityHeading="true"
+                android:text="@string/cough_question" />
+            <TextView
+                android:id="@+id/new_cough_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/cough_question"
+                android:layout_marginTop="8dp"
+                android:text="@string/cough_description_new"
+                android:textColor="@color/text_sub_title"
+                android:visibility="visible"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/continuous_cough_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/new_cough_description"
+                android:layout_marginTop="4dp"
+                android:text="@string/cough_description"
+                android:textColor="@color/text_sub_title"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/radio_selection_error"
+                style="@style/TextViewError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/continuous_cough_description"
+                android:layout_marginTop="16dp"
+                android:text="@string/radio_button_cough_error"
+                android:visibility="gone" />
+
+            <RadioGroup
+                android:id="@+id/cough_diagnosis_answer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/radio_selection_error"
+                android:layout_marginTop="16dp">
+
+                <RadioButton
+                    android:id="@+id/yes"
+                    android:layout_width="match_parent"
+                    android:layout_height="88dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/radio_button_background_selector"
+                    android:button="@drawable/radio_button_inset"
+                    android:fontFamily="@font/roboto_medium"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/yes_cough"
+                    android:textSize="16sp" />
+
+
+                <RadioButton
+                    android:id="@+id/no"
+                    android:layout_width="match_parent"
+                    android:layout_height="88dp"
+                    android:background="@drawable/radio_button_background_selector"
+                    android:button="@drawable/radio_button_inset"
+                    android:fontFamily="@font/roboto_medium"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="@string/no_cough"
+                    android:textSize="16sp" />
+
+
+            </RadioGroup>
+        </RelativeLayout>
+    </ScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirm_diagnosis"
+        style="@style/PrimaryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/continue_button" />
+
+</RelativeLayout>

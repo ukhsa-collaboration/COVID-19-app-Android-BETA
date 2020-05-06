@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<resources>
+    <color name="colorPrimary">#005EB8</color>
+    <color name="colorDanger">#D5281B</color>
+    <color name="colorPrimaryDark">#FF3F51B5</color>
+    <color name="colorAccent">#005EB8</color>
+    <color name="white">#ffffff</color>
+    <color name="gray">#D8DDE0</color>
+    <color name="black">#000000</color>
+    <color name="text_primary_color">#212B32</color>
+    <color name="button_background">#007F3B</color>
+    <color name="button_background_disabled">#7F007F3B</color>
+
+    <color name="color_nhsuk_grey_5">#F0F4F5</color>
+    <color name="color_nhsuk_grey_4">#AEB7BD</color>
+
+    <color name="text_sub_title">#4C6272</color>
+    <color name="amber">#FFB81C</color>
+    <color name="divider">#1F000000</color>
+</resources>
