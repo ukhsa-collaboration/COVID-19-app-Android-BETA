@@ -8,15 +8,21 @@ import uk.nhs.nhsx.sonar.android.app.util.isEarlierThan
 object UserStateTransitions {
 
     fun diagnose(
+        currentState: UserState,
         symptomsDate: LocalDate,
         symptoms: NonEmptySet<Symptom>,
         today: LocalDate = LocalDate.now()
-    ): UserState =
-        if (doesNotHaveTemperature(symptoms) && symptomsDate.isEarlierThan(days = NO_DAYS_IN_RED, from = today)) {
-            RecoveryState
-        } else {
-            UserState.red(symptomsDate, symptoms, today)
+    ): UserState {
+        val startedOver7DaysAgo = symptomsDate.isEarlierThan(days = NO_DAYS_IN_RED, from = today)
+        val notConsideredContagious = doesNotHaveTemperature(symptoms) && startedOver7DaysAgo
+        val isAmberState = currentState is AmberState
+
+        return when {
+            notConsideredContagious && isAmberState -> currentState
+            notConsideredContagious -> RecoveryState
+            else -> UserState.red(symptomsDate, symptoms, today)
         }
+    }
 
     fun diagnoseForCheckin(
         symptoms: Set<Symptom>,

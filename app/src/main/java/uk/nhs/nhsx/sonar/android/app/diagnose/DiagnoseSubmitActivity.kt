@@ -97,7 +97,8 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private fun updateStateAndNavigate() {
-        val state = UserStateTransitions.diagnose(symptomsDate, symptoms)
+        val currentState = userStateStorage.get()
+        val state = UserStateTransitions.diagnose(currentState, symptomsDate, symptoms)
         state.scheduleCheckInReminder(reminders)
         userStateStorage.set(state)
 

@@ -20,7 +20,6 @@ import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 class UserStateTransitionsTest {
 
     private val today = LocalDate(2020, 4, 10)
-
     private val symptomsWithoutTemperature = nonEmptySetOf(COUGH)
     private val symptomsWithTemperature = nonEmptySetOf(TEMPERATURE)
 
@@ -31,6 +30,16 @@ class UserStateTransitionsTest {
         val state = diagnose(DefaultState, `7 days ago or more`, symptomsWithoutTemperature, today)
 
         assertThat(state).isEqualTo(RecoveryState)
+    }
+
+    @Test
+    fun `diagnose - when symptoms date is 7 days ago or more, no temperature, and current state is Amber`() {
+        val amberState = buildAmberState()
+        val `7 days ago or more` = today.minusDays(7)
+
+        val state = diagnose(amberState, `7 days ago or more`, symptomsWithoutTemperature, today)
+
+        assertThat(state).isEqualTo(amberState)
     }
 
     @Test
