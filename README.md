@@ -10,6 +10,7 @@ Required secrets are:
 
  - `sonar.headerValue`
  - `sonar.analyticsKey`
+ - `sonar.baseUrl`
 
 To set a property refer to [official gradle documentation](https://docs.gradle.org/current/userguide/build_environment.html)
 

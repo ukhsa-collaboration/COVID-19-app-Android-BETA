@@ -46,7 +46,10 @@ android {
     }
 
     defaultConfig {
-        def baseUrl = property("sonar.baseUrl")
+        def baseUrl = findProperty("sonar.baseUrl") ?: {
+            throw new MissingPropertyException("Missing property `sonar.baseUrl` please see README for instructions")
+        }
+
         def headerValue = findProperty("sonar.headerValue") ?: {
             throw new MissingPropertyException("Missing property `sonar.headerValue` please see README for instructions")
         }
@@ -54,8 +57,6 @@ android {
         def analyticsKey = findProperty("sonar.analyticsKey") ?: {
             throw new MissingPropertyException("Missing property `sonar.analyticsKey` please see README for instructions")
         }
-
-        logger.quiet("sonar.baseUrl is: $baseUrl")
 
         buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
         buildConfigField("String", "SONAR_HEADER_VALUE", "\"$headerValue\"")
@@ -139,13 +140,13 @@ task("outputInstrumentationErrors") {
         def slurper = new XmlSlurper(new Parser())
 
         htmlFiles
-                .collectMany { file ->
-                    def html = slurper.parse(file)
-                    html.'**'.findAll { node -> node.name() == 'pre' }*.text()
-                }
-                .each { stacktrace ->
-                    System.err.println("\n==============================\n$stacktrace==============================\n")
-                }
+            .collectMany { file ->
+                def html = slurper.parse(file)
+                html.'**'.findAll { node -> node.name() == 'pre' }*.text()
+            }
+            .each { stacktrace ->
+                System.err.println("\n==============================\n$stacktrace==============================\n")
+            }
     }
 }
 
