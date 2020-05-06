@@ -10,3 +10,6 @@ captures
 jacoco.exec
 .envrc
 .tool-versions
+
+## Pacts folder
+app/target/pacts
