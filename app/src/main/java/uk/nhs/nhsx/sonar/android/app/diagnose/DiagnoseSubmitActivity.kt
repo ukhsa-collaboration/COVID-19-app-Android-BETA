@@ -28,8 +28,8 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.UserStateFactory
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import javax.inject.Inject
@@ -97,7 +97,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private fun updateStateAndNavigate() {
-        val state = UserStateFactory.questionnaire(symptomsDate, symptoms)
+        val state = UserStateTransitions.diagnose(symptomsDate, symptoms)
         state.scheduleCheckInReminder(reminders)
         userStateStorage.update(state)
 

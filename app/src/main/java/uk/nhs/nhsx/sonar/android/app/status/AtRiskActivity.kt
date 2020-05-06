@@ -67,7 +67,7 @@ class AtRiskActivity : BaseActivity() {
         super.onResume()
 
         userStateStorage.get()
-            .transitionIfExpired()
+            .let { UserStateTransitions.transitionIfExpired(it) }
             ?.let {
                 userStateStorage.update(it)
                 navigateTo(it)

@@ -17,8 +17,8 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserState
-import uk.nhs.nhsx.sonar.android.app.status.UserStateFactory
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import javax.inject.Inject
 
@@ -37,18 +37,19 @@ class DiagnoseCoughViewModel @Inject constructor(private val userStateStorage: U
         viewModelScope.launch {
 
             val symptoms = symptoms(hasTemperature, hasCough)
+            val isCurrentlyIsolating = prevState.displayState() == ISOLATE
+            val hasNoSymptoms = symptoms.isEmpty()
 
-            nextStateLiveData.value = when (prevState.displayState()) {
-                ISOLATE -> Main(updateState(symptoms))
-                else -> {
-                    if (symptoms.isEmpty()) Close else Review(NonEmptySet.create(symptoms)!!)
-                }
+            nextStateLiveData.value = when {
+                isCurrentlyIsolating -> Main(updateState(symptoms))
+                hasNoSymptoms -> Close
+                else -> Review(NonEmptySet.create(symptoms)!!)
             }
         }
     }
 
     private fun updateState(symptoms: Set<Symptom>): UserState =
-        UserStateFactory.checkinQuestionnaire(symptoms).also {
+        UserStateTransitions.diagnoseForCheckin(symptoms).also {
             userStateStorage.update(it)
         }
 

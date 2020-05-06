@@ -9,6 +9,7 @@ import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import javax.inject.Inject
 
 class NotificationHandler @Inject constructor(
@@ -32,7 +33,7 @@ class NotificationHandler @Inject constructor(
                 }
                 isContactAlert(messageData) -> {
                     userStateStorage.get()
-                        .transitionOnContactAlert()
+                        .let { UserStateTransitions.transitionOnContactAlert(it) }
                         ?.let {
                             userStateStorage.update(it)
                             showStatusNotification()

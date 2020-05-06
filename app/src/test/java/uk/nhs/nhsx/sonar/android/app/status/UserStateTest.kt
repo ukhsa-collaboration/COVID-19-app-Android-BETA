@@ -9,25 +9,12 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
-import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
-
-private fun buildAmberState(
-    until: DateTime = DateTime.now().plusDays(1)
-) = AmberState(until)
-
-private fun buildRedState(
-    until: DateTime = DateTime.now().plusDays(1),
-    symptoms: NonEmptySet<Symptom> = nonEmptySetOf(COUGH)
-) = RedState(until, symptoms)
-
-private fun buildCheckinState(
-    until: DateTime = DateTime.now().plusDays(1),
-    symptoms: NonEmptySet<Symptom> = nonEmptySetOf(COUGH)
-) = CheckinState(until, symptoms)
 
 class UserStateTest {
 
@@ -38,6 +25,46 @@ class UserStateTest {
     private val expiredAmberState = buildAmberState(until = DateTime.now().minusSeconds(1))
     private val expiredRedState = buildRedState(until = DateTime.now().minusSeconds(1))
     private val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
+
+    private val today = LocalDate(2020, 4, 10)
+
+    @Test
+    fun `amber state factory method`() {
+        val state = UserState.amber(today)
+
+        val `13daysFromNowAt7` = DateTime(2020, 4, 23, 7, 0).toDateTime(DateTimeZone.UTC)
+        assertThat(state).isEqualTo(AmberState(`13daysFromNowAt7`))
+    }
+
+    @Test
+    fun `checkin state factory method`() {
+        val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
+        val state = UserState.checkin(symptoms, today)
+
+        val tomorrowAt7 = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
+        assertThat(state).isEqualTo(CheckinState(tomorrowAt7, symptoms))
+    }
+
+    @Test
+    fun `red state factory method - when symptoms started more than 7 days ago`() {
+        val over7daysAgo = LocalDate(2020, 4, 2)
+        val symptoms = nonEmptySetOf(COUGH, Symptom.TEMPERATURE)
+        val state = UserState.red(over7daysAgo, symptoms, today)
+
+        val tomorrowAt7 = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
+        assertThat(state.symptoms).isEqualTo(symptoms)
+        assertThat(state.until).isEqualTo(tomorrowAt7)
+    }
+
+    @Test
+    fun `red state factory method - when symptoms started less than 7 days ago`() {
+        val lessThan7daysAgo = LocalDate(2020, 4, 5)
+        val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
+        val state = UserState.red(lessThan7daysAgo, symptoms, today)
+
+        val `7daysAfterSymptomsStart` = DateTime(2020, 4, 12, 7, 0).toDateTime(DateTimeZone.UTC)
+        assertThat(state.until()).isEqualTo(`7daysAfterSymptomsStart`)
+    }
 
     @Test
     fun `test until`() {
@@ -68,28 +95,6 @@ class UserStateTest {
         assertThat(amberState.displayState()).isEqualTo(DisplayState.AT_RISK)
         assertThat(redState.displayState()).isEqualTo(DisplayState.ISOLATE)
         assertThat(checkinState.displayState()).isEqualTo(DisplayState.ISOLATE)
-    }
-
-    @Test
-    fun `test transitionOnContactAlert`() {
-        assertThat(DefaultState.transitionOnContactAlert()).isInstanceOf(AmberState::class.java)
-        assertThat(RecoveryState.transitionOnContactAlert()).isInstanceOf(AmberState::class.java)
-        assertThat(amberState.transitionOnContactAlert()).isNull()
-        assertThat(redState.transitionOnContactAlert()).isNull()
-        assertThat(checkinState.transitionOnContactAlert()).isNull()
-    }
-
-    @Test
-    fun `test transitionIfExpired`() {
-        assertThat(DefaultState.transitionIfExpired()).isNull()
-        assertThat(RecoveryState.transitionIfExpired()).isNull()
-        assertThat(amberState.transitionIfExpired()).isNull()
-        assertThat(redState.transitionIfExpired()).isNull()
-        assertThat(checkinState.transitionIfExpired()).isNull()
-
-        assertThat(expiredAmberState.transitionIfExpired()).isEqualTo(DefaultState)
-        assertThat(expiredRedState.transitionIfExpired()).isEqualTo(DefaultState)
-        assertThat(expiredCheckinState.transitionIfExpired()).isEqualTo(DefaultState)
     }
 
     @Test
