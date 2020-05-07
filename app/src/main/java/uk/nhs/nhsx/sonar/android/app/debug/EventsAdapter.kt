@@ -5,6 +5,8 @@
 package uk.nhs.nhsx.sonar.android.app.debug
 
 import android.content.Context
+import android.graphics.Color
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +26,14 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val context: Context = view.context
 
     fun bindTo(event: ConnectedDevice) {
+        val eventBytes = Base64.decode(event.id, Base64.DEFAULT)
+        val rgbAsHex = eventBytes.sliceArray(0 until 3)
+            .map { String.format("%02X", it) }
+            .joinToString("", prefix = "#")
+
         itemView.remote_contact_id.text = event.id
+        val cryptogramColor = Color.parseColor(rgbAsHex)
+        itemView.setBackgroundColor(cryptogramColor)
         itemView.rssi.text = event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
         itemView.time.text = context.getString(
             R.string.last_reading, Seconds.secondsBetween(
