@@ -15,8 +15,9 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
 import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.PromiseAssert.Companion.assertThat
+import uk.nhs.nhsx.sonar.android.app.http.RequestAssert.Companion.assertThat
 import uk.nhs.nhsx.sonar.android.app.http.TestQueue
-import uk.nhs.nhsx.sonar.android.app.http.assertBodyHasJson
 import uk.nhs.nhsx.sonar.android.app.http.generateSignatureKey
 import java.util.Base64
 
@@ -69,12 +70,12 @@ class CoLocationApiTest {
 
         val promise = coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", events))
 
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
 
         val request = requestQueue.lastRequest
         assertThat(request.method).isEqualTo(PATCH)
         assertThat(request.url).isEqualTo("$baseUrl/api/residents/::sonar-id::")
-        request.assertBodyHasJson(
+        assertThat(request).bodyHasJson(
             "symptomsTimestamp" to "::timestamp::",
             "contactEvents" to listOf(
                 mapOf(
@@ -119,7 +120,7 @@ class CoLocationApiTest {
             coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", emptyList()))
 
         requestQueue.returnSuccess(JSONObject())
-        assertThat(promise.isSuccess).isTrue()
+        assertThat(promise).succeeded()
     }
 
     @Test
@@ -128,6 +129,6 @@ class CoLocationApiTest {
             coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", emptyList()))
 
         requestQueue.returnError(VolleyError())
-        assertThat(promise.isFailed).isTrue()
+        assertThat(promise).failed()
     }
 }

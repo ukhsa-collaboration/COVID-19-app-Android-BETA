@@ -62,7 +62,7 @@ class ReferenceCodeViewModelTest {
 
         assertThat(state.value).isEqualTo(Loading)
 
-        deferred.fail(RuntimeException("Oops"))
+        deferred.fail("Oops")
 
         assertThat(state.value).isEqualTo(ReferenceCodeViewModel.State.Error)
     }

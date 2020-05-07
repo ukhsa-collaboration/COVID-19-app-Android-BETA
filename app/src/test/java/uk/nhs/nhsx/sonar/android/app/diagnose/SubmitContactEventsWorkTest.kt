@@ -79,7 +79,7 @@ class SubmitContactEventsWorkTest {
         coEvery { coLocationDataProvider.getEvents() } returns events
         every { coLocationApi.save(any()) } returns saveDeferred.promise
 
-        saveDeferred.fail(Exception("Failed to save"))
+        saveDeferred.fail("Failed to save")
 
         val result = work.doWork(workDataOf("SYMPTOMS_DATE" to symptomsDate))
 

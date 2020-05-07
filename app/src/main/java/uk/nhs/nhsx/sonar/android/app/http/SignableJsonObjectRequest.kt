@@ -7,12 +7,14 @@ package uk.nhs.nhsx.sonar.android.app.http
 import com.android.volley.NetworkResponse
 import com.android.volley.Request.Method
 import com.android.volley.Response
+import com.android.volley.VolleyError
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDateTime
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Explanation
 import javax.crypto.Mac
 import javax.crypto.SecretKey
 
@@ -27,7 +29,7 @@ class SignableJsonObjectRequest(
         httpRequest.url,
         httpRequest.jsonBody,
         Response.Listener { deferred.resolve(it) },
-        Response.ErrorListener { deferred.fail(it) }
+        Response.ErrorListener { deferred.failWithVolleyError(it) }
     ) {
 
     override fun parseNetworkResponse(response: NetworkResponse): Response<JSONObject> =
@@ -81,6 +83,9 @@ class SignableJsonObjectRequest(
         return base64enc(signature)
     }
 }
+
+fun <T> Deferred<T>.failWithVolleyError(error: VolleyError) =
+    fail(Explanation(error.message ?: "HttpClient error", error, error.networkResponse?.statusCode))
 
 private fun HttpMethod.toInt() =
     when (this) {

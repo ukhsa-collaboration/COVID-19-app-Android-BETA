@@ -6,7 +6,6 @@ package uk.nhs.nhsx.sonar.android.app.registration
 
 import androidx.work.Data
 import com.android.volley.ClientError
-import com.android.volley.VolleyError
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 import uk.nhs.nhsx.sonar.android.app.analytics.registrationActivationCallFailed
@@ -80,7 +79,7 @@ class RegistrationUseCase @Inject constructor(
     private suspend fun registerDevice(firebaseToken: String) =
         residentApi
             .register(firebaseToken)
-            .onError { analytics.trackEvent(registrationSendTokenCallFailed(it.getStatusCode())) }
+            .onError { analytics.trackEvent(registrationSendTokenCallFailed(it.code)) }
             .toCoroutine()
 
     private suspend fun registerResident(
@@ -98,7 +97,7 @@ class RegistrationUseCase @Inject constructor(
 
         return residentApi
             .confirmDevice(confirmation)
-            .onError { analytics.trackEvent(registrationActivationCallFailed(it.getStatusCode())) }
+            .onError { analytics.trackEvent(registrationActivationCallFailed(it.code)) }
             .map { it.id }
             .toCoroutine()
     }
@@ -106,10 +105,4 @@ class RegistrationUseCase @Inject constructor(
     private fun storeSonarId(sonarId: String) {
         sonarIdProvider.set(sonarId)
     }
-
-    private fun Exception.getStatusCode(): Int? =
-        when (this) {
-            is VolleyError -> networkResponse?.statusCode
-            else -> null
-        }
 }

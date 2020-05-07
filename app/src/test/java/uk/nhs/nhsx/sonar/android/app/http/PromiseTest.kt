@@ -6,7 +6,10 @@ package uk.nhs.nhsx.sonar.android.app.http
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.http.ExplanationAssert.Companion.assertThat
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Explanation
+import uk.nhs.nhsx.sonar.android.app.http.PromiseAssert.Companion.assertThat
 import java.io.IOException
 
 class PromiseTest {
@@ -15,12 +18,12 @@ class PromiseTest {
     fun `test success handling, when subscribing before resolution`() {
         var successValue: String? = null
         var otherSuccessValue: String? = null
-        var errorValue: Exception? = null
+        var errorValue: Explanation? = null
 
         val deferred = Deferred<String>()
         val promise = deferred.promise
 
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
 
         promise
             .onSuccess { successValue = it }
@@ -28,9 +31,7 @@ class PromiseTest {
             .onError { errorValue = it }
         deferred.resolve("success!!")
 
-        assertThat(promise.isSuccess).isTrue()
-        assertThat(promise.value).isEqualTo("success!!")
-        assertThat(promise.error).isNull()
+        assertThat(promise).succeededWith("success!!")
         assertThat(otherSuccessValue).isEqualTo("success!!")
         assertThat(successValue).isEqualTo("success!!")
         assertThat(errorValue).isNull()
@@ -39,17 +40,15 @@ class PromiseTest {
     @Test
     fun `test success handling, when subscribing after resolution`() {
         var successValue: String? = null
-        var errorValue: Exception? = null
+        var errorValue: Explanation? = null
 
         val deferred = Deferred<String>()
         val promise = deferred.promise
 
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
 
         deferred.resolve("success!!")
-        assertThat(promise.isSuccess).isTrue()
-        assertThat(promise.value).isEqualTo("success!!")
-        assertThat(promise.error).isNull()
+        assertThat(promise).succeededWith("success!!")
 
         promise
             .onSuccess { successValue = it }
@@ -61,13 +60,13 @@ class PromiseTest {
     @Test
     fun `test error handling, when subscribing before resolution`() {
         var successValue: String? = null
-        var errorValue: Exception? = null
-        var otherErrorValue: Exception? = null
+        var errorValue: Explanation? = null
+        var otherErrorValue: Explanation? = null
 
         val deferred = Deferred<String>()
         val promise = deferred.promise
 
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
 
         promise
             .onSuccess { successValue = it }
@@ -75,39 +74,30 @@ class PromiseTest {
             .onError { otherErrorValue = it }
         deferred.fail(IOException("Oops"))
 
-        assertThat(promise.isFailed).isTrue()
-        assertThat(promise.value).isNull()
-        assertThat(promise.error).isInstanceOf(IOException::class.java)
-        assertThat(promise.error).hasMessage("Oops")
+        assertThat(promise).failedWith<IOException>("Oops")
         assertThat(successValue).isNull()
-        assertThat(errorValue).isInstanceOf(IOException::class.java)
-        assertThat(errorValue).hasMessage("Oops")
-        assertThat(otherErrorValue).isInstanceOf(IOException::class.java)
-        assertThat(otherErrorValue).hasMessage("Oops")
+        assertThat(errorValue).hasExceptionWithMessage<IOException>("Oops")
+        assertThat(otherErrorValue).hasExceptionWithMessage<IOException>("Oops")
     }
 
     @Test
     fun `test error handling, when subscribing after resolution`() {
         var successValue: String? = null
-        var errorValue: Exception? = null
+        var errorValue: Explanation? = null
 
         val deferred = Deferred<String>()
         val promise = deferred.promise
 
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
 
         deferred.fail(IOException("Oops"))
-        assertThat(promise.isFailed).isTrue()
-        assertThat(promise.value).isNull()
-        assertThat(promise.error).isInstanceOf(IOException::class.java)
-        assertThat(promise.error).hasMessage("Oops")
+        assertThat(promise).failedWith<IOException>("Oops")
 
         promise
             .onSuccess { successValue = it }
             .onError { errorValue = it }
         assertThat(successValue).isNull()
-        assertThat(errorValue).isInstanceOf(IOException::class.java)
-        assertThat(errorValue).hasMessage("Oops")
+        assertThat(errorValue).hasExceptionWithMessage<IOException>("Oops")
     }
 
     @Test

@@ -28,6 +28,7 @@ import uk.nhs.nhsx.sonar.android.app.analytics.registrationFailedWaitingForFCMTo
 import uk.nhs.nhsx.sonar.android.app.analytics.registrationSendTokenCallFailed
 import uk.nhs.nhsx.sonar.android.app.analytics.registrationSucceeded
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.http.failWithVolleyError
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.ACTIVATION_CODE_TIMED_OUT
 
@@ -234,9 +235,9 @@ class RegistrationUseCaseTest {
         verify { analytics.trackEvent(registrationSucceeded()) }
     }
 
-    private fun confirmDeviceFails(exception: Exception) {
+    private fun confirmDeviceFails(error: VolleyError) {
         val deferred = Deferred<Registration>()
-        deferred.fail(exception)
+        deferred.failWithVolleyError(error)
         every { residentApi.confirmDevice(confirmation) } returns deferred.promise
     }
 
@@ -244,7 +245,7 @@ class RegistrationUseCaseTest {
         val networkResponse = buildNetworkResponse(statusCode)
         val deferred = Deferred<Unit>()
 
-        deferred.fail(VolleyError(networkResponse))
+        deferred.failWithVolleyError(VolleyError(networkResponse))
         every { residentApi.register(any()) } returns deferred.promise
     }
 

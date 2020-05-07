@@ -57,7 +57,7 @@ class ReferenceCodeWorkTest {
     @Test
     fun `doWork - on failure`() = runBlockingTest {
         val deferred = Promise.Deferred<ReferenceCode>()
-        deferred.fail(Exception("Oops"))
+        deferred.fail("Oops")
 
         every { provider.get() } returns null
         every { api.generate() } returns deferred.promise

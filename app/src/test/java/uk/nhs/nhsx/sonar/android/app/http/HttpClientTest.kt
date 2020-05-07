@@ -4,12 +4,14 @@
 
 package uk.nhs.nhsx.sonar.android.app.http
 
+import com.android.volley.NetworkResponse
 import com.android.volley.Request
 import com.android.volley.VolleyError
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.http.HttpMethod.POST
+import uk.nhs.nhsx.sonar.android.app.http.PromiseAssert.Companion.assertThat
 import java.util.Base64
 
 class HttpClientTest {
@@ -26,7 +28,7 @@ class HttpClientTest {
         )
         val promise = httpClient.send(inputRequest)
 
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
         assertThat(queue.requests).hasSize(1)
 
         val request = queue.requests.first()
@@ -51,7 +53,7 @@ class HttpClientTest {
             )
         val promise = httpClient.send(inputRequest)
 
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
         assertThat(queue.requests).hasSize(1)
 
         val request = queue.requests.first()
@@ -72,22 +74,33 @@ class HttpClientTest {
 
         queue.returnSuccess(jsonObjectOf("hello" to "world"))
 
-        assertThat(promise.isSuccess).isTrue()
+        assertThat(promise).succeeded()
         assertThat(promise.value).isInstanceOf(JSONObject::class.java)
         assertThat(promise.value.toString()).isEqualTo(jsonOf("hello" to "world"))
-        assertThat(promise.error).isNull()
     }
 
     @Test
-    fun `test send() on failure`() {
+    fun `test send() on HTTP error`() {
         val inputRequest = HttpRequest(HttpMethod.GET, "http://localhost:123/api")
         val promise = httpClient.send(inputRequest)
+        val volleyError = VolleyError(buildNetworkResponse(503))
 
-        queue.returnError(VolleyError("Oopsies"))
+        queue.returnError(volleyError)
 
-        assertThat(promise.isFailed).isTrue()
-        assertThat(promise.value).isNull()
-        assertThat(promise.error).isInstanceOf(VolleyError::class.java)
-        assertThat(promise.error).hasMessage("Oopsies")
+        assertThat(promise).failedWith<VolleyError>(code = 503)
+    }
+
+    @Test
+    fun `test send() on networking failure`() {
+        val inputRequest = HttpRequest(HttpMethod.GET, "http://localhost:123/api")
+        val promise = httpClient.send(inputRequest)
+        val errorWithoutNetworkResponse = VolleyError("Oopsies")
+
+        queue.returnError(errorWithoutNetworkResponse)
+
+        assertThat(promise).failedWith<VolleyError>("Oopsies")
     }
 }
+
+private fun buildNetworkResponse(statusCode: Int) =
+    NetworkResponse(statusCode, ByteArray(0), true, 0L, listOf())

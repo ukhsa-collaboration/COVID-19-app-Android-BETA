@@ -12,8 +12,9 @@ import org.json.JSONObject
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.http.PromiseAssert.Companion.assertThat
+import uk.nhs.nhsx.sonar.android.app.http.RequestAssert.Companion.assertThat
 import uk.nhs.nhsx.sonar.android.app.http.TestQueue
-import uk.nhs.nhsx.sonar.android.app.http.assertBodyHasJson
 import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
 
 class ResidentApiTest {
@@ -28,11 +29,11 @@ class ResidentApiTest {
     fun `test register() request`() {
         val promise = residentApi.register("some-token")
 
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
 
         val request = requestQueue.lastRequest
         assertThat(request.url).isEqualTo("$baseUrl/api/devices/registrations")
-        request.assertBodyHasJson("pushToken" to "some-token")
+        assertThat(request).bodyHasJson("pushToken" to "some-token")
     }
 
     @Test
@@ -40,7 +41,7 @@ class ResidentApiTest {
         val promise = residentApi.register("some-token")
         requestQueue.returnSuccess(JSONObject())
 
-        assertThat(promise.isSuccess).isTrue()
+        assertThat(promise).succeeded()
     }
 
     @Test
@@ -48,9 +49,7 @@ class ResidentApiTest {
         val promise = residentApi.register("some-token")
         requestQueue.returnError(VolleyError("boom"))
 
-        assertThat(promise.isFailed).isTrue()
-        assertThat(promise.error).isInstanceOf(VolleyError::class.java)
-        assertThat(promise.error).hasMessage("boom")
+        assertThat(promise).failedWith<VolleyError>("boom")
     }
 
     @Test
@@ -64,11 +63,11 @@ class ResidentApiTest {
         )
 
         val promise = residentApi.confirmDevice(confirmation)
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
 
         val request = requestQueue.lastRequest
         assertThat(request.url).isEqualTo("$baseUrl/api/devices")
-        request.assertBodyHasJson(
+        assertThat(request).bodyHasJson(
             "activationCode" to "::activation code::",
             "pushToken" to "::push token::",
             "deviceModel" to "::device model::",
@@ -95,8 +94,7 @@ class ResidentApiTest {
         val promise = residentApi.confirmDevice(confirmation)
         requestQueue.returnSuccess(jsonResponse)
 
-        assertThat(promise.isSuccess).isTrue()
-        assertThat(promise.value).isEqualTo(Registration("00000000-0000-0000-0000-000000000001"))
+        assertThat(promise).succeededWith(Registration("00000000-0000-0000-0000-000000000001"))
         verify { encryptionKeyStorage.storeSecretKey("some-secret-key-base64-encoded") }
         verify { encryptionKeyStorage.storeServerPublicKey("some-public-key-base64-encoded") }
     }
@@ -114,8 +112,6 @@ class ResidentApiTest {
         val promise = residentApi.confirmDevice(confirmation)
         requestQueue.returnError(VolleyError("boom"))
 
-        assertThat(promise.isFailed).isTrue()
-        assertThat(promise.error).isInstanceOf(VolleyError::class.java)
-        assertThat(promise.error).hasMessage("boom")
+        assertThat(promise).failedWith<VolleyError>("boom")
     }
 }

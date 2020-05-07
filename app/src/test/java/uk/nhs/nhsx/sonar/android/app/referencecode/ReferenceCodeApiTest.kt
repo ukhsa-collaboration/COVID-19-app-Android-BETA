@@ -11,6 +11,7 @@ import io.mockk.verifyAll
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.http.HttpClient
+import uk.nhs.nhsx.sonar.android.app.http.PromiseAssert.Companion.assertThat
 import uk.nhs.nhsx.sonar.android.app.http.SecretKeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.TestQueue
 import uk.nhs.nhsx.sonar.android.app.http.generateSignatureKey
@@ -41,7 +42,7 @@ class ReferenceCodeApiTest {
             secretKeyStorage.provideSecretKey()
             sonarIdProvider.get()
         }
-        assertThat(promise.isInProgress).isTrue()
+        assertThat(promise).isInProgress()
 
         val request = requestQueue.lastRequest
         assertThat(request.url).isEqualTo("http://api.example.com/api/residents/some-sonar-id-101/linking-id")
@@ -53,6 +54,6 @@ class ReferenceCodeApiTest {
         requestQueue.returnSuccess(
             jsonObjectOf("linkingId" to "some test linking id 200")
         )
-        assertThat(promise.value).isEqualTo(ReferenceCode("some test linking id 200"))
+        assertThat(promise).succeededWith(ReferenceCode("some test linking id 200"))
     }
 }
