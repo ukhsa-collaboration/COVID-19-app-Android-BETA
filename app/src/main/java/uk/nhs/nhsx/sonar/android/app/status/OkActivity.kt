@@ -6,12 +6,17 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Button
 import androidx.activity.viewModels
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
+import kotlinx.android.synthetic.main.activity_ok.notificationPanel
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
 import kotlinx.android.synthetic.main.activity_review_close.nhs_service
@@ -89,6 +94,16 @@ class OkActivity : BaseActivity() {
             openUrl(URL_INFO)
         }
 
+        notificationPanel.setOnClickListener {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", packageName, null)
+            intent.data = uri
+
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            }
+        }
+
         addViewModelListener()
         viewModel.onStart()
 
@@ -146,11 +161,15 @@ class OkActivity : BaseActivity() {
         } else {
             recoveryDialog.dismiss()
         }
+
+        notificationPanel.isVisible =
+            !NotificationManagerCompat.from(this).areNotificationsEnabled()
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
         status_not_feeling_well.cardColourInversion(inversionModeEnabled)
         medical_workers_card.cardColourInversion(inversionModeEnabled)
+        notificationPanel.cardColourInversion(inversionModeEnabled)
     }
 
     override fun onPause() {

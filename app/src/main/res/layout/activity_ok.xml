@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
@@ -21,6 +20,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/notificationPanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
+                android:visibility="gone">
+
+                <include layout="@layout/notification_panel" />
+            </com.google.android.material.card.MaterialCardView>
 
             <uk.nhs.nhsx.sonar.android.app.status.RegistrationProgressPanel
                 android:id="@+id/registrationPanel"

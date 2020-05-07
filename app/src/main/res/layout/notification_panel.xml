@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/amberCircle"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_centerVertical="true"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_amber_circle" />
+
+        <TextView
+            style="@style/TextViewStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="13dp"
+            android:layout_toEndOf="@+id/amberCircle"
+            android:text="@string/enable_notifications_title"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="27dp"
+            android:layout_height="19dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@null"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_bell_ringing" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="8dp"
+        android:text="@string/enable_notifications_text"
+        android:textSize="15sp" />
+</LinearLayout>

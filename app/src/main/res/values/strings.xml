@@ -244,4 +244,6 @@
     <string name="please_confirm_the_information">Please confirm that the information you have entered is accurate</string>
     <string name="tablet_support_title">This app is not made for tablets.</string>
     <string name="tablet_support_description">This app is only available for smartphones because the app is only effective if you have it on a device that is with you all the time when you go out. Please install the app on your smartphone.</string>
+    <string name="enable_notifications_text">You will not receive notifications to say if you\'ve been near someone with COVID-19 symptoms unless you allow notifications in your Settings.</string>
+    <string name="enable_notifications_title">Enable notifications</string>
 </resources>
