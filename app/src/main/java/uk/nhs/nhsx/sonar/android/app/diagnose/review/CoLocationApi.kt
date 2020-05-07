@@ -51,7 +51,7 @@ data class CoLocationEvent(
     val hmacSignature: String
 )
 
-private fun CoLocationData.toJson(): JSONObject =
+fun CoLocationData.toJson(): JSONObject =
     jsonObjectOf(
         "symptomsTimestamp" to symptomsTimestamp,
         "contactEvents" to contactEvents.map {

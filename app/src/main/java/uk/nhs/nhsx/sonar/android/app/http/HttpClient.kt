@@ -21,6 +21,7 @@ private fun createQueue(): RequestQueue =
 class HttpClient(
     private val queue: RequestQueue,
     private val sonarHeaderValue: String,
+    private val utcClock: UTCClock = RealUTCClock(),
     private val base64enc: (ByteArray) -> String = { Base64.encodeToString(it, Base64.DEFAULT) }
 ) {
     constructor(sonarHeaderValue: String) : this(createQueue(), sonarHeaderValue)
@@ -42,6 +43,7 @@ class HttpClient(
             httpRequest = request,
             deferred = deferred,
             base64enc = base64enc,
+            utcClock = utcClock,
             sonarHeaderValue = sonarHeaderValue
         ).apply {
             retryPolicy = DefaultRetryPolicy(

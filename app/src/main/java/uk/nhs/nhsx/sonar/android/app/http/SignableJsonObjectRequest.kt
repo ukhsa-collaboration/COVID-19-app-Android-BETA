@@ -10,8 +10,6 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
-import org.joda.time.DateTimeZone
-import org.joda.time.LocalDateTime
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
 import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Explanation
@@ -22,6 +20,7 @@ class SignableJsonObjectRequest(
     private val httpRequest: HttpRequest,
     deferred: Deferred<JSONObject>,
     private val sonarHeaderValue: String,
+    private val utcClock: UTCClock = RealUTCClock(),
     private val base64enc: (ByteArray) -> String
 ) :
     JsonObjectRequest(
@@ -48,8 +47,7 @@ class SignableJsonObjectRequest(
         return when (httpRequest.secretKey) {
             null -> return mapOf(*defaultHeaders)
             else -> {
-                val timestampAsString = LocalDateTime
-                    .now(DateTimeZone.UTC)
+                val timestampAsString = utcClock.now()
                     .toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
 
                 val signature = generateSignature(

@@ -213,6 +213,8 @@ dependencies {
     testImplementation 'org.awaitility:awaitility-kotlin:3.1.6'
     testImplementation 'io.mockk:mockk:1.10.0'
     testImplementation 'org.json:json:20190722'
+    testImplementation 'com.squareup.okhttp3:okhttp-urlconnection:4.6.0'
+    testImplementation 'com.squareup.okhttp3:okhttp:4.6.0'
     testImplementation 'au.com.dius:pact-jvm-consumer-junit:4.0.10'
     testImplementation 'org.slf4j:slf4j-api:1.7.30'
     testImplementation 'org.slf4j:slf4j-simple:1.7.30'
