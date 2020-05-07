@@ -26,6 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.util.observe
 import javax.inject.Inject
 
 class DiagnoseCoughActivity : BaseActivity() {
@@ -55,7 +56,7 @@ class DiagnoseCoughActivity : BaseActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        viewModel.observeUserState().observe({ this.lifecycle }) { result ->
+        viewModel.observeUserState().observe(this) { result ->
             when (result) {
                 is StateResult.Review -> DiagnoseReviewActivity.start(this, result.symptoms)
                 StateResult.Close -> DiagnoseCloseActivity.start(this)

@@ -47,3 +47,6 @@ inline fun <T> LiveData<LiveDataEvent<T>>.observeEventForever(crossinline onEven
 
 fun <T, U> LiveData<T>.map(function: (T) -> U): LiveData<U> =
     Transformations.map(this, function)
+
+fun <T> LiveData<T>.observe(owner: LifecycleOwner, function: (T) -> Unit) =
+    observe(owner, Observer(function))

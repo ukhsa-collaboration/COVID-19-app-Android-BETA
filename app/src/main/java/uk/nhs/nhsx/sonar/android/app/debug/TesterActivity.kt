@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_test.continue_button
 import kotlinx.android.synthetic.main.activity_test.events
@@ -26,6 +25,7 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.util.observe
 import javax.inject.Inject
 
 class TesterActivity : AppCompatActivity(R.layout.activity_test) {
@@ -71,7 +71,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             viewModel.storeEvents(this)
         }
 
-        viewModel.observeConnectionEvents().observe(this, Observer {
+        viewModel.observeConnectionEvents().observe(this) {
             Timber.d("Devices are $it")
             if (it.isEmpty()) no_events.visibility = View.VISIBLE
             else {
@@ -80,7 +80,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
                 val unique = ids.map { id -> it.findLast { event -> event.id == id } }
                 adapter.submitList(unique)
             }
-        })
+        }
 
         viewModel.observeConnectionEvents()
     }

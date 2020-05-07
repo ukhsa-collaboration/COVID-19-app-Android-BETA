@@ -10,7 +10,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_post_code.invalidPostCodeHint
 import kotlinx.android.synthetic.main.activity_post_code.postCodeContinue
 import kotlinx.android.synthetic.main.activity_post_code.postCodeEditText
@@ -20,6 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.util.announce
+import uk.nhs.nhsx.sonar.android.app.util.observe
 import uk.nhs.nhsx.sonar.android.app.util.observeEvent
 import javax.inject.Inject
 
@@ -46,7 +46,7 @@ class PostCodeActivity : ColorInversionAwareActivity(R.layout.activity_post_code
             viewModel.onContinue(postCodeEditText.text.toString())
         }
 
-        viewModel.viewState().observe(this, Observer { viewState ->
+        viewModel.viewState().observe(this) { viewState ->
             when (viewState) {
                 PostCodeViewState.Valid -> {
                     postCodeEditText.setBackgroundResource(R.drawable.edit_text_background)
@@ -58,7 +58,7 @@ class PostCodeActivity : ColorInversionAwareActivity(R.layout.activity_post_code
                     invalidPostCodeHint.isVisible = true
                 }
             }
-        })
+        }
 
         viewModel.navigation().observeEvent(this, { navigation ->
             when (navigation) {

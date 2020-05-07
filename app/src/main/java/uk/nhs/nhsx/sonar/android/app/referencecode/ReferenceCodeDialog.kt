@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.activity.ComponentActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.util.observe
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 
 class ReferenceCodeDialog(
@@ -28,7 +29,7 @@ class ReferenceCodeDialog(
         setOnCancelListener { dismiss() }
         openButton.setOnClickListener { showExpanded() }
 
-        viewModel.state().observe({ activity.lifecycle }) { state ->
+        viewModel.state().observe(activity) { state ->
             referenceCodeView.text =
                 when (state) {
                     ReferenceCodeViewModel.State.Loading -> activity.getString(R.string.loading)

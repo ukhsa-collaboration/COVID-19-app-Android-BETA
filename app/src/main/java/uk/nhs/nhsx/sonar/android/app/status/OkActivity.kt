@@ -13,14 +13,10 @@ import android.widget.Button
 import androidx.activity.viewModels
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
-import androidx.lifecycle.Observer
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
-import kotlinx.android.synthetic.main.activity_ok.notificationPanel
-import kotlinx.android.synthetic.main.activity_ok.registrationPanel
-import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
+import kotlinx.android.synthetic.main.activity_ok.*
 import kotlinx.android.synthetic.main.activity_review_close.nhs_service
-import kotlinx.android.synthetic.main.banner.toolbar_info
+import kotlinx.android.synthetic.main.banner.*
 import kotlinx.android.synthetic.main.status_footer_view.medical_workers_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -38,6 +34,7 @@ import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_DEFAULT
 import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_DEFAULT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
+import uk.nhs.nhsx.sonar.android.app.util.observe
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import javax.inject.Inject
@@ -118,7 +115,7 @@ class OkActivity : BaseActivity() {
     }
 
     private fun addViewModelListener() {
-        viewModel.viewState().observe(this, Observer { result ->
+        viewModel.viewState().observe(this) { result ->
             when (result) {
                 Complete -> {
                     registrationPanel.setState(result)
@@ -130,10 +127,8 @@ class OkActivity : BaseActivity() {
                     registrationPanel.setState(result)
                     toggleNotFeelingCard(false)
                 }
-                null -> {
-                }
             }
-        })
+        }
     }
 
     private fun setRecoveryDialog() {
