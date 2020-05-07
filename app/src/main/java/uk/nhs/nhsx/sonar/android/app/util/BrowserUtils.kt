@@ -24,7 +24,7 @@ private const val UTM_CONTENT_GENERAL = "utm_content=general"
 private const val UTM_CONTENT_SYMPTOMS = "utm_content=symptoms"
 private const val UTM_CONTENT_NOTIFIED = "utm_content=notified"
 
-private const val PAGE_NHS_CONDITIONS = "https://www.nhs.uk/conditions/coronavirus-covid-19"
+private const val PAGE_NHS_CONDITIONS = "https://www.nhs.uk/conditions/coronavirus-covid-19/"
 
 private const val PAGE_ADVICE_DEFAULT =
     "https://www.gov.uk/government/publications/full-guidance-on-staying-at-home-and-away-from-others/full-guidance-on-staying-at-home-and-away-from-others"
