@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.confirm_diagnosis
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_question
@@ -20,13 +19,11 @@ import kotlinx.android.synthetic.main.activity_cough_diagnosis.yes
 import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
-import uk.nhs.nhsx.sonar.android.app.util.observe
 import javax.inject.Inject
 
 class DiagnoseCoughActivity : BaseActivity() {
@@ -39,9 +36,7 @@ class DiagnoseCoughActivity : BaseActivity() {
     lateinit var userStateStorage: UserStateStorage
 
     @Inject
-    lateinit var factory: ViewModelFactory<DiagnoseCoughViewModel>
-
-    private val viewModel by viewModels<DiagnoseCoughViewModel> { factory }
+    lateinit var form: DiagnoseCoughForm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -56,22 +51,10 @@ class DiagnoseCoughActivity : BaseActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        viewModel.observeUserState().observe(this) { result ->
-            when (result) {
-                is StateResult.Review -> DiagnoseReviewActivity.start(this, result.symptoms)
-                StateResult.Close -> DiagnoseCloseActivity.start(this)
-                is StateResult.Main -> navigateTo(result.userState)
-            }
-        }
-
         confirm_diagnosis.setOnClickListener {
             when (cough_diagnosis_answer.checkedRadioButtonId) {
-                R.id.yes -> {
-                    viewModel.update(hasTemperature, true)
-                }
-                R.id.no -> {
-                    viewModel.update(hasTemperature, false)
-                }
+                R.id.yes -> submitForm(true)
+                R.id.no -> submitForm(false)
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
                     radio_selection_error.announceForAccessibility(getString(R.string.radio_button_cough_error))
@@ -81,6 +64,14 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         cough_diagnosis_answer.setOnCheckedChangeListener { _, _ ->
             radio_selection_error.visibility = View.GONE
+        }
+    }
+
+    private fun submitForm(hasCough: Boolean) {
+        when (val result = form.submit(hasTemperature, hasCough)) {
+            is StateResult.Review -> DiagnoseReviewActivity.start(this, result.symptoms)
+            StateResult.Close -> DiagnoseCloseActivity.start(this)
+            is StateResult.Main -> navigateTo(result.userState)
         }
     }
 

@@ -4,11 +4,6 @@
 
 package uk.nhs.nhsx.sonar.android.app.diagnose
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Close
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Main
 import uk.nhs.nhsx.sonar.android.app.diagnose.StateResult.Review
@@ -21,30 +16,21 @@ import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class DiagnoseCoughViewModel @Inject constructor(private val userStateStorage: UserStateStorage) :
-    ViewModel() {
+@Singleton
+class DiagnoseCoughForm @Inject constructor(private val userStateStorage: UserStateStorage) {
 
-    private val prevState: UserState by lazy {
-        userStateStorage.get()
-    }
+    fun submit(hasTemperature: Boolean, hasCough: Boolean): StateResult {
+        val prevState = userStateStorage.get()
+        val symptoms = symptoms(hasTemperature, hasCough)
+        val isCurrentlyIsolating = prevState.displayState() == ISOLATE
+        val hasNoSymptoms = symptoms.isEmpty()
 
-    private val nextStateLiveData = MutableLiveData<StateResult>()
-
-    fun observeUserState(): LiveData<StateResult> = nextStateLiveData
-
-    fun update(hasTemperature: Boolean, hasCough: Boolean) {
-        viewModelScope.launch {
-
-            val symptoms = symptoms(hasTemperature, hasCough)
-            val isCurrentlyIsolating = prevState.displayState() == ISOLATE
-            val hasNoSymptoms = symptoms.isEmpty()
-
-            nextStateLiveData.value = when {
-                isCurrentlyIsolating -> Main(updateState(symptoms))
-                hasNoSymptoms -> Close
-                else -> Review(NonEmptySet.create(symptoms)!!)
-            }
+        return when {
+            isCurrentlyIsolating -> Main(updateState(symptoms))
+            hasNoSymptoms -> Close
+            else -> Review(NonEmptySet.create(symptoms)!!)
         }
     }
 
@@ -61,10 +47,7 @@ class DiagnoseCoughViewModel @Inject constructor(private val userStateStorage: U
 }
 
 sealed class StateResult {
-
     data class Review(val symptoms: NonEmptySet<Symptom>) : StateResult()
-
     object Close : StateResult()
-
     data class Main(val userState: UserState) : StateResult()
 }
