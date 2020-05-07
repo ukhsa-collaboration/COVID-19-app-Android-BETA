@@ -7,30 +7,19 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.activity_post_code.invalidPostCodeHint
-import kotlinx.android.synthetic.main.activity_post_code.postCodeContinue
-import kotlinx.android.synthetic.main.activity_post_code.postCodeEditText
-import kotlinx.android.synthetic.main.activity_post_code.postCodeRationale
+import kotlinx.android.synthetic.main.activity_post_code.*
 import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.util.announce
-import uk.nhs.nhsx.sonar.android.app.util.observe
-import uk.nhs.nhsx.sonar.android.app.util.observeEvent
 import javax.inject.Inject
 
 class PostCodeActivity : ColorInversionAwareActivity(R.layout.activity_post_code) {
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory<PostCodeViewModel>
-
-    private val viewModel: PostCodeViewModel by viewModels {
-        viewModelFactory
-    }
+    lateinit var postCodeValidator: PostCodeValidator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,28 +32,18 @@ class PostCodeActivity : ColorInversionAwareActivity(R.layout.activity_post_code
             )
 
         postCodeContinue.setOnClickListener {
-            viewModel.onContinue(postCodeEditText.text.toString())
-        }
+            val postCodeEntry = postCodeEditText.text.toString()
 
-        viewModel.viewState().observe(this) { viewState ->
-            when (viewState) {
-                PostCodeViewState.Valid -> {
-                    postCodeEditText.setBackgroundResource(R.drawable.edit_text_background)
-                    invalidPostCodeHint.isVisible = false
-                }
-                PostCodeViewState.Invalid -> {
-                    postCodeEditText.setBackgroundResource(R.drawable.edit_text_background_error)
-                    announce(R.string.valid_post_code_is_required)
-                    invalidPostCodeHint.isVisible = true
-                }
+            if (postCodeValidator.validate(postCodeEntry)) {
+                postCodeEditText.setBackgroundResource(R.drawable.edit_text_background)
+                invalidPostCodeHint.isVisible = false
+                PermissionActivity.start(this)
+            } else {
+                postCodeEditText.setBackgroundResource(R.drawable.edit_text_background_error)
+                announce(R.string.valid_post_code_is_required)
+                invalidPostCodeHint.isVisible = true
             }
         }
-
-        viewModel.navigation().observeEvent(this, { navigation ->
-            when (navigation) {
-                PostCodeNavigation.Permissions -> PermissionActivity.start(this)
-            }
-        })
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
