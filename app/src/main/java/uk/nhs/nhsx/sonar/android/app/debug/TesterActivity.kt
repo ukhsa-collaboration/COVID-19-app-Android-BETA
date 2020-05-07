@@ -11,12 +11,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_test.continue_button
-import kotlinx.android.synthetic.main.activity_test.events
-import kotlinx.android.synthetic.main.activity_test.exportButton
-import kotlinx.android.synthetic.main.activity_test.no_events
-import kotlinx.android.synthetic.main.activity_test.reset_button
-import kotlinx.android.synthetic.main.activity_test.sonar_id
+import kotlinx.android.synthetic.main.activity_test.*
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -50,7 +45,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        sonar_id.text = "${sonarIdProvider.get()}"
+        sonar_id.text = sonarIdProvider.get()
         val adapter = EventsAdapter()
         events.adapter = adapter
         events.layoutManager = LinearLayoutManager(this)
