@@ -82,17 +82,9 @@ It is attached to the `check` step of the build.
 The official Kotlin style guide recommends slightly different configuration from the default
 Android Studio setup.
 
-1. The continuation indent should be set to 4
+Imports should *never* use wildcards:
 
-    ![Continuation indent](docs/kotlin-continuation-indent.png)
-
-1. Imports should *never* use wildcards
-
-    ![No wildcard import](docs/kotlin-import-no-wildcards.png)
-
-1. Files should end with a new line character.
-    
-    ![Ensure line feed on save](docs/kotlin-newline-character.png)
+![No wildcard import](docs/kotlin-import-no-wildcards.png)
 
 ## Play Store
 
