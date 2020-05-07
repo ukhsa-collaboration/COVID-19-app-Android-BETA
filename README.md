@@ -5,20 +5,21 @@
 
 ## Build setup
 
-Some secrets need to be set for the build to run. Please *DO NOT* add them to the project's `gradle.properties`.
-Required secrets are:
+For the build to run, some secrets must be set first. Please *DO NOT* add them to the project's `gradle.properties`.
+
+The required secrets are:
 
  - `sonar.headerValue`
  - `sonar.analyticsKey`
  - `sonar.baseUrl`
 
-To set a property refer to [official gradle documentation](https://docs.gradle.org/current/userguide/build_environment.html)
+To set a property, please refer to [official gradle documentation](https://docs.gradle.org/current/userguide/build_environment.html)
 
 ## Running tests
 
 1. Device setup
 
-    Make sure all animations are turned off on the device (not an emulator) that is running the tests.
+    Make sure all animations are disabled on the device (not an emulator) that is running the tests.
     https://developer.android.com/training/testing/espresso/setup#set-up-environment
     
     Also ensure that location access is enabled on the device.
@@ -41,12 +42,12 @@ To set a property refer to [official gradle documentation](https://docs.gradle.o
 ## PACT tests
 
 [Pact contract tests](https://github.com/DiUS/pact-jvm) are run as part of the regular unit test suite. 
-If one of the tests is failing, and you need more output, 
-set slf4j logging to debug: `-Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG`
+If one of the tests is failing, and you require additional debugging information, then set the slf4j log level to debug:   
+`-Dorg.slf4j.simpleLogger.defaultLogLevel=DEBUG`
 
 ### Are your pact tests failing with "problem accessing trust store"?
 
-This is a sign that you are registering encryption provider in a test but are not de-registering it after. Pact will then try to create a client using the Apache `SSLSocketFactory`. This will in turn try to use the encryption provider as the certificate trust store, resulting in the error you see. To fix, de-register the encryption provider after use in tests.
+This is a sign that you are registering an encryption provider in a test, however are not de-registering it afterwards. The pact will then try to create a client using the Apache `SSLSocketFactory`. This will in turn try to use the encryption provider as the certificate trust store, resulting in the error you see. To fix, de-register the encryption provider after use in tests.
 
 ## Running tests on Firebase from your machine
 
@@ -56,7 +57,7 @@ Make sure your APKs are built -
 ./gradlew localBuild
 ```
 
-You will need the [`gcloud` CLI](https://cloud.google.com/sdk/install).
+You will need the [`GCloud`CLI](https://cloud.google.com/sdk/install).
 Once installed run:
 
 ```$bash
@@ -76,7 +77,7 @@ gcloud firebase test android run \
 
 ## Code formatting with KTLint
 
-KTLint has been added to the build and will automatically run when you run the build.
+KTLint has been added to the build and will automatically initialise when you run the build.
 It is attached to the `check` step of the build.
 
 The official Kotlin style guide recommends slightly different configuration from the default
@@ -96,7 +97,7 @@ Android Studio setup.
 
 ## Play Store
 
-1. Make sure you have configured the following properties in `~/.gradle/gradle.properties`
+1. Make sure you have configured the following properties in `~/.gradle/gradle.properties`:
 
    ```properties
    SIGNING_KEY_ALIAS=<keystore alias>
@@ -106,7 +107,7 @@ Android Studio setup.
    PLAY_SERVICES_PUBLISH=<path/to/play-services.json>
    ```
 
-1. Update the release notes in `app/src/main/play/release-notes/en-GB/default.txt`
+1. Update the release notes in `app/src/main/play/release-notes/en-GB/default.txt`.
 
 1. To publish new release in `internal test track`, run following command in project root directory:
 
@@ -114,13 +115,13 @@ Android Studio setup.
    ./gradlew publish -Pplay-enabled
    ```
 
-1. To prompt a release from internal track to alpha (stakeholder) track, run following command in project root directory:
+1. To prompt a release from internal track to the alpha (stakeholder) track, run following command in project root directory:
 
    ```bash
    ./gradlew promoteArtifact -Pplay-enabled
    ```
 
 **NOTE**
-  * The build number will be set automatically. you don't need to change or commit it to git
+  * The build number will be set automatically. You don't need to change or commit it to git.
 
-Check [Gradle Play Publisher](https://github.com/Triple-T/gradle-play-publisher) for more info
+Check [Gradle Play Publisher](https://github.com/Triple-T/gradle-play-publisher) for more info.
