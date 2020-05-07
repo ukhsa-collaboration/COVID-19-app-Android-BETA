@@ -103,7 +103,7 @@ class ScannerTest {
             val scan = Scanner(
                 bleClient,
                 saveContactWorker,
-                bleEvents = BleEvents { Base64.getEncoder().encodeToString(it) },
+                eventEmitter = DebugBleEventTracker { Base64.getEncoder().encodeToString(it) },
                 currentTimestampProvider = { timestamp },
                 scanIntervalLength = 1,
                 base64Decoder = { Base64.getDecoder().decode(it) }

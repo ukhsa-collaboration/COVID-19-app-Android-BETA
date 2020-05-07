@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import org.joda.time.Seconds
 import uk.nhs.nhsx.sonar.android.app.MainActivity
-import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
+import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorkLauncher.Companion.REFERENCE_CODE_WORK
@@ -32,7 +32,7 @@ import javax.inject.Inject
 class TestViewModel @Inject constructor(
     private val context: Context,
     private val contactEventDao: ContactEventDao,
-    private val eventTracker: BleEvents
+    private val eventTracker: DebugBleEventTracker
 ) : ViewModel() {
 
     fun clear() {

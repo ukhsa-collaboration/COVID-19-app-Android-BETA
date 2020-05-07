@@ -14,8 +14,13 @@ import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
+interface BleEventEmitter {
+    fun connectedDeviceEvent(id: ByteArray, rssiValues: List<Int>)
+    fun scanFailureEvent()
+}
+
 @Singleton
-class BleEvents @Inject constructor() {
+class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
     constructor(customEncoder: (ByteArray) -> String) : this() {
         base64Encoder = customEncoder
     }
@@ -31,7 +36,13 @@ class BleEvents @Inject constructor() {
     fun observeConnectionEvents(): LiveData<List<ConnectedDevice>> =
         connectionEvents
 
-    fun connectedDeviceEvent(id: ByteArray, rssiValues: List<Int>) {
+    fun clear() {
+        safelyUpdateEventList {
+            eventsList.clear()
+        }
+    }
+
+    override fun connectedDeviceEvent(id: ByteArray, rssiValues: List<Int>) {
         val identifier = try {
             BluetoothIdentifier.fromBytes(id)
         } catch (e: Exception) {
@@ -62,15 +73,9 @@ class BleEvents @Inject constructor() {
         }
     }
 
-    fun scanFailureEvent() {
+    override fun scanFailureEvent() {
         safelyUpdateEventList {
             eventsList.add(ConnectedDevice(isReadFailure = true))
-        }
-    }
-
-    fun clear() {
-        safelyUpdateEventList {
-            eventsList.clear()
         }
     }
 
@@ -81,6 +86,13 @@ class BleEvents @Inject constructor() {
         }
         connectionEvents.postValue(eventListCopy)
     }
+}
+
+@Singleton
+class NoOpBleEventEmitter @Inject constructor() : BleEventEmitter {
+    override fun connectedDeviceEvent(id: ByteArray, rssiValues: List<Int>) {}
+
+    override fun scanFailureEvent() {}
 }
 
 private fun getCurrentTimeStamp() = DateTime.now(DateTimeZone.UTC)

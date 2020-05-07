@@ -34,7 +34,7 @@ import javax.inject.Named
 class Scanner @Inject constructor(
     private val rxBleClient: RxBleClient,
     private val saveContactWorker: SaveContactWorker,
-    private val bleEvents: BleEvents,
+    private val eventEmitter: BleEventEmitter,
     private val currentTimestampProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
     @Named(BluetoothModule.SCAN_INTERVAL_LENGTH)
     private val scanIntervalLength: Int,
@@ -192,13 +192,13 @@ class Scanner @Inject constructor(
         )
 
     private fun onConnectionError(e: Throwable) {
-        bleEvents.scanFailureEvent()
+        eventEmitter.scanFailureEvent()
         Timber.e("Connection failed with: $e")
     }
 
     private fun storeEvent(event: Event) {
         Timber.d("Event $event")
-        bleEvents.connectedDeviceEvent(
+        eventEmitter.connectedDeviceEvent(
             event.identifier,
             listOf(event.rssi)
         )

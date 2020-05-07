@@ -15,7 +15,8 @@ import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.analytics.AnalyticEvent
 import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
-import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
+import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
+import uk.nhs.nhsx.sonar.android.app.ble.NoOpBleEventEmitter
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.Scanner
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
@@ -67,12 +68,13 @@ class TestBluetoothModule(
     override fun provideScanner(
         rxBleClient: RxBleClient,
         saveContactWorker: SaveContactWorker,
-        bleEvents: BleEvents
-    ) =
+        debugBleEventEmitter: DebugBleEventTracker,
+        noOpBleEventEmitter: NoOpBleEventEmitter
+    ): Scanner =
         Scanner(
             rxBleClient,
             saveContactWorker,
-            bleEvents,
+            debugBleEventEmitter,
             currentTimestampProvider,
             scanIntervalLength
         )

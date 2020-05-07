@@ -12,8 +12,10 @@ import androidx.core.content.ContextCompat.getSystemService
 import com.polidea.rxandroidble2.RxBleClient
 import dagger.Module
 import dagger.Provides
+import uk.nhs.nhsx.sonar.android.app.BuildConfig
 import uk.nhs.nhsx.sonar.android.app.DeviceDetection
-import uk.nhs.nhsx.sonar.android.app.ble.BleEvents
+import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
+import uk.nhs.nhsx.sonar.android.app.ble.NoOpBleEventEmitter
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.Scanner
 import javax.inject.Named
@@ -43,14 +45,20 @@ open class BluetoothModule(
     open fun provideScanner(
         rxBleClient: RxBleClient,
         saveContactWorker: SaveContactWorker,
-        bleEvents: BleEvents
-    ): Scanner =
-        Scanner(
+        debugBleEventEmitter: DebugBleEventTracker,
+        noOpBleEventEmitter: NoOpBleEventEmitter
+    ): Scanner {
+        val eventEmitter = when (BuildConfig.BUILD_TYPE) {
+            "debug", "staging" -> debugBleEventEmitter
+            else -> noOpBleEventEmitter
+        }
+        return Scanner(
             rxBleClient,
             saveContactWorker,
-            bleEvents,
+            eventEmitter,
             scanIntervalLength = scanIntervalLength
         )
+    }
 
     @Provides
     @Named(SCAN_INTERVAL_LENGTH)
