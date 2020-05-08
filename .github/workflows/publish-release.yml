@@ -61,7 +61,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/bundle/internal/app-internal.aab
-          asset_name: app-internal-${{ steps.publish_staging.outputs.buildVersion }}($${ github.event.client_payload.ref }}).aab
+          asset_name: app-internal-${{ steps.publish_staging.outputs.buildVersion }}(${{ github.event.client_payload.ref }}).aab
           asset_content_type: application/octet-stream
 
       - name: Upload Staging APK
@@ -71,7 +71,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/apk/internal/app-internal.aab
-          asset_name: app-internal-${{ steps.publish_staging.outputs.buildVersion }}($${ github.event.client_payload.ref }}).apk
+          asset_name: app-internal-${{ steps.publish_staging.outputs.buildVersion }}(${{ github.event.client_payload.ref }}).apk
           asset_content_type: application/vnd.android.package-archive
 
       - name: Publish Alpha
@@ -98,7 +98,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/bundle/release/app-release.aab
-          asset_name: app-release-${{ steps.publish_alpha.outputs.buildVersion }}($${ github.event.client_payload.ref }}).aab
+          asset_name: app-release-${{ steps.publish_alpha.outputs.buildVersion }}(${{ github.event.client_payload.ref }}).aab
           asset_content_type: application/octet-stream
 
       - name: Upload Alpha APK
@@ -108,7 +108,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/apk/release/app-release.aab
-          asset_name: app-release-${{ steps.publish_alpha.outputs.buildVersion }}($${ github.event.client_payload.ref }}).apk
+          asset_name: app-release-${{ steps.publish_alpha.outputs.buildVersion }}(${{ github.event.client_payload.ref }}).apk
           asset_content_type: application/vnd.android.package-archive
 
       - name: Notify Slack
@@ -119,6 +119,6 @@ jobs:
           SLACK_USERNAME: CI
           SLACK_TITLE: New Staging & Alpha Release
           SLACK_MESSAGE: |
-            - Staging Build: ${{ steps.publish_staging.outputs.buildVersion }}($${ github.event.client_payload.ref }})
-            - Alpha Build: ${{ steps.publish_alpha.outputs.buildVersion }}($${ github.event.client_payload.ref }})
+            - Staging Build: ${{ steps.publish_staging.outputs.buildVersion }}(${{ github.event.client_payload.ref }})
+            - Alpha Build: ${{ steps.publish_alpha.outputs.buildVersion }}(${{ github.event.client_payload.ref }})
             - Release Url: ${{ steps.create_release.outputs.html_url }}
