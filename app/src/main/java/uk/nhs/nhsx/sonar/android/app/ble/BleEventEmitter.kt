@@ -15,8 +15,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface BleEventEmitter {
-    fun connectedDeviceEvent(id: ByteArray, rssiValues: List<Int>)
-    fun scanFailureEvent()
+    fun connectedDeviceEvent(
+        id: ByteArray,
+        rssiValues: List<Int>,
+        txPowerAdvertised: Int
+    )
 }
 
 @Singleton
@@ -42,40 +45,42 @@ class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
         }
     }
 
-    override fun connectedDeviceEvent(id: ByteArray, rssiValues: List<Int>) {
+    override fun connectedDeviceEvent(
+        id: ByteArray,
+        rssiValues: List<Int>,
+        txPowerAdvertised: Int
+    ) {
         val identifier = try {
             BluetoothIdentifier.fromBytes(id)
         } catch (e: Exception) {
             return
         }
         val idString = base64Encoder(identifier.cryptogram.asBytes())
+            .replace("\n", "")
+
         safelyUpdateEventList {
-            val lastEvent = eventsList.firstOrNull { it.id == idString }
+            val lastEvent = eventsList.firstOrNull { it.cryptogram == idString }
             if (lastEvent != null) {
                 eventsList.remove(lastEvent)
                 eventsList.add(
                     lastEvent.copy(
-                        timestamp = getCurrentTimeStamp(),
-                        lastTimestamp = lastEvent.timestamp,
-                        rssiValues = rssiValues
+                        rssiTimestamps = listOf(getCurrentTimeStamp()) + lastEvent.rssiTimestamps,
+                        rssiValues = rssiValues + lastEvent.rssiValues
                     )
                 )
             } else {
                 eventsList.add(
                     ConnectedDevice(
-                        id = idString,
-                        timestamp = getCurrentTimeStamp(),
-                        lastTimestamp = getCurrentTimeStamp(),
-                        rssiValues = rssiValues
+                        cryptogram = idString,
+                        firstSeen = getCurrentTimeStamp(),
+                        rssiTimestamps = listOf(getCurrentTimeStamp()),
+                        rssiValues = rssiValues,
+                        txPowerAdvertised = txPowerAdvertised,
+                        txPowerProtocol = identifier.txPower.toInt()
                     )
                 )
             }
-        }
-    }
-
-    override fun scanFailureEvent() {
-        safelyUpdateEventList {
-            eventsList.add(ConnectedDevice(isReadFailure = true))
+            eventsList.sortByDescending { it.firstSeen }
         }
     }
 
@@ -90,18 +95,22 @@ class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
 
 @Singleton
 class NoOpBleEventEmitter @Inject constructor() : BleEventEmitter {
-    override fun connectedDeviceEvent(id: ByteArray, rssiValues: List<Int>) {}
-
-    override fun scanFailureEvent() {}
+    override fun connectedDeviceEvent(
+        id: ByteArray,
+        rssiValues: List<Int>,
+        txPowerAdvertised: Int
+    ) {
+    }
 }
 
 private fun getCurrentTimeStamp() = DateTime.now(DateTimeZone.UTC)
 
 data class ConnectedDevice(
-    val id: String? = null,
-    val timestamp: DateTime = DateTime.now(),
-    val lastTimestamp: DateTime = DateTime.now(),
+    val cryptogram: String? = null,
+    val firstSeen: DateTime = DateTime.now(),
+    val rssiTimestamps: List<DateTime> = listOf(DateTime.now()),
     val rssiValues: List<Int> = emptyList(),
-    val isConnectionError: Boolean = false,
-    val isReadFailure: Boolean = false
+    val txPowerProtocol: Int = 0,
+    val txPowerAdvertised: Int = 0,
+    var expanded: Boolean = false
 )

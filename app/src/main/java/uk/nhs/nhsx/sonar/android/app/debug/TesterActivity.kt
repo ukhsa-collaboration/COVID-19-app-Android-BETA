@@ -46,6 +46,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
         sonar_id.text = sonarIdProvider.get()
+
         val adapter = EventsAdapter()
         events.adapter = adapter
         events.layoutManager = LinearLayoutManager(this)
@@ -71,8 +72,8 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             if (it.isEmpty()) no_events.visibility = View.VISIBLE
             else {
                 no_events.visibility = View.GONE
-                val ids = it.map { event -> event.id }.distinct()
-                val unique = ids.map { id -> it.findLast { event -> event.id == id } }
+                val ids = it.map { event -> event.cryptogram }.distinct()
+                val unique = ids.map { id -> it.findLast { event -> event.cryptogram == id } }
                 adapter.submitList(unique)
             }
         }

@@ -10,55 +10,74 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.view.children
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.event_error_view_item.view.error_event
+import kotlinx.android.synthetic.main.event_view.view.detailView
 import kotlinx.android.synthetic.main.event_view.view.remote_contact_id
 import kotlinx.android.synthetic.main.event_view.view.rssi
-import kotlinx.android.synthetic.main.event_view.view.time
+import kotlinx.android.synthetic.main.event_view.view.timestamp
+import kotlinx.android.synthetic.main.event_view.view.txPower
+import org.joda.time.DateTime
 import org.joda.time.Seconds
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ble.ConnectedDevice
+import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
+import kotlin.math.abs
 
 class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val context: Context = view.context
 
     fun bindTo(event: ConnectedDevice) {
-        val eventBytes = Base64.decode(event.id, Base64.DEFAULT)
-        val rgbAsHex = eventBytes.sliceArray(0 until 3)
-            .map { String.format("%02X", it) }
-            .joinToString("", prefix = "#")
+        itemView.detailView.visibility = if (event.expanded) View.VISIBLE else View.GONE
+        val cryptogramColour = cryptogramColourAndInverse(event)
+        updateColours(cryptogramColour.first, cryptogramColour.second)
 
-        itemView.remote_contact_id.text = event.id
-        val cryptogramColor = Color.parseColor(rgbAsHex)
-        itemView.setBackgroundColor(cryptogramColor)
-        itemView.rssi.text = event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
-        itemView.time.text = context.getString(
-            R.string.last_reading, Seconds.secondsBetween(
-                event.lastTimestamp,
-                event.timestamp
-            ).seconds
-        )
-    }
-}
+        itemView.remote_contact_id.text = event.cryptogram
+        itemView.remote_contact_id.maxLines = if (event.expanded) 4 else 1
 
-class EventErrorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        itemView.detailView.timestamp.text = context.getString(R.string.timestamp, event.firstSeen)
+        itemView.detailView.txPower.text =
+            context.getString(R.string.txpower, event.txPowerAdvertised, event.txPowerProtocol)
 
-    fun bindTo(event: ConnectedDevice) {
-        val errorTextView = itemView.error_event
-        errorTextView.text = when {
-            event.isReadFailure -> {
-                "Read failure"
+        itemView.rssi.text = if (event.expanded) {
+            val rssis = event.rssiValues
+            val rssiTimestamps = event.rssiTimestamps
+            val rssiIntervals = rssiTimestamps.mapIndexed { index, timestamp ->
+                return@mapIndexed if (index == 0) ""
+                else
+                    abs(Seconds.secondsBetween(
+                        DateTime(rssiTimestamps[index - 1]),
+                        DateTime(timestamp)
+                    ).seconds)
             }
-            event.isConnectionError -> {
-                "Disconnected " + event.id.orEmpty()
-            }
-            else -> {
-                "None"
-            }
+            rssis.mapIndexed { index, _ -> "${rssis[index]}        ${rssiTimestamps[index].toTime()}        ${rssiIntervals[index]}" }
+                .joinToString("\n")
+        } else {
+            event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
         }
+        itemView.rssi.maxLines = if (event.expanded) Int.MAX_VALUE else 1
+    }
+
+    private fun DateTime.toTime(): String = this.toUtcIsoFormat().split("T")[1].substring(0, 8)
+    private fun updateColours(cryptogramColour: Int, inverseColor: Int) {
+        itemView.setBackgroundColor(cryptogramColour)
+        itemView.remote_contact_id.setTextColor(inverseColor)
+        itemView.rssi.setTextColor(inverseColor)
+        for (view in itemView.detailView.children) {
+            if (view is TextView) view.setTextColor(inverseColor)
+        }
+    }
+
+    private fun cryptogramColourAndInverse(event: ConnectedDevice): Pair<Int, Int> {
+        val cryptogramBytes = Base64.decode(event.cryptogram, Base64.DEFAULT)
+        val r = cryptogramBytes[0].toInt()
+        val g = cryptogramBytes[1].toInt()
+        val b = cryptogramBytes[2].toInt()
+        return Pair(Color.rgb(r, g, b), Color.rgb(255 - r, 255 - g, 255 - b))
     }
 }
 
@@ -66,34 +85,19 @@ class EventsAdapter :
     ListAdapter<ConnectedDevice, RecyclerView.ViewHolder>(EventItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
         val inflater = LayoutInflater.from(parent.context)
-        return if (viewType == ERROR_TYPE) {
-            val view = inflater.inflate(R.layout.event_error_view_item, parent, false)
-            EventErrorViewHolder(view)
-        } else {
-            val view = inflater.inflate(R.layout.event_view, parent, false)
-            EventViewHolder(view)
-        }
+        val view = inflater.inflate(R.layout.event_view, parent, false)
+        return EventViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (holder) {
-            is EventViewHolder -> holder.bindTo(getItem(position))
-            is EventErrorViewHolder -> holder.bindTo(getItem(position))
+        val eventHolder = holder as EventViewHolder
+        eventHolder.bindTo(getItem(position))
+        val event = currentList[position]
+        eventHolder.itemView.setOnClickListener {
+            event.expanded = !event.expanded
+            notifyItemChanged(position)
         }
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        // TODO: Seems to be able to return null
-        val item = getItem(position)
-        return if (item.isConnectionError or item.isReadFailure) ERROR_TYPE
-        else CONNECTION_TYPE
-    }
-
-    companion object {
-        private const val ERROR_TYPE = 1
-        private const val CONNECTION_TYPE = 2
     }
 }
 

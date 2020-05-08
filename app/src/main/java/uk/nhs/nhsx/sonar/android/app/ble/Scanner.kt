@@ -192,7 +192,6 @@ class Scanner @Inject constructor(
         )
 
     private fun onConnectionError(e: Throwable) {
-        eventEmitter.scanFailureEvent()
         Timber.e("Connection failed with: $e")
     }
 
@@ -200,7 +199,8 @@ class Scanner @Inject constructor(
         Timber.d("Event $event")
         eventEmitter.connectedDeviceEvent(
             event.identifier,
-            listOf(event.rssi)
+            listOf(event.rssi),
+            event.txPower
         )
 
         saveContactWorker.createOrUpdateContactEvent(
