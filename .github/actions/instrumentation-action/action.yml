@@ -1,5 +1,9 @@
 name: 'Run instrumentation tests'
-description: 'Setup Java, Android SDK and GCloud CLI'
+description: 'Setup GCloud CLI'
+inputs:
+  googleCloudServiceAccount:
+    description: 'Google Cloud Service Account'
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'

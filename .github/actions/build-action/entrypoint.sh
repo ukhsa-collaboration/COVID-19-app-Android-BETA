@@ -1,15 +1,21 @@
 #!/usr/bin/env bash
-
 set -ev
 
+function validate() {
+  if [[ -z "$1" ]]; then
+    >&2 echo "Unable to find input: '$2'."
+    exit 1
+  fi
+}
+
+validate "$INPUT_GOOGLE_SERVICES" "Google Services"
+validate "$INPUT_SONAR_HEADER_VALUE" "Sonar Header Value"
+validate "$INPUT_SONAR_ANALYTICS_KEY" "Sonar Analytics Key"
+
 GOOGLE_SERVICES_FILE=app/google-services.json
-
-if [ -z "$GOOGLE_SERVICES" ]; then
-  echo "GOOGLE_SERVICES is required to generate $GOOGLE_SERVICES_FILE"
-  exit 1
-fi
-
 mkdir build
-echo "$GOOGLE_SERVICES" > $GOOGLE_SERVICES_FILE
+echo "$INPUT_GOOGLE_SERVICES" > $GOOGLE_SERVICES_FILE
 
-./gradlew build packageDebugAndroidTest -Psonar.headerValue="$TEST_SONAR_HEADER_VALUE" -Psonar.analyticsKey="$SONAR_ANALYTICS_KEY"
+./gradlew build packageDebugAndroidTest \
+    -Psonar.headerValue="$INPUT_SONAR_HEADER_VALUE" \
+    -Psonar.analyticsKey="$INPUT_SONAR_ANALYTICS_KEY"

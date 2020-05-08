@@ -1,5 +1,15 @@
 name: 'Setup build environment'
-description: 'Setup Java, Android SDK and GCloud CLI'
+description: 'Setup Java, Android SDK'
+inputs:
+  googleServices:
+    description: 'google-services config file'
+    required: true
+  sonarHeaderValue:
+    description: 'Sonar header value'
+    required: true
+  sonarAnalyticsKey:
+    description: 'Sonar analytics key'
+    required: true
 runs:
   using: 'docker'
   image: 'Dockerfile'

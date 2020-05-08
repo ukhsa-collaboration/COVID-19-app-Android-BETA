@@ -18,30 +18,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Cache Gradle packages
+      - name: Cache Gradle Packages
         uses: actions/cache@v1
         with:
           path: /root/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Build and test
+      - name: Build & Test
         uses: ./.github/actions/build-action
-        env:
-          GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
-          TEST_SONAR_HEADER_VALUE: ${{ secrets.TestSonarHeaderValue }}
-          SONAR_ANALYTICS_KEY: ${{ secrets.TestSonarAnalyticsKey }}
-
-      - name: Upload Debug APK
-        uses: actions/upload-artifact@v2
         with:
-          name: apk-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          googleServices: ${{ secrets.GoogleServices }}
+          sonarHeaderValue: ${{ secrets.TestSonarHeaderValue }}
+          sonarAnalyticsKey: ${{ secrets.TestSonarAnalyticsKey }}
 
-      - name: Instrumentation test
+      - name: Instrumented Test
         uses: ./.github/actions/instrumentation-action
-        env:
-          SERVICE_ACCOUNT: ${{ secrets.ServiceAccount }}
+        with:
+          googleCloudServiceAccount: ${{ secrets.ServiceAccount }}
 
       - name: Notify Slack on Failure
         if: ${{ github.ref == 'refs/heads/master' && failure() }}
