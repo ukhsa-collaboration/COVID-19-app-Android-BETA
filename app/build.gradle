@@ -70,7 +70,7 @@ android {
         debug {
             testCoverageEnabled project.hasProperty("coverage")
         }
-        staging {
+        internal {
             minifyEnabled false
             signingConfig signingConfigs.config
         }

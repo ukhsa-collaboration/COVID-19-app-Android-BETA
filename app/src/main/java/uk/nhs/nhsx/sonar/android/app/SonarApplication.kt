@@ -53,7 +53,7 @@ class SonarApplication : Application() {
         FirebaseApp.initializeApp(this)
 
         when (BuildConfig.BUILD_TYPE) {
-            "staging" -> {
+            "internal" -> {
                 Timber.plant(Timber.DebugTree())
                 registerShakeDetector()
             }

@@ -49,7 +49,7 @@ open class BluetoothModule(
         noOpBleEventEmitter: NoOpBleEventEmitter
     ): Scanner {
         val eventEmitter = when (BuildConfig.BUILD_TYPE) {
-            "debug", "staging" -> debugBleEventEmitter
+            "debug", "internal" -> debugBleEventEmitter
             else -> noOpBleEventEmitter
         }
         return Scanner(
