@@ -8,9 +8,9 @@ function validate() {
   fi
 }
 
-validate "$INPUT_GOOGLE_SERVICES" "Google Services"
-validate "$INPUT_SONAR_HEADER_VALUE" "Sonar Header Value"
-validate "$INPUT_SONAR_ANALYTICS_KEY" "Sonar Analytics Key"
+validate "$INPUT_GOOGLE_SERVICES" "googleServices"
+validate "$INPUT_SONAR_HEADER_VALUE" "sonarHeaderValue"
+validate "$INPUT_SONAR_ANALYTICS_KEY" "sonarAnalyticsKey"
 
 GOOGLE_SERVICES_FILE=app/google-services.json
 mkdir build

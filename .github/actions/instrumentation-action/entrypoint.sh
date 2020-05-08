@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 set -ev
 
 function validate() {
@@ -9,7 +8,7 @@ function validate() {
   fi
 }
 
-validate "$INPUT_GOOGLE_CLOUD_SERVICE_ACCOUNT" "Google Cloud Service Account"
+validate "$INPUT_GOOGLE_CLOUD_SERVICE_ACCOUNT" "googleCloudServiceAccount"
 
 SERVICE_ACCOUNT_FILE=build/gcloud-key.json
 echo "$INPUT_GOOGLE_CLOUD_SERVICE_ACCOUNT" > $SERVICE_ACCOUNT_FILE

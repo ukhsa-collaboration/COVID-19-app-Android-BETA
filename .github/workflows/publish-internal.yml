@@ -31,30 +31,30 @@ jobs:
       - name: Publish
         id: publish
         uses: ./.github/actions/publish-action
-        env:
-          BUILD_FLAVOR: Internal
-          PLAY_TRACK: internal
-          GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
-          PLAY_SERVICES: ${{ secrets.PlayServices }}
-          SIGNING_KEY_STORE: ${{ secrets.signingKeyStore }}
-          SIGNING_KEY_ALIAS: ${{ secrets.signingKeyStoreAlias }}
-          SIGNING_KEY_STORE_PASSWORD: ${{ secrets.signingKeyStorePassword }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.signingKeyPassword }}
-          SONAR_HEADER_VALUE: ${{ secrets.TestSonarHeaderValue }}
-          SONAR_ANALYTICS_KEY: ${{ secrets.TestSonarAnalyticsKey }}
-          SONAR_BASE_URL: https://test.route.cp.data.england.nhs.uk
-          COMMIT_SHA: ${{ github.event.client_payload.ref }}
+        with:
+          buildFlavor: Internal
+          playTrack: internal
+          googleServices: ${{ secrets.GoogleServices }}
+          playServices: ${{ secrets.PlayServices }}
+          signingKeyStore: ${{ secrets.signingKeyStore }}
+          signingKeyStorAlias: ${{ secrets.signingKeyStoreAlias }}
+          signingKeyStorePassword: ${{ secrets.signingKeyStorePassword }}
+          signingKeyPassword: ${{ secrets.signingKeyPassword }}
+          sonarHeaderValue: ${{ secrets.TestSonarHeaderValue }}
+          sonarAnalyticsKey: ${{ secrets.TestSonarAnalyticsKey }}
+          sonarBaseUrl: ${{ secrets.TestSonarBaseUrl }}
+          commitSha: ${{ github.event.client_payload.ref }}
 
       - name: Upload APK
         uses: actions/upload-artifact@v2
         with:
-          name: app-internal-${{ steps.publish.outputs.buildVersion }}.apk
+          name: app-internal-${{ steps.publish.outputs.buildVersion }}($${ github.event.client_payload.ref }}).apk
           path: app/build/outputs/apk/internal/app-internal.apk
 
       - name: Upload AAB
         uses: actions/upload-artifact@v2
         with:
-          name: app-internal-${{ steps.publish.outputs.buildVersion }}.aab
+          name: app-internal-${{ steps.publish.outputs.buildVersion }}($${ github.event.client_payload.ref }}).aab
           path: app/build/outputs/bundle/internal/app-internal.aab
 
       - name: Notify Slack

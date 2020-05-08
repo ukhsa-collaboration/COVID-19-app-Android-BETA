@@ -1,8 +1,58 @@
 name: 'Setup play environment'
 description: 'Setup play environment to publish the app to internal test track'
+inputs:
+  buildFlavor:
+    description: 'build flavor e.g Internal, Release'
+    required: true
+  playTrack:
+    description: 'play-store track e.g internal, Staging, Alpha'
+    required: true
+  playServices:
+    description: 'services credentials for play-store API'
+    required: true
+  googleServices:
+    description: 'google-services config file'
+    required: true
+  sonarHeaderValue:
+    description: 'Sonar header value'
+    required: true
+  sonarAnalyticsKey:
+    description: 'Sonar analytics key'
+    required: true
+  sonarBaseUrl:
+    description: 'Sonar base url'
+    required: true
+  commitSha:
+    description: 'commit sha'
+    required: true
+  signingKeyStore:
+    description: 'key store'
+    required: true
+  signingKeyStorePassword:
+    description: 'key store password'
+    required: true
+  signingKeyStoreAlias:
+    description: 'key store alias'
+    required: true
+  signingKeyPassword:
+    description: 'key password'
+    required: true
 outputs:
   buildVersion:
     description: 'build version'
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  env:
+    INPUT_BUILD_FLAVOR: ${{ inputs.buildFlavor }}
+    INPUT_PLAY_TRACK: ${{ inputs.playTrack }}
+    INPUT_GOOGLE_SERVICES: ${{ inputs.googleServices }}
+    INPUT_PLAY_SERVICES: ${{ inputs.playServices }}
+    INPUT_SIGNING_KEY_STORE: ${{ inputs.signingKeyStore }}
+    INPUT_SIGNING_KEY_ALIAS: ${{ inputs.signingKeyStoreAlias }}
+    INPUT_SIGNING_KEY_STORE_PASSWORD: ${{ inputs.signingKeyStorePassword }}
+    INPUT_SIGNING_KEY_PASSWORD: ${{ inputs.signingKeyPassword }}
+    INPUT_SONAR_HEADER_VALUE: ${{ inputs.sonarHeaderValue }}
+    INPUT_SONAR_ANALYTICS_KEY: ${{ inputs.sonarAnalyticsKey }}
+    INPUT_SONAR_BASE_URL: ${{ inputs.sonarBaseUrl }}
+    INPUT_COMMIT_SHA: ${{ inputs.commitSha }}

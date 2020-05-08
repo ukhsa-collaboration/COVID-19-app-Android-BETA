@@ -11,22 +11,30 @@ your username via `GITHUB_USER_TOKEN` environment variable.
 $ export GITHUB_USER_TOKEN = <user>:token
 ```
 
-## Publish
+## Publish Internal
 
-In order to publish a new build, you need to run `trigger.sh` script.
+In order to publish a new internal build, you need to run `internal.sh` script.
+
+Script needs an arguments which is a commit-sha (short one).
+
+```sh
+$ ./internal 376e3f4
+```
+
+Above script publishes a build to `internal` track in play store.
+
+### Publish Staging and Alpha
+
+In order to publish a new staging and alpha build, you need to run `release.sh` script.
 
 Script needs two arguments:
- - First one is the publish track. valid values are `test`, `staging` or `alpha`
- - Second one is a git ref. it can be a commit sha, tag or any other valid git ref.
-
-### Publish Test Build (Using test endpoints)
+ - The first one is a commit-sha (short one).
+ - The second one is the release tag for github release (e.g v1.1)
 
 ```sh
-$ ./trigger.sh test 376e3f4
+$ ./release.sh 376e3f4
 ```
 
-### Publish Alpha Build (Using production endpoints)
-
-```sh
-$ ./trigger.sh alpha 376e3f4
-```
+Above script publishes two builds:
+  - the first one uses the staging endpoints and is published to `Staging` track in play store.
+  - the second one uses the production endpoints and is published to `Alpha` track in play store.

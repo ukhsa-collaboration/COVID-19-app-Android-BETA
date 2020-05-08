@@ -3,7 +3,7 @@ set -e
 
 function main() {
 
-ref=$2
+ref=$1
 
 validate "$ref" "ref"
 validate "$GITHUB_USER_TOKEN" "GITHUB_USER_TOKEN"	
@@ -43,7 +43,7 @@ function validate() {
 
 function usage() {
   echo ""
-  echo "Usage: $0 track<test|alpha>  ref<git sha|ref>"
+  echo "Usage: $0 <git sha>"
   echo ""
 }
 
