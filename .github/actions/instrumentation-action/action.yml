@@ -7,5 +7,5 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
-  args:
-    - ${{ inputs.googleCloudServiceAccount }}
+  env:
+    INPUT_GOOGLE_CLOUD_SERVICE_ACCOUNT: ${{ inputs.googleCloudServiceAccount }}
