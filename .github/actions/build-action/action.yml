@@ -13,3 +13,7 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.googleServices }}
+    - ${{ inputs.sonarHeaderValue }}
+    - ${{ inputs.sonarAnalyticsKey }}

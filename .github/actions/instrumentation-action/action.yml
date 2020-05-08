@@ -7,3 +7,5 @@ inputs:
 runs:
   using: 'docker'
   image: 'Dockerfile'
+  args:
+    - ${{ inputs.googleCloudServiceAccount }}
