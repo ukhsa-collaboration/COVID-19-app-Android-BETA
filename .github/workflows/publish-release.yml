@@ -1,0 +1,124 @@
+name: Publish Alpha
+
+on:
+  repository_dispatch:
+    types: [publish-release]
+
+jobs:
+
+  publish:
+    runs-on:
+      - self-hosted
+      - linux
+      - aws
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.client_payload.ref }}
+
+      - name: Cache Gradle Packages
+        uses: actions/cache@v1
+        with:
+          path: /root/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Publish Staging
+        id: publish_staging
+        uses: ./.github/actions/publish-action
+        with:
+          buildFlavor: Internal
+          playTrack: Staging
+          googleServices: ${{ secrets.GoogleServices }}
+          playServices: ${{ secrets.PlayServices }}
+          signingKeyStore: ${{ secrets.signingKeyStore }}
+          signingKeyStoreAlias: ${{ secrets.signingKeyStoreAlias }}
+          signingKeyStorePassword: ${{ secrets.signingKeyStorePassword }}
+          signingKeyPassword: ${{ secrets.signingKeyPassword }}
+          sonarHeaderValue: ${{ secrets.StagingSonarHeaderValue }}
+          sonarAnalyticsKey: ${{ secrets.TestSonarAnalyticsKey }}
+          sonarBaseUrl: ${{ secrets.StagingSonarBaseUrl }}
+          commitSha: ${{ github.event.client_payload.ref }}
+
+      - name: Create Release
+        id: create_release
+        uses: fleskesvor/create-release@feature/support-target-commitish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.client_payload.tag }}
+          release_name: Release ${{ github.event.client_payload.tag }}
+          commitish: ${{ github.event.client_payload.ref }}
+          body: ""
+
+      - name: Upload Staging AAB
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: app/build/outputs/bundle/internal/app-internal.aab
+          asset_name: app-internal-${{ steps.publish_staging.outputs.buildVersion }}($${ github.event.client_payload.ref }}).aab
+          asset_content_type: application/octet-stream
+
+      - name: Upload Staging APK
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: app/build/outputs/apk/internal/app-internal.aab
+          asset_name: app-internal-${{ steps.publish_staging.outputs.buildVersion }}($${ github.event.client_payload.ref }}).apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Publish Alpha
+        id: publish_alpha
+        uses: ./.github/actions/publish-action
+        with:
+          buildFlavor: Release
+          playTrack: alpha
+          googleServices: ${{ secrets.ProdGoogleServices }}
+          playServices: ${{ secrets.PlayServices }}
+          signingKeyStore: ${{ secrets.signingKeyStore }}
+          signingKeyStoreAlias: ${{ secrets.signingKeyStoreAlias }}
+          signingKeyStorePassword: ${{ secrets.signingKeyStorePassword }}
+          signingKeyPassword: ${{ secrets.signingKeyPassword }}
+          sonarHeaderValue: ${{ secrets.ProdSonarHeaderValue }}
+          sonarAnalyticsKey: ${{ secrets.ProdSonarAnalyticsKey }}
+          sonarBaseUrl: ${{ secrets.ProdSonarBaseUrl }}
+          commitSha: ${{ github.event.client_payload.ref }}
+
+      - name: Upload Alpha AAB
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: app/build/outputs/bundle/release/app-release.aab
+          asset_name: app-release-${{ steps.publish_alpha.outputs.buildVersion }}($${ github.event.client_payload.ref }}).aab
+          asset_content_type: application/octet-stream
+
+      - name: Upload Alpha APK
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: app/build/outputs/apk/release/app-release.aab
+          asset_name: app-release-${{ steps.publish_alpha.outputs.buildVersion }}($${ github.event.client_payload.ref }}).apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Notify Slack
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
+          SLACK_COLOR: '#138275'
+          SLACK_USERNAME: CI
+          SLACK_TITLE: New Staging & Alpha Release
+          SLACK_MESSAGE: |
+            - Staging Build: ${{ steps.publish_staging.outputs.buildVersion }}($${ github.event.client_payload.ref }})
+            - Alpha Build: ${{ steps.publish_alpha.outputs.buildVersion }}($${ github.event.client_payload.ref }})
+            - Release Url: ${{ steps.create_release.outputs.html_url }}

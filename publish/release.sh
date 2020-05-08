@@ -30,7 +30,7 @@ fi
 
 url="https://api.github.com/repos/nhsx/sonar-colocate-android/dispatches"
 contentType="Content-Type: application/json"
-payload="{\"event_type\": \"publish-release\", \"client_payload\": {\"ref\": \"$ref\"}}"
+payload="{\"event_type\": \"publish-release\", \"client_payload\": {\"ref\": \"$ref\", \"tag\": \"$tag\"}}"
 
 echo ""
 echo "Dispatching event: $payload"

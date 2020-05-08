@@ -21,14 +21,14 @@ jobs:
 
       - run: echo ::set-output name=commitsha::$(git rev-parse --short HEAD)
 
-      - name: Cache Gradle packages
+      - name: Cache Gradle Packages
         uses: actions/cache@v1
         with:
           path: /root/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Publish
+      - name: Publish Internal
         id: publish
         uses: ./.github/actions/publish-action
         with:
@@ -37,7 +37,7 @@ jobs:
           googleServices: ${{ secrets.GoogleServices }}
           playServices: ${{ secrets.PlayServices }}
           signingKeyStore: ${{ secrets.signingKeyStore }}
-          signingKeyStorAlias: ${{ secrets.signingKeyStoreAlias }}
+          signingKeyStoreAlias: ${{ secrets.signingKeyStoreAlias }}
           signingKeyStorePassword: ${{ secrets.signingKeyStorePassword }}
           signingKeyPassword: ${{ secrets.signingKeyPassword }}
           sonarHeaderValue: ${{ secrets.TestSonarHeaderValue }}
@@ -45,13 +45,13 @@ jobs:
           sonarBaseUrl: ${{ secrets.TestSonarBaseUrl }}
           commitSha: ${{ github.event.client_payload.ref }}
 
-      - name: Upload APK
+      - name: Upload Internal APK
         uses: actions/upload-artifact@v2
         with:
           name: app-internal-${{ steps.publish.outputs.buildVersion }}($${ github.event.client_payload.ref }}).apk
           path: app/build/outputs/apk/internal/app-internal.apk
 
-      - name: Upload AAB
+      - name: Upload Internal AAB
         uses: actions/upload-artifact@v2
         with:
           name: app-internal-${{ steps.publish.outputs.buildVersion }}($${ github.event.client_payload.ref }}).aab
@@ -63,5 +63,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
           SLACK_COLOR: '#138275'
           SLACK_USERNAME: CI
-          SLACK_TITLE: New Internal Release ${{ steps.publish.outputs.buildVersion }}
-          SLACK_MESSAGE: APK and AAB are uploaded as job artefacts
+          SLACK_TITLE: New Internal Release
+          SLACK_MESSAGE: |
+            - Internal Build: ${{ steps.publish.outputs.buildVersion }}($${ github.event.client_payload.ref }})
+            - APK and AAB are uploaded as job artefacts
