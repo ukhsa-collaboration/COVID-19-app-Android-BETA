@@ -1,8 +1,8 @@
-name: Publish Test
+name: Publish Internal
 
 on:
   repository_dispatch:
-    types: [publish-test]
+    types: [publish-internal]
 
 jobs:
 
@@ -32,7 +32,7 @@ jobs:
         id: publish
         uses: ./.github/actions/publish-action
         env:
-          BUILD_FLAVOR: StagingApk
+          BUILD_FLAVOR: Internal
           PLAY_TRACK: internal
           GOOGLE_SERVICES: ${{ secrets.GoogleServices }}
           PLAY_SERVICES: ${{ secrets.PlayServices }}
@@ -45,26 +45,17 @@ jobs:
           SONAR_BASE_URL: https://test.route.cp.data.england.nhs.uk
           COMMIT_SHA: ${{ github.event.client_payload.ref }}
 
-      - name: Create Test Release
-        id: create_test_release
-        uses: fleskesvor/create-release@feature/support-target-commitish
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
         with:
-          tag_name: ${{ steps.publish.outputs.buildVersion }}
-          release_name: Test Build ${{ steps.publish.outputs.buildVersion }}
-          body: |
-            New test build
+          name: app-internal-${{ steps.publish.outputs.buildVersion }}.apk
+          path: app/build/outputs/apk/internal/app-internal.apk
 
-      - name: Upload Test APK
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload AAB
+        uses: actions/upload-artifact@v2
         with:
-          upload_url: ${{ steps.create_test_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/staging/app-staging.apk
-          asset_name: app-staging.apk
-          asset_content_type: application/vnd.android.package-archive
+          name: app-internal-${{ steps.publish.outputs.buildVersion }}.aab
+          path: app/build/outputs/bundle/internal/app-internal.aab
 
       - name: Notify Slack
         uses: rtCamp/action-slack-notify@v2.0.0
@@ -72,5 +63,5 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
           SLACK_COLOR: '#138275'
           SLACK_USERNAME: CI
-          SLACK_TITLE: New Test Release
-          SLACK_MESSAGE: ${{ steps.create_test_release.outputs.html_url }}
+          SLACK_TITLE: New Internal Release ${{ steps.publish.outputs.buildVersion }}
+          SLACK_MESSAGE: APK and AAB are uploaded as job artefacts
