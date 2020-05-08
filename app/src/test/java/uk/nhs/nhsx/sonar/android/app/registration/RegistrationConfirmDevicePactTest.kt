@@ -34,7 +34,7 @@ import javax.crypto.KeyGenerator
 class RegistrationConfirmDevicePactTest {
 
     @get:Rule
-    val provider = PactProviderRule("registration_api", this)
+    val provider = PactProviderRule("Registration API", this)
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -43,7 +43,7 @@ class RegistrationConfirmDevicePactTest {
     private lateinit var clientSymmetricKey: String
     private lateinit var registrationId: UUID
 
-    @Pact(consumer = "android_app")
+    @Pact(consumer = "Android App")
     fun pact(builder: PactDslWithProvider): RequestResponsePact {
         clientSymmetricKey = generatePrivateKey()
         serverPublicKey = generateServerPublicKey()

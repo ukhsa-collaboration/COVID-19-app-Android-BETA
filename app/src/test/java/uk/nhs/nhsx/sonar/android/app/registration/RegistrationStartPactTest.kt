@@ -31,12 +31,12 @@ import java.util.concurrent.Executors
 class RegistrationStartPactTest {
 
     @get:Rule
-    val provider = PactProviderRule("registration_api", this)
+    val provider = PactProviderRule("Registration API", this)
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    @Pact(consumer = "android_app")
+    @Pact(consumer = "Android App")
     fun pact(builder: PactDslWithProvider): RequestResponsePact =
         builder
             .given("no existing registration")

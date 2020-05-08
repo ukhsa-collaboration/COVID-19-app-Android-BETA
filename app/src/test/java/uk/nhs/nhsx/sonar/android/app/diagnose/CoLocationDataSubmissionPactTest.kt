@@ -61,12 +61,12 @@ class CoLocationDataSubmissionPactTest {
     private lateinit var colocationData: CoLocationData
 
     @get:Rule
-    val provider = PactProviderRule("proximity_api", this)
+    val provider = PactProviderRule("Proximity API", this)
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
 
-    @Pact(consumer = "android_app")
+    @Pact(consumer = "Android App")
     fun pact(builder: PactDslWithProvider): RequestResponsePact {
         utcNow = LocalDateTime.now(DateTimeZone.UTC)
         val timestamp = utcNow.toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
@@ -83,8 +83,11 @@ class CoLocationDataSubmissionPactTest {
 
         return builder
             .given(
-                "a confirmed registration with key",
-                mutableMapOf<String, Any>("key" to encodeBase64(secretKey.encoded))
+                "a confirmed registration",
+                mutableMapOf<String, Any>(
+                    "id" to colocationData.sonarId,
+                    "key" to encodeBase64(secretKey.encoded)
+                )
             )
             .given("the date and time is", mutableMapOf<String, Any>("timestamp" to timestamp))
             // request

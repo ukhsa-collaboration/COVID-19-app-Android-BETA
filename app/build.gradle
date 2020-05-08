@@ -106,7 +106,7 @@ pact {
     publish {
         version = 'git rev-parse --short HEAD'.execute().text.trim()
         pactBrokerUrl = findProperty("pactbroker.url") ?: 'http://localhost:9292'
-        tags = ['git tag --points-at HEAD'.execute().text.trim()]
+        tags = ['git describe --tags'.execute().text.trim()]
     }
 }
 
