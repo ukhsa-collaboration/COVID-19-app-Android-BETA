@@ -32,6 +32,7 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
@@ -364,19 +365,26 @@ class FlowTest {
         checkOkActivityIsShown()
     }
 
+    private fun findButton(text: String): UiObject2? =
+        testAppContext.device.let {
+            it.findObject(By.text(text))
+                ?: it.findObject(By.text(text.toLowerCase()))
+                ?: it.findObject(By.text(text.toUpperCase()))
+        }
+
     fun testOnboarding_WhenPermissionsNeedToBeSet() {
         fun testEnableBluetooth() {
             onView(withId(R.id.permission_continue)).perform(click())
 
             testAppContext.device.apply {
                 wait(Until.hasObject(By.textContains("wants to turn on Bluetooth")), 500)
-                val buttonText = "Allow"
-                val allowButton = findObject(By.text(buttonText))
-                if (allowButton != null) {
-                    allowButton.click()
-                    return@apply
-                }
-                findObject(By.text(buttonText.toUpperCase())).click()
+
+                val button = sequenceOf("Allow", "Yes", "Ok", "Accept")
+                    .mapNotNull(::findButton)
+                    .firstOrNull()
+                    ?: fail("Looks like we could not find the acceptance button for bluetooth.")
+
+                button.click()
             }
         }
 
