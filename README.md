@@ -86,6 +86,8 @@ Imports should *never* use wildcards:
 
 ![No wildcard import](docs/kotlin-import-no-wildcards.png)
 
+Additionally, the continuation indent should be set to 4 spaces and files should end with a newline character. This will be handled automatically by the `.editorconfig` file for most people.
+
 ## Play Store
 
 1. Make sure you have configured the following properties in `~/.gradle/gradle.properties`
