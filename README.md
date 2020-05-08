@@ -3,6 +3,8 @@
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Release: BETA](https://img.shields.io/badge/Release-BETA-orange)
 
+[Android App matrix chatroom](https://matrix.to/#/!DUestmBrLYsBaSiGdc:matrix.org?via=matrix.org)
+
 ## Build setup
 
 Some secrets need to be set for the build to run. Please *DO NOT* add them to the project's `gradle.properties`.
