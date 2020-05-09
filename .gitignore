@@ -10,6 +10,7 @@ captures
 jacoco.exec
 .envrc
 .tool-versions
+gradle-local.properties
 
 ## Pacts folder
 app/target/pacts

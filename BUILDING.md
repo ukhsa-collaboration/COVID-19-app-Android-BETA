@@ -14,22 +14,16 @@ Setup:
   * In firebase create a new android app with a unique app id - E.g `test.android.covid86`
   * Save the google-services.json that it gives you to ./app/google-services.json
   * In `app\build.gradle` replace `uk.nhs.nhsx.colocate` with your firebase app id (E.g. `test.android.covid86`).
-  * In `app\build.gradle` comment out the throw exceptions and just any string:
+  * In the root directory add a `gradle-local.properties` with the following contents:
 ```
-        def baseUrl = findProperty("sonar.baseUrl") ?: {
-            ""
-            //throw new MissingPropertyException("Missing property `sonar.baseUrl` please see README for instructions")
-        }
+# Project-wide Gradle settings that should NOT BE CHECKED INTO GIT.
+#
+#  This file is intentionally in .gitignore
 
-        def headerValue = findProperty("sonar.headerValue") ?: {
-            ""
-            //throw new MissingPropertyException("Missing property `sonar.headerValue` please see README for instructions")
-        }
-
-        def analyticsKey = findProperty("sonar.analyticsKey") ?: {
-            ""
-            //throw new MissingPropertyException("Missing property `sonar.analyticsKey` please see README for instructions")
-        }
+# Back end server url (not currently open sourced)
+sonar.baseUrl=https://not.yet.open.sourced.backend.gov.uk/
+sonar.headerValue=example_header_value
+sonar.analyticsKey=example_analytics_key
 ```
 
   * If you don't plug an android phone into a usb, [create an emulator](https://developer.android.com/studio/run/managing-avds#createavd)
