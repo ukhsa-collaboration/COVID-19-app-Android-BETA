@@ -5,6 +5,8 @@
 
 ## Build setup
 
+For getting started instructions read [BUILDING.md](BUILDING.md)
+
 Some secrets need to be set for the build to run. Please *DO NOT* add them to the project's `gradle.properties`.
 Required secrets are:
 
