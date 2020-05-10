@@ -61,7 +61,7 @@
         <activity android:name=".diagnose.DiagnoseCoughActivity" />
         <activity
             android:name=".onboarding.PostCodeActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".diagnose.DiagnoseCloseActivity" />
         <activity android:name=".onboarding.EnableBluetoothActivity" />
         <activity android:name=".onboarding.GrantLocationPermissionActivity" />
