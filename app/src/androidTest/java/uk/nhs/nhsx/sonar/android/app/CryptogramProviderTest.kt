@@ -5,7 +5,6 @@
 package uk.nhs.nhsx.sonar.android.app
 
 import android.content.Context
-import android.util.Base64
 import androidx.test.rule.ActivityTestRule
 import junit.framework.TestCase
 import org.assertj.core.api.Assertions.assertThat
@@ -16,13 +15,11 @@ import org.joda.time.Minutes
 import org.joda.time.Seconds
 import org.junit.Rule
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.crypto.CRYPTOGRAM_FILENAME
-import uk.nhs.nhsx.sonar.android.app.crypto.CRYPTOGRAM_PREF_NAME
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramProvider
+import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
 import uk.nhs.nhsx.sonar.android.app.crypto.Encrypter
 import uk.nhs.nhsx.sonar.android.app.crypto.EphemeralKeyProvider
-import uk.nhs.nhsx.sonar.android.app.crypto.LATEST_DATE_PREF_NAME
 import uk.nhs.nhsx.sonar.android.app.http.AndroidSecretKeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.DelegatingKeyStore
 import uk.nhs.nhsx.sonar.android.app.http.PUBLIC_KEY_FILENAME
@@ -41,6 +38,7 @@ class CryptogramProviderTest {
 
     private lateinit var sonarIdProvider: SonarIdProvider
     private lateinit var encrypter: Encrypter
+    private lateinit var cryptogramStorage: CryptogramStorage
 
     private val startTime = DateTime.parse("2020-04-24T14:00:00Z")
 
@@ -65,20 +63,22 @@ class CryptogramProviderTest {
 
     fun setUp() {
         keyStore.aliases().asSequence().forEach { keyStore.deleteEntry(it) }
-        listOf(PUBLIC_KEY_FILENAME, SECRET_KEY_PREFERENCE_FILENAME, CRYPTOGRAM_FILENAME).forEach {
+        listOf(PUBLIC_KEY_FILENAME, SECRET_KEY_PREFERENCE_FILENAME).forEach {
             val clear = context.getSharedPreferences(it, Context.MODE_PRIVATE).edit().clear()
             if (!clear.commit()) TestCase.fail("Unable to clear shared preference: $it")
         }
 
         sonarIdProvider = SonarIdProvider(context)
         sonarIdProvider.set("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+
         val secretKeyStorage = AndroidSecretKeyStorage(keyStore, context)
         secretKeyStorage.storeSecretKey("ddYTB7doP61hMnChfcWBVvvZsP5l5ypar5eeFQrBfY8=")
         val publicKeyStorage = SharedPreferencesPublicKeyStorage(context)
         publicKeyStorage.storeServerPublicKey("MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu1f68MqDXbKeTqZMTHsOGToO4rKnPClXe/kE+oWqlaWZQv4J1E98cUNdpzF9JIFRPMCNdGOvTr4UB+BhQv9GWg==")
-        val keyStorage = DelegatingKeyStore(secretKeyStorage, publicKeyStorage)
-        val ephemeralKeyProvider = EphemeralKeyProvider()
-        encrypter = Encrypter(keyStorage, ephemeralKeyProvider)
+
+        encrypter = Encrypter(DelegatingKeyStore(secretKeyStorage, publicKeyStorage), EphemeralKeyProvider())
+        cryptogramStorage = CryptogramStorage(context)
+        cryptogramStorage.clear()
     }
 
     private fun returnsTheSameCryptogramIfRequestedOnSameDay() {
@@ -95,7 +95,7 @@ class CryptogramProviderTest {
         val provider = CryptogramProvider(
             sonarIdProvider,
             encrypter,
-            context,
+            cryptogramStorage,
             currentDateProvider
         )
         val cryptogram = provider.provideCryptogram()
@@ -118,7 +118,7 @@ class CryptogramProviderTest {
         val provider = CryptogramProvider(
             sonarIdProvider,
             encrypter,
-            context,
+            cryptogramStorage,
             currentDateProvider
         )
         val cryptogram = provider.provideCryptogram()
@@ -139,7 +139,7 @@ class CryptogramProviderTest {
         val provider = CryptogramProvider(
             sonarIdProvider,
             encrypter,
-            context,
+            cryptogramStorage,
             currentDateProvider
         )
         val cryptogram = provider.provideCryptogram()
@@ -151,7 +151,7 @@ class CryptogramProviderTest {
         val provider = CryptogramProvider(
             sonarIdProvider,
             encrypter,
-            context,
+            cryptogramStorage,
             currentDateProvider
         )
         val cryptogram = provider.provideCryptogram()
@@ -159,7 +159,7 @@ class CryptogramProviderTest {
             CryptogramProvider(
                 sonarIdProvider,
                 encrypter,
-                context,
+                cryptogramStorage,
                 currentDateProvider
             ).provideCryptogram()
         )
@@ -169,14 +169,11 @@ class CryptogramProviderTest {
         val provider = CryptogramProvider(
             sonarIdProvider,
             encrypter,
-            context,
+            cryptogramStorage,
             currentDateProvider
         )
         val storedCryptogram = Cryptogram.fromBytes(Random.Default.nextBytes(Cryptogram.SIZE))
-        context.getSharedPreferences(CRYPTOGRAM_FILENAME, Context.MODE_PRIVATE).edit()
-            .putLong(LATEST_DATE_PREF_NAME, startTime.minus(Hours.FIVE).millis)
-            .putString(CRYPTOGRAM_PREF_NAME, Base64.encodeToString(storedCryptogram.asBytes(), Base64.DEFAULT))
-            .commit()
+        cryptogramStorage.set(Pair(startTime.minus(Hours.FIVE).millis, storedCryptogram))
 
         val cryptogram = provider.provideCryptogram()
         assertThat(cryptogram).isEqualTo(storedCryptogram)
@@ -186,20 +183,15 @@ class CryptogramProviderTest {
         val provider = CryptogramProvider(
             sonarIdProvider,
             encrypter,
-            context,
+            cryptogramStorage,
             currentDateProvider
         )
         val storedCryptogram = Cryptogram.fromBytes(Random.Default.nextBytes(Cryptogram.SIZE))
-        val prefs =
-            context.getSharedPreferences(CRYPTOGRAM_FILENAME, Context.MODE_PRIVATE)
-        prefs.edit()
-            .putLong(LATEST_DATE_PREF_NAME, startTime.minus(Days.ONE).millis)
-            .putString(CRYPTOGRAM_PREF_NAME, Base64.encodeToString(storedCryptogram.asBytes(), Base64.DEFAULT))
-            .commit()
+        cryptogramStorage.set(Pair(startTime.minus(Days.ONE).millis, storedCryptogram))
 
         val cryptogram = provider.provideCryptogram()
         assertThat(cryptogram).isNotEqualTo(storedCryptogram)
-        val updatedCryptogram = prefs.getString(CRYPTOGRAM_PREF_NAME, "")
-        assertThat(Base64.decode(updatedCryptogram, Base64.DEFAULT)).isNotEqualTo(storedCryptogram)
+        val updatedCryptogram = cryptogramStorage.get().second!!
+        assertThat(updatedCryptogram).isNotEqualTo(storedCryptogram)
     }
 }

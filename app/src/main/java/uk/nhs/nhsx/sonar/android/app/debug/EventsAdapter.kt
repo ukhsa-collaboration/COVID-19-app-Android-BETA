@@ -5,7 +5,6 @@
 package uk.nhs.nhsx.sonar.android.app.debug
 
 import android.content.Context
-import android.graphics.Color
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
@@ -33,8 +32,9 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     fun bindTo(event: ConnectedDevice) {
         itemView.detailView.visibility = if (event.expanded) View.VISIBLE else View.GONE
-        val cryptogramColour = cryptogramColourAndInverse(event)
-        updateColours(cryptogramColour.first, cryptogramColour.second)
+        val cryptogramBytes = Base64.decode(event.cryptogram, Base64.DEFAULT)
+        val (cryptogramColour, inverseColour) = cryptogramColourAndInverse(cryptogramBytes)
+        updateColours(cryptogramColour, inverseColour)
 
         itemView.remote_contact_id.text = event.cryptogram
         itemView.remote_contact_id.maxLines = if (event.expanded) 4 else 1
@@ -49,10 +49,12 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val rssiIntervals = rssiTimestamps.mapIndexed { index, timestamp ->
                 return@mapIndexed if (index == 0) ""
                 else
-                    abs(Seconds.secondsBetween(
-                        DateTime(rssiTimestamps[index - 1]),
-                        DateTime(timestamp)
-                    ).seconds)
+                    abs(
+                        Seconds.secondsBetween(
+                            DateTime(rssiTimestamps[index - 1]),
+                            DateTime(timestamp)
+                        ).seconds
+                    ).toString()
             }
             rssis.mapIndexed { index, _ -> "${rssis[index]}        ${rssiTimestamps[index].toTime()}        ${rssiIntervals[index]}" }
                 .joinToString("\n")
@@ -70,14 +72,6 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         for (view in itemView.detailView.children) {
             if (view is TextView) view.setTextColor(inverseColor)
         }
-    }
-
-    private fun cryptogramColourAndInverse(event: ConnectedDevice): Pair<Int, Int> {
-        val cryptogramBytes = Base64.decode(event.cryptogram, Base64.DEFAULT)
-        val r = cryptogramBytes[0].toInt()
-        val g = cryptogramBytes[1].toInt()
-        val b = cryptogramBytes[2].toInt()
-        return Pair(Color.rgb(r, g, b), Color.rgb(255 - r, 255 - g, 255 - b))
     }
 }
 
