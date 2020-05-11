@@ -11,6 +11,7 @@ import uk.nhs.nhsx.sonar.android.app.http.AndroidSecretKeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.DelegatingKeyStore
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdSigner
+import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.Encrypter
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.PublicKeyStorage
@@ -37,10 +38,17 @@ class CryptoModule(
     fun providePublicKeyStorage(): PublicKeyStorage = SharedPreferencesPublicKeyStorage(context)
 
     @Provides
-    fun provideBluetoothCryptogramProvider(
+    fun provideCryptogramProvider(
         sonarIdProvider: SonarIdProvider,
         encrypter: Encrypter,
+        context: Context
+    ): CryptogramProvider =
+        CryptogramProvider(sonarIdProvider, encrypter, context)
+
+    @Provides
+    fun provideBluetoothIdentitymProvider(
+        cryptogramProvider: CryptogramProvider,
         signer: BluetoothIdSigner
     ): BluetoothIdProvider =
-        BluetoothIdProvider(sonarIdProvider, encrypter, signer)
+        BluetoothIdProvider(cryptogramProvider, signer)
 }

@@ -5,7 +5,9 @@
 package uk.nhs.nhsx.sonar.android.app.crypto
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider
+import java.nio.ByteBuffer
 
+val COUNTRY_CODE: ByteArray = ByteBuffer.wrap(ByteArray(2)).putShort(826.toShort()).array()
 const val PROVIDER_NAME = BouncyCastleProvider.PROVIDER_NAME
 const val ECDH = "ECDH"
 const val ELLIPTIC_CURVE = "EC"

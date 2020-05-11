@@ -34,11 +34,6 @@ private val message = "somthing to sign".toByteArray()
 private val expectedMessageSignature =
     Base64.decode("lALk5pvISLja72Od1kmRHMd9GR7Z47PJgrN+QSW61H8=", Base64.DEFAULT)
 
-const val exampleServerPubPEM = """-----BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu1f68MqDXbKeTqZMTHsOGToO4rKn
-PClXe/kE+oWqlaWZQv4J1E98cUNdpzF9JIFRPMCNdGOvTr4UB+BhQv9GWg==
------END PUBLIC KEY-----"""
-
 class AndroidSecretKeyStorageTest {
 
     @get:Rule
