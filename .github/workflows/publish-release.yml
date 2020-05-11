@@ -68,7 +68,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/bundle/internal/app-internal.aab
-          asset_name: app-internal-${{ steps.publish_staging.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }}).aab
+          asset_name: app-staging-${{ steps.publish_staging.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }}).aab
           asset_content_type: application/octet-stream
 
       - name: Upload Staging APK
@@ -78,7 +78,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: app/build/outputs/apk/internal/app-internal.apk
-          asset_name: app-internal-${{ steps.publish_staging.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }}).apk
+          asset_name: app-staging-${{ steps.publish_staging.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }}).apk
           asset_content_type: application/vnd.android.package-archive
 
       - name: Publish Alpha
