@@ -13,6 +13,7 @@ jobs:
       - self-hosted
       - linux
       - aws
+      - blue
 
     steps:
       - name: Checkout

@@ -15,10 +15,10 @@ $ export GITHUB_USER_TOKEN = <user>:token
 
 In order to publish a new internal build, you need to run `internal.sh` script.
 
-Script needs an arguments which is a commit-sha (short one).
+Script needs an arguments which is a git ref (commit-sha, branch ...).
 
 ```sh
-$ ./internal 376e3f4
+$ ./internal 376e3f
 ```
 
 Above script publishes a build to `internal` track in play store.
@@ -28,11 +28,11 @@ Above script publishes a build to `internal` track in play store.
 In order to publish a new staging and alpha build, you need to run `release.sh` script.
 
 Script needs two arguments:
- - The first one is a commit-sha (short one).
+ - The first one is a git ref (commit-sha, branch ...)
  - The second one is the release tag for github release (e.g v1.1)
 
 ```sh
-$ ./release.sh 376e3f4
+$ ./release.sh 376e3f
 ```
 
 Above script publishes two builds:
