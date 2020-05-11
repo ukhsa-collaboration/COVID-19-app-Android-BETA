@@ -23,6 +23,7 @@ import javax.inject.Inject
 const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
 const val NOTIFICATION_ID_LOCATION_IS_DISABLED = 1338
 const val NOTIFICATION_CHECK_IN_REMINDER = 1340
+const val NOTIFICATION_SERVICE_ID = 10001
 
 class BluetoothNotificationHelper(val context: Context) {
 
@@ -90,6 +91,12 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
             isOngoing = false
         )
     }
+}
+
+fun Context.cancelStatusNotification() {
+    NotificationManagerCompat
+        .from(this)
+        .cancel(NOTIFICATION_SERVICE_ID)
 }
 
 fun Context.notificationBuilder(): NotificationCompat.Builder =

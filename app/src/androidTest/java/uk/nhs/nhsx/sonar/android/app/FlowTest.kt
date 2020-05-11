@@ -109,6 +109,7 @@ class FlowTest {
             ::testRegistrationRetry,
             ::testBluetoothInteractions,
             ::testReceivingStatusUpdateNotification,
+            ::testHideStatusUpdateNotificationWhenNotClicked,
             ::testExplanation,
             ::testLaunchWhenStateIsDefault,
             ::testLaunchWhenStateIsAmber,
@@ -267,6 +268,27 @@ class FlowTest {
         testAppContext.apply {
             simulateStatusUpdateReceived()
             clickOnNotification(R.string.notification_title, R.string.notification_text)
+        }
+
+        checkAtRiskActivityIsShown()
+    }
+
+    fun testHideStatusUpdateNotificationWhenNotClicked() {
+        setUserState(DefaultState)
+        setValidSonarId()
+        setReferenceCode()
+
+        val notificationTitle = R.string.notification_title
+
+        testAppContext.apply {
+            simulateStatusUpdateReceived()
+            isNotificationDisplayed(notificationTitle, isDisplayed = true)
+        }
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        testAppContext.apply {
+            isNotificationDisplayed(notificationTitle, isDisplayed = false)
         }
 
         checkAtRiskActivityIsShown()

@@ -64,7 +64,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         eventNumber++
         Timber.d("Sending event nr $eventNumber")
         when (eventNumber) {
-            1 -> { startTime }
+            1 -> {
+                startTime
+            }
             2, 3 -> DateTime.parse("2020-04-01T14:34:43Z") // +90 seconds
             4 -> DateTime.parse("2020-04-01T14:44:53Z") // +610 seconds
             else -> throw IllegalStateException()
@@ -148,6 +150,19 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun simulateStatusUpdateReceived() {
         val msg = RemoteMessage(bundleOf("status" to "POTENTIAL"))
         notificationService.onMessageReceived(msg)
+    }
+
+    fun isNotificationDisplayed(
+        @StringRes notificationTitleRes: Int,
+        isDisplayed: Boolean
+    ) {
+        val notificationTitle = testActivity.getString(notificationTitleRes)
+
+        device.openNotification()
+
+        assertThat(device.hasObject(By.text(notificationTitle))).isEqualTo(isDisplayed)
+
+        device.pressBack()
     }
 
     fun clickOnNotification(
