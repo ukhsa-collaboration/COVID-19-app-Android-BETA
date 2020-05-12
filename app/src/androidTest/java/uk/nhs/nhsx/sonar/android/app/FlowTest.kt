@@ -108,6 +108,7 @@ class FlowTest {
             ::testTabletNotSupported,
             ::testRegistration,
             ::testRegistrationRetry,
+            ::testRegistrationPushNotificationNotReceived,
             ::testBluetoothInteractions,
             ::testReceivingStatusUpdateNotification,
             ::testHideStatusUpdateNotificationWhenNotClicked,
@@ -236,6 +237,43 @@ class FlowTest {
 
         // job retries after at least 10 seconds
         waitForText(R.string.registration_everything_is_working_ok, timeoutInMs = 20000)
+
+        checkViewHasText(
+            R.id.registrationStatusText,
+            R.string.registration_everything_is_working_ok
+        )
+        verifyCheckMySymptomsButton(isEnabled())
+    }
+
+    fun testRegistrationPushNotificationNotReceived() {
+        testAppContext.simulateBackendDelay(400)
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        onView(withId(R.id.confirm_onboarding)).perform(click())
+
+        checkPostCodeActivityIsShown()
+
+        onView(withId(R.id.postCodeContinue)).perform(click())
+
+        onView(withId(R.id.invalidPostCodeHint)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
+        closeSoftKeyboard()
+
+        onView(withId(R.id.postCodeContinue)).perform(click())
+
+        checkPermissionActivityIsShown()
+
+        onView(withId(R.id.permission_continue)).perform(click())
+
+        checkOkActivityIsShown()
+
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
+
+        testAppContext.verifyReceivedRegistrationRequest()
+
+        testAppContext.verifyRegistrationFlow()
 
         checkViewHasText(
             R.id.registrationStatusText,

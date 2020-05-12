@@ -37,10 +37,9 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
+import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.PUBLIC_KEY
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.REFERENCE_CODE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.RESIDENT_ID
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.SECRET_KEY
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
@@ -114,7 +113,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         keyStore.aliases().asSequence().forEach { keyStore.deleteEntry(it) }
 
         component = DaggerTestAppComponent.builder()
-            .appModule(AppModule(app, testLocationHelper, TestAnalytics()))
+            .appModule(
+                AppModule(
+                    app,
+                    testLocationHelper,
+                    TestAnalytics(),
+                    ActivationCodeWaitTime(10, TimeUnit.SECONDS)
+                )
+            )
             .persistenceModule(PersistenceModule(app))
             .bluetoothModule(testBluetoothModule)
             .cryptoModule(
@@ -235,7 +241,6 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         simulateActivationCodeReceived()
         verifyReceivedActivationRequest()
         verifySonarIdAndSecretKeyAndPublicKey()
-        verifyReferenceCode()
     }
 
     fun verifyRegistrationRetry() {
@@ -243,7 +248,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         simulateActivationCodeReceived()
     }
 
-    private fun verifyReceivedRegistrationRequest() {
+    fun verifyReceivedRegistrationRequest() {
         // WorkManager is responsible for starting registration process and unfortunately it is not exact
         // Have to wait for longer time (usually less than 10 seconds). Putting 20 secs just to be sure
         var lastRequest = mockServer.takeRequest(20_000, TimeUnit.MILLISECONDS)
@@ -298,13 +303,6 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val publicKey = keyStorage.providePublicKey()?.encoded
         val decodedPublicKey = Base64.decode(PUBLIC_KEY, Base64.DEFAULT)
         assertThat(publicKey).isEqualTo(decodedPublicKey)
-    }
-
-    private fun verifyReferenceCode() {
-        val provider = component.getReferenceCodeProvider()
-        await until {
-            provider.get() == ReferenceCode(REFERENCE_CODE)
-        }
     }
 
     fun simulateDeviceInProximity() {

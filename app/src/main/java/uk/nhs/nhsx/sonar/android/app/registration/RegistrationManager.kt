@@ -36,19 +36,25 @@ import kotlin.coroutines.CoroutineContext
 class RegistrationManager @Inject constructor(
     private val context: Context,
     private val workManager: WorkManager,
-    @Named(AppModule.DISPATCHER_MAIN) private val dispatcher: CoroutineDispatcher
+    @Named(AppModule.DISPATCHER_MAIN) private val dispatcher: CoroutineDispatcher,
+    private val activationCodeWaitTime: ActivationCodeWaitTime
 ) : CoroutineScope {
 
     private var previousWorkInfoLiveData: LiveData<WorkInfo>? = null
     private val observer = Observer<WorkInfo> { workInfo -> handleWorkInfo(workInfo) }
 
-    fun register(initialDelaySeconds: Long = 0, activationCodeTimedOut: Boolean = false) {
+    fun register(
+        initialDelayValue: Long = 0,
+        initialDelayTimeUnit: TimeUnit = TimeUnit.SECONDS,
+        activationCodeTimedOut: Boolean = false
+    ) {
         // Need it for the thread confinement and LiveData can be observed on the Main Thread only
         launch {
             Timber.tag("RegistrationUseCase")
-                .d("register initialDelaySeconds = $initialDelaySeconds")
+                .d("register initialDelaySeconds = $initialDelayValue")
 
-            val registrationWorkRequest = createWorkRequest(initialDelaySeconds, activationCodeTimedOut)
+            val registrationWorkRequest =
+                createWorkRequest(initialDelayValue, initialDelayTimeUnit, activationCodeTimedOut)
 
             workManager.enqueueUniqueWork(
                 REGISTRATION_WORK,
@@ -72,26 +78,34 @@ class RegistrationManager @Inject constructor(
                 workInfo.outputData.getBoolean(WAITING_FOR_ACTIVATION_CODE, false)
 
             if (waitingForActivationCode) {
-                scheduleRegisterRetryInOneHour()
+                scheduleRegisterRetryAfterActivationCodeWaitTimeExpires()
             } else {
                 BluetoothService.start(context)
             }
         }
     }
 
-    private fun scheduleRegisterRetryInOneHour() {
-        register(ONE_HOUR_IN_SECONDS, activationCodeTimedOut = true)
+    private fun scheduleRegisterRetryAfterActivationCodeWaitTimeExpires() {
+        register(
+            activationCodeWaitTime.timeDelay,
+            activationCodeWaitTime.timeUnit,
+            activationCodeTimedOut = true
+        )
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun createWorkRequest(initialDelaySeconds: Long, activationCodeTimedOut: Boolean): OneTimeWorkRequest {
+    fun createWorkRequest(
+        initialDelaySeconds: Long,
+        initialDelayTimeUnit: TimeUnit,
+        activationCodeTimedOut: Boolean
+    ): OneTimeWorkRequest {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
         return OneTimeWorkRequestBuilder<RegistrationWorker>()
             .setConstraints(constraints)
-            .setInitialDelay(initialDelaySeconds, TimeUnit.SECONDS)
+            .setInitialDelay(initialDelaySeconds, initialDelayTimeUnit)
             .setBackoffCriteria(
                 BackoffPolicy.EXPONENTIAL,
                 MIN_BACKOFF_MILLIS,
@@ -111,6 +125,5 @@ class RegistrationManager @Inject constructor(
     companion object {
         const val REGISTRATION_WORK = "registration"
         const val ACTIVATION_CODE_TIMED_OUT = "activationCodeTimedOut"
-        const val ONE_HOUR_IN_SECONDS = 60L * 60
     }
 }

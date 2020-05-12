@@ -13,14 +13,20 @@ import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
+import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 
 @Module
 class AppModule(
     private val applicationContext: Context,
     private val locationHelper: LocationHelper,
-    private val sonarAnalytics: SonarAnalytics
+    private val sonarAnalytics: SonarAnalytics,
+    private val activationCodeWaitTime: ActivationCodeWaitTime = ActivationCodeWaitTime(
+        1,
+        TimeUnit.HOURS
+    )
 ) {
 
     @Provides
@@ -55,6 +61,10 @@ class AppModule(
         Build.VERSION.SDK_INT.toString()
 
     @Provides
+    fun activationCodeWaitTime(): ActivationCodeWaitTime =
+        activationCodeWaitTime
+
+    @Provides
     fun provideAlarmManager(context: Context): AlarmManager =
         context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -72,5 +82,6 @@ class AppModule(
         const val DISPATCHER_MAIN = "DISPATCHER_MAIN"
         const val DEVICE_MODEL = "DEVICE_MODEL"
         const val DEVICE_OS_VERSION = "DEVICE_OS_MODEL"
+        const val REGISTRATION_ACTIVATION_CODE_WAIT_TIME = "REGISTRATION_ACTIVATION_CODE_WAIT_TIME"
     }
 }
