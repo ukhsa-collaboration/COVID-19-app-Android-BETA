@@ -122,6 +122,7 @@
     <string name="need_medical_advice">If you need urgent medical advice about your coronavirus symptoms, visit</string>
     <string name="nhs_online_service"><u>NHS Coronavirus</u></string>
     <string name="nhs_111_online_service"><u>NHS 111 online coronavirus service</u></string>
+    <string name="clinical_test_uk_gov"><u>Order a clinical test on GOV.UK</u></string>
     <string name="status_today_feeling">How are you feeling today?</string>
     <string name="registration_finalising_setup">Finalising setup…</string>
     <string name="registration_everything_is_working_ok">The app is working properly</string>
@@ -249,4 +250,9 @@
     <string name="enable_notifications_title">Enable notifications</string>
     <string name="timestamp">Timestamp %1$s</string>
     <string name="txpower">TxPower: \nAdvertised = %1$d \nProtocol = %2$d</string>
+    <string name="apply_for_test">Apply for a coronavirus test</string>
+    <string name="apply_for_test_title">Apply for a coronavirus test</string>
+    <string name="apply_for_test_p2">You can now order a clinical test for you and other people in your household. This clinical test can tell you whether you currently have COVID-19 or not.</string>
+    <string name="apply_for_test_p1">As you have self reported symptoms of coronavirus in this app, you can now get tested and choose between ordering a home test kit and getting tested in a test centre.</string>
+    <string name="get_tested">Get tested</string>
 </resources>

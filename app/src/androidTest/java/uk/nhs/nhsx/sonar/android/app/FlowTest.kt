@@ -121,7 +121,8 @@ class FlowTest {
             ::testResumeWhenBluetoothIsDisabled,
             ::testResumeWhenLocationAccessIsDisabled,
             ::testResumeWhenLocationPermissionIsRevoked,
-            ::testEnableBluetoothThroughNotification
+            ::testEnableBluetoothThroughNotification,
+            ::testClickOrderTestCardShowsApplyForTest
         )
 
         tests.forEach {
@@ -343,6 +344,26 @@ class FlowTest {
         checkIsolateActivityIsShown()
         checkDisplayOfReferenceCode()
         checkMedicalWorkersInstructionsNotDisplayed()
+    }
+
+    fun testClickOrderTestCardShowsApplyForTest() {
+        setUserState(
+            RedState(
+                DateTime.now(DateTimeZone.UTC).plusDays(1),
+                nonEmptySetOf(Symptom.TEMPERATURE)
+            )
+        )
+        setValidSonarId()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        onView(withId(R.id.orderTestCard)).perform(click())
+
+        checkApplyForTestActivityIsShown()
+    }
+
+    private fun checkApplyForTestActivityIsShown() {
+        onView(withId(R.id.apply_for_test_title)).check(matches(isDisplayed()))
     }
 
     fun testLaunchWhenStateIsRedAndExpired() {

@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_isolate.book_test_card
 import kotlinx.android.synthetic.main.activity_isolate.follow_until
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
 import kotlinx.android.synthetic.main.activity_isolate.nhs_service
+import kotlinx.android.synthetic.main.activity_isolate.orderTestCard
 import kotlinx.android.synthetic.main.activity_isolate.reference_link_card
 import kotlinx.android.synthetic.main.activity_isolate.symptomsTextView
 import kotlinx.android.synthetic.main.banner.toolbar_info
@@ -26,6 +27,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
+import uk.nhs.nhsx.sonar.android.app.tests.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.util.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_RED
@@ -88,6 +90,10 @@ class IsolateActivity : BaseActivity() {
 
         toolbar_info.setOnClickListener {
             openUrl(URL_INFO)
+        }
+
+        orderTestCard.setOnClickListener {
+            ApplyForTestActivity.start(this)
         }
 
         setUpdateSymptomsDialog()

@@ -128,6 +128,27 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/orderTestCard"
+                    style="@style/PrimaryCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:accessibilityHeading="true"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/orderTestLink"
+                        style="@style/TextViewActionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="16dp"
+                        android:text="@string/apply_for_test" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/reference_link_card"
                     style="@style/PrimaryCard"
                     android:layout_width="match_parent"
