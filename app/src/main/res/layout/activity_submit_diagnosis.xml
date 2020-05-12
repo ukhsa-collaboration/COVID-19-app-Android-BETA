@@ -41,7 +41,7 @@
                     android:text="@string/isle_of_white_only_title" />
 
                 <TextView
-                    style="@style/TextViewStatusSubTittle"
+                    style="@style/TextViewStatusSubTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"

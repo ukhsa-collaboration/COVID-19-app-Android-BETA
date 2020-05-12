@@ -166,7 +166,7 @@
                         android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="16dp"
-                        android:text="@string/view_reference_code" />
+                        android:text="@string/testing_information" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView

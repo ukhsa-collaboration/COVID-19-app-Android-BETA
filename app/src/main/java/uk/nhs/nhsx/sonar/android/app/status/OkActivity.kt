@@ -14,10 +14,14 @@ import androidx.activity.viewModels
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.activity_ok.*
+import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
+import kotlinx.android.synthetic.main.activity_ok.notificationPanel
+import kotlinx.android.synthetic.main.activity_ok.registrationPanel
+import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
 import kotlinx.android.synthetic.main.activity_review_close.nhs_service
-import kotlinx.android.synthetic.main.banner.*
+import kotlinx.android.synthetic.main.banner.toolbar_info
 import kotlinx.android.synthetic.main.status_footer_view.medical_workers_card
+import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -26,6 +30,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDialog
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorkLauncher
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
@@ -91,6 +96,11 @@ class OkActivity : BaseActivity() {
             openUrl(URL_INFO)
         }
 
+        toggleReferenceCodeCard(false)
+        reference_link_card.setOnClickListener {
+            ReferenceCodeActivity.start(this)
+        }
+
         notificationPanel.setOnClickListener {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
             val uri = Uri.fromParts("package", packageName, null)
@@ -108,9 +118,16 @@ class OkActivity : BaseActivity() {
     }
 
     private fun toggleNotFeelingCard(enabled: Boolean) {
-        status_not_feeling_well.let {
-            it.isClickable = enabled
-            it.isEnabled = enabled
+        with(status_not_feeling_well) {
+            isClickable = enabled
+            isEnabled = enabled
+        }
+    }
+
+    private fun toggleReferenceCodeCard(enabled: Boolean) {
+        with(reference_link_card) {
+            isEnabled = enabled
+            isClickable = enabled
         }
     }
 
@@ -121,11 +138,13 @@ class OkActivity : BaseActivity() {
                     registrationPanel.setState(result)
                     BluetoothService.start(this)
                     toggleNotFeelingCard(true)
+                    toggleReferenceCodeCard(true)
                     referenceCodeWorkLauncher.launchWork()
                 }
                 InProgress -> {
                     registrationPanel.setState(result)
                     toggleNotFeelingCard(false)
+                    toggleReferenceCodeCard(false)
                 }
             }
         }

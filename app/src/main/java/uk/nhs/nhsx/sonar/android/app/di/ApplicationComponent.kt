@@ -32,6 +32,7 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.EnableLocationActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.GrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorker
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
@@ -68,6 +69,7 @@ interface ApplicationComponent {
     fun inject(activity: DiagnoseSubmitActivity)
     fun inject(activity: DiagnoseCoughActivity)
     fun inject(activity: DiagnoseTemperatureActivity)
+    fun inject(activity: ReferenceCodeActivity)
 
     fun inject(service: BluetoothService)
     fun inject(service: NotificationService)

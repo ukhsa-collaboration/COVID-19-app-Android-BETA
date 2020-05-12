@@ -13,12 +13,14 @@ import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import kotlinx.android.synthetic.main.status_footer_view.medical_workers_card
 import kotlinx.android.synthetic.main.status_footer_view.nhs_service
+import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDialog
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_AMBER
 import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_AMBER
@@ -61,6 +63,10 @@ class AtRiskActivity : BaseActivity() {
 
         medical_workers_card.setOnClickListener {
             MedicalWorkersInstructionsDialog(this).showExpanded()
+        }
+
+        reference_link_card.setOnClickListener {
+            ReferenceCodeActivity.start(this)
         }
     }
 

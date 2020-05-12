@@ -73,6 +73,7 @@
         <activity android:name=".diagnose.DiagnoseSubmitActivity" />
         <activity android:name=".edgecases.TabletNotSupportedActivity" />
         <activity android:name=".tests.ApplyForTestActivity" />
+        <activity android:name=".referencecode.ReferenceCodeActivity" />
 
         <service
             android:name=".ble.BluetoothService"

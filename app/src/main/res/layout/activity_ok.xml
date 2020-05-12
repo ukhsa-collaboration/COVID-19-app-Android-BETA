@@ -130,7 +130,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
-                    style="@style/TextViewStatusSubTittle"
+                    style="@style/TextViewStatusSubTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"

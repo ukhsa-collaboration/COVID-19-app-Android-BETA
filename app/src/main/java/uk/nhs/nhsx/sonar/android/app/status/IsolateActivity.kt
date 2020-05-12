@@ -9,7 +9,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
-import androidx.activity.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_isolate.book_test_card
 import kotlinx.android.synthetic.main.activity_isolate.follow_until
@@ -21,12 +20,10 @@ import kotlinx.android.synthetic.main.activity_isolate.symptomsTextView
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeDialog
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.tests.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.util.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
@@ -46,13 +43,7 @@ class IsolateActivity : BaseActivity() {
     @Inject
     protected lateinit var checkInReminderNotification: CheckInReminderNotification
 
-    @Inject
-    protected lateinit var referenceCodeViewModelFactory: ViewModelFactory<ReferenceCodeViewModel>
-
     private lateinit var updateSymptomsDialog: BottomSheetDialog
-
-    private val referenceCodeViewModel: ReferenceCodeViewModel by viewModels { referenceCodeViewModelFactory }
-    private var referenceCodeDialog: BottomSheetDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -97,11 +88,10 @@ class IsolateActivity : BaseActivity() {
         }
 
         setUpdateSymptomsDialog()
-        referenceCodeDialog = ReferenceCodeDialog(
-            this,
-            referenceCodeViewModel,
-            findViewById(R.id.reference_link_card)
-        )
+
+        reference_link_card.setOnClickListener {
+            ReferenceCodeActivity.start(this)
+        }
     }
 
     private fun setUpdateSymptomsDialog() {

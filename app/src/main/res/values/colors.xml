@@ -17,6 +17,9 @@
 
     <color name="color_nhsuk_grey_5">#F0F4F5</color>
     <color name="color_nhsuk_grey_4">#AEB7BD</color>
+    <color name="color_nhsuk_grey_3">#E5E5E5</color>
+
+    <color name="card_background_grey">#B3D8DDE0</color>
 
     <color name="text_sub_title">#4C6272</color>
     <color name="amber">#FFB81C</color>

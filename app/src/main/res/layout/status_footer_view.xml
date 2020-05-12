@@ -12,7 +12,7 @@
     tools:parentTag="LinearLayout">
 
     <TextView
-        style="@style/TextViewStatusSubTittle"
+        style="@style/TextViewStatusSubTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
@@ -20,7 +20,7 @@
         android:text="@string/status_description_02" />
 
     <TextView
-        style="@style/TextViewStatusSubTittle"
+        style="@style/TextViewStatusSubTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="16dp"
@@ -65,5 +65,26 @@
             android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
             android:text="@string/important_instructions_for_medical_workers" />
 
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/reference_link_card"
+        style="@style/PrimaryCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:accessibilityHeading="true"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/reference_code_link"
+            style="@style/TextViewActionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="16dp"
+            android:text="@string/testing_information" />
     </com.google.android.material.card.MaterialCardView>
 </merge>

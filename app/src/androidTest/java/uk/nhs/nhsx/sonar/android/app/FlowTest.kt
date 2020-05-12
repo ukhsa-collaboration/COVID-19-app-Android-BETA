@@ -23,6 +23,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
+import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -315,6 +316,7 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkOkActivityIsShown()
+        checkDisplayOfReferenceCode()
         checkDisplayOfMedicalWorkersInstructions()
     }
 
@@ -326,6 +328,7 @@ class FlowTest {
         onView(withId(R.id.start_main_activity)).perform(click())
 
         checkAtRiskActivityIsShown()
+        checkDisplayOfReferenceCode()
         checkDisplayOfMedicalWorkersInstructions()
     }
 
@@ -631,7 +634,8 @@ class FlowTest {
         onView(withId(R.id.reference_link_card)).perform(scrollTo(), click())
 
         onView(withId(R.id.reference_code)).check(matches(withText(REFERENCE_CODE)))
-        onView(withId(R.id.close)).perform(click())
+
+        onView(withContentDescription(R.string.go_back)).perform(click())
     }
 
     private fun checkDisplayOfMedicalWorkersInstructions() {
