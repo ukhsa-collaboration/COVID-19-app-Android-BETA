@@ -9,6 +9,7 @@ function validate() {
 }
 
 validate "$INPUT_GOOGLE_SERVICES" "googleServices"
+validate "$INPUT_SONAR_BASE_URL" "sonarBaseUrl"
 validate "$INPUT_SONAR_HEADER_VALUE" "sonarHeaderValue"
 validate "$INPUT_SONAR_ANALYTICS_KEY" "sonarAnalyticsKey"
 
@@ -17,5 +18,6 @@ mkdir build
 echo "$INPUT_GOOGLE_SERVICES" > $GOOGLE_SERVICES_FILE
 
 ./gradlew build packageDebugAndroidTest \
+    -Psonar.baseUrl="$INPUT_SONAR_BASE_URL" \
     -Psonar.headerValue="$INPUT_SONAR_HEADER_VALUE" \
     -Psonar.analyticsKey="$INPUT_SONAR_ANALYTICS_KEY"

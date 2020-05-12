@@ -30,6 +30,7 @@ jobs:
         uses: ./.github/actions/build-action
         with:
           googleServices: ${{ secrets.GoogleServices }}
+          sonarBaseUrl: ${{ secrets.TestSonarBaseUrl }}
           sonarHeaderValue: ${{ secrets.TestSonarHeaderValue }}
           sonarAnalyticsKey: ${{ secrets.TestSonarAnalyticsKey }}
 
