@@ -15,6 +15,7 @@ import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import kotlinx.coroutines.CoroutineScope
@@ -38,11 +39,10 @@ class Scanner @Inject constructor(
     private val currentTimestampProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
     @Named(BluetoothModule.SCAN_INTERVAL_LENGTH)
     private val scanIntervalLength: Int,
-    private val base64Decoder: (String) -> ByteArray = { Base64.decode(it, Base64.DEFAULT) }
+    base64Decoder: (String) -> ByteArray = { Base64.decode(it, Base64.DEFAULT) }
 ) {
 
     private var devices: MutableList<Pair<ScanResult, Int>> = mutableListOf()
-    private val connections: MutableList<Disposable?> = mutableListOf()
 
     private val sonarServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(SONAR_SERVICE_UUID))
@@ -82,20 +82,26 @@ class Scanner @Inject constructor(
             .setLogger { level, tag, msg -> Timber.tag(tag).log(level, msg) }
             .build()
         RxBleClient.updateLogOptions(logOptions)
+
         scanJob = coroutineScope.launch {
             while (isActive) {
+
                 Timber.d("scan - Starting")
                 scanDisposable = scan()
+
                 var attempts = 0
                 while (attempts++ < 10 && devices.isEmpty()) {
-                    if (!isActive) return@launch
+                    if (!isActive) {
+                        disposeScanDisposable()
+                        return@launch
+                    }
                     delay(scanIntervalLength.toLong() * 1_000)
                 }
-                Timber.d("scan - Stopping")
-                if (!isActive) return@launch
 
-                scanDisposable?.dispose()
-                scanDisposable = null
+                Timber.d("scan - Stopping")
+                disposeScanDisposable()
+
+                if (!isActive) return@launch
 
                 // Some devices are unable to connect while a scan is running
                 // or just after it finished
@@ -106,11 +112,19 @@ class Scanner @Inject constructor(
                     connectToDevice(it.first, it.second, coroutineScope)
                 }
 
-                connections.map { it?.dispose() }
-                connections.clear()
                 devices.clear()
             }
         }
+    }
+
+    fun stop() {
+        disposeScanDisposable()
+        scanJob?.cancel()
+    }
+
+    private fun disposeScanDisposable() {
+        scanDisposable?.dispose()
+        scanDisposable = null
     }
 
     private fun scan(): Disposable? =
@@ -128,18 +142,14 @@ class Scanner @Inject constructor(
                 ::onConnectionError
             )
 
-    fun stop() {
-        scanDisposable?.dispose()
-        scanDisposable = null
-        scanJob?.cancel()
-    }
-
     private fun connectToDevice(
         scanResult: ScanResult,
         txPowerAdvertised: Int,
         coroutineScope: CoroutineScope
     ) {
         val macAddress = scanResult.bleDevice.macAddress
+
+        val compositeDisposable = CompositeDisposable()
 
         Timber.d("Connecting to $macAddress")
         scanResult
@@ -152,14 +162,16 @@ class Scanner @Inject constructor(
                 read(connection, txPowerAdvertised, coroutineScope)
             }
             .doOnSubscribe {
-                connections.add(it)
+                compositeDisposable.add(it)
             }
             .take(1)
             .blockingSubscribe(
                 { event ->
+                    compositeDisposable.dispose()
                     storeEvent(event)
                 },
                 { e ->
+                    compositeDisposable.dispose()
                     Timber.e("failed reading from $macAddress - $e")
                 }
             )
