@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -26,42 +25,74 @@
                 android:src="@drawable/ic_reference_link" />
 
             <TextView
-                android:id="@+id/reference_code_title"
                 style="@style/TextViewStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="24dp"
                 android:accessibilityHeading="true"
-                android:layout_marginBottom="16dp"
                 android:text="@string/reference_code_title" />
+
+            <TextView
+                style="@style/TextViewStatusSubTitleHeading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="6dp"
+                android:accessibilityHeading="true"
+                android:text="@string/reference_code_when_1"
+                android:textColor="@color/text_primary_color"
+                android:textStyle="bold" />
 
             <TextView
                 style="@style/TextViewStatusSubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="@string/reference_code_description_1"
                 android:textColor="@color/text_primary_color" />
 
             <TextView
+                style="@style/TextViewStatusSubTitleHeading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="6dp"
+                android:accessibilityHeading="true"
+                android:text="@string/reference_code_when_2"
+                android:textColor="@color/text_primary_color"
+                android:textStyle="bold" />
+
+            <TextView
                 style="@style/TextViewStatusSubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="30dp"
                 android:text="@string/reference_code_description_2"
-                android:textColor="@color/text_primary_color" />
+                android:textColor="@color/text_primary_color" />>
+
+            <TextView
+                style="@style/TextViewStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="24dp"
+                android:accessibilityHeading="true"
+                android:text="@string/reference_code_linking" />
 
             <LinearLayout
                 android:id="@+id/bluetooth_rationale"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@color/card_background_grey">
 
-                <View style="@style/Divider.Vertical" />
+                <View
+                    android:id="@+id/reference_code_divider"
+                    style="@style/Divider.Vertical" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,14 +108,29 @@
                         android:paddingStart="12dp"
                         android:paddingTop="16dp"
                         android:paddingEnd="12dp"
-                        android:text="Your app reference code"
+                        android:text="@string/reference_code_app"
                         android:textColor="@color/text_primary_color" />
+
+                    <TextView
+                        android:id="@+id/reference_code_connect"
+                        style="@style/TextViewStatusSubTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:accessibilityHeading="true"
+                        android:lineSpacingMultiplier="1.2"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="20dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:text="@string/connect_to_internet"
+                        android:textColor="@color/text_primary_color"
+                        android:textSize="14sp"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/reference_code"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="20dp"
                         android:letterSpacing="0.1"
@@ -97,11 +143,12 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/reference_code_description_3"
                 style="@style/TextViewStatusSubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
                 android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="@string/reference_code_description_3"
                 android:textColor="@color/text_primary_color" />
 

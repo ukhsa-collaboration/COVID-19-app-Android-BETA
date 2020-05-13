@@ -85,6 +85,6 @@
             android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
             android:paddingHorizontal="16dp"
             android:paddingVertical="16dp"
-            android:text="@string/testing_information" />
+            android:text="@string/reference_code_title" />
     </com.google.android.material.card.MaterialCardView>
 </merge>
