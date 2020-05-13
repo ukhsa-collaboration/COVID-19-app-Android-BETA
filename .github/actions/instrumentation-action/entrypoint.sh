@@ -14,7 +14,7 @@ SERVICE_ACCOUNT_FILE=build/gcloud-key.json
 echo "$INPUT_GOOGLE_CLOUD_SERVICE_ACCOUNT" > $SERVICE_ACCOUNT_FILE
 
 gcloud auth activate-service-account --key-file=$SERVICE_ACCOUNT_FILE
-gcloud config set project sonar-colocate
+gcloud config set project nhsx-sonar-dev
 gcloud firebase test android run \
   --type instrumentation \
   --app app/build/outputs/apk/debug/app-debug.apk \
