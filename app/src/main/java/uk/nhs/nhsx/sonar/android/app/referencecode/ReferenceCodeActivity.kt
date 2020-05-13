@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_reference_code.reference_code
 import kotlinx.android.synthetic.main.activity_reference_code.reference_code_connect
 import kotlinx.android.synthetic.main.activity_reference_code.reference_code_description_3
 import kotlinx.android.synthetic.main.activity_reference_code.reference_code_divider
+import kotlinx.android.synthetic.main.activity_reference_code.reference_code_panel
 import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -41,25 +42,7 @@ class ReferenceCodeActivity : AppCompatActivity() {
         )
 
         viewModel.state().observe(this, Observer { state ->
-                when (state) {
-                    ReferenceCodeViewModel.State.Loading -> {
-                        reference_code_divider.background = getDrawable(R.color.colorPrimary)
-                        reference_code_connect.isVisible = false
-                        reference_code.isVisible = true
-                        reference_code.text = getString(R.string.loading)
-                    }
-                    is ReferenceCodeViewModel.State.Loaded -> {
-                        reference_code_divider.background = getDrawable(R.color.colorPrimary)
-                        reference_code_connect.isVisible = false
-                        reference_code.isVisible = true
-                        reference_code.text = state.code.value
-                    }
-                    ReferenceCodeViewModel.State.Error -> {
-                        reference_code_divider.background = getDrawable(R.color.colorDanger)
-                        reference_code.isVisible = false
-                        reference_code_connect.isVisible = true
-                    }
-                }
+            reference_code_panel.setState(state)
         })
 
         viewModel.getReferenceCode()

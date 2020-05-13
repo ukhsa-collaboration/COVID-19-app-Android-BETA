@@ -82,65 +82,13 @@
                 android:accessibilityHeading="true"
                 android:text="@string/reference_code_linking" />
 
-            <LinearLayout
-                android:id="@+id/bluetooth_rationale"
+            <uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodePanel
+                android:id="@+id/reference_code_panel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@color/card_background_grey">
-
-                <View
-                    android:id="@+id/reference_code_divider"
-                    style="@style/Divider.Vertical" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/TextViewStatusSubTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:lineSpacingMultiplier="1.2"
-                        android:paddingStart="12dp"
-                        android:paddingTop="16dp"
-                        android:paddingEnd="12dp"
-                        android:text="@string/reference_code_app"
-                        android:textColor="@color/text_primary_color" />
-
-                    <TextView
-                        android:id="@+id/reference_code_connect"
-                        style="@style/TextViewStatusSubTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:lineSpacingMultiplier="1.2"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="20dp"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:text="@string/connect_to_internet"
-                        android:textColor="@color/text_primary_color"
-                        android:textSize="14sp"
-                        android:visibility="gone"/>
-
-                    <TextView
-                        android:id="@+id/reference_code"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="20dp"
-                        android:letterSpacing="0.1"
-                        android:paddingHorizontal="12dp"
-                        android:textColor="@color/text_primary_color"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-            </LinearLayout>
+                />
 
             <TextView
                 android:id="@+id/reference_code_description_3"
