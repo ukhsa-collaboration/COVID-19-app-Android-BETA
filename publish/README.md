@@ -32,7 +32,7 @@ Script needs two arguments:
  - The second one is the release tag for github release (e.g v1.1)
 
 ```sh
-$ ./release.sh 376e3f
+$ ./release.sh 376e3f v1.2.0
 ```
 
 Above script publishes two builds:
