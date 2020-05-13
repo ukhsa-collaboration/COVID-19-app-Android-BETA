@@ -16,36 +16,32 @@ import uk.nhs.nhsx.sonar.android.app.http.SecretKeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.TestQueue
 import uk.nhs.nhsx.sonar.android.app.http.generateSignatureKey
 import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
-import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import java.nio.charset.Charset
 import java.util.Base64
 
 class ReferenceCodeApiTest {
-
-    private val sonarIdProvider = mockk<SonarIdProvider>()
 
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
     private val secretKeyStorage = mockk<SecretKeyStorage>()
     private val httpClient = HttpClient(requestQueue, "someValue") { Base64.getEncoder().encodeToString(it) }
 
-    private val api = ReferenceCodeApi(baseUrl, sonarIdProvider, secretKeyStorage, httpClient)
+    private val api = ReferenceCodeApi(baseUrl, secretKeyStorage, httpClient)
 
     @Test
-    fun test() {
+    fun `get reference code`() {
         every { secretKeyStorage.provideSecretKey() } returns generateSignatureKey()
-        every { sonarIdProvider.get() } returns "some-sonar-id-101"
+        val sonarId = "::some sonar id::"
 
-        val promise = api.generate()
+        val promise = api.get(sonarId)
 
         verifyAll {
             secretKeyStorage.provideSecretKey()
-            sonarIdProvider.get()
         }
         assertThat(promise).isInProgress()
 
         val request = requestQueue.lastRequest
-        assertThat(request.url).isEqualTo("http://api.example.com/api/residents/some-sonar-id-101/linking-id")
+        assertThat(request.url).isEqualTo("http://api.example.com/api/residents/$sonarId/linking-id")
         assertThat(request.method).isEqualTo(Method.PUT)
         assertThat(request.body.toString(Charset.defaultCharset())).isEqualTo("{}")
         assertThat(request.headers).containsKey("Sonar-Request-Timestamp")

@@ -89,7 +89,6 @@
                         android:layout_marginBottom="20dp"
                         android:letterSpacing="0.1"
                         android:paddingHorizontal="12dp"
-                        android:text="@string/loading"
                         android:textColor="@color/text_primary_color"
                         android:textSize="20sp"
                         android:textStyle="bold" />

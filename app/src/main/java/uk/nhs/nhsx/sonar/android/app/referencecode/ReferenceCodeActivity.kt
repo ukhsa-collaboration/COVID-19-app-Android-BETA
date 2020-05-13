@@ -34,11 +34,13 @@ class ReferenceCodeActivity : AppCompatActivity() {
         viewModel.state().observe(this, Observer { state ->
             reference_code.text =
                 when (state) {
-                    ReferenceCodeViewModel.State.Loading -> getString(R.string.loading)
+                    ReferenceCodeViewModel.State.Loading -> ""
                     is ReferenceCodeViewModel.State.Loaded -> state.code.value
                     ReferenceCodeViewModel.State.Error -> getString(R.string.error)
                 }
         })
+
+        viewModel.getReferenceCode()
     }
 
     companion object {

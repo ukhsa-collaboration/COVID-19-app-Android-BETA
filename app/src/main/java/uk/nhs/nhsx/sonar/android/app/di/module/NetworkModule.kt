@@ -37,5 +37,5 @@ class NetworkModule(
         keyStorage: KeyStorage,
         httpClient: HttpClient
     ): ReferenceCodeApi =
-        ReferenceCodeApi(baseUrl, sonarIdProvider, keyStorage, httpClient)
+        ReferenceCodeApi(baseUrl, keyStorage, httpClient)
 }
