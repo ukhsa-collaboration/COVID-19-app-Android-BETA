@@ -15,6 +15,7 @@ class BluetoothStatusSubscriptionHandler(
         fun startGattAndAdvertise()
         fun stopGattAndAdvertise()
         fun startScan()
+        fun stopScanner()
     }
 
     data class CombinedStatus(
@@ -33,6 +34,7 @@ class BluetoothStatusSubscriptionHandler(
         if (status.isBluetoothEnabled) {
             notifications.hideBluetoothIsDisabled()
         } else {
+            delegate.stopScanner()
             delegate.stopGattAndAdvertise()
             notifications.showBluetoothIsDisabled()
         }

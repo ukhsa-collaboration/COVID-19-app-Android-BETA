@@ -67,6 +67,7 @@ class BluetoothStatusSubscriptionHandlerTest {
             helper.hideLocationIsDisabled()
             helper.showBluetoothIsDisabled()
             delegate.stopGattAndAdvertise()
+            delegate.stopScanner()
         }
     }
 

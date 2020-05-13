@@ -45,7 +45,7 @@ class BluetoothService : Service(), Delegate {
     lateinit var advertise: Advertise
 
     @Inject
-    lateinit var scan: Scanner
+    lateinit var scanner: Scanner
 
     @Inject
     lateinit var gattServer: GattServer
@@ -135,14 +135,14 @@ class BluetoothService : Service(), Delegate {
         if (!isScanRunning) {
             isScanRunning = true
             scanScope = CoroutineScope(coroutineDispatcher + Job())
-            scan.start(scanScope)
+            scanner.start(scanScope)
         }
     }
 
     private fun stopSubServices() {
         Timber.d("BluetoothService stop all sub-services")
         stopGattAndAdvertise()
-        stopScan()
+        stopScanner()
         stateChangeDisposable?.dispose()
     }
 
@@ -168,12 +168,12 @@ class BluetoothService : Service(), Delegate {
         }
     }
 
-    private fun stopScan() {
+    override fun stopScanner() {
         Timber.d("stopScan isScanRunning = $isScanRunning")
         if (isScanRunning) {
             isScanRunning = false
             scanScope.cancel()
-            scan.stop()
+            scanner.stop()
         }
     }
 }
