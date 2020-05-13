@@ -21,3 +21,4 @@ runs:
     INPUT_SONAR_BASE_URL: ${{ inputs.sonarBaseUrl }}
     INPUT_SONAR_HEADER_VALUE: ${{ inputs.sonarHeaderValue }}
     INPUT_SONAR_ANALYTICS_KEY: ${{ inputs.sonarAnalyticsKey }}
+    INPUT_PACTBROKER_URL: https://sonar-pact-broker-app.apps.nonprod.aws.cp.data.england.nhs.uk
