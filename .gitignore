@@ -13,3 +13,4 @@ jacoco.exec
 
 ## Pacts folder
 app/target/pacts
+/.pairs
