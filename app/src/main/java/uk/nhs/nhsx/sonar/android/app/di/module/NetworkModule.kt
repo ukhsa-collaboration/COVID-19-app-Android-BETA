@@ -11,7 +11,6 @@ import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeApi
 import uk.nhs.nhsx.sonar.android.app.registration.ResidentApi
-import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 
 @Module
 class NetworkModule(
@@ -33,7 +32,6 @@ class NetworkModule(
 
     @Provides
     fun referenceCodeApi(
-        sonarIdProvider: SonarIdProvider,
         keyStorage: KeyStorage,
         httpClient: HttpClient
     ): ReferenceCodeApi =
