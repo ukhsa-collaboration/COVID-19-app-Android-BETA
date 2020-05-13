@@ -21,7 +21,6 @@ import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorkLauncher.Companion.REFERENCE_CODE_WORK
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.io.File
@@ -45,7 +44,6 @@ class TestViewModel @Inject constructor(
                 FirebaseInstanceId.getInstance().deleteInstanceId()
                 WorkManager.getInstance(context).let {
                     it.cancelUniqueWork(REGISTRATION_WORK)
-                    it.cancelUniqueWork(REFERENCE_CODE_WORK)
                 }
             }
 

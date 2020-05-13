@@ -33,7 +33,6 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.GrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorker
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
@@ -77,7 +76,6 @@ interface ApplicationComponent {
     fun inject(worker: DeleteOutdatedEventsWorker)
     fun inject(worker: RegistrationWorker)
     fun inject(worker: SubmitContactEventsWorker)
-    fun inject(worker: ReferenceCodeWorker)
 
     fun inject(receiver: PackageReplacedReceiver)
     fun inject(receiver: BootCompletedReceiver)

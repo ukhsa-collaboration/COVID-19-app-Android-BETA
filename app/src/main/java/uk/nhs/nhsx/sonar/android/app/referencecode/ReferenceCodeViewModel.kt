@@ -10,34 +10,20 @@ import androidx.lifecycle.ViewModel
 import uk.nhs.nhsx.sonar.android.app.http.Promise
 import javax.inject.Inject
 
-class ReferenceCodeViewModel @Inject constructor(
-    private val api: ReferenceCodeApi,
-    private val provider: ReferenceCodeProvider
-) : ViewModel() {
+class ReferenceCodeViewModel @Inject constructor(private val api: ReferenceCodeApi) : ViewModel() {
 
     sealed class State {
         object Loading : State()
-        data class Loaded(val code: ReferenceCode) : State()
         object Error : State()
+        data class Loaded(val code: ReferenceCode) : State()
     }
 
-    fun state(): LiveData<State> {
-        val existingCode = provider.get()
+    fun state(): LiveData<State> = api.generate().toLiveData()
 
-        if (existingCode != null)
-            return MutableLiveData(State.Loaded(existingCode))
+    private fun Promise<ReferenceCode>.toLiveData(): LiveData<State> =
+        MutableLiveData<State>(State.Loading).also { data ->
 
-        return api.generate().toLiveData()
-    }
-
-    private fun Promise<ReferenceCode>.toLiveData(): LiveData<State> {
-        val liveData = MutableLiveData<State>(State.Loading)
-        this
-            .onSuccess {
-                provider.set(it)
-                liveData.value = State.Loaded(it)
-            }
-            .onError { liveData.value = State.Error }
-        return liveData
-    }
+            this.onSuccess { data.value = State.Loaded(it) }
+                .onError { data.value = State.Error }
+        }
 }

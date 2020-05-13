@@ -31,7 +31,6 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.medicalworkers.MedicalWorkersInstructionsDialog
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeWorkLauncher
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
@@ -58,9 +57,6 @@ class OkActivity : BaseActivity() {
 
     @Inject
     lateinit var postCodeProvider: PostCodeProvider
-
-    @Inject
-    lateinit var referenceCodeWorkLauncher: ReferenceCodeWorkLauncher
 
     private lateinit var recoveryDialog: BottomSheetDialog
 
@@ -139,7 +135,6 @@ class OkActivity : BaseActivity() {
                     BluetoothService.start(this)
                     toggleNotFeelingCard(true)
                     toggleReferenceCodeCard(true)
-                    referenceCodeWorkLauncher.launchWork()
                 }
                 InProgress -> {
                     registrationPanel.setState(result)
