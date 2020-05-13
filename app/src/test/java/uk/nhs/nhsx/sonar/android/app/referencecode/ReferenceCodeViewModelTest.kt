@@ -63,7 +63,6 @@ class ReferenceCodeViewModelTest {
             testObserver.onChanged(Loading)
             testObserver.onChanged(Loaded(ReferenceCode("some-other-code-201")))
         }
-
     }
 
     @Test
