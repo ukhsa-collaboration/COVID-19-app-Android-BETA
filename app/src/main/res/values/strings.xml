@@ -4,7 +4,7 @@
 
 <resources>
     <string name="app_name">NHS COVID-19</string>
-    <string name="app_title">COVID-19</string>
+    <string name="app_title">Coronavirus (COVID-19)</string>
     <string name="location_permission">\u2022 your device’s <b>location</b>, to record places you’ve spent time in
     </string>
     <string name="bluetooth_permission">\u2022 <b>Bluetooth</b>, to record when your device is near others using this
