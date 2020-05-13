@@ -41,9 +41,9 @@ jobs:
 
       - name: Notify Slack on Failure
         if: ${{ github.ref == 'refs/heads/master' && failure() }}
-        uses: rtCamp/action-slack-notify@v2.0.0
+        uses: rtCamp/action-slack-notify@96d5e2a64fc78a6b7ac13265f55bee296869967a
         env:
           SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
-          SLACK_COLOR: '#FFBF00'
+          SLACK_COLOR: '#FF0000'
           SLACK_USERNAME: CI
           SLACK_TITLE: Commit Message

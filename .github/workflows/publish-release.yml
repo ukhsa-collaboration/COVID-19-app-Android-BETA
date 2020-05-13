@@ -52,7 +52,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: fleskesvor/create-release@feature/support-target-commitish
+        uses: fleskesvor/create-release@1a72e235c178bf2ae6c51a8ae36febc24568c5fe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -119,7 +119,7 @@ jobs:
           asset_content_type: application/vnd.android.package-archive
 
       - name: Notify Slack
-        uses: rtCamp/action-slack-notify@v2.0.0
+        uses: rtCamp/action-slack-notify@96d5e2a64fc78a6b7ac13265f55bee296869967a
         env:
           SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
           SLACK_COLOR: '#138275'
