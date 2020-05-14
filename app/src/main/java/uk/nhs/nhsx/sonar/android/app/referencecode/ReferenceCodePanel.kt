@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
 package uk.nhs.nhsx.sonar.android.app.referencecode
 
 import android.content.ClipData
@@ -13,6 +17,7 @@ import kotlinx.android.synthetic.main.reference_code_panel.view.copy_content_gro
 import kotlinx.android.synthetic.main.reference_code_panel.view.copy_content_label
 import kotlinx.android.synthetic.main.reference_code_panel.view.divider
 import kotlinx.android.synthetic.main.reference_code_panel.view.reference_code
+import kotlinx.android.synthetic.main.reference_code_panel.view.reference_code_connect
 import uk.nhs.nhsx.sonar.android.app.R
 
 class ReferenceCodePanel @JvmOverloads constructor(
@@ -23,51 +28,48 @@ class ReferenceCodePanel @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     init {
-        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        inflater.inflate(R.layout.reference_code_panel, this)
+        (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
+            .inflate(R.layout.reference_code_panel, this)
 
         copy_content.setOnClickListener {
             if (!isCopyClicked) setCopyClickListener()
         }
     }
 
-    var isError: Boolean = false
-        set(value) = handleError(value)
-
-    var isLoading: Boolean = false
-        set(value) = handleLoading(value)
-
     private var isCopyClicked: Boolean = false
 
     fun setState(state: ReferenceCodeViewModel.State) {
         when (state) {
-            ReferenceCodeViewModel.State.Loading -> isLoading = true
-            ReferenceCodeViewModel.State.Error -> isError = true
-            is ReferenceCodeViewModel.State.Loaded -> setRefCode(state.code.value)
+            ReferenceCodeViewModel.State.Loading -> handleLoading()
+            ReferenceCodeViewModel.State.Error -> handleError()
+            is ReferenceCodeViewModel.State.Loaded -> handleLoaded(state.code.value)
         }
     }
 
-    fun setRefCode(code: String) {
-        reference_code.text = code
-    }
-
-    private fun handleError(value: Boolean) {
-        if (value) setError() else reset()
-    }
-
-    private fun handleLoading(value: Boolean) {
-        if (value) reset()
-    }
-
-    private fun setError() {
-        reference_code.text = context.getString(R.string.error)
-        divider.background = context.getDrawable(R.color.colorDanger)
-        copy_content_group.visibility = View.INVISIBLE
-    }
-
-    private fun reset() {
+    private fun handleLoaded(code: String) {
         divider.background = context.getDrawable(R.color.colorPrimary)
-        reference_code.text = ""
+
+        reference_code_connect.visibility = View.GONE
+
+        reference_code.text = code
+        copy_content_group.visibility = View.VISIBLE
+    }
+
+    private fun handleError() {
+        divider.background = context.getDrawable(R.color.colorDanger)
+
+        reference_code.visibility = View.GONE
+        copy_content_group.visibility = View.GONE
+
+        reference_code_connect.visibility = View.VISIBLE
+    }
+
+    private fun handleLoading() {
+        divider.background = context.getDrawable(R.color.colorPrimary)
+
+        reference_code_connect.visibility = View.GONE
+
+        reference_code.text = context.getString(R.string.loading)
         copy_content_group.visibility = View.VISIBLE
     }
 

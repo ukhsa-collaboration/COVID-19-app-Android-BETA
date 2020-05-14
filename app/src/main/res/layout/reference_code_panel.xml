@@ -33,6 +33,22 @@
                 android:textColor="@color/text_primary_color" />
 
             <TextView
+                android:id="@+id/reference_code_connect"
+                style="@style/TextViewStatusSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:accessibilityHeading="true"
+                android:lineSpacingMultiplier="1.2"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="20dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:text="@string/connect_to_internet"
+                android:textColor="@color/text_primary_color"
+                android:textSize="14sp"
+                android:visibility="gone"/>
+
+            <TextView
                 android:id="@+id/reference_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

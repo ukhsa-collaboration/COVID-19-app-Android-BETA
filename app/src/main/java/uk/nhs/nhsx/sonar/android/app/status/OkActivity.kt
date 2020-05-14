@@ -139,7 +139,7 @@ class OkActivity : BaseActivity() {
                 InProgress -> {
                     registrationPanel.setState(result)
                     toggleNotFeelingCard(false)
-                    toggleReferenceCodeCard(true)
+                    toggleReferenceCodeCard(false)
                 }
             }
         }
