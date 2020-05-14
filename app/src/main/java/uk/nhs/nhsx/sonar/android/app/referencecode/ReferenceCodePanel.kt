@@ -81,10 +81,10 @@ class ReferenceCodePanel @JvmOverloads constructor(
             setPrimaryClip(clip)
         }
 
-        copy_content_label.visibility = View.VISIBLE
+        copy_content_label.text = context.getString(R.string.copied)
 
         postDelayed(COPIED_TEXT_DISPLAY_DURATION) {
-            copy_content_label.visibility = View.INVISIBLE
+            copy_content_label.text = context.getString(R.string.copy)
             isCopyClicked = false
         }
     }

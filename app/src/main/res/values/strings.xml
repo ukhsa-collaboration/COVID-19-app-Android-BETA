@@ -196,5 +196,6 @@
     <string name="reference_code_app">Your app reference code</string>
     <string name="connect_to_internet">Please connect your phone to the internet to see the app reference code.</string>
     <string name="reference_code_description_3"><![CDATA[<p>If you get a test you need to enter an app reference code as part of the test registration.</p><p>By having accurate data the app can improve notifications for people you have been in contact with and let them know their risk of having coronavirus is either lower or higher.</p><p>You can always find the latest code here, it should be unique for every test you take and you shouldn\’t share it with anybody else.</p>]]></string>
+    <string name="copy">Copy</string>
     <string name="copied">Copied</string>
 </resources>
