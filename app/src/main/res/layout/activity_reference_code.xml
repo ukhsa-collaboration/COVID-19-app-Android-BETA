@@ -49,17 +49,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 android:text="@string/reference_code_description_1"
                 android:textColor="@color/text_primary_color" />
+
+            <TextView
+                style="@style/TextViewStatusSubTitleHeading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="6dp"
+                android:accessibilityHeading="true"
+                android:text="@string/reference_code_when_2"
+                android:textColor="@color/text_primary_color"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/TextViewStatusSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="24dp"
+                android:text="@string/reference_code_description_2"
+                android:textColor="@color/text_primary_color" />
+
+            <TextView
+                style="@style/TextViewStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="16dp"
+                android:accessibilityHeading="true"
+                android:text="@string/reference_code_linking" />
 
             <uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodePanel
                 android:id="@+id/reference_code_panel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="16dp"
-                />
+                android:layout_marginBottom="16dp" />
 
             <TextView
                 android:id="@+id/reference_code_description_3"
