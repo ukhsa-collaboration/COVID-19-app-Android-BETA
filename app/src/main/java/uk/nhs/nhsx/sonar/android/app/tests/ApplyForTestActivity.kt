@@ -10,10 +10,10 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import kotlinx.android.synthetic.main.activity_apply_for_test.order_clinical_tests
 import kotlinx.android.synthetic.main.activity_reference_code.reference_code_panel
-import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import androidx.lifecycle.Observer
+import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BuildConfig
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -36,10 +36,11 @@ class ApplyForTestActivity : BaseActivity() {
 
         setContentView(R.layout.activity_apply_for_test)
 
-        toolbar.setTitle(R.string.get_tested)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back_blue)
+        supportActionBar?.setHomeActionContentDescription(R.string.go_back)
+        supportActionBar?.title = getString(R.string.apply_for_test)
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         viewModel.state().observe(this, Observer { state ->

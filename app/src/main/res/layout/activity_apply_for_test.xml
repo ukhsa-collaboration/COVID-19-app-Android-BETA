@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
@@ -11,48 +10,63 @@
     android:orientation="vertical"
     tools:context="uk.nhs.nhsx.sonar.android.app.MainActivity">
 
-    <include layout="@layout/symptom_banner" />
+    <include layout="@layout/white_banner" />
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@id/permission_continue"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
             android:paddingBottom="16dp">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="40dp"
-                android:layout_gravity="bottom|center_horizontal"
                 android:contentDescription="@null"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_bg_gradient_top"
+                android:paddingVertical="40dp"
                 android:src="@drawable/ic_get_tested" />
 
             <TextView
                 android:id="@+id/apply_for_test_title"
-                style="@style/OnboardingTitle"
-                android:layout_width="wrap_content"
+                style="@style/TextViewStatus"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:accessibilityHeading="true"
+                android:paddingHorizontal="16dp"
                 android:text="@string/apply_for_test" />
 
             <TextView
+                style="@style/TextViewStatusSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/text_primary_color"
+                android:text="@string/apply_for_test_desc" />
+
+            <TextView
+                style="@style/TextViewStatusSubTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:lineSpacingMultiplier="1.2"
-                android:text="@string/apply_for_test_desc" />
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/text_primary_color"
+                android:text="@string/apply_for_test_need_ref" />
+
+            <uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodePanel
+                android:id="@+id/reference_code_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="16dp" />
 
             <TextView
                 android:id="@+id/order_clinical_tests"
@@ -60,22 +74,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:gravity="center"
+                android:drawableEnd="@drawable/ic_link"
+                android:drawablePadding="8dp"
+                android:textStyle="bold"
+                android:paddingHorizontal="16dp"
                 android:text="@string/clinical_test_uk_gov" />
-
-            <uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodePanel
-                android:id="@+id/reference_code_panel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="16dp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:lineSpacingMultiplier="1.2"
-                android:text="@string/apply_for_test_need_ref" />
 
         </LinearLayout>
 

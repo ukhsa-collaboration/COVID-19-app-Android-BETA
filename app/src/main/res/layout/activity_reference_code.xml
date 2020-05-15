@@ -21,6 +21,7 @@
                 android:id="@+id/reference_code_icon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:contentDescription="@null"
                 android:background="@drawable/ic_bg_gradient_top"
                 android:src="@drawable/ic_reference_link" />
 
