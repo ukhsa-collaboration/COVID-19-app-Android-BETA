@@ -14,10 +14,12 @@ import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import androidx.lifecycle.Observer
+import uk.nhs.nhsx.sonar.android.app.BuildConfig
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
-import uk.nhs.nhsx.sonar.android.app.util.URL_APPLY_CORONAVIRUS_TEST
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel.State.Loaded
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
@@ -42,13 +44,16 @@ class ApplyForTestActivity : BaseActivity() {
 
         viewModel.state().observe(this, Observer { state ->
             reference_code_panel.setState(state)
+
+            order_clinical_tests.setOnClickListener {
+                when (state) {
+                    is Loaded -> openUrl(buildUrlWithCode(state.code))
+                    else -> openUrl(buildUrlWithoutCode())
+                }
+            }
         })
 
         viewModel.getReferenceCode()
-
-        order_clinical_tests.setOnClickListener {
-            openUrl(URL_APPLY_CORONAVIRUS_TEST)
-        }
     }
 
     companion object {
@@ -57,5 +62,11 @@ class ApplyForTestActivity : BaseActivity() {
 
         private fun getIntent(context: Context) =
             Intent(context, ApplyForTestActivity::class.java)
+
+        private fun buildUrlWithCode(code: ReferenceCode): String =
+            "${BuildConfig.URL_APPLY_CORONAVIRUS_TEST}?ctaToken=${code.value}"
+
+        private fun buildUrlWithoutCode(): String =
+            BuildConfig.URL_APPLY_CORONAVIRUS_TEST
     }
 }

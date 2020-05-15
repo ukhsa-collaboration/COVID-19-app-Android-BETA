@@ -48,6 +48,7 @@ jobs:
           sonarHeaderValue: ${{ secrets.StagingSonarHeaderValue }}
           sonarAnalyticsKey: ${{ secrets.TestSonarAnalyticsKey }}
           sonarBaseUrl: ${{ secrets.StagingSonarBaseUrl }}
+          sonarUrlApplyCoronavirusTest: https://self-referral.test-for-coronavirus.service.gov.uk/cta-start
           commitSha: ${{ steps.commitsha.outputs.short }}
 
       - name: Create Release
@@ -96,6 +97,7 @@ jobs:
           sonarHeaderValue: ${{ secrets.ProdSonarHeaderValue }}
           sonarAnalyticsKey: ${{ secrets.ProdSonarAnalyticsKey }}
           sonarBaseUrl: ${{ secrets.ProdSonarBaseUrl }}
+          sonarUrlApplyCoronavirusTest: https://self-referral.test-for-coronavirus.service.gov.uk/cta-start
           commitSha: ${{ steps.commitsha.outputs.short }}
 
       - name: Upload Alpha AAB

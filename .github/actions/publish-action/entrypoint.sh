@@ -19,6 +19,7 @@ validate "$INPUT_SIGNING_KEY_PASSWORD" "signingKeyPassword"
 validate "$INPUT_SONAR_HEADER_VALUE" "sonarHeaderValue"
 validate "$INPUT_SONAR_ANALYTICS_KEY" "sonarAnalyticsKey"
 validate "$INPUT_SONAR_BASE_URL" "sonarBaseUrl"
+validate "$INPUT_SONAR_URL_APPLY_CORONAVIRUS_TEST" "sonarUrlApplyCoronavirusTest"
 validate "$INPUT_COMMIT_SHA" "commitSha"
 
 CURRENT_DIR=$(pwd)
@@ -40,6 +41,7 @@ base64 -d build/keystore.txt > "$SIGNING_KEY_STORE_FILE"
    -Psonar.headerValue="$INPUT_SONAR_HEADER_VALUE" \
    -Psonar.analyticsKey="$INPUT_SONAR_ANALYTICS_KEY" \
    -Psonar.baseUrl="$INPUT_SONAR_BASE_URL" \
+   -Psonar.urlApplyCoronavirusTest="$INPUT_SONAR_URL_APPLY_CORONAVIRUS_TEST" \
    -Pplay-enabled \
    -PPLAY_SERVICES_PUBLISH="$PLAY_SERVICES_FILE" \
    -PSIGNING_KEY_STORE="$SIGNING_KEY_STORE_FILE" \

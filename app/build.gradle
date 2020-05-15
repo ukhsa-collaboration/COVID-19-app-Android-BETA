@@ -61,10 +61,13 @@ android {
         buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
         buildConfigField("String", "SONAR_HEADER_VALUE", "\"$headerValue\"")
         buildConfigField("String", "SONAR_ANALYTICS_KEY", "\"${analyticsKey}\"")
+
         buildConfigField("String", "SONAR_SERVICE_UUID", "\"${property("sonar.serviceUuid")}\"")
         buildConfigField("String", "SONAR_ENCODED_BACKGROUND_IOS_SERVICE_UUID", "\"${property("sonar.encodedBackgroundIosServiceUuid")}\"")
         buildConfigField("String", "SONAR_IDENTITY_CHARACTERISTIC_UUID", "\"${property("sonar.identityCharacteristicUuid")}\"")
         buildConfigField("String", "SONAR_KEEP_ALIVE_CHARACTERISTIC_UUID", "\"${property("sonar.keepAliveCharacteristicUuid")}\"")
+
+        buildConfigField("String", "URL_APPLY_CORONAVIRUS_TEST", "\"${property("sonar.urlApplyCoronavirusTest")}\"")
     }
 
     buildTypes {
