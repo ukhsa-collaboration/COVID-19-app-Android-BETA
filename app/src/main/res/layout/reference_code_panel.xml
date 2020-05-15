@@ -87,6 +87,7 @@
             android:layout_marginTop="8dp"
             android:layout_gravity="end"
             android:paddingBottom="16dp"
+            android:contentDescription="@string/copy"
             android:foreground="?selectableItemBackground"
             android:src="@drawable/ic_content_copy" />
 

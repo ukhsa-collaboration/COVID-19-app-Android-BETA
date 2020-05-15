@@ -82,6 +82,7 @@ class ReferenceCodePanel @JvmOverloads constructor(
         }
 
         copy_content_label.text = context.getString(R.string.copied)
+        copy_content_label.announceForAccessibility(context.getString(R.string.copied))
 
         postDelayed(COPIED_TEXT_DISPLAY_DURATION) {
             copy_content_label.text = context.getString(R.string.copy)
