@@ -82,6 +82,7 @@ class FlowTest {
         testAppContext = TestApplicationContext(activityRule)
         testAppContext.closeNotificationPanel()
         ensureBluetoothEnabled()
+        resetApp()
     }
 
     private fun resetApp() {
@@ -100,35 +101,6 @@ class FlowTest {
     }
 
     @Test
-    fun testRunner() {
-        val tests = listOf(
-            ::testUnsupportedDevice,
-            ::testUnsupportedDeviceOnThePermissionScreen,
-            ::testTabletNotSupported,
-            ::testRegistration,
-            ::testRegistrationRetry,
-            ::testBluetoothInteractions,
-            ::testReceivingStatusUpdateNotification,
-            ::testExplanation,
-            ::testLaunchWhenStateIsDefault,
-            ::testLaunchWhenStateIsAmber,
-            ::testLaunchWhenStateIsRed,
-            ::testLaunchWhenStateIsRedAndExpired,
-            ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
-            ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
-            ::testOnboarding_WhenPermissionsNeedToBeSet,
-            ::testResumeWhenBluetoothIsDisabled,
-            ::testResumeWhenLocationAccessIsDisabled,
-            ::testResumeWhenLocationPermissionIsRevoked,
-            ::testEnableBluetoothThroughNotification
-        )
-
-        tests.forEach {
-            resetApp()
-            it()
-        }
-    }
-
     fun testUnsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()
 
@@ -140,6 +112,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testTabletNotSupported() {
         testAppContext.simulateTablet()
 
@@ -151,6 +124,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testUnsupportedDeviceOnThePermissionScreen() {
 
         onTestStartScreen {
@@ -178,6 +152,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testRegistration() {
         testAppContext.simulateBackendDelay(400)
 
@@ -212,6 +187,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testRegistrationRetry() {
         testAppContext.simulateBackendResponse(error = true)
 
@@ -249,6 +225,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testBluetoothInteractions() {
         setUserState(DefaultState)
         setValidSonarIdAndSecretKeyAndPublicKey()
@@ -274,6 +251,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testReceivingStatusUpdateNotification() {
         setUserState(DefaultState)
         setValidSonarId()
@@ -291,6 +269,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testExplanation() {
 
         onTestStartScreen {
@@ -308,6 +287,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testLaunchWhenStateIsDefault() {
         setUserState(DefaultState)
         setValidSonarId()
@@ -324,6 +304,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testLaunchWhenStateIsAmber() {
         setUserState(AmberState(DateTime.now(DateTimeZone.UTC).plusDays(1)))
         setValidSonarId()
@@ -340,6 +321,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testLaunchWhenStateIsRed() {
         setUserState(
             RedState(
@@ -366,6 +348,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testLaunchWhenStateIsRedAndExpired() {
         setUserState(
             RedState(
@@ -384,6 +367,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState() {
         setUserState(
             RedState(
@@ -409,6 +393,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testLaunchWhenOnboardingIsFinishedButNotRegistered() {
         setFinishedOnboarding()
 
@@ -420,6 +405,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testOnboarding_WhenPermissionsNeedToBeSet() {
         fun testEnableBluetooth() {
 
@@ -503,6 +489,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testResumeWhenBluetoothIsDisabled() {
         setUserState(DefaultState)
         setValidSonarId()
@@ -527,6 +514,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testResumeWhenLocationAccessIsDisabled() {
         setUserState(DefaultState)
         setValidSonarId()
@@ -549,6 +537,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testResumeWhenLocationPermissionIsRevoked() {
         setUserState(DefaultState)
         setValidSonarId()
@@ -581,6 +570,7 @@ class FlowTest {
         }
     }
 
+    @Test
     fun testEnableBluetoothThroughNotification() {
         setUserState(DefaultState)
         setValidSonarId()
