@@ -7,7 +7,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onTestStartScreen(func: TestStartScreenRobot.() -> Unit) = TestStartScreenRobot().apply(func)
 
-class TestStartScreenRobot : ScreenRobot() {
+class TestStartScreenRobot : ViewRobot() {
     fun startMainActivity() {
         onView(withId(R.id.start_main_activity)).perform(click())
     }

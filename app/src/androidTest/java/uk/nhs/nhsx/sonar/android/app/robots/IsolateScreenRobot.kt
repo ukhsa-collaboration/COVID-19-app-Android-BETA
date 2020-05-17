@@ -4,7 +4,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onIsolateScreen(func: IsolateScreenRobot.() -> Unit) = IsolateScreenRobot().apply(func)
 
-class IsolateScreenRobot : ScreenRobot() {
+class IsolateScreenRobot : ViewRobot() {
 
     fun checkIsolateActivityIsShown() {
         checkViewWithIdIsDisplayed(R.id.status_red)

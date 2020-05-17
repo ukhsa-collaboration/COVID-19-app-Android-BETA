@@ -4,7 +4,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onExplanationScreen(func: ExplanationScreenRobot.() -> Unit) = ExplanationScreenRobot().apply(func)
 
-class ExplanationScreenRobot : ScreenRobot() {
+class ExplanationScreenRobot : ViewRobot() {
 
     fun checkExplanationActivityIsShown() {
         checkViewWithIdIsDisplayed(R.id.explanation_back)

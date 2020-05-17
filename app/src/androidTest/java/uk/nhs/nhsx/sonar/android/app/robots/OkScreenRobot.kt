@@ -10,7 +10,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onOkScreen(func: OkScreenRobot.() -> Unit) = OkScreenRobot().apply(func)
 
-class OkScreenRobot : ScreenRobot() {
+class OkScreenRobot : ViewRobot() {
 
     fun checkOkActivityIsShown() {
         checkTitleIsDisplayed()

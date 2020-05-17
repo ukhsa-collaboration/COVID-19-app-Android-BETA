@@ -4,7 +4,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onPostCodeScreen(func: PostCodeScreenRobot.() -> Unit) = PostCodeScreenRobot().apply(func)
 
-class PostCodeScreenRobot : ScreenRobot() {
+class PostCodeScreenRobot : ViewRobot() {
     fun checkPostCodeActivityIsShown() {
         checkViewWithIdIsDisplayed(R.id.postCodeContinue)
     }

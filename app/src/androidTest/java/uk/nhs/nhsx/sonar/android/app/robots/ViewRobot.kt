@@ -17,7 +17,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import kotlin.test.fail
 
-abstract class ScreenRobot {
+abstract class ViewRobot {
 
     protected fun checkViewHasText(@IdRes viewId: Int, @StringRes stringId: Int) {
         onView(withId(viewId)).check(matches(withText(stringId)))

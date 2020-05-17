@@ -5,7 +5,7 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher
 
 fun onReferenceCodePanel(func: ReferenceCodePanelRobot.() -> Unit) = ReferenceCodePanelRobot().apply(func)
 
-class ReferenceCodePanelRobot : ScreenRobot() {
+class ReferenceCodePanelRobot : ViewRobot() {
 
     fun checkDisplayOfReferenceCode() {
         checkViewHasText(R.id.reference_code, TestSonarServiceDispatcher.REFERENCE_CODE)

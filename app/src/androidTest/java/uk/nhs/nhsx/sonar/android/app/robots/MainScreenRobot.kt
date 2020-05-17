@@ -4,7 +4,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onMainScreen(func: MainScreenRobot.() -> Unit) = MainScreenRobot().apply(func)
 
-class MainScreenRobot : ScreenRobot() {
+class MainScreenRobot : ViewRobot() {
     fun clickOnConfirmButton() {
         clickOnView(R.id.confirm_onboarding)
     }

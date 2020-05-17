@@ -17,7 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.SetChecked
 
 fun onDiagnosisScreen(func: DiagnosisScreenRobot.() -> Unit) = DiagnosisScreenRobot().apply(func)
 
-class DiagnosisScreenRobot : ScreenRobot() {
+class DiagnosisScreenRobot : ViewRobot() {
 
     fun checkCanTransitionToIsolateActivity() {
 

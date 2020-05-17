@@ -4,7 +4,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onIsolateBottomSheetView(func: IsolateBottomSheetViewRobot.() -> Unit) = IsolateBottomSheetViewRobot().apply(func)
 
-class IsolateBottomSheetViewRobot : ScreenRobot() {
+class IsolateBottomSheetViewRobot : ViewRobot() {
 
     fun checkIsolateActivityPopUpIsShown() {
         checkViewWithIdIsDisplayed(R.id.bottom_sheet_isolate)

@@ -4,7 +4,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onRegistrationPanel(func: RegistrationPanelRobot.() -> Unit) = RegistrationPanelRobot().apply(func)
 
-class RegistrationPanelRobot : ScreenRobot() {
+class RegistrationPanelRobot : ViewRobot() {
     fun checkWorkingOkMessageIsShown() {
         checkViewHasText(
             R.id.registrationStatusText,

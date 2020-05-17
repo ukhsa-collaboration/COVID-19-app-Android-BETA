@@ -4,7 +4,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onMedicalWorkersInstructionPanel(func: MedicalWorkersInstructionPanelRobot.() -> Unit) = MedicalWorkersInstructionPanelRobot().apply(func)
 
-class MedicalWorkersInstructionPanelRobot : ScreenRobot() {
+class MedicalWorkersInstructionPanelRobot : ViewRobot() {
 
     fun checkDisplayOfMedicalWorkersInstructions() {
         scrollAndClickOnView(R.id.medicalWorkersInstructions)

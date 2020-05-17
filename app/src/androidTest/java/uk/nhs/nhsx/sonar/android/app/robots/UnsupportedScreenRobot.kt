@@ -4,7 +4,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onDeviceUnsupportedScreen(func: UnsupportedScreenRobot.() -> Unit) = UnsupportedScreenRobot().apply(func)
 
-class UnsupportedScreenRobot : ScreenRobot() {
+class UnsupportedScreenRobot : ViewRobot() {
 
     fun verifyUnsupportedMessageIsShown() {
         checkViewHasText(R.id.edgeCaseTitle, R.string.device_not_supported_title)

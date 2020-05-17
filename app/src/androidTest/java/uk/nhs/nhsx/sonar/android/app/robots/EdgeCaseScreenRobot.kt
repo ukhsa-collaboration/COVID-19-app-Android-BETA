@@ -5,7 +5,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 
 fun onEdgeCaseScreen(func: EdgeCaseScreenRobot.() -> Unit) = EdgeCaseScreenRobot().apply(func)
 
-class EdgeCaseScreenRobot : ScreenRobot() {
+class EdgeCaseScreenRobot : ViewRobot() {
     fun checkBlueToothMessageIsDisplayed() {
         checkViewHasText(R.id.edgeCaseTitle, R.string.re_enable_bluetooth_title)
     }
