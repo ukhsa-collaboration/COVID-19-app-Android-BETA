@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_review_diagnosis.date_selection_e
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_cough
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_temperature
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
-import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_prompt
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
 import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import org.joda.time.DateTime
@@ -55,7 +54,6 @@ class DiagnoseReviewActivity : BaseActivity() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         setSymptomsReviewAnswers()
-        setSymptomsDateQuestion()
         setDateSpinner()
 
         submit_diagnosis.setOnClickListener {
@@ -169,15 +167,6 @@ class DiagnoseReviewActivity : BaseActivity() {
             when (Symptom.COUGH in symptoms) {
                 true -> getString(R.string.i_do_cough)
                 false -> getString(R.string.i_do_not_cough)
-            }
-    }
-
-    private fun setSymptomsDateQuestion() {
-        symptoms_date_prompt.text =
-            when {
-                Symptom.COUGH !in symptoms -> getString(R.string.symptoms_date_prompt_temperature)
-                Symptom.TEMPERATURE !in symptoms -> getString(R.string.symptoms_date_prompt_cough)
-                else -> getString(R.string.symptoms_date_prompt_all)
             }
     }
 
