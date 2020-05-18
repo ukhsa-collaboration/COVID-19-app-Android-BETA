@@ -657,7 +657,7 @@ class FlowTest {
     }
 
     private fun checkAtRiskActivityIsShown() {
-        onView(withId(R.id.status_amber)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_amber_title)).check(matches(isDisplayed()))
     }
 
     private fun checkIsolateActivityIsShown() {

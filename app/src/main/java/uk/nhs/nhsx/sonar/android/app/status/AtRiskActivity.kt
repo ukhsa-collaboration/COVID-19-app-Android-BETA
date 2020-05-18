@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_at_risk.follow_until
 import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_amber
+import kotlinx.android.synthetic.main.activity_at_risk.registrationPanel
 import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import kotlinx.android.synthetic.main.status_footer_view.medical_workers_card
@@ -47,6 +48,8 @@ class AtRiskActivity : BaseActivity() {
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
         }
+
+        registrationPanel.setState(RegistrationState.Complete)
 
         latest_advice_amber.setOnClickListener {
             openUrl(URL_LATEST_ADVICE_AMBER)

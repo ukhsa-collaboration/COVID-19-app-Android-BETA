@@ -19,7 +19,7 @@
         android:paddingHorizontal="16dp"
         android:layout_marginBottom="8dp"
         android:textAllCaps="true"
-        android:text="More Options" />
+        android:text="@string/more_options" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/medical_workers_card"
@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:accessibilityHeading="true"
         android:clickable="true"
         android:focusable="true">
 
@@ -49,7 +48,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:accessibilityHeading="true"
         android:clickable="true"
         android:focusable="true">
 
