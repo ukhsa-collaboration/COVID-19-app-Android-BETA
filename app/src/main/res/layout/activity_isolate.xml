@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,40 +25,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="32dp">
+                android:orientation="vertical">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/status_red"
-                    style="@style/PrimaryCard"
+                <uk.nhs.nhsx.sonar.android.app.status.RegistrationProgressPanel
+                    android:id="@+id/registrationPanel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp">
+                    android:minHeight="60dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="16dp">
+
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/symptomatic_card_background" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/amber_card_background"
-                        android:orientation="vertical"
-                        android:paddingTop="32dp"
-                        android:paddingBottom="32dp">
-
-                        <TextView
-                            android:id="@+id/symptomsTextView"
-                            style="@style/TextViewCardSubTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="24dp"
-                            android:layout_marginEnd="16dp"
-                            tools:text="@string/high_temperature" />
-
-                        <View
-                            style="@style/HorizontalDivider"
-                            android:layout_height="2dp"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginBottom="16dp"
-                            android:background="@color/color_nhsuk_grey_5" />
+                        android:paddingHorizontal="16dp"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/status_red_title"
@@ -67,32 +58,48 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:accessibilityHeading="true"
-                            android:paddingStart="24dp"
-                            android:paddingEnd="16dp"
                             android:text="@string/status_red_title" />
-
-                        <TextView
-                            android:id="@+id/latest_advice_red"
-                            style="@style/TextViewSubStatus"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:gravity="center_vertical"
-                            android:letterSpacing="0.04"
-                            android:minHeight="48dp"
-                            android:paddingStart="20dp"
-                            android:paddingEnd="16dp"
-                            android:text="@string/status_what_to_do" />
 
                         <TextView
                             android:id="@+id/follow_until"
                             style="@style/TextViewCardSubTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingStart="24dp"
-                            android:paddingEnd="16dp"
-                            tools:text="@string/follow_until" />
+                            android:layout_marginTop="8dp"
+
+                            tools:text="@string/follow_until_red" />
                     </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/status_today_feeling"
+                    style="@style/TextViewCardSubTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="16dp"
+                    android:accessibilityHeading="true"
+                    android:text="@string/next_steps"
+                    android:textAllCaps="true" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/latest_advice_red"
+                    style="@style/PrimaryCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        style="@style/TextViewActionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_back_arrow_circle"
+                        android:drawablePadding="16dp"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="16dp"
+                        android:text="@string/read_current_advice_for_you" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
@@ -100,95 +107,21 @@
                     style="@style/PrimaryCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                    android:layout_marginBottom="12dp">
 
                         <TextView
-                            style="@style/TextViewActionSubTitle"
+                            style="@style/TextViewActionTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="12dp"
-                            android:accessibilityHeading="true"
-                            android:text="@string/please_book_test"
-                            android:textSize="16sp" />
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="16dp"
+                            android:drawableStart="@drawable/ic_back_arrow_circle"
+                            android:drawablePadding="16dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/apply_for_test" />
 
-                        <TextView
-                            style="@style/TextViewSubStatus"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@string/test_booking_number" />
-                    </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/orderTestCard"
-                    style="@style/PrimaryCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:accessibilityHeading="true"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <TextView
-                        android:id="@+id/orderTestLink"
-                        style="@style/TextViewActionTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="16dp"
-                        android:text="@string/apply_for_test" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/reference_link_card"
-                    style="@style/PrimaryCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:accessibilityHeading="true"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <TextView
-                        android:id="@+id/reference_code_link"
-                        style="@style/TextViewActionTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
-                        android:paddingHorizontal="16dp"
-                        android:paddingVertical="16dp"
-                        android:text="@string/reference_code_title" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:id="@+id/need_medical_advice"
-                    style="@style/TextViewActionSubTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:accessibilityHeading="true"
-                    android:paddingHorizontal="16dp"
-                    android:text="@string/need_medical_advice"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/nhs_service"
-                    style="@style/TextViewLink02"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp"
-                    android:text="@string/nhs_online_service" />
+                <include layout="@layout/status_footer_view" />
 
             </LinearLayout>
         </ScrollView>

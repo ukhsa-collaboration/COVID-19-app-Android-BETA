@@ -22,6 +22,26 @@
         android:text="@string/more_options" />
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/reference_link_card"
+        style="@style/PrimaryCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
+        android:focusable="true">
+
+        <TextView
+            android:id="@+id/reference_code_link"
+            style="@style/TextViewActionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="24dp"
+            android:text="@string/reference_code_title" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/medical_workers_card"
         style="@style/PrimaryCard"
         android:layout_width="match_parent"
@@ -42,25 +62,6 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/reference_link_card"
-        style="@style/PrimaryCard"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:focusable="true">
-
-        <TextView
-            android:id="@+id/reference_code_link"
-            style="@style/TextViewActionTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="24dp"
-            android:text="@string/reference_code_title" />
-    </com.google.android.material.card.MaterialCardView>
 
 
     <TextView

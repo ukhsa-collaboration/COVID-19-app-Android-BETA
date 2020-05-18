@@ -384,7 +384,7 @@ class FlowTest {
 
         checkIsolateActivityIsShown()
         checkDisplayOfReferenceCode()
-        checkMedicalWorkersInstructionsNotDisplayed()
+        checkDisplayOfMedicalWorkersInstructions()
     }
 
     fun testClickOrderTestCardShowsApplyForTest() {
@@ -398,7 +398,7 @@ class FlowTest {
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
-        onView(withId(R.id.orderTestCard)).perform(click())
+        onView(withId(R.id.book_test_card)).perform(click())
 
         checkApplyForTestActivityIsShown()
     }
@@ -661,7 +661,7 @@ class FlowTest {
     }
 
     private fun checkIsolateActivityIsShown() {
-        onView(withId(R.id.status_red)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_red_title)).check(matches(isDisplayed()))
     }
 
     private fun checkIsolateActivityPopUpIsShown() {
@@ -811,6 +811,6 @@ class FlowTest {
         onView(withId(R.id.submit_diagnosis)).perform(click())
 
         // Red State
-        onView(withId(R.id.status_red)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_red_title)).check(matches(isDisplayed()))
     }
 }

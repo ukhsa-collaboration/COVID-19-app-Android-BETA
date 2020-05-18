@@ -6,18 +6,19 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_isolate.book_test_card
 import kotlinx.android.synthetic.main.activity_isolate.follow_until
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
-import kotlinx.android.synthetic.main.activity_isolate.nhs_service
-import kotlinx.android.synthetic.main.activity_isolate.orderTestCard
-import kotlinx.android.synthetic.main.activity_isolate.reference_link_card
-import kotlinx.android.synthetic.main.activity_isolate.symptomsTextView
+import kotlinx.android.synthetic.main.activity_isolate.registrationPanel
 import kotlinx.android.synthetic.main.banner.toolbar_info
+import kotlinx.android.synthetic.main.status_footer_view.medical_workers_card
+import kotlinx.android.synthetic.main.status_footer_view.nhs_service
+import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -25,6 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.tests.ApplyForTestActivity
+import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_RED
@@ -53,16 +55,14 @@ class IsolateActivity : BaseActivity() {
         BluetoothService.start(this)
 
         val state = userStateStorage.get()
-        val symptoms = state.symptoms().sortedDescending()
 
-        symptomsTextView.text = symptoms.joinToString("\n") {
-            when (it) {
-                Symptom.TEMPERATURE -> getString(R.string.high_temperature)
-                Symptom.COUGH -> getString(R.string.continuous_cough)
+        registrationPanel.setState(RegistrationState.Complete)
+        follow_until.text = buildSpannedString {
+            bold {
+                append(getString(R.string.follow_until_red_pre, state.until().toUiFormat()))
             }
+            append(" ${getString(R.string.follow_until_red)}")
         }
-
-        follow_until.text = getString(R.string.follow_until, state.until().toUiFormat())
 
         latest_advice_red.setOnClickListener {
             openUrl(URL_LATEST_ADVICE_RED)
@@ -72,19 +72,16 @@ class IsolateActivity : BaseActivity() {
             openUrl(URL_SUPPORT_RED)
         }
 
-        book_test_card.setOnClickListener {
-            val intent = Intent(Intent.ACTION_DIAL)
-            val bookTestPhoneNumber = getString(R.string.test_booking_number)
-            intent.data = Uri.parse("tel:$bookTestPhoneNumber")
-            startActivity(intent)
-        }
-
         toolbar_info.setOnClickListener {
             openUrl(URL_INFO)
         }
 
-        orderTestCard.setOnClickListener {
+        book_test_card.setOnClickListener {
             ApplyForTestActivity.start(this)
+        }
+
+        medical_workers_card.setOnClickListener {
+            WorkplaceGuidanceActivity.start(this)
         }
 
         setUpdateSymptomsDialog()

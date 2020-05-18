@@ -7,6 +7,8 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import kotlinx.android.synthetic.main.activity_at_risk.follow_until
 import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_amber
 import kotlinx.android.synthetic.main.activity_at_risk.registrationPanel
@@ -42,8 +44,12 @@ class AtRiskActivity : BaseActivity() {
         BluetoothService.start(this)
         setContentView(R.layout.activity_at_risk)
 
-        follow_until.text =
-            getString(R.string.follow_until, userStateStorage.get().until().toUiFormat())
+        follow_until.text = buildSpannedString {
+            append(getString(R.string.follow_until))
+            bold {
+                append("  ${userStateStorage.get().until().toUiFormat()}")
+            }
+        }
 
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)

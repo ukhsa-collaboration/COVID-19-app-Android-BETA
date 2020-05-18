@@ -64,7 +64,7 @@
     <string name="status_not_feeling_well">I feel unwell</string>
     <string name="status_not_feeling_well_desc">I might have symptoms of coronavirus and want to know what to do next</string>
     <string name="status_initial_title">Follow the current advice to stop the spread of coronavirus</string>
-    <string name="status_red_title">Your symptoms indicate you may have coronavirus</string>
+    <string name="status_red_title">Your symptoms indicate you may have coronavirus. Please self-isolate and apply for a test.</string>
     <string name="need_medical_advice">NHS services for your part of the country</string>
     <string name="nhs_online_service"><u>NHS Coronavirus</u></string>
     <string name="nhs_111_online_service"><u>NHS 111 online coronavirus service</u></string>
@@ -114,7 +114,9 @@
     <string name="go_to_your_settings">Go to your Settings</string>
     <string name="enable_location_service_title">You need to enable location services on your phone</string>
     <string name="enable_location_service_rationale">To make Bluetooth work, we need you to turn on location services on your phone.\n\nThis app is not using Bluetooth or your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nIf you do not enable location services on your phone this app will not work.\n\nTo enable this app to work, please go to Settings and enable location services:</string>
-    <string name="follow_until">Please follow the advice below until  %1$s</string>
+    <string name="follow_until">Please follow the advice below until </string>
+    <string name="follow_until_red_pre">On %1$s </string>
+    <string name="follow_until_red"> this app will notify you to update your symptoms. Please read your full advice below.</string>
     <string name="status_description_01">If you don’t have any symptoms, there’s no need to do anything right now. If you develop symptoms, please come back to this app. If you need urgent medical advice please go to 111/999.</string>
     <string name="status_description_02">Feel free to use other apps as normal and you’ll be notified if your advice changes.</string>
     <string name="status_description_03">If you develop symptoms, please come back to this app.</string>
@@ -182,7 +184,7 @@
     <string name="enable_notifications_title">Enable notifications</string>
     <string name="timestamp">Timestamp %1$s</string>
     <string name="txpower">TxPower: \nAdvertised = %1$d \nProtocol = %2$d</string>
-    <string name="apply_for_test">Apply for a coronavirus test</string>
+    <string name="apply_for_test">Apply for a coronavirus test now</string>
     <string name="apply_for_test_desc">You can now order a coronavirus test for you and other people in your household. This test can tell you whether you currently have coronavirus or not.</string>
     <string name="apply_for_test_need_ref">In order for this app to receive your test result, please write down this 8 digit app reference code as you will be asked for it later.</string>
     <string name="get_tested">Get tested</string>
