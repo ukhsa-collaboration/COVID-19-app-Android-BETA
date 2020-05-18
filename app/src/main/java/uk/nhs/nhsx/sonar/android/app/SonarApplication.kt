@@ -10,8 +10,6 @@ import androidx.work.ListenableWorker
 import com.google.firebase.FirebaseApp
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.iid.FirebaseInstanceId
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
 import com.polidea.rxandroidble2.exceptions.BleException
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
@@ -45,7 +43,6 @@ class SonarApplication : Application() {
 
         configureBouncyCastleProvider()
 
-        startAnalytics()
         appComponent = buildApplicationComponent()
 
         configureRxJavaErrorHandler()
@@ -108,14 +105,6 @@ class SonarApplication : Application() {
             .networkModule(NetworkModule(BuildConfig.BASE_URL, BuildConfig.SONAR_HEADER_VALUE))
             .notificationsModule(NotificationsModule())
             .build()
-
-    private fun startAnalytics() {
-        AppCenter.start(
-            this,
-            BuildConfig.SONAR_ANALYTICS_KEY,
-            Analytics::class.java
-        )
-    }
 
     private fun configureBouncyCastleProvider() {
         // Remove existing built in Bouncy Castle
