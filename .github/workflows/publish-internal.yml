@@ -11,6 +11,7 @@ jobs:
       - self-hosted
       - linux
       - aws
+      - blue
 
     steps:
       - name: Checkout
@@ -19,7 +20,9 @@ jobs:
         with:
           ref: ${{ github.event.client_payload.ref }}
 
-      - run: echo ::set-output name=commitsha::$(git rev-parse --short HEAD)
+      - name: Get Commit Short Hash
+        id: commitsha
+        run: echo ::set-output name=short::$(git rev-parse --short HEAD)
 
       - name: Cache Gradle Packages
         uses: actions/cache@v1
@@ -43,27 +46,28 @@ jobs:
           sonarHeaderValue: ${{ secrets.TestSonarHeaderValue }}
           sonarAnalyticsKey: ${{ secrets.TestSonarAnalyticsKey }}
           sonarBaseUrl: ${{ secrets.TestSonarBaseUrl }}
-          commitSha: ${{ github.event.client_payload.ref }}
+          sonarUrlApplyCoronavirusTest: https://self-referral.test-for-coronavirus.service.gov.uk/cta-start
+          commitSha: ${{ steps.commitsha.outputs.short }}
 
       - name: Upload Internal APK
         uses: actions/upload-artifact@v2
         with:
-          name: app-internal-${{ steps.publish.outputs.buildVersion }}(${{ github.event.client_payload.ref }}).apk
+          name: app-internal-${{ steps.publish.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }}).apk
           path: app/build/outputs/apk/internal/app-internal.apk
 
       - name: Upload Internal AAB
         uses: actions/upload-artifact@v2
         with:
-          name: app-internal-${{ steps.publish.outputs.buildVersion }}(${{ github.event.client_payload.ref }}).aab
+          name: app-internal-${{ steps.publish.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }}).aab
           path: app/build/outputs/bundle/internal/app-internal.aab
 
       - name: Notify Slack
-        uses: rtCamp/action-slack-notify@v2.0.0
+        uses: rtCamp/action-slack-notify@96d5e2a64fc78a6b7ac13265f55bee296869967a
         env:
           SLACK_WEBHOOK: ${{ secrets.SonarAndroidWebHook }}
           SLACK_COLOR: '#138275'
           SLACK_USERNAME: CI
           SLACK_TITLE: New Internal Release
           SLACK_MESSAGE: |
-            - Internal Build: ${{ steps.publish.outputs.buildVersion }}(${{ github.event.client_payload.ref }})
+            - Internal Build: ${{ steps.publish.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }})
             - APK and AAB are uploaded as job artefacts

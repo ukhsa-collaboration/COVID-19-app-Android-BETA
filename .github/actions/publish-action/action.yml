@@ -22,6 +22,9 @@ inputs:
   sonarBaseUrl:
     description: 'Sonar base url'
     required: true
+  sonarUrlApplyCoronavirusTest:
+    description: 'Url to apply for coronavirus test'
+    required: true
   commitSha:
     description: 'commit sha'
     required: true
@@ -55,4 +58,5 @@ runs:
     INPUT_SONAR_HEADER_VALUE: ${{ inputs.sonarHeaderValue }}
     INPUT_SONAR_ANALYTICS_KEY: ${{ inputs.sonarAnalyticsKey }}
     INPUT_SONAR_BASE_URL: ${{ inputs.sonarBaseUrl }}
+    INPUT_SONAR_URL_APPLY_CORONAVIRUS_TEST: ${{ inputs.sonarUrlApplyCoronavirusTest }}
     INPUT_COMMIT_SHA: ${{ inputs.commitSha }}

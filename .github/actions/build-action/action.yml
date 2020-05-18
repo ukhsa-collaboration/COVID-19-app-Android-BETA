@@ -4,6 +4,9 @@ inputs:
   googleServices:
     description: 'google-services config file'
     required: true
+  sonarBaseUrl:
+    description: 'Sonar base url'
+    required: true
   sonarHeaderValue:
     description: 'Sonar header value'
     required: true
@@ -15,5 +18,7 @@ runs:
   image: 'Dockerfile'
   env:
     INPUT_GOOGLE_SERVICES: ${{ inputs.googleServices }}
+    INPUT_SONAR_BASE_URL: ${{ inputs.sonarBaseUrl }}
     INPUT_SONAR_HEADER_VALUE: ${{ inputs.sonarHeaderValue }}
     INPUT_SONAR_ANALYTICS_KEY: ${{ inputs.sonarAnalyticsKey }}
+    INPUT_PACTBROKER_URL: https://sonar-pact-broker-app.apps.nonprod.aws.cp.data.england.nhs.uk
