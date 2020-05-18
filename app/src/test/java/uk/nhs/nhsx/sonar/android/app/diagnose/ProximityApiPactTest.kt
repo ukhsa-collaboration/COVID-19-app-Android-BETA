@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.diagnose
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import au.com.dius.pact.consumer.dsl.PactDslJsonBody
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
 import au.com.dius.pact.consumer.junit.PactProviderRule
 import au.com.dius.pact.consumer.junit.PactVerification
@@ -71,8 +72,6 @@ class ProximityApiPactTest {
         (0..Random.nextInt(3, 10)).map { generateCoLocationEvent() }
     )
     private val getReferenceCodeRequest = jsonObjectOf("sonarId" to sonarId)
-    private val linkingId = "aaaa-bbbb"
-    private val getReferenceCodeResponse = jsonObjectOf("linkingId" to linkingId)
 
     @get:Rule
     val provider = PactProviderRule("Proximity API", this)
@@ -113,7 +112,13 @@ class ProximityApiPactTest {
             .body(getReferenceCodeRequest)
             // response
             .willRespondWith()
-            .body(getReferenceCodeResponse)
+            .body(
+                PactDslJsonBody().stringMatcher(
+                    "linkingId",
+                    "[0-9-abcdefghjkmnpqrstvwxyz]{4,20}",
+                    "abcd-efgj"
+                )
+            )
             .status(HttpStatus.SC_OK)
             .toPact()
     }
@@ -265,10 +270,10 @@ class ProximityApiPactTest {
     private fun randomTxPower() = Random.nextInt(-20, -1)
 
     private fun testQueue(): RequestQueue =
-            RequestQueue(
-                NoCache(),
-                BasicNetwork(OkHttpStack()),
-                1,
-                ExecutorDelivery(Executors.newSingleThreadExecutor())
-            ).apply { start() }
+        RequestQueue(
+            NoCache(),
+            BasicNetwork(OkHttpStack()),
+            1,
+            ExecutorDelivery(Executors.newSingleThreadExecutor())
+        ).apply { start() }
 }
