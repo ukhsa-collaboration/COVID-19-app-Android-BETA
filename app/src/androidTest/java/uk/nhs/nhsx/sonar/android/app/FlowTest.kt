@@ -537,7 +537,7 @@ class FlowTest {
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
-        onView(withId(R.id.latest_advice_ok)).perform(click())
+        onView(withId(R.id.read_current_advice)).perform(click())
         ensureBluetoothDisabled()
         testAppContext.device.pressBack()
 
@@ -571,7 +571,7 @@ class FlowTest {
 
         onView(withId(R.id.start_main_activity)).perform(click())
 
-        onView(withId(R.id.latest_advice_ok)).perform(click())
+        onView(withId(R.id.read_current_advice)).perform(click())
         testAppContext.revokeLocationPermission()
         testAppContext.device.pressBack()
 
@@ -653,7 +653,7 @@ class FlowTest {
 
     private fun checkOkActivityIsShown() {
         waitForText(R.string.status_initial_title, 1000)
-        onView(withId(R.id.status_initial)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_initial_title)).check(matches(isDisplayed()))
     }
 
     private fun checkAtRiskActivityIsShown() {

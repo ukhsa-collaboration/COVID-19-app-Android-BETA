@@ -14,8 +14,8 @@ import androidx.activity.viewModels
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.activity_ok.latest_advice_ok
 import kotlinx.android.synthetic.main.activity_ok.notificationPanel
+import kotlinx.android.synthetic.main.activity_ok.read_current_advice
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
 import kotlinx.android.synthetic.main.activity_review_close.nhs_service
@@ -74,7 +74,7 @@ class OkActivity : BaseActivity() {
             DiagnoseTemperatureActivity.start(this)
         }
 
-        latest_advice_ok.setOnClickListener {
+        read_current_advice.setOnClickListener {
             openUrl(URL_LATEST_ADVICE_DEFAULT)
         }
 

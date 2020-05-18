@@ -115,6 +115,7 @@
         <item name="android:textColor">@color/text_sub_title</item>
     </style>
 
+
     <style name="OnboardingTitle" parent="Widget.AppCompat.TextView">
         <item name="android:lineSpacingMultiplier">1</item>
         <item name="android:textSize">28sp</item>
@@ -139,7 +140,8 @@
         <item name="android:background">@color/colorPrimary</item>
     </style>
 
-    <style name="Divider.Vertical" parent="Divider">
+    <style name="Divider.Vertical">
+        <item name="android:background">@drawable/initial_card_background</item>
         <item name="android:layout_width">4dp</item>
         <item name="android:layout_height">match_parent</item>
     </style>

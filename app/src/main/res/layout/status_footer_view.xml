@@ -12,55 +12,31 @@
     tools:parentTag="LinearLayout">
 
     <TextView
-        style="@style/TextViewStatusSubTitle"
+        style="@style/TextViewCardSubTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:accessibilityHeading="true"
         android:paddingHorizontal="16dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/status_description_02" />
-
-    <TextView
-        style="@style/TextViewStatusSubTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:text="@string/status_description_03" />
-
-    <TextView
-        android:id="@+id/need_medical_advice"
-        style="@style/TextViewActionSubTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:paddingHorizontal="16dp"
-        android:accessibilityHeading="true"
-        android:text="@string/need_medical_advice"
-        android:textSize="16sp" />
-
-    <TextView
-        android:id="@+id/nhs_service"
-        style="@style/TextViewLink02"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
-        android:text="@string/nhs_online_service" />
+        android:textAllCaps="true"
+        android:text="More Options" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/medical_workers_card"
         style="@style/PrimaryCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:accessibilityHeading="true"
         android:clickable="true"
         android:focusable="true">
+
         <TextView
             android:id="@+id/medicalWorkersInstructions"
             style="@style/TextViewActionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="16dp"
+            android:paddingVertical="24dp"
             android:paddingHorizontal="16dp"
             android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
             android:text="@string/guidance_for_workplace" />
@@ -84,7 +60,31 @@
             android:layout_height="wrap_content"
             android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
             android:paddingHorizontal="16dp"
-            android:paddingVertical="16dp"
+            android:paddingVertical="24dp"
             android:text="@string/reference_code_title" />
     </com.google.android.material.card.MaterialCardView>
+
+
+    <TextView
+        android:id="@+id/need_medical_advice"
+        style="@style/TextViewActionSubTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:paddingHorizontal="16dp"
+        android:text="@string/need_medical_advice"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/nhs_service"
+        style="@style/TextViewLink02"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:paddingHorizontal="16dp"
+        android:textStyle="bold"
+        android:paddingVertical="8dp"
+        android:drawablePadding="8dp"
+        android:drawableEnd="@drawable/ic_link"
+        android:text="@string/nhs_online_service" />
 </merge>

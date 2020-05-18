@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
-    android:background="@color/colorPrimary">
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/logo"
@@ -20,7 +20,7 @@
             android:layout_gravity="center"
             android:layout_marginEnd="16dp"
             android:contentDescription="@null"
-            android:src="@drawable/nhs" />
+            android:src="@drawable/ic_nhs_logo_light" />
 
         <TextView
             android:layout_width="0dp"
@@ -31,7 +31,7 @@
             android:fontFamily="@font/roboto_medium"
             android:gravity="center_vertical"
             android:text="@string/app_title"
-            android:textColor="@color/white"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
 
         <ImageButton
@@ -41,6 +41,6 @@
             android:layout_gravity="end|center_vertical"
             android:background="?selectableItemBackgroundBorderless"
             android:contentDescription="@string/info"
-            app:srcCompat="@drawable/ic_info" />
+            app:srcCompat="@drawable/ic_info_outline_blue" />
     </LinearLayout>
 </com.google.android.material.appbar.MaterialToolbar>

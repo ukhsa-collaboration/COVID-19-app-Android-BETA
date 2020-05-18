@@ -1,22 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:right="12dp">
-        <shape android:shape="rectangle">
-            <corners android:radius="4dp" />
-            <solid android:color="@color/colorPrimary" />
-        </shape>
-    </item>
-    <item android:left="12dp">
-        <shape android:shape="rectangle">
-            <corners
-                android:bottomRightRadius="4dp"
-                android:topRightRadius="4dp" />
-            <solid android:color="@color/white" />
-        </shape>
-    </item>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/colorPrimaryDark">
 
-</layer-list>
+    <item android:id="@android:id/background">
+        <shape>
+            <solid android:color="@color/colorPrimary" />
+            <corners android:radius="8dp" />
+            <padding
+                android:bottom="0dp"
+                android:left="0dp"
+                android:right="0dp"
+                android:top="0dp" />
+        </shape>
+    </item>
+</ripple>
