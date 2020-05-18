@@ -26,8 +26,7 @@ private const val UTM_CONTENT_NOTIFIED = "utm_content=notified"
 
 private const val PAGE_NHS_CONDITIONS = "https://www.nhs.uk/conditions/coronavirus-covid-19"
 
-private const val PAGE_ADVICE_DEFAULT =
-    "https://www.gov.uk/government/publications/full-guidance-on-staying-at-home-and-away-from-others/full-guidance-on-staying-at-home-and-away-from-others"
+private const val PAGE_ADVICE_DEFAULT = "https://faq.covid19.nhs.uk/article/KA-01062/en-us"
 
 private const val PAGE_ADVICE_RED =
     "https://www.gov.uk/government/publications/covid-19-stay-at-home-guidance/stay-at-home-guidance-for-households-with-possible-coronavirus-covid-19-infection"
