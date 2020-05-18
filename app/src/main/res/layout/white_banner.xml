@@ -7,4 +7,5 @@
     style="@style/LightActionBar"
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
+    app:contentInsetStartWithNavigation="8dp"
     app:title="@string/app_name" />

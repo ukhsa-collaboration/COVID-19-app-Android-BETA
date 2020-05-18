@@ -153,8 +153,7 @@
     </string>
     <string name="confirm_diagnosis_text_1">The information you have provided will be used to help protect your community and the NHS. The NHS needs accurate data on the number of people with symptoms.</string>
     <string name="confirm_diagnosis_text_2">Together we can help save lives, protect the NHS, and stop the spread of coronavirus in the UK.</string>
-    <string name="important_instructions_for_medical_workers">Important instructions for health and care workers
-    </string>
+    <string name="guidance_for_workplace">Guidance for your workplace</string>
     <string name="medical_workers_instructions_title">Turn off your Bluetooth when you put on your PPE</string>
     <string name="medical_workers_instructions_text">Your interactions at work should not be captured when you are
         wearing personal protective equipment.
@@ -198,4 +197,9 @@
     <string name="reference_code_description_3">In order for this app to receive your test result use your app reference code when registering your test.</string>
     <string name="copy">Copy</string>
     <string name="copied">Copied</string>
+    <string name="latest_guidance"><u>Latest guidance for your workplace</u></string>
+    <string name="latest_workplace_guidance">Read the latest guidance for your workplace</string>
+    <string name="workplace_guidance_info">The guidance on GOV.UK is up to date and specific to the industry you work in.</string>
+    <string name="healt_and_care_workers_title">If you are a health and care worker:</string>
+    <string name="healt_and_care_workers_description">Turn off your Bluetooth when you put on your personal protective equipment provided for you by your employer. Your interactions at work should not be captured when you are wearing personal protective equipment.</string>
 </resources>

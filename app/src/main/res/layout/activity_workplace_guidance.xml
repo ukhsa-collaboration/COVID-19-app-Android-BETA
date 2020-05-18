@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/white_banner" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ic_bg_gradient_top"
+                android:contentDescription="@null"
+                android:paddingVertical="40dp"
+                android:src="@drawable/ic_guidance" />
+
+            <TextView
+                android:id="@+id/workplace_guidance_title"
+                style="@style/TextViewStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:accessibilityHeading="true"
+                android:paddingHorizontal="16dp"
+                android:text="@string/latest_workplace_guidance" />
+
+            <TextView
+                style="@style/TextViewStatusSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:text="@string/workplace_guidance_info"
+                android:textColor="@color/text_primary_color" />
+
+            <TextView
+                android:id="@+id/workplace_latest_advice"
+                style="@style/TextViewLink02"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:drawableEnd="@drawable/ic_link"
+                android:drawablePadding="8dp"
+                android:paddingHorizontal="16dp"
+                android:text="@string/latest_guidance"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/TextViewStatusSubTitleHeading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:accessibilityHeading="true"
+                android:text="@string/healt_and_care_workers_title"
+                android:textColor="@color/text_primary_color"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/TextViewStatusSubTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingHorizontal="16dp"
+                android:text="@string/healt_and_care_workers_description"
+                android:textColor="@color/text_primary_color" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

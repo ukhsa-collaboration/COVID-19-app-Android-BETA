@@ -63,7 +63,7 @@
             android:paddingVertical="16dp"
             android:paddingHorizontal="16dp"
             android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
-            android:text="@string/important_instructions_for_medical_workers" />
+            android:text="@string/guidance_for_workplace" />
 
     </com.google.android.material.card.MaterialCardView>
 

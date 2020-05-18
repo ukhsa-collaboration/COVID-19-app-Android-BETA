@@ -678,15 +678,8 @@ class FlowTest {
 
     private fun checkDisplayOfMedicalWorkersInstructions() {
         onView(withId(R.id.medicalWorkersInstructions)).perform(scrollTo(), click())
-        checkViewHasText(
-            R.id.medicalWorkersInstructionsTitle,
-            R.string.medical_workers_instructions_title
-        )
-        checkViewHasText(
-            R.id.medicalWorkersInstructionsText,
-            R.string.medical_workers_instructions_text
-        )
-        onView(withId(R.id.closeButton)).perform(click())
+        onView(withId(R.id.workplace_guidance_title)).check(matches(isDisplayed()))
+        onView(withContentDescription(R.string.go_back)).perform(click())
     }
 
     private fun checkMedicalWorkersInstructionsNotDisplayed() {
