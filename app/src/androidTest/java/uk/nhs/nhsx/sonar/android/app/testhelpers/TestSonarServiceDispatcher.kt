@@ -39,8 +39,8 @@ class TestSonarServiceDispatcher : Dispatcher() {
                     "/api/devices" -> MockResponse().apply {
                         setBody("""{"id":"$RESIDENT_ID","secretKey":"$encodedSecretKey","publicKey":"$PUBLIC_KEY"}""")
                     }
-                    "/api/residents/$RESIDENT_ID" -> MockResponse()
-                    "/api/residents/$RESIDENT_ID/linking-id" -> MockResponse().apply {
+                    "/api/proximity-events/upload" -> MockResponse()
+                    "/api/app-instances/linking-id" -> MockResponse().apply {
                         setBody("""{"linkingId":"$REFERENCE_CODE"}""")
                     }
                     else -> MockResponse().apply {

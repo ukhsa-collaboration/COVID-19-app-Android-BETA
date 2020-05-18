@@ -41,9 +41,9 @@ class ReferenceCodeApiTest {
         assertThat(promise).isInProgress()
 
         val request = requestQueue.lastRequest
-        assertThat(request.url).isEqualTo("http://api.example.com/api/residents/$sonarId/linking-id")
+        assertThat(request.url).isEqualTo("http://api.example.com/api/app-instances/linking-id")
         assertThat(request.method).isEqualTo(Method.PUT)
-        assertThat(request.body.toString(Charset.defaultCharset())).isEqualTo("{}")
+        assertThat(request.body.toString(Charset.defaultCharset())).isEqualTo("""{"sonarId":"::some sonar id::"}""")
         assertThat(request.headers).containsKey("Sonar-Request-Timestamp")
         assertThat(request.headers).containsKey("Sonar-Message-Signature")
 

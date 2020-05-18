@@ -5,7 +5,6 @@
 package uk.nhs.nhsx.sonar.android.app.diagnose
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import au.com.dius.pact.consumer.dsl.Matchers
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider
 import au.com.dius.pact.consumer.junit.PactProviderRule
 import au.com.dius.pact.consumer.junit.PactVerification
@@ -36,6 +35,8 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.toJson
 import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.UTCClock
+import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeApi
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.nio.ByteBuffer
 import java.util.Base64
@@ -53,12 +54,25 @@ class StoppedUTCClock(private val alwaysNow: LocalDateTime) : UTCClock {
 }
 
 @ExperimentalCoroutinesApi
-class CoLocationDataSubmissionPactTest {
+class ProximityApiPactTest {
     private val base64encoder = Base64.getEncoder()
-    private lateinit var encryptionKeyStorage: KeyStorage
-    private lateinit var secretKey: SecretKey
-    private lateinit var utcNow: LocalDateTime
-    private lateinit var colocationData: CoLocationData
+    private val sonarId: String = UUID.randomUUID().toString()
+    private val utcNow: LocalDateTime = LocalDateTime.now(DateTimeZone.UTC)
+    private val timestamp: String = utcNow.toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    private val secretKey: SecretKey = generatePrivateKey()
+
+    private val encryptionKeyStorage: KeyStorage = mockk<KeyStorage>(relaxed = true).apply {
+        every { provideSecretKey() } returns secretKey
+    }
+
+    private val colocationData: CoLocationData = CoLocationData(
+        sonarId,
+        timestamp,
+        (0..Random.nextInt(3, 10)).map { generateCoLocationEvent() }
+    )
+    private val getReferenceCodeRequest = jsonObjectOf("sonarId" to sonarId)
+    private val linkingId = "aaaa-bbbb"
+    private val getReferenceCodeResponse = jsonObjectOf("linkingId" to linkingId)
 
     @get:Rule
     val provider = PactProviderRule("Proximity API", this)
@@ -67,20 +81,46 @@ class CoLocationDataSubmissionPactTest {
     val rule = InstantTaskExecutorRule()
 
     @Pact(consumer = "Android App")
-    fun pact(builder: PactDslWithProvider): RequestResponsePact {
-        utcNow = LocalDateTime.now(DateTimeZone.UTC)
-        val timestamp = utcNow.toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
+    fun getReferenceCodeFragment(builder: PactDslWithProvider): RequestResponsePact {
+        return builder
+            .given(
+                "a confirmed registration",
+                mutableMapOf<String, Any>(
+                    "id" to sonarId,
+                    "key" to encodeBase64(secretKey.encoded)
+                )
+            )
+            .given("the date and time is", mutableMapOf<String, Any>("timestamp" to timestamp))
+            // request
+            .uponReceiving("a reference code request")
+            .path(
+                "/api/app-instances/linking-id"
+            )
+            .method("PUT")
+            .matchHeader(
+                "Sonar-Request-Timestamp",
+                "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z",
+                timestamp
+            )
+            .headers(
+                "Sonar-Message-Signature",
+                generateSignature(
+                    secretKey,
+                    timestamp,
+                    getReferenceCodeRequest.toString().toByteArray()
+                )
+            )
+            .body(getReferenceCodeRequest)
+            // response
+            .willRespondWith()
+            .body(getReferenceCodeResponse)
+            .status(HttpStatus.SC_OK)
+            .toPact()
+    }
 
-        secretKey = generatePrivateKey()
-        encryptionKeyStorage = mockk(relaxed = true)
+    @Pact(consumer = "Android App")
+    fun proximityUploadFragment(builder: PactDslWithProvider): RequestResponsePact {
         every { encryptionKeyStorage.provideSecretKey() } returns secretKey
-
-        colocationData = CoLocationData(
-            UUID.randomUUID().toString(),
-            timestamp,
-            (0..Random.nextInt(3, 10)).map { generateCoLocationEvent() }
-        )
-
         return builder
             .given(
                 "a confirmed registration",
@@ -92,9 +132,8 @@ class CoLocationDataSubmissionPactTest {
             .given("the date and time is", mutableMapOf<String, Any>("timestamp" to timestamp))
             // request
             .uponReceiving("a proximity data submission")
-            .matchPath(
-                "/api/residents/${Matchers.UUID_REGEX}",
-                "/api/residents/${colocationData.sonarId}"
+            .path(
+                "/api/proximity-events/upload"
             )
             .method("PATCH")
             .matchHeader(
@@ -118,7 +157,7 @@ class CoLocationDataSubmissionPactTest {
     }
 
     @Test
-    @PactVerification
+    @PactVerification(fragment = "proximityUploadFragment")
     fun `verifies submission of proximity event data`() {
         val httpClient =
             HttpClient(testQueue(), "some-header", StoppedUTCClock(utcNow), ::encodeBase64)
@@ -128,10 +167,28 @@ class CoLocationDataSubmissionPactTest {
             httpClient
         )
 
-        val request = coLocationApi.save(colocationData)
-        runBlocking { request.toCoroutine() }
+        val uploadRequest = coLocationApi.save(colocationData)
+        runBlocking { uploadRequest.toCoroutine() }
 
-        assertThat(request.isSuccess).isTrue()
+        assertThat(uploadRequest.isSuccess).isTrue()
+    }
+
+    @Test
+    @PactVerification(fragment = "getReferenceCodeFragment")
+    fun `verifies getting a reference code`() {
+        val httpClient =
+            HttpClient(testQueue(), "some-header", StoppedUTCClock(utcNow), ::encodeBase64)
+
+        val referenceCodeApi = ReferenceCodeApi(
+            provider.url,
+            encryptionKeyStorage,
+            httpClient
+        )
+
+        val referenceCodeRequest = referenceCodeApi.get(sonarId)
+        runBlocking { referenceCodeRequest.toCoroutine() }
+
+        assertThat(referenceCodeRequest.isSuccess).isTrue()
     }
 
     private fun generateCoLocationEvent(): CoLocationEvent {
@@ -208,10 +265,10 @@ class CoLocationDataSubmissionPactTest {
     private fun randomTxPower() = Random.nextInt(-20, -1)
 
     private fun testQueue(): RequestQueue =
-        RequestQueue(
-            NoCache(),
-            BasicNetwork(OkHttpStack()),
-            1,
-            ExecutorDelivery(Executors.newSingleThreadExecutor())
-        ).apply { start() }
+            RequestQueue(
+                NoCache(),
+                BasicNetwork(OkHttpStack()),
+                1,
+                ExecutorDelivery(Executors.newSingleThreadExecutor())
+            ).apply { start() }
 }

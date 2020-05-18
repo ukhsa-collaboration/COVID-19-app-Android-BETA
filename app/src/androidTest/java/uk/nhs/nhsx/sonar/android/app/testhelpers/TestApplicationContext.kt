@@ -358,7 +358,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
-        assertThat(lastRequest?.path).isEqualTo("/api/residents/$RESIDENT_ID")
+        assertThat(lastRequest?.path).isEqualTo("/api/proximity-events/upload")
         assertThat(lastRequest?.method).isEqualTo("PATCH")
 
         val body = lastRequest?.body?.readUtf8() ?: ""

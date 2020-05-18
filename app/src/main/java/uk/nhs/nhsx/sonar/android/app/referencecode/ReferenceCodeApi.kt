@@ -19,10 +19,10 @@ class ReferenceCodeApi(
 
     fun get(sonarId: String): Promise<ReferenceCode> {
         val secretKey = secretKeyStorage.provideSecretKey()
-        val url = "$baseUrl/api/residents/$sonarId/linking-id"
+        val url = "$baseUrl/api/app-instances/linking-id"
 
         return httpClient
-            .send(HttpRequest(PUT, url, jsonObjectOf(), secretKey))
+            .send(HttpRequest(PUT, url, jsonObjectOf("sonarId" to sonarId), secretKey))
             .map { ReferenceCode(it.getString("linkingId")) }
     }
 }

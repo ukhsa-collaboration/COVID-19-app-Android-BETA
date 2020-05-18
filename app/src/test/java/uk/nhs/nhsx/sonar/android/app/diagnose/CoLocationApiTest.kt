@@ -74,8 +74,9 @@ class CoLocationApiTest {
 
         val request = requestQueue.lastRequest
         assertThat(request.method).isEqualTo(PATCH)
-        assertThat(request.url).isEqualTo("$baseUrl/api/residents/::sonar-id::")
+        assertThat(request.url).isEqualTo("$baseUrl/api/proximity-events/upload")
         assertThat(request).bodyHasJson(
+            "sonarId" to "::sonar-id::",
             "symptomsTimestamp" to "::timestamp::",
             "contactEvents" to listOf(
                 mapOf(

@@ -22,7 +22,7 @@ class CoLocationApi(
     fun save(coLocationData: CoLocationData): Promise<Unit> {
         val request = HttpRequest(
             method = PATCH,
-            url = "$baseUrl/api/residents/${coLocationData.sonarId}",
+            url = "$baseUrl/api/proximity-events/upload",
             jsonBody = coLocationData.toJson(),
             secretKey = keyStorage.provideSecretKey()!!
         )
@@ -53,6 +53,7 @@ data class CoLocationEvent(
 
 fun CoLocationData.toJson(): JSONObject =
     jsonObjectOf(
+        "sonarId" to sonarId,
         "symptomsTimestamp" to symptomsTimestamp,
         "contactEvents" to contactEvents.map {
             mapOf(
