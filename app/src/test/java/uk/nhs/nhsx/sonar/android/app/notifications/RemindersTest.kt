@@ -17,7 +17,6 @@ import org.joda.time.DateTime
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders.Companion.REMINDER_TYPE
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders.Companion.REQUEST_CODE_CHECK_IN_REMINDER
-import uk.nhs.nhsx.sonar.android.app.util.CheckInReminderNotification
 
 class RemindersTest {
 

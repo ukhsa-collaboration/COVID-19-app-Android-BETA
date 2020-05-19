@@ -39,14 +39,12 @@ class SonarApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        JodaTimeAndroid.init(this)
+        appComponent = buildApplicationComponent()
+        appComponent.provideNotificationChannels().createChannels()
 
         configureBouncyCastleProvider()
-
-        appComponent = buildApplicationComponent()
-
         configureRxJavaErrorHandler()
-
+        JodaTimeAndroid.init(this)
         FirebaseApp.initializeApp(this)
 
         when (BuildConfig.BUILD_TYPE) {

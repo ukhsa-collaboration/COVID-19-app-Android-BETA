@@ -29,6 +29,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEventsWorker
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
+import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.onboarding.EnableLocationActivity
@@ -91,4 +92,5 @@ interface ApplicationComponent {
 
     fun provideRxBleClient(): RxBleClient
     fun provideLocationHelper(): LocationHelper
+    fun provideNotificationChannels(): NotificationChannels
 }

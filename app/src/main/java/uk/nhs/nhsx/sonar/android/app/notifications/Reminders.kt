@@ -10,7 +10,6 @@ import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
 import org.joda.time.DateTime
-import uk.nhs.nhsx.sonar.android.app.util.CheckInReminderNotification
 import javax.inject.Inject
 
 class Reminders @Inject constructor(

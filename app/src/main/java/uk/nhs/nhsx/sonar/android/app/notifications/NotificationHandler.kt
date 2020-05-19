@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.notifications
 
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
@@ -47,6 +48,7 @@ class NotificationHandler @Inject constructor(
 
     private fun showStatusNotification() {
         sender.send(
+            ContactAndCheckin,
             NOTIFICATION_SERVICE_ID,
             R.string.notification_title,
             R.string.notification_text,

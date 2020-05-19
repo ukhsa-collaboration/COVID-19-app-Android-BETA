@@ -10,7 +10,6 @@ import android.content.Intent
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import uk.nhs.nhsx.sonar.android.app.util.notificationBuilder
 import javax.inject.Inject
 
 class NotificationSender @Inject constructor(private val context: Context) {
@@ -18,6 +17,7 @@ class NotificationSender @Inject constructor(private val context: Context) {
     private val manager = NotificationManagerCompat.from(context)
 
     fun send(
+        channel: NotificationChannels.Channel,
         serviceId: Int,
         @StringRes notificationTitle: Int,
         @StringRes notificationText: Int,
@@ -30,7 +30,7 @@ class NotificationSender @Inject constructor(private val context: Context) {
             .bigText(context.getString(notificationText))
 
         val notification =
-            context.notificationBuilder()
+            context.notificationBuilder(channel)
                 .setContentTitle(context.getString(notificationTitle))
                 .setStyle(notificationStyle)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)

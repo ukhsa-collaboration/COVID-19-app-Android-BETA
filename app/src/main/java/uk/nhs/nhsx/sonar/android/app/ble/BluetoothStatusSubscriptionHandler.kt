@@ -4,7 +4,7 @@
 
 package uk.nhs.nhsx.sonar.android.app.ble
 
-import uk.nhs.nhsx.sonar.android.app.util.BluetoothNotificationHelper
+import uk.nhs.nhsx.sonar.android.app.notifications.BluetoothNotificationHelper
 
 class BluetoothStatusSubscriptionHandler(
     private val delegate: Delegate,

@@ -2,22 +2,21 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app.util
+package uk.nhs.nhsx.sonar.android.app.notifications
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.TurnBluetoothOnReceiver
+import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel
+import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
+import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.PermissionsAndAccess
 import javax.inject.Inject
 
 const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
@@ -45,6 +44,7 @@ class BluetoothNotificationHelper(val context: Context) {
 
         showNotification(
             context,
+            PermissionsAndAccess,
             NOTIFICATION_ID_BLUETOOTH_IS_DISABLED,
             context.getString(R.string.notification_bluetooth_disabled_title),
             context.getString(R.string.notification_bluetooth_disabled_text),
@@ -59,6 +59,7 @@ class BluetoothNotificationHelper(val context: Context) {
 
         showNotification(
             context,
+            PermissionsAndAccess,
             NOTIFICATION_ID_LOCATION_IS_DISABLED,
             context.getString(R.string.notification_location_disabled_title),
             context.getString(R.string.notification_location_disabled_text),
@@ -82,6 +83,7 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
 
         showNotification(
             context,
+            ContactAndCheckin,
             NOTIFICATION_CHECK_IN_REMINDER,
             context.getString(R.string.checkin_notification_title),
             context.getString(R.string.checkin_notification_text),
@@ -99,14 +101,15 @@ fun Context.cancelStatusNotification() {
         .cancel(NOTIFICATION_SERVICE_ID)
 }
 
-fun Context.notificationBuilder(): NotificationCompat.Builder =
-    NotificationCompat.Builder(this, createNotificationChannelReturningId())
+fun Context.notificationBuilder(channel: Channel): NotificationCompat.Builder =
+    NotificationCompat.Builder(this, NotificationChannels(this).createChannelReturningId(channel))
         .setColor(getColor(R.color.colorPrimary))
         .setSmallIcon(R.drawable.ic_status)
         .setContentIntent(mainActivityPendingContent(this))
 
 private fun showNotification(
     context: Context,
+    channel: Channel,
     notificationId: Int,
     contentTitle: String,
     contentText: String,
@@ -116,14 +119,10 @@ private fun showNotification(
     isOngoing: Boolean = true
 ) {
     val builder = context
-        .notificationBuilder()
+        .notificationBuilder(channel)
         .setContentTitle(contentTitle)
-        .setStyle(
-            NotificationCompat.BigTextStyle()
-                .bigText(contentText)
-        )
+        .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
         .setPriority(NotificationCompat.PRIORITY_MAX)
-        .setContentIntent(mainActivityPendingContent(context))
         .setAutoCancel(autoCancel)
         .setOngoing(isOngoing)
         .apply {
@@ -135,20 +134,6 @@ private fun showNotification(
     NotificationManagerCompat
         .from(context)
         .notify(notificationId, builder.build())
-}
-
-private fun Context.createNotificationChannelReturningId(): String {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val notificationChannel = NotificationChannel(
-            getString(R.string.default_notification_channel_id),
-            getString(R.string.main_notification_channel_name),
-            IMPORTANCE_DEFAULT
-        )
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.createNotificationChannel(notificationChannel)
-    }
-
-    return getString(R.string.default_notification_channel_id)
 }
 
 private fun mainActivityPendingContent(context: Context) =

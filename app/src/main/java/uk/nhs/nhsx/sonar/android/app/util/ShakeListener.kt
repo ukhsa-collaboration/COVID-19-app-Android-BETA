@@ -73,33 +73,21 @@ class ShakeListener(context: Context, val onShake: () -> Unit) :
 fun Application.registerShakeDetector() {
     this.registerActivityLifecycleCallbacks(
         object : Application.ActivityLifecycleCallbacks {
-            override fun onActivityPaused(activity: Activity) {
-            }
 
-            override fun onActivityStarted(activity: Activity) {
-            }
-
-            override fun onActivityDestroyed(activity: Activity) {
-            }
-
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-            }
-
-            override fun onActivityStopped(activity: Activity) {
-            }
+            override fun onActivityPaused(activity: Activity) = Unit
+            override fun onActivityStarted(activity: Activity) = Unit
+            override fun onActivityDestroyed(activity: Activity) = Unit
+            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+            override fun onActivityStopped(activity: Activity) = Unit
+            override fun onActivityResumed(activity: Activity) = Unit
 
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 if (activity is BaseActivity) {
-                    val shakeListener = ShakeListener(
-                        applicationContext
-                    ) {
+                    val shakeListener = ShakeListener(applicationContext) {
                         TesterActivity.start(activity)
                     }
                     activity.lifecycle.addObserver(shakeListener)
                 }
-            }
-
-            override fun onActivityResumed(activity: Activity) {
             }
         }
     )

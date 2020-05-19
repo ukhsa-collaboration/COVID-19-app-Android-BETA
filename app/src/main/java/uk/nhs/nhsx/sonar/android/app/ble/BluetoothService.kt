@@ -25,8 +25,9 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStatusSubscriptionHandler.CombinedStatus
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStatusSubscriptionHandler.Delegate
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
-import uk.nhs.nhsx.sonar.android.app.util.BluetoothNotificationHelper
-import uk.nhs.nhsx.sonar.android.app.util.notificationBuilder
+import uk.nhs.nhsx.sonar.android.app.notifications.BluetoothNotificationHelper
+import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ForegroundService
+import uk.nhs.nhsx.sonar.android.app.notifications.notificationBuilder
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -65,7 +66,7 @@ class BluetoothService : Service(), Delegate {
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(FOREGROUND_NOTIFICATION_ID, notificationBuilder().build())
+        startForeground(FOREGROUND_NOTIFICATION_ID, notificationBuilder(ForegroundService).build())
 
         val bleClient = appComponent.provideRxBleClient()
         val notificationHelper = BluetoothNotificationHelper(this)

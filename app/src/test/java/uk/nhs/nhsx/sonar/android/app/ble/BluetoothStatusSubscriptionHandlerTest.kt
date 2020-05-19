@@ -9,7 +9,7 @@ import io.mockk.verify
 import io.mockk.verifyAll
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStatusSubscriptionHandler.CombinedStatus
-import uk.nhs.nhsx.sonar.android.app.util.BluetoothNotificationHelper
+import uk.nhs.nhsx.sonar.android.app.notifications.BluetoothNotificationHelper
 
 class BluetoothStatusSubscriptionHandlerTest {
 
