@@ -20,6 +20,7 @@ import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.*
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
@@ -91,7 +92,10 @@ class NotificationHandlerTest {
 
     @Test
     fun `test handleNewMessage - status update`() {
-        val messageData = mapOf("status" to "POTENTIAL")
+        val messageData = mapOf(
+            "type" to "Status Update",
+            "status" to "Potential"
+        )
         every { statusStorage.get() } returns DefaultState
 
         handler.handleNewMessage(messageData)
@@ -105,7 +109,10 @@ class NotificationHandlerTest {
 
     @Test
     fun `test handleNewMessage - status update in amber state`() {
-        val messageData = mapOf("status" to "POTENTIAL")
+        val messageData = mapOf(
+            "type" to "Status Update",
+            "status" to "Potential"
+        )
         every { statusStorage.get() } returns AmberState(DateTime.now())
 
         handler.handleNewMessage(messageData)
@@ -119,8 +126,11 @@ class NotificationHandlerTest {
 
     @Test
     fun `test handleNewMessage - status update in red state`() {
-        val messageData = mapOf("status" to "POTENTIAL")
-        every { statusStorage.get() } returns RedState(DateTime.now(), nonEmptySetOf(Symptom.TEMPERATURE))
+        val messageData = mapOf(
+            "type" to "Status Update",
+            "status" to "Potential"
+        )
+        every { statusStorage.get() } returns RedState(DateTime.now(), nonEmptySetOf(TEMPERATURE))
 
         handler.handleNewMessage(messageData)
 
@@ -137,7 +147,11 @@ class NotificationHandlerTest {
         every { statusStorage.get() } returns DefaultState
 
         val messageData =
-            mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/100")
+            mapOf(
+                "type" to "Status Update",
+                "status" to "Potential",
+                "acknowledgmentUrl" to "https://api.example.com/ack/100"
+            )
 
         handler.handleNewMessage(messageData)
 

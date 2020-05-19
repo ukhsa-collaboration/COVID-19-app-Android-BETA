@@ -80,13 +80,16 @@ class NotificationHandler @Inject constructor(
             }
 
     private fun isContactAlert(data: Map<String, String>) =
-        data.containsKey(STATUS_KEY)
+        data[TYPE_KEY] == TYPE_STATUS_UPDATE && data[STATUS_KEY] == STATUS_POTENTIAL
 
     private fun isActivation(data: Map<String, String>) =
         data.containsKey(ACTIVATION_CODE_KEY)
 
     companion object {
+        private const val TYPE_KEY = "type"
+        private const val TYPE_STATUS_UPDATE = "Status Update"
         private const val STATUS_KEY = "status"
+        private const val STATUS_POTENTIAL = "Potential"
         private const val ACTIVATION_CODE_KEY = "activationCode"
         private const val ACKNOWLEDGMENT_URL = "acknowledgmentUrl"
         private const val NOTIFICATION_SERVICE_ID = 10001
