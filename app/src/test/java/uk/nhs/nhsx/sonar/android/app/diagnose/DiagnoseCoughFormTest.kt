@@ -31,7 +31,7 @@ class DiagnoseCoughFormTest {
     fun `initial state is blue then final state is blue`() {
         every { stateStorage.get() } returns DefaultState
 
-        val result = form.submit(hasTemperature = false, hasCough = false)
+        val result = form.submit(emptySet())
 
         assertThat(result).isEqualTo(StateResult.Close)
     }
@@ -40,9 +40,9 @@ class DiagnoseCoughFormTest {
     fun `initial state is blue then final state is red`() {
         every { stateStorage.get() } returns DefaultState
 
-        val result = form.submit(hasTemperature = true, hasCough = false)
+        val result = form.submit(setOf(TEMPERATURE))
 
-        assertThat(result).isEqualTo(StateResult.Review(nonEmptySetOf(TEMPERATURE)))
+        assertThat(result).isEqualTo(StateResult.Review)
     }
 
     @Test
@@ -50,7 +50,7 @@ class DiagnoseCoughFormTest {
         val expected = DefaultState
         every { stateStorage.get() } returns RedState(DateTime.now(UTC), nonEmptySetOf(COUGH))
 
-        val result = form.submit(hasTemperature = false, hasCough = false)
+        val result = form.submit(emptySet())
 
         assertThat(result).isEqualTo(StateResult.Main(expected))
     }
@@ -60,7 +60,7 @@ class DiagnoseCoughFormTest {
         val expected = RecoveryState
         every { stateStorage.get() } returns RedState(DateTime.now(UTC), nonEmptySetOf(COUGH))
 
-        val result = form.submit(hasTemperature = false, hasCough = true)
+        val result = form.submit(setOf(COUGH))
 
         assertThat(result).isEqualTo(StateResult.Main(expected))
     }
@@ -75,7 +75,7 @@ class DiagnoseCoughFormTest {
         val expected = CheckinState(tomorrowSevenAm, nonEmptySetOf(TEMPERATURE))
         every { stateStorage.get() } returns RedState(DateTime.now(UTC), nonEmptySetOf(COUGH))
 
-        val result = form.submit(hasTemperature = true, hasCough = false)
+        val result = form.submit(setOf(TEMPERATURE))
 
         assertThat(result).isEqualTo(StateResult.Main(expected))
     }
@@ -90,7 +90,7 @@ class DiagnoseCoughFormTest {
         val expected = CheckinState(tomorrowSevenAm, nonEmptySetOf(TEMPERATURE))
         every { stateStorage.get() } returns CheckinState(DateTime.now(UTC), nonEmptySetOf(COUGH))
 
-        val result = form.submit(hasTemperature = true, hasCough = false)
+        val result = form.submit(setOf(TEMPERATURE))
 
         assertThat(result).isEqualTo(StateResult.Main(expected))
     }
@@ -100,16 +100,16 @@ class DiagnoseCoughFormTest {
         RedState(DateTime.now(UTC).plusDays(7), nonEmptySetOf(TEMPERATURE))
         every { stateStorage.get() } returns AmberState(DateTime.now(UTC))
 
-        val result = form.submit(hasTemperature = true, hasCough = false)
+        val result = form.submit(setOf(TEMPERATURE))
 
-        assertThat(result).isEqualTo(StateResult.Review(nonEmptySetOf(TEMPERATURE)))
+        assertThat(result).isEqualTo(StateResult.Review)
     }
 
     @Test
     fun `initial state is Amber then final state Is Amber`() {
         every { stateStorage.get() } returns AmberState(DateTime.now(UTC))
 
-        val result = form.submit(hasTemperature = false, hasCough = false)
+        val result = form.submit(emptySet())
 
         assertThat(result).isEqualTo(StateResult.Close)
     }

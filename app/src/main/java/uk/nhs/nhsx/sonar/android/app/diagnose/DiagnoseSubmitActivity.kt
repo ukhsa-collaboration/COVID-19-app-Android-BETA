@@ -41,10 +41,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     @Inject
     protected lateinit var reminders: Reminders
 
-    private val symptoms: NonEmptySet<Symptom> by lazy {
-        @Suppress("UNCHECKED_CAST")
-        intent.getSerializableExtra(SYMPTOMS) as NonEmptySet<Symptom>
-    }
+    private val symptoms: Set<Symptom> by lazy { intent.getSymptoms() }
 
     private val symptomsDate: LocalDate by lazy {
         DateTime(intent.getLongExtra(SYMPTOMS_DATE, 0), UTC).toLocalDate()
@@ -79,7 +76,10 @@ class DiagnoseSubmitActivity : BaseActivity() {
                 scrollView.fullScroll(FOCUS_DOWN)
                 needConfirmationHint.postDelayed(50) {
                     needConfirmationHint.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
-                    CompoundButtonCompat.setButtonTintList(confirmationCheckbox, checkboxErrorColors)
+                    CompoundButtonCompat.setButtonTintList(
+                        confirmationCheckbox,
+                        checkboxErrorColors
+                    )
                 }
                 return@setOnClickListener
             }
@@ -99,7 +99,11 @@ class DiagnoseSubmitActivity : BaseActivity() {
 
     private fun updateStateAndNavigate() {
         val currentState = userStateStorage.get()
-        val state = UserStateTransitions.diagnose(currentState, symptomsDate, symptoms)
+        val state = UserStateTransitions.diagnose(
+            currentState,
+            symptomsDate,
+            NonEmptySet.create(symptoms)!!
+        )
         state.scheduleCheckInReminder(reminders)
         userStateStorage.set(state)
 
@@ -110,19 +114,18 @@ class DiagnoseSubmitActivity : BaseActivity() {
 
     companion object {
 
-        private const val SYMPTOMS = "SYMPTOMS"
         private const val SYMPTOMS_DATE = "SYMPTOMS_DATE"
 
-        fun start(context: Context, symptoms: NonEmptySet<Symptom>, symptomsDate: DateTime) =
+        fun start(context: Context, symptoms: Set<Symptom>, symptomsDate: DateTime) =
             context.startActivity(getIntent(context, symptoms, symptomsDate))
 
         private fun getIntent(
             context: Context,
-            symptoms: NonEmptySet<Symptom>,
+            symptoms: Set<Symptom>,
             symptomsDate: DateTime
         ) =
             Intent(context, DiagnoseSubmitActivity::class.java).apply {
-                putExtra(SYMPTOMS, symptoms)
+                putSymptoms(symptoms)
                 putExtra(SYMPTOMS_DATE, symptomsDate.millis)
             }
     }

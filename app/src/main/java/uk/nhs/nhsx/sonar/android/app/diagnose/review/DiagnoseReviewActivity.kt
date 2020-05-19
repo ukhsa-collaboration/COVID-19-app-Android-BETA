@@ -26,20 +26,18 @@ import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
+import uk.nhs.nhsx.sonar.android.app.diagnose.getSymptoms
+import uk.nhs.nhsx.sonar.android.app.diagnose.putSymptoms
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.SpinnerAdapter
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setError
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setFocused
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setInitial
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 
 class DiagnoseReviewActivity : BaseActivity() {
 
-    private val symptoms: NonEmptySet<Symptom> by lazy {
-        @Suppress("UNCHECKED_CAST")
-        intent.getSerializableExtra(SYMPTOMS) as NonEmptySet<Symptom>
-    }
+    private val symptoms: Set<Symptom> by lazy { intent.getSymptoms() }
 
     private var symptomsDate: DateTime? = null
 
@@ -182,14 +180,13 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     companion object {
-        private const val SYMPTOMS = "SYMPTOMS"
 
-        fun start(context: Context, symptoms: NonEmptySet<Symptom>) =
+        fun start(context: Context, symptoms: Set<Symptom>) =
             context.startActivity(getIntent(context, symptoms))
 
-        private fun getIntent(context: Context, symptoms: NonEmptySet<Symptom>) =
+        private fun getIntent(context: Context, symptoms: Set<Symptom>) =
             Intent(context, DiagnoseReviewActivity::class.java).apply {
-                putExtra(SYMPTOMS, symptoms)
+                putSymptoms(symptoms)
             }
     }
 }

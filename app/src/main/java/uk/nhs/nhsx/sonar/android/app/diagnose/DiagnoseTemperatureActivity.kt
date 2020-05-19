@@ -20,6 +20,7 @@ import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
 
@@ -38,10 +39,10 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         confirm_diagnosis.setOnClickListener {
             when (temperature_diagnosis_answer.checkedRadioButtonId) {
                 R.id.yes -> {
-                    nextStep(true)
+                    nextStep(setOf(Symptom.TEMPERATURE))
                 }
                 R.id.no -> {
-                    nextStep(false)
+                    nextStep(emptySet())
                 }
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
@@ -86,8 +87,8 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         }
     }
 
-    protected open fun nextStep(hasTemperature: Boolean) {
-        DiagnoseCoughActivity.start(this, hasTemperature)
+    protected open fun nextStep(symptoms: Set<Symptom>) {
+        DiagnoseCoughActivity.start(this, symptoms)
     }
 
     companion object {

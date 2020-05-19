@@ -22,15 +22,14 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
 class DiagnoseCoughActivity : BaseActivity() {
 
-    private val hasTemperature: Boolean by lazy {
-        intent.getBooleanExtra(HAS_TEMPERATURE, false)
-    }
+    private val symptoms: Set<Symptom> by lazy { intent.getSymptoms() }
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
@@ -53,8 +52,8 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         confirm_diagnosis.setOnClickListener {
             when (cough_diagnosis_answer.checkedRadioButtonId) {
-                R.id.yes -> submitForm(true)
-                R.id.no -> submitForm(false)
+                R.id.yes -> submitForm(symptoms.plus(Symptom.COUGH))
+                R.id.no -> submitForm(symptoms)
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
                     radio_selection_error.announceForAccessibility(getString(R.string.radio_button_cough_error))
@@ -67,9 +66,9 @@ class DiagnoseCoughActivity : BaseActivity() {
         }
     }
 
-    private fun submitForm(hasCough: Boolean) {
-        when (val result = form.submit(hasTemperature, hasCough)) {
-            is StateResult.Review -> DiagnoseReviewActivity.start(this, result.symptoms)
+    private fun submitForm(symptoms: Set<Symptom>) {
+        when (val result = form.submit(symptoms)) {
+            is StateResult.Review -> DiagnoseReviewActivity.start(this, symptoms)
             StateResult.Close -> DiagnoseCloseActivity.start(this)
             is StateResult.Main -> navigateTo(result.userState)
         }
@@ -107,14 +106,12 @@ class DiagnoseCoughActivity : BaseActivity() {
 
     companion object {
 
-        private const val HAS_TEMPERATURE = "HAS_TEMPERATURE"
+        fun start(context: Context, symptoms: Set<Symptom>) =
+            context.startActivity(getIntent(context, symptoms))
 
-        fun start(context: Context, hasTemperature: Boolean = false) =
-            context.startActivity(getIntent(context, hasTemperature))
-
-        private fun getIntent(context: Context, hasTemperature: Boolean) =
+        private fun getIntent(context: Context, symptoms: Set<Symptom>) =
             Intent(context, DiagnoseCoughActivity::class.java).apply {
-                putExtra(HAS_TEMPERATURE, hasTemperature)
+                putSymptoms(symptoms)
             }
     }
 }
