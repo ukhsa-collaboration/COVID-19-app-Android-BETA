@@ -12,6 +12,7 @@ jacoco.exec
 .tool-versions
 
 ## Pacts folder
-app/target/pacts
+app/pacts
+
 /.pairs
 /.git-authors

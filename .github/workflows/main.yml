@@ -34,6 +34,13 @@ jobs:
           sonarBaseUrl: ${{ secrets.TestSonarBaseUrl }}
           sonarHeaderValue: ${{ secrets.TestSonarHeaderValue }}
           sonarAnalyticsKey: ${{ secrets.TestSonarAnalyticsKey }}
+          pactBrokerUrl: https://sonar-pact-broker-app.apps.nonprod.aws.cp.data.england.nhs.uk
+
+      - name: Upload pacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: pacts-${{ github.sha }}
+          path: app/pacts
 
       - name: Instrumented Test
         uses: ./.github/actions/instrumentation-action

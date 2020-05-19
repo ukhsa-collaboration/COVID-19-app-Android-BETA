@@ -1,0 +1,229 @@
+{
+  "provider": {
+    "name": "Proximity API"
+  },
+  "consumer": {
+    "name": "Android App"
+  },
+  "interactions": [
+    {
+      "description": "a proximity data submission",
+      "request": {
+        "method": "PATCH",
+        "path": "/api/proximity-events/upload",
+        "headers": {
+          "Sonar-Message-Signature": "kcPUtOSXpTdFCXvsGzKehE28vesMIrUgjahi9jY0tyI=",
+          "Sonar-Request-Timestamp": "2020-05-18T23:36:40Z",
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        "body": {
+          "sonarId": "255535e2-f40b-4a65-8c52-abacbd7ef070",
+          "contactEvents": [
+            {
+              "duration": 577,
+              "transmissionTime": 6,
+              "countryCode": 18242,
+              "rssiIntervals": [
+                58,
+                24,
+                57,
+                89,
+                59,
+                62,
+                90
+              ],
+              "encryptedRemoteContactId": "R0LXrC6OCanN7tzxKgxBH46PUw7bg2TL6NpcqNGgvgkDWYxYlVADpQoGBDeKshqNP2+My8L7SUKS+uALYwkE/1ZmZoW8+BS0gyRKNMNgr7XughbTRE1JjsLXGvfxIZmQAZrcSabo0hVZucZa9QAAABFCYNqxGTNO4cr6HQX5zxl/",
+              "txPowerInProtocol": -2,
+              "txPowerAdvertised": -4,
+              "rssiValues": "5lvFCh3vVQ==",
+              "hmacSignature": "QmDasRkzTuHK+h0F+c8Zfw==",
+              "timestamp": "2020-05-18T23:36:40Z"
+            },
+            {
+              "duration": 531,
+              "transmissionTime": 47,
+              "countryCode": 18242,
+              "rssiIntervals": [
+                83,
+                77,
+                28,
+                3,
+                15,
+                23,
+                67
+              ],
+              "encryptedRemoteContactId": "R0LZkYs1rbjuthNUPRbem6licdjuM9Mi89rYJiG18v3xv4If0Z9ZYcD0Jp17lZSbG4EFsqgIQa8dmfe6gW56x5m/cLt/C86IxID1LE/kmNhmDvKcFKmd5BxdvZaQOLYUt7Ta7RuzaoRT4Jnx9QAAABz5uCbA41AlxgLCrMphw/Rd",
+              "txPowerInProtocol": -13,
+              "txPowerAdvertised": -12,
+              "rssiValues": "wM/42PTB/g==",
+              "hmacSignature": "+bgmwONQJcYCwqzKYcP0XQ==",
+              "timestamp": "2020-05-18T23:36:40Z"
+            },
+            {
+              "duration": 169,
+              "transmissionTime": 14,
+              "countryCode": 18242,
+              "rssiIntervals": [
+                64,
+                66,
+                75,
+                47,
+                5,
+                96,
+                64,
+                66,
+                53,
+                92
+              ],
+              "encryptedRemoteContactId": "R0IwoQb0PwcI1APjrYH9IyR5T2owj9TxKBw75NpcrljBGwItp05KisNT/gVoBLWUH1w+jZQHN4gIHy2SZ3cdNGPXnkryxZ+8Ad6MoPCL1ihDEXO7qZ2iwXLcYndrP8PNerSanrXvvKVYmwk2+AAAABa3sB907a6c7f5hdJfDPWMB",
+              "txPowerInProtocol": -20,
+              "txPowerAdvertised": -3,
+              "rssiValues": "xbjp+koSSre9DQ==",
+              "hmacSignature": "t7AfdO2unO3+YXSXwz1jAQ==",
+              "timestamp": "2020-05-18T23:36:40Z"
+            },
+            {
+              "duration": 29,
+              "transmissionTime": 19,
+              "countryCode": 18242,
+              "rssiIntervals": [
+                17,
+                95,
+                5,
+                82,
+                28,
+                19,
+                92,
+                57,
+                4,
+                2
+              ],
+              "encryptedRemoteContactId": "R0I0quz1kyfjd0Ez2i3g16j2jo9v4bFwbf6vERzeqYY9u2+YE/sIWXBl0rk7SPRT7ttlGj9FUy+yuqP+PU/+97pwUBuUsGdFJuLQP7R/jo27klwcWkOi4uWQUX+/l0vxwpbvZpCEFRakLJKk+wAAABaqaFvc6NwcScVYlDTm1d6Y",
+              "txPowerInProtocol": -20,
+              "txPowerAdvertised": -15,
+              "rssiValues": "RAi/tN3BSvwP2g==",
+              "hmacSignature": "qmhb3OjcHEnFWJQ05tXemA==",
+              "timestamp": "2020-05-18T23:36:40Z"
+            }
+          ],
+          "symptomsTimestamp": "2020-05-18T23:36:40Z"
+        },
+        "matchingRules": {
+          "header": {
+            "Sonar-Request-Timestamp": {
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z"
+                }
+              ],
+              "combine": "AND"
+            }
+          }
+        }
+      },
+      "response": {
+        "status": 204
+      },
+      "providerStates": [
+        {
+          "name": "a confirmed registration",
+          "params": {
+            "id": "255535e2-f40b-4a65-8c52-abacbd7ef070",
+            "key": "KtOqIq0kN6DPlrpsD2EGhA6/YrUqU4gBLwQyT4Wv1oI="
+          }
+        },
+        {
+          "name": "the date and time is",
+          "params": {
+            "timestamp": "2020-05-18T23:36:40Z"
+          }
+        }
+      ]
+    },
+    {
+      "description": "a reference code request",
+      "request": {
+        "method": "PUT",
+        "path": "/api/app-instances/linking-id",
+        "headers": {
+          "Sonar-Message-Signature": "t4qWeirGO7XK9veY9evNOYImGjvJRNvY5sCkXoAuhbw=",
+          "Sonar-Request-Timestamp": "2020-05-18T23:36:32Z",
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        "body": {
+          "sonarId": "c8784b26-b53a-4706-a554-1b7f14b087c5"
+        },
+        "matchingRules": {
+          "header": {
+            "Sonar-Request-Timestamp": {
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z"
+                }
+              ],
+              "combine": "AND"
+            }
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        "body": {
+          "linkingId": "abcd-efgj"
+        },
+        "matchingRules": {
+          "body": {
+            "$.linkingId": {
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "[0-9-abcdefghjkmnpqrstvwxyz]{4,20}"
+                }
+              ],
+              "combine": "AND"
+            }
+          },
+          "header": {
+            "Content-Type": {
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "application/json(;\\s?charset=[\\w\\-]+)?"
+                }
+              ],
+              "combine": "AND"
+            }
+          }
+        }
+      },
+      "providerStates": [
+        {
+          "name": "a confirmed registration",
+          "params": {
+            "id": "c8784b26-b53a-4706-a554-1b7f14b087c5",
+            "key": "rjr1dyJHI0Txkuqxrr97mwAKbYAqQCDmL6JpBMiG5e4="
+          }
+        },
+        {
+          "name": "the date and time is",
+          "params": {
+            "timestamp": "2020-05-18T23:36:32Z"
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "3.0.0"
+    },
+    "pact-jvm": {
+      "version": "4.0.10"
+    }
+  }
+}
