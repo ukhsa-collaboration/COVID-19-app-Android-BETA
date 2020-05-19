@@ -8,6 +8,7 @@ import au.com.dius.pact.consumer.junit.PactProviderRule
 import au.com.dius.pact.consumer.junit.PactVerification
 import au.com.dius.pact.core.model.RequestResponsePact
 import au.com.dius.pact.core.model.annotations.Pact
+import au.com.dius.pact.core.model.annotations.PactFolder
 import com.android.volley.ExecutorDelivery
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.BasicNetwork
@@ -31,6 +32,7 @@ import java.util.concurrent.Executors
 import javax.crypto.KeyGenerator
 
 @ExperimentalCoroutinesApi
+@PactFolder("pacts")
 class RegistrationConfirmDevicePactTest {
 
     @get:Rule

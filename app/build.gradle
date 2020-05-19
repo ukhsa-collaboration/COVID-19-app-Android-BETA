@@ -108,8 +108,9 @@ android {
 
 pact {
     publish {
+        pactDirectory = "$rootDir/app/pacts"
         version = 'git rev-parse --short HEAD'.execute().text.trim()
-        pactBrokerUrl = findProperty("pactbroker.url") ?: 'http://localhost:9292'
+        pactBrokerUrl = findProperty("pactbroker.url") ?: 'http://localhost:5000'
         tags = ['git describe --tags'.execute().text.trim()]
     }
 }

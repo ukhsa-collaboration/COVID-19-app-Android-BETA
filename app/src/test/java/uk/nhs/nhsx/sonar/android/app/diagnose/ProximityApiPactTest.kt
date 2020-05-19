@@ -11,6 +11,7 @@ import au.com.dius.pact.consumer.junit.PactProviderRule
 import au.com.dius.pact.consumer.junit.PactVerification
 import au.com.dius.pact.core.model.RequestResponsePact
 import au.com.dius.pact.core.model.annotations.Pact
+import au.com.dius.pact.core.model.annotations.PactFolder
 import com.android.volley.ExecutorDelivery
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.BasicNetwork
@@ -55,6 +56,7 @@ class StoppedUTCClock(private val alwaysNow: LocalDateTime) : UTCClock {
 }
 
 @ExperimentalCoroutinesApi
+@PactFolder("pacts")
 class ProximityApiPactTest {
     private val base64encoder = Base64.getEncoder()
     private val sonarId: String = UUID.randomUUID().toString()

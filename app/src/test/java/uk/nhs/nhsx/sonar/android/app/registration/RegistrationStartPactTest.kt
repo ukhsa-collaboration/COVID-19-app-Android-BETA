@@ -11,6 +11,7 @@ import au.com.dius.pact.consumer.junit.PactProviderRule
 import au.com.dius.pact.consumer.junit.PactVerification
 import au.com.dius.pact.core.model.RequestResponsePact
 import au.com.dius.pact.core.model.annotations.Pact
+import au.com.dius.pact.core.model.annotations.PactFolder
 import com.android.volley.ExecutorDelivery
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.BasicNetwork
@@ -28,6 +29,7 @@ import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import java.util.concurrent.Executors
 
 @ExperimentalCoroutinesApi
+@PactFolder("pacts")
 class RegistrationStartPactTest {
 
     @get:Rule
