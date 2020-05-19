@@ -5,13 +5,14 @@ on:
     types: [pact-tagging-test]
 
 jobs:
-
   publish:
     runs-on:
       - self-hosted
       - linux
       - aws
       - blue
+
+    container: pactfoundation/pact-cli
 
     steps:
       - name: Checkout
@@ -27,7 +28,6 @@ jobs:
           echo ::set-output name=long::$(git rev-parse HEAD)
 
       - name: Tag version as supported in pact broker
-        container: pactfoundation/pact-cli
         run: broker create-version-tag --tag supported --pacticipant 'Android App' --version ${{ steps.commitsha.outputs.short }}
         env:
           PACT_BROKER_URL: https://sonar-pact-broker-app.apps.nonprod.aws.cp.data.england.nhs.uk
