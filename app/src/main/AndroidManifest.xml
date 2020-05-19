@@ -75,6 +75,9 @@
         <activity android:name=".tests.ApplyForTestActivity" />
         <activity android:name=".referencecode.ReferenceCodeActivity" />
         <activity android:name=".tests.WorkplaceGuidanceActivity" />
+        <activity android:name=".diagnose.DiagnoseStomachActivity" />
+        <activity android:name=".diagnose.DiagnoseSneezeActivity" />
+        <activity android:name=".diagnose.DiagnoseAnosmiaActivity" />
 
         <service
             android:name=".ble.BluetoothService"

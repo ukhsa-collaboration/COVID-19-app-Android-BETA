@@ -20,10 +20,10 @@ import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
@@ -33,9 +33,6 @@ class DiagnoseCoughActivity : BaseActivity() {
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
-
-    @Inject
-    lateinit var form: DiagnoseCoughForm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -52,8 +49,8 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         confirm_diagnosis.setOnClickListener {
             when (cough_diagnosis_answer.checkedRadioButtonId) {
-                R.id.yes -> submitForm(symptoms.plus(Symptom.COUGH))
-                R.id.no -> submitForm(symptoms)
+                R.id.yes -> nextStep(symptoms.plus(Symptom.COUGH))
+                R.id.no -> nextStep(symptoms)
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
                     radio_selection_error.announceForAccessibility(getString(R.string.radio_button_cough_error))
@@ -66,11 +63,15 @@ class DiagnoseCoughActivity : BaseActivity() {
         }
     }
 
-    private fun submitForm(symptoms: Set<Symptom>) {
-        when (val result = form.submit(symptoms)) {
-            is StateResult.Review -> DiagnoseReviewActivity.start(this, symptoms)
-            StateResult.Close -> DiagnoseCloseActivity.start(this)
-            is StateResult.Main -> navigateTo(result.userState)
+    private fun nextStep(symptoms: Set<Symptom>) {
+        val currentState = userStateStorage.get()
+        if (currentState.displayState() == ISOLATE) {
+            UserStateTransitions.diagnoseForCheckin(symptoms).also { newState ->
+                userStateStorage.set(newState)
+                navigateTo(newState)
+            }
+        } else {
+            DiagnoseAnosmiaActivity.start(this, symptoms)
         }
     }
 
@@ -91,14 +92,14 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         if (state.displayState() == ISOLATE) {
             progress.text = getString(R.string.progress_two_out_of_two)
-            progress.contentDescription = getString(R.string.page2of2)
+            progress.contentDescription = getString(R.string.page_2_of_2)
             confirm_diagnosis.text = getString(R.string.submit)
             new_cough_description.visibility = View.GONE
             cough_question.text = getString(R.string.cough_question_simplified)
         } else {
-            progress.text = getString(R.string.progress_two_thirds)
+            progress.text = getString(R.string.progress_two_sixth)
             confirm_diagnosis.text = getString(R.string.continue_button)
-            progress.contentDescription = getString(R.string.page2of3)
+            progress.contentDescription = getString(R.string.page_2_of_6)
             new_cough_description.visibility = View.VISIBLE
             cough_question.text = getString(R.string.cough_question)
         }

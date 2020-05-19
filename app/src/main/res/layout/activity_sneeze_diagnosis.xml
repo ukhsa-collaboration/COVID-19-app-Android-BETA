@@ -31,26 +31,27 @@
                 android:fontFamily="@font/roboto_medium"
                 android:letterSpacing="0.1"
                 android:paddingTop="24dp"
-                android:text="@string/progress_one_sixth"
+                android:text="@string/progress_four_sixth"
+                android:contentDescription="@string/page_4_of_6"
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/temperature_question"
+                android:id="@+id/sneeze_question"
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/progress"
                 android:accessibilityHeading="true"
-                android:text="@string/temperature_question" />
+                android:text="@string/sneeze_question" />
 
             <TextView
-                android:id="@+id/temperature_description"
+                android:id="@+id/sneeze_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/temperature_question"
+                android:layout_below="@id/sneeze_question"
                 android:layout_marginTop="8dp"
-                android:text="@string/temperature_description"
+                android:text="@string/sneeze_description"
                 android:textColor="@color/text_sub_title"
                 android:textSize="16sp" />
 
@@ -59,15 +60,15 @@
                 style="@style/TextViewError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/temperature_description"
+                android:layout_below="@id/sneeze_description"
                 android:layout_marginTop="16dp"
-                android:labelFor="@+id/temperature_diagnosis_answer"
-                android:text="@string/radio_button_temperature_error"
+                android:labelFor="@+id/sneeze_diagnosis_answer"
+                android:text="@string/radio_button_symptoms_error"
                 android:visibility="gone" />
 
 
             <RadioGroup
-                android:id="@+id/temperature_diagnosis_answer"
+                android:id="@+id/sneeze_diagnosis_answer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/radio_selection_error"
@@ -83,7 +84,7 @@
                     android:fontFamily="@font/roboto_medium"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="@string/yes_temperature"
+                    android:text="@string/yes_to_symptoms"
                     android:textSize="16sp" />
 
 
@@ -96,7 +97,7 @@
                     android:fontFamily="@font/roboto_medium"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:text="@string/no_temperature"
+                    android:text="@string/no_to_symptoms"
                     android:textSize="16sp" />
             </RadioGroup>
         </RelativeLayout>

@@ -28,10 +28,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="8dp"
-                android:contentDescription="@string/page_3_of_3"
+                android:contentDescription="@string/page_6_of_6"
                 android:fontFamily="@font/roboto_medium"
                 android:letterSpacing="0.1"
-                android:text="@string/progress_three_thirds"
+                android:text="@string/progress_six_sixth"
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
 

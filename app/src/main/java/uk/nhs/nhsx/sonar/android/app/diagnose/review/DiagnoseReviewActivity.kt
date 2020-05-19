@@ -13,10 +13,12 @@ import android.widget.AdapterView
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import kotlinx.android.synthetic.main.activity_review_diagnosis.date_selection_error
+import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_anosmia
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_cough
+import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_sneeze
+import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_stomach
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_temperature
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
-import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_prompt
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
 import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import org.joda.time.DateTime
@@ -53,7 +55,6 @@ class DiagnoseReviewActivity : BaseActivity() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         setSymptomsReviewAnswers()
-        setSymptomsDateQuestion()
         setDateSpinner()
 
         submit_diagnosis.setOnClickListener {
@@ -168,14 +169,23 @@ class DiagnoseReviewActivity : BaseActivity() {
                 true -> getString(R.string.i_do_cough)
                 false -> getString(R.string.i_do_not_cough)
             }
-    }
 
-    private fun setSymptomsDateQuestion() {
-        symptoms_date_prompt.text =
-            when {
-                Symptom.COUGH !in symptoms -> getString(R.string.symptoms_date_prompt_temperature)
-                Symptom.TEMPERATURE !in symptoms -> getString(R.string.symptoms_date_prompt_cough)
-                else -> getString(R.string.symptoms_date_prompt_all)
+        review_answer_anosmia.text =
+            when (Symptom.ANOSMIA in symptoms) {
+                true -> getString(R.string.i_do_anosmia)
+                false -> getString(R.string.i_do_not_anosmia)
+            }
+
+        review_answer_sneeze.text =
+            when (Symptom.SNEEZE in symptoms) {
+                true -> getString(R.string.i_do_sneeze)
+                false -> getString(R.string.i_do_not_sneeze)
+            }
+
+        review_answer_stomach.text =
+            when (Symptom.STOMACH in symptoms) {
+                true -> getString(R.string.i_do_stomach)
+                false -> getString(R.string.i_do_not_stomach)
             }
     }
 

@@ -20,8 +20,11 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseAnosmiaActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCoughActivity
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSneezeActivity
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseStomachActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEventsWorker
@@ -67,6 +70,9 @@ interface ApplicationComponent {
     fun inject(activity: PostCodeActivity)
     fun inject(activity: TesterActivity)
     fun inject(activity: DiagnoseSubmitActivity)
+    fun inject(activity: DiagnoseSneezeActivity)
+    fun inject(activity: DiagnoseStomachActivity)
+    fun inject(activity: DiagnoseAnosmiaActivity)
     fun inject(activity: DiagnoseCoughActivity)
     fun inject(activity: DiagnoseTemperatureActivity)
     fun inject(activity: ReferenceCodeActivity)

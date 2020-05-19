@@ -8,41 +8,38 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.confirm_diagnosis
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.no
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.progress
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.radio_selection_error
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_diagnosis_answer
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_question
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.yes
+import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.anosmia_diagnosis_answer
+import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.confirm_diagnosis
+import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.no
+import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.yes
 import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
 
-open class DiagnoseTemperatureActivity : BaseActivity() {
+open class DiagnoseAnosmiaActivity : BaseActivity() {
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
 
+    private val symptoms: Set<Symptom> by lazy { intent.getSymptoms() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_temperature_diagnosis)
-
-        setQuestionnaireContent()
+        setContentView(R.layout.activity_anosmia_diagnosis)
 
         confirm_diagnosis.setOnClickListener {
-            when (temperature_diagnosis_answer.checkedRadioButtonId) {
+            when (anosmia_diagnosis_answer.checkedRadioButtonId) {
                 R.id.yes -> {
-                    nextStep(setOf(Symptom.TEMPERATURE))
+                    nextStep(symptoms.plus(Symptom.ANOSMIA))
                 }
                 R.id.no -> {
-                    nextStep(emptySet())
+                    nextStep(symptoms)
                 }
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
@@ -51,13 +48,13 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
             }
         }
 
-        temperature_diagnosis_answer.setOnCheckedChangeListener { _, _ ->
+        anosmia_diagnosis_answer.setOnCheckedChangeListener { _, _ ->
             radio_selection_error.visibility = View.GONE
         }
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
         toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
@@ -73,29 +70,17 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         }
     }
 
-    private fun setQuestionnaireContent() {
-        val state = userStateStorage.get()
-
-        if (state.displayState() == ISOLATE) {
-            progress.text = getString(R.string.progress_half)
-            progress.contentDescription = getString(R.string.page_1_of_2)
-            temperature_question.text = getString(R.string.temperature_question_simplified)
-        } else {
-            progress.text = getString(R.string.progress_one_sixth)
-            progress.contentDescription = getString(R.string.page_1_of_6)
-            temperature_question.text = getString(R.string.temperature_question)
-        }
-    }
-
     protected open fun nextStep(symptoms: Set<Symptom>) {
-        DiagnoseCoughActivity.start(this, symptoms)
+        DiagnoseSneezeActivity.start(this, symptoms)
     }
 
     companion object {
-        fun start(context: Context) =
-            context.startActivity(getIntent(context))
+        fun start(context: Context, symptoms: Set<Symptom>) =
+            context.startActivity(getIntent(context, symptoms))
 
-        private fun getIntent(context: Context) =
-            Intent(context, DiagnoseTemperatureActivity::class.java)
+        private fun getIntent(context: Context, symptoms: Set<Symptom>) =
+            Intent(context, DiagnoseAnosmiaActivity::class.java).apply {
+                putSymptoms(symptoms)
+            }
     }
 }

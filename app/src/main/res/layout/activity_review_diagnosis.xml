@@ -28,11 +28,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:contentDescription="@string/page_3_of_3"
+                android:contentDescription="@string/page_6_of_6"
                 android:fontFamily="@font/roboto_medium"
                 android:letterSpacing="0.1"
                 android:paddingTop="24dp"
-                android:text="@string/progress_three_thirds"
+                android:text="@string/progress_six_sixth"
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
 
@@ -76,6 +76,51 @@
             <View
                 style="@style/HorizontalDivider"
                 android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/review_answer_anosmia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/i_do_anosmia"
+                android:textSize="16sp" />
+
+            <View
+                style="@style/HorizontalDivider"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/review_answer_sneeze"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/i_do_sneeze"
+                android:textSize="16sp" />
+
+            <View
+                style="@style/HorizontalDivider"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp" />
+
+            <TextView
+                android:id="@+id/review_answer_stomach"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@string/i_do_stomach"
+                android:textSize="16sp" />
+
+            <View
+                style="@style/HorizontalDivider"
+                android:layout_marginTop="12dp"
                 android:layout_marginBottom="48dp" />
 
             <TextView
@@ -84,7 +129,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:accessibilityHeading="true"
-                android:text="@string/symptoms_date_prompt_cough" />
+                android:text="@string/symptoms_date_prompt_all" />
 
             <TextView
                 android:id="@+id/date_selection_error"

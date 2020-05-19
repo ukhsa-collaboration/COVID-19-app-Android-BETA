@@ -98,5 +98,8 @@ enum class DisplayState {
 
 enum class Symptom {
     COUGH,
-    TEMPERATURE
+    TEMPERATURE,
+    ANOSMIA,
+    SNEEZE,
+    STOMACH
 }

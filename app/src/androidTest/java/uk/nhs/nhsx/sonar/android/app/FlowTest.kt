@@ -18,7 +18,6 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.typeText
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -109,7 +108,8 @@ class FlowTest {
             ::testRegistration,
             ::testRegistrationRetry,
             ::testRegistrationPushNotificationNotReceived,
-            ::testBluetoothInteractions,
+            ::testProximityDataUploadOnSympotomaticState,
+            ::testQuestionnaireFlowWithNoSymptom,
             ::testReceivingStatusUpdateNotification,
             ::testHideStatusUpdateNotificationWhenNotClicked,
             ::testExplanation,
@@ -119,7 +119,7 @@ class FlowTest {
             ::testLaunchWhenStateIsRedAndExpired,
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
             ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
-            ::testOnboarding_WhenPermissionsNeedToBeSet,
+            ::testOnboardingWhenPermissionsNeedToBeSet,
             ::testResumeWhenBluetoothIsDisabled,
             ::testResumeWhenLocationAccessIsDisabled,
             ::testResumeWhenLocationPermissionIsRevoked,
@@ -282,7 +282,7 @@ class FlowTest {
         verifyCheckMySymptomsButton(isEnabled())
     }
 
-    fun testBluetoothInteractions() {
+    fun testProximityDataUploadOnSympotomaticState() {
         setUserState(DefaultState)
         setValidSonarIdAndSecretKeyAndPublicKey()
         setReferenceCode()
@@ -291,11 +291,23 @@ class FlowTest {
 
         testAppContext.simulateDeviceInProximity()
 
-        checkCanTransitionToIsolateActivity()
+        checkQuestionnaireFlowWithSymptoms()
 
         testAppContext.verifyReceivedProximityRequest()
 
         checkIsolateActivityIsShown()
+    }
+
+    fun testQuestionnaireFlowWithNoSymptom() {
+        setUserState(DefaultState)
+        setValidSonarIdAndSecretKeyAndPublicKey()
+        setReferenceCode()
+
+        onView(withId(R.id.start_main_activity)).perform(click())
+
+        checkQuestionnaireFlowWithNoSymptom()
+
+        checkOkActivityIsShown()
     }
 
     fun testReceivingStatusUpdateNotification() {
@@ -456,7 +468,7 @@ class FlowTest {
                 ?: it.findObject(By.text(text.toUpperCase()))
         }
 
-    fun testOnboarding_WhenPermissionsNeedToBeSet() {
+    fun testOnboardingWhenPermissionsNeedToBeSet() {
         fun testEnableBluetooth() {
             onView(withId(R.id.permission_continue)).perform(click())
 
@@ -682,10 +694,6 @@ class FlowTest {
         onView(withContentDescription(R.string.go_back)).perform(click())
     }
 
-    private fun checkMedicalWorkersInstructionsNotDisplayed() {
-        onView(withId(R.id.medicalWorkersInstructions)).check(doesNotExist())
-    }
-
     private fun setUserState(state: UserState) {
         component.getUserStateStorage().set(state)
     }
@@ -754,20 +762,46 @@ class FlowTest {
         checkIsolateActivityIsShown()
     }
 
-    private fun checkCanTransitionToIsolateActivity() {
+    private fun checkQuestionnaireFlowWithNoSymptom() {
         onView(withId(R.id.status_not_feeling_well)).perform(scrollTo(), click())
 
         // Temperature step
-        onView(withId(R.id.temperature_question)).check(matches(isDisplayed()))
-        onView(withId(R.id.yes)).perform(click())
-        onView(withId(R.id.yes)).check(matches(isChecked()))
-        onView(withId(R.id.confirm_diagnosis)).perform(click())
+        answerNoTo(R.id.temperature_question)
 
-        // Cough step
-        onView(withId(R.id.cough_question)).check(matches(isDisplayed()))
-        onView(withId(R.id.yes)).perform(click())
-        onView(withId(R.id.yes)).check(matches(isChecked()))
-        onView(withId(R.id.confirm_diagnosis)).perform(click())
+        // Cough Step
+        answerNoTo(R.id.cough_question)
+
+        // Anosmia Step
+        answerNoTo(R.id.anosmia_question)
+
+        // Sneeze Step
+        answerNoTo(R.id.sneeze_question)
+
+        // Stomach Step
+        answerNoTo(R.id.stomach_question)
+
+        // Close Activity
+        onView(withId(R.id.close_review_btn)).check(matches(isDisplayed()))
+        onView(withId(R.id.close_review_btn)).perform(click())
+    }
+
+    private fun checkQuestionnaireFlowWithSymptoms() {
+        onView(withId(R.id.status_not_feeling_well)).perform(scrollTo(), click())
+
+        // Temperature step
+        answerYesTo(R.id.temperature_question)
+
+        // Cough Step
+        answerYesTo(R.id.cough_question)
+
+        // Anosmia Step
+        answerYesTo(R.id.anosmia_question)
+
+        // Sneeze Step
+        answerYesTo(R.id.sneeze_question)
+
+        // Stomach Step
+        answerYesTo(R.id.stomach_question)
 
         // Review Step
         onView(withId(R.id.symptoms_date_prompt))
@@ -781,6 +815,7 @@ class FlowTest {
             .check(matches(withText(R.string.i_do_cough)))
 
         onView(withId(R.id.submit_diagnosis)).perform(click())
+        onView(withId(R.id.symptoms_date_spinner)).perform(scrollTo())
         onView(withId(R.id.date_selection_error)).check(matches(isDisplayed()))
 
         onView(withId(R.id.symptoms_date_spinner)).check(matches(withSpinnerText(R.string.start_date)))
@@ -812,5 +847,20 @@ class FlowTest {
 
         // Red State
         onView(withId(R.id.status_red_title)).check(matches(isDisplayed()))
+    }
+
+    private fun answerYesTo(questionId: Int) {
+        answerTo(questionId, R.id.yes)
+    }
+
+    private fun answerNoTo(questionId: Int) {
+        answerTo(questionId, R.id.no)
+    }
+
+    private fun answerTo(questionId: Int, answerId: Int) {
+        onView(withId(questionId)).check(matches(isDisplayed()))
+        onView(withId(answerId)).perform(click())
+        onView(withId(answerId)).check(matches(isChecked()))
+        onView(withId(R.id.confirm_diagnosis)).perform(click())
     }
 }
