@@ -1,0 +1,21 @@
+name: Remove Support
+
+on:
+  repository_dispatch:
+    types: [remove-support]
+
+jobs:
+
+  publish:
+    runs-on:
+      - self-hosted
+      - linux
+      - aws
+      - blue
+
+    container: curlimages/curl
+
+    steps:
+      - name: Remove support tag in pact broker
+        id: removesupport
+        run: curl -v -XDELETE https://sonar-pact-broker-app.apps.nonprod.aws.cp.data.england.nhs.uk/pacticipants/Android%20App/versions/${{ github.event.client_payload.version }}/tags/supported
