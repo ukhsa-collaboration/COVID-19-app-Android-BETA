@@ -48,3 +48,5 @@ const val URL_PRIVACY_NOTICE = "https://covid19.nhs.uk/privacy-and-data.html"
 const val URL_TERMS_OF_USE = "https://covid19.nhs.uk/our-policies.html"
 
 const val URL_NHS_LOCAL_SUPPORT = "https://faq.covid19.nhs.uk/article/KA-01065/en-us"
+
+const val WORKPLACE_GUIDANCE = "https://www.gov.uk/guidance/working-safely-during-coronavirus-covid-19"
