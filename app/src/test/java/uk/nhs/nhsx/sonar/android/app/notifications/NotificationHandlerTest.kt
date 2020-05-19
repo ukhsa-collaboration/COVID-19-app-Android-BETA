@@ -15,6 +15,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
@@ -30,20 +31,43 @@ class NotificationHandlerTest {
     private val registrationManager = mockk<RegistrationManager>(relaxUnitFun = true)
     private val ackDao = mockk<AcknowledgmentsDao>(relaxUnitFun = true)
     private val ackApi = mockk<AcknowledgmentsApi>(relaxUnitFun = true)
+    private val sonarIdProvider = mockk<SonarIdProvider>()
+    private val notificationTokenApi = mockk<NotificationTokenApi>(relaxUnitFun = true)
     private val handler = NotificationHandler(
         sender,
         statusStorage,
         activationCodeProvider,
         registrationManager,
         ackDao,
-        ackApi
+        ackApi,
+        sonarIdProvider,
+        notificationTokenApi
     )
 
     @Test
-    fun testOnMessageReceived_UnrecognizedNotification() {
+    fun `test handleNewToken - when we have a sonar id`() {
+        every { sonarIdProvider.hasProperSonarId() } returns true
+        every { sonarIdProvider.get() } returns "sonar-id-200"
+
+        handler.handleNewToken("some-token #1")
+
+        verify { notificationTokenApi.updateToken("sonar-id-200", "some-token #1") }
+    }
+
+    @Test
+    fun `test handleNewToken - when we don't have a sonar id`() {
+        every { sonarIdProvider.hasProperSonarId() } returns false
+
+        handler.handleNewToken("some-token #1")
+
+        verify { notificationTokenApi wasNot Called }
+    }
+
+    @Test
+    fun `test handleNewMessage - unrecognized notification`() {
         val messageData = mapOf("foo" to "bar")
 
-        handler.handle(messageData)
+        handler.handleNewMessage(messageData)
 
         verifyAll {
             sender wasNot Called
@@ -54,10 +78,10 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun testOnMessageReceived_Activation() {
+    fun `test handleNewMessage - activation`() {
         val messageData = mapOf("activationCode" to "code-023")
 
-        handler.handle(messageData)
+        handler.handleNewMessage(messageData)
 
         verify {
             activationCodeProvider.set("code-023")
@@ -66,11 +90,11 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun testOnMessageReceived_StatusUpdate() {
+    fun `test handleNewMessage - status update`() {
         val messageData = mapOf("status" to "POTENTIAL")
         every { statusStorage.get() } returns DefaultState
 
-        handler.handle(messageData)
+        handler.handleNewMessage(messageData)
 
         verifyAll {
             statusStorage.get()
@@ -80,11 +104,11 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun testOnMessageReceived_InAmberState() {
+    fun `test handleNewMessage - status update in amber state`() {
         val messageData = mapOf("status" to "POTENTIAL")
         every { statusStorage.get() } returns AmberState(DateTime.now())
 
-        handler.handle(messageData)
+        handler.handleNewMessage(messageData)
 
         verifyAll {
             statusStorage.get()
@@ -94,11 +118,11 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun testOnMessageReceived_InRedState() {
+    fun `test handleNewMessage - status update in red state`() {
         val messageData = mapOf("status" to "POTENTIAL")
         every { statusStorage.get() } returns RedState(DateTime.now(), nonEmptySetOf(Symptom.TEMPERATURE))
 
-        handler.handle(messageData)
+        handler.handleNewMessage(messageData)
 
         verifyAll {
             statusStorage.get()
@@ -108,14 +132,14 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun testOnMessageReceived_WithAcknowledgmentUrl() {
+    fun `test handleNewMessage - a notification with acknowledgmentUrl`() {
         every { ackDao.tryFind(any()) } returns null
         every { statusStorage.get() } returns DefaultState
 
         val messageData =
             mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/100")
 
-        handler.handle(messageData)
+        handler.handleNewMessage(messageData)
 
         verifyAll {
             statusStorage.get()
@@ -128,13 +152,13 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun testOnMessageReceived_WhenItHasAlreadyBeenReceived() {
+    fun `test handleNewMessage - when it has already been received`() {
         every { ackDao.tryFind(any()) } returns Acknowledgment("https://api.example.com/ack/101")
 
         val messageData =
             mapOf("status" to "POTENTIAL", "acknowledgmentUrl" to "https://api.example.com/ack/101")
 
-        handler.handle(messageData)
+        handler.handleNewMessage(messageData)
 
         verifyAll {
             statusStorage wasNot Called

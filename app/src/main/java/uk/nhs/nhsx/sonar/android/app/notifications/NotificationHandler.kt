@@ -8,6 +8,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
+import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
@@ -19,10 +20,19 @@ class NotificationHandler @Inject constructor(
     private val activationCodeProvider: ActivationCodeProvider,
     private val registrationManager: RegistrationManager,
     private val acknowledgmentsDao: AcknowledgmentsDao,
-    private val acknowledgmentsApi: AcknowledgmentsApi
+    private val acknowledgmentsApi: AcknowledgmentsApi,
+    private val sonarIdProvider: SonarIdProvider,
+    private val notificationTokenApi: NotificationTokenApi
 ) {
 
-    fun handle(messageData: Map<String, String>) {
+    fun handleNewToken(token: String) {
+        if (!sonarIdProvider.hasProperSonarId())
+            return
+
+        notificationTokenApi.updateToken(sonarIdProvider.get(), token)
+    }
+
+    fun handleNewMessage(messageData: Map<String, String>) {
         val wasHandled = hasBeenAcknowledged(messageData)
 
         if (!wasHandled) {

@@ -21,10 +21,11 @@ class NotificationService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         Timber.d("Received new token: $token")
+        notificationHandler.handleNewToken(token)
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
         Timber.i("New Message: ${message.messageId} ${message.data}")
-        notificationHandler.handle(message.data)
+        notificationHandler.handleNewMessage(message.data)
     }
 }
