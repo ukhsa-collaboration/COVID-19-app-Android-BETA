@@ -20,6 +20,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdProvider
+import kotlin.random.Random
 
 class GattWrapper(
     private val server: BluetoothGattServer?,
@@ -30,8 +31,6 @@ class GattWrapper(
 ) {
     var notifyJob: Job? = null
 
-    // No semantic value, just to avoid caching.
-    private var keepAliveValue: Byte = 0x00
     private val subscribedDevices = mutableListOf<BluetoothDevice>()
     private val lock = Mutex()
 
@@ -101,10 +100,8 @@ class GattWrapper(
                         bluetoothManager.getConnectedDevices(BluetoothProfile.GATT)
                             .intersect(subscribedDevices)
 
-                    keepAliveValue++
-                    keepAliveCharacteristic.value = byteArrayOf(keepAliveValue)
+                    keepAliveCharacteristic.value = Random.Default.nextBytes(1)
                     connectedSubscribers.forEach {
-                        Timber.d("Notifying $it of new value $keepAliveValue")
                         server?.notifyCharacteristicChanged(it, keepAliveCharacteristic, false)
                     }
                 }

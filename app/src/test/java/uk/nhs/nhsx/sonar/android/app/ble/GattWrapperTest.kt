@@ -14,6 +14,7 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -43,7 +44,6 @@ class GattWrapperTest {
         )
     )
 
-    private lateinit var identifier: BluetoothIdentifier
     private lateinit var identifierBytes: ByteArray
 
     private val gattWrapper = GattWrapper(
@@ -78,8 +78,10 @@ class GattWrapperTest {
     }
 
     @Test
-    fun `server notifies subscribers every eight seconds`() {
+    fun `server notifies subscribers with a random value every eight seconds`() {
         val keepAliveDescriptor = mockk<BluetoothGattDescriptor>()
+        val slot = slot<ByteArray>()
+        every { keepAliveCharacteristic.setValue(capture(slot)) } answers { true }
 
         every { keepAliveDescriptor.characteristic.uuid } returns SONAR_KEEPALIVE_CHARACTERISTIC_UUID
         every { keepAliveDescriptor.uuid } returns NOTIFY_DESCRIPTOR_UUID
@@ -89,12 +91,30 @@ class GattWrapperTest {
         verify(exactly = 0) { server.notifyCharacteristicChanged(any(), any(), any()) }
 
         coroutineScope.advanceTimeBy(8_000)
-        verify { keepAliveCharacteristic.value = byteArrayOf(1) }
-        verify(exactly = 1) { server.notifyCharacteristicChanged(device, keepAliveCharacteristic, false) }
+        val firstKeepAliveValue = slot.captured
+        verify { keepAliveCharacteristic.value = firstKeepAliveValue }
+        verify(exactly = 1) {
+            server.notifyCharacteristicChanged(
+                device,
+                keepAliveCharacteristic,
+                false
+            )
+        }
 
         coroutineScope.advanceTimeBy(8_000)
-        verify { keepAliveCharacteristic.value = byteArrayOf(2) }
-        verify(exactly = 2) { server.notifyCharacteristicChanged(device, keepAliveCharacteristic, false) }
+        val secondKeepAliveValue = slot.captured
+        verify { keepAliveCharacteristic.value = secondKeepAliveValue }
+        verify(exactly = 2) {
+            server.notifyCharacteristicChanged(
+                device,
+                keepAliveCharacteristic,
+                false
+            )
+        }
+
+        assertThat(secondKeepAliveValue).isNotEqualTo(
+            byteArrayOf((firstKeepAliveValue.first() + 1.toByte()).toByte())
+        )
     }
 
     @Test
