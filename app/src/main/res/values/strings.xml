@@ -90,7 +90,7 @@
     <string name="temperature_description">You don\'t need a thermometer or to know a precise temperature. If you feel hot to touch on your chest or back answer \'yes\'.</string>
     <string name="cough_question">Do you have a new continuous cough or loss of smell?</string>
     <string name="cough_description">Continuous: means coughing a lot for more than an hour, or 3 or more coughing episodes in 24 hours.</string>
-    <string name="anosmia_description">Loss of smell: means you’ve noticed you can’t smell anything within the last few days, or your have experienced a change in your sense of smell.</string>
+    <string name="anosmia_description">Loss of smell: means you’ve noticed you can’t smell anything within the last few days, or you have experienced a change in your sense of smell.</string>
     <string name="diagnosis_review_title">Thank you for sharing this data with the NHS.</string>
     <string name="diagnosis_review_description">Thank you for sharing this data with the NHS. We will use this information to anonymously inform people they have come into contact with covid symptoms and encourage them to self-isolate.\nThank you for helping us save lives</string>
     <string name="submit">Submit</string>
