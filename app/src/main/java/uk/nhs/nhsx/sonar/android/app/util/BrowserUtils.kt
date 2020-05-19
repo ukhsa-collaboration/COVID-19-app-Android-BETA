@@ -24,8 +24,6 @@ private const val UTM_CONTENT_GENERAL = "utm_content=general"
 private const val UTM_CONTENT_SYMPTOMS = "utm_content=symptoms"
 private const val UTM_CONTENT_NOTIFIED = "utm_content=notified"
 
-private const val PAGE_NHS_CONDITIONS = "https://www.nhs.uk/conditions/coronavirus-covid-19"
-
 private const val PAGE_ADVICE_DEFAULT =
     "https://www.gov.uk/government/publications/full-guidance-on-staying-at-home-and-away-from-others/full-guidance-on-staying-at-home-and-away-from-others"
 
@@ -34,11 +32,8 @@ private const val PAGE_ADVICE_RED =
 
 private const val PAGE_ADVICE_AMBER = "https://www.gov.uk/coronavirus"
 
-const val URL_SUPPORT_DEFAULT = "$PAGE_NHS_CONDITIONS?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_GENERAL"
-const val URL_SUPPORT_RED = "$PAGE_NHS_CONDITIONS?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_SYMPTOMS"
-const val URL_SUPPORT_AMBER = "$PAGE_NHS_CONDITIONS?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_NOTIFIED"
-
-const val URL_LATEST_ADVICE_DEFAULT = "$PAGE_ADVICE_DEFAULT?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_GENERAL"
+const val URL_LATEST_ADVICE_DEFAULT =
+    "$PAGE_ADVICE_DEFAULT?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_GENERAL"
 
 const val URL_LATEST_ADVICE_RED =
     "$PAGE_ADVICE_RED?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_SYMPTOMS#main-messages"
@@ -51,3 +46,5 @@ const val URL_SYMPTOM_CHECKER = "https://111.nhs.uk/covid-19/"
 const val URL_INFO = "https://covid19.nhs.uk/"
 const val URL_PRIVACY_NOTICE = "https://covid19.nhs.uk/privacy-and-data.html"
 const val URL_TERMS_OF_USE = "https://covid19.nhs.uk/our-policies.html"
+
+const val URL_NHS_LOCAL_SUPPORT = "https://faq.covid19.nhs.uk/article/KA-01065/en-us"

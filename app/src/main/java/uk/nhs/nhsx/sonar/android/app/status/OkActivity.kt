@@ -36,7 +36,7 @@ import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
 import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_DEFAULT
-import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_DEFAULT
+import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.observe
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -81,7 +81,7 @@ class OkActivity : BaseActivity() {
         toggleNotFeelingCard(false)
 
         nhs_service.setOnClickListener {
-            openUrl(URL_SUPPORT_DEFAULT)
+            openUrl(URL_NHS_LOCAL_SUPPORT)
         }
 
         medical_workers_card.setOnClickListener {

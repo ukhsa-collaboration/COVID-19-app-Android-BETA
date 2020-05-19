@@ -26,9 +26,9 @@ import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_AMBER
-import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_AMBER
-import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
+import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cancelStatusNotification
+import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 import javax.inject.Inject
@@ -62,7 +62,7 @@ class AtRiskActivity : BaseActivity() {
         }
 
         nhs_service.setOnClickListener {
-            openUrl(URL_SUPPORT_AMBER)
+            openUrl(URL_NHS_LOCAL_SUPPORT)
         }
 
         toolbar_info.setOnClickListener {

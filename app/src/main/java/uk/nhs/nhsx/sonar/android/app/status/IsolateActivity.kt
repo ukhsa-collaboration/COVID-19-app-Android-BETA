@@ -30,7 +30,7 @@ import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_RED
-import uk.nhs.nhsx.sonar.android.app.util.URL_SUPPORT_RED
+import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
@@ -69,7 +69,7 @@ class IsolateActivity : BaseActivity() {
         }
 
         nhs_service.setOnClickListener {
-            openUrl(URL_SUPPORT_RED)
+            openUrl(URL_NHS_LOCAL_SUPPORT)
         }
 
         toolbar_info.setOnClickListener {
