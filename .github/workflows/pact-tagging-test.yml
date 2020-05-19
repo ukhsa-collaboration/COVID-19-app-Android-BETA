@@ -1,18 +1,19 @@
 name: Tag a version as supported
 
 on:
-  repository_dispatch:
-    types: [pact-tagging-test]
+  push:
+    branches:
+      - master
 
 jobs:
-  publish:
+  checkout:
+    outputs:
+      shortref: ${{ steps.commitsha.outputs.short }}
     runs-on:
       - self-hosted
       - linux
       - aws
       - blue
-
-    container: pactfoundation/pact-cli
 
     steps:
       - name: Checkout
@@ -27,7 +28,18 @@ jobs:
           echo ::set-output name=short::$(git rev-parse --short HEAD)
           echo ::set-output name=long::$(git rev-parse HEAD)
 
+  tag:
+    runs-on:
+      - self-hosted
+      - linux
+      - aws
+      - blue
+
+    needs: checkout
+    container: pactfoundation/pact-cli
+
+    steps:
       - name: Tag version as supported in pact broker
-        run: broker create-version-tag --tag supported --pacticipant 'Android App' --version ${{ steps.commitsha.outputs.short }}
+        run: broker create-version-tag --tag supported --pacticipant 'Android App' --version ${{ needs.checkout.outputs.shortref }}
         env:
           PACT_BROKER_URL: https://sonar-pact-broker-app.apps.nonprod.aws.cp.data.england.nhs.uk
