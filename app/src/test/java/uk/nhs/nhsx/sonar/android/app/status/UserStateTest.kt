@@ -39,7 +39,7 @@ class UserStateTest {
     @Test
     fun `checkin state factory method`() {
         val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        val state = UserState.checkin(symptoms, today)
+        val state = UserState.checkin(null, symptoms, today)
 
         val tomorrowAt7 = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
         assertThat(state).isEqualTo(CheckinState(tomorrowAt7, symptoms))
@@ -68,8 +68,8 @@ class UserStateTest {
 
     @Test
     fun `test until`() {
-        assertThat(DefaultState.until()).isNull()
-        assertThat(RecoveryState.until()).isNull()
+        assertThat(DefaultState().until()).isNull()
+        assertThat(RecoveryState().until()).isNull()
         assertThat(amberState.until()).isEqualTo(amberState.until)
         assertThat(redState.until()).isEqualTo(redState.until)
         assertThat(checkinState.until()).isEqualTo(checkinState.until)
@@ -77,8 +77,8 @@ class UserStateTest {
 
     @Test
     fun `test hasExpired`() {
-        assertThat(DefaultState.hasExpired()).isFalse()
-        assertThat(RecoveryState.hasExpired()).isFalse()
+        assertThat(DefaultState().hasExpired()).isFalse()
+        assertThat(RecoveryState().hasExpired()).isFalse()
         assertThat(amberState.hasExpired()).isFalse()
         assertThat(redState.hasExpired()).isFalse()
         assertThat(checkinState.hasExpired()).isFalse()
@@ -90,8 +90,8 @@ class UserStateTest {
 
     @Test
     fun `test displayState`() {
-        assertThat(DefaultState.displayState()).isEqualTo(DisplayState.OK)
-        assertThat(RecoveryState.displayState()).isEqualTo(DisplayState.OK)
+        assertThat(DefaultState().displayState()).isEqualTo(DisplayState.OK)
+        assertThat(RecoveryState().displayState()).isEqualTo(DisplayState.OK)
         assertThat(amberState.displayState()).isEqualTo(DisplayState.AT_RISK)
         assertThat(redState.displayState()).isEqualTo(DisplayState.ISOLATE)
         assertThat(checkinState.displayState()).isEqualTo(DisplayState.ISOLATE)
@@ -101,10 +101,10 @@ class UserStateTest {
     fun `test scheduleCheckInReminder`() {
         val reminders = mockk<Reminders>(relaxUnitFun = true)
 
-        DefaultState.scheduleCheckInReminder(reminders)
+        DefaultState().scheduleCheckInReminder(reminders)
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
-        RecoveryState.scheduleCheckInReminder(reminders)
+        RecoveryState().scheduleCheckInReminder(reminders)
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
         amberState.scheduleCheckInReminder(reminders)
@@ -129,8 +129,8 @@ class UserStateTest {
 
     @Test
     fun `test symptoms`() {
-        assertThat(DefaultState.symptoms()).isEmpty()
-        assertThat(RecoveryState.symptoms()).isEmpty()
+        assertThat(DefaultState().symptoms()).isEmpty()
+        assertThat(RecoveryState().symptoms()).isEmpty()
         assertThat(amberState.symptoms()).isEmpty()
         assertThat(redState.symptoms()).isEqualTo(redState.symptoms)
         assertThat(checkinState.symptoms()).isEqualTo(checkinState.symptoms)

@@ -200,7 +200,12 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun simulateStatusUpdateReceived() {
-        val msg = RemoteMessage(bundleOf("status" to "POTENTIAL"))
+        val msg = RemoteMessage(
+            bundleOf(
+                "type" to "Status Update",
+                "status" to "Potential"
+            )
+        )
         notificationService.onMessageReceived(msg)
     }
 

@@ -19,10 +19,11 @@ import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.*
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
+import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class NotificationHandlerTest {
 
@@ -96,7 +97,7 @@ class NotificationHandlerTest {
             "type" to "Status Update",
             "status" to "Potential"
         )
-        every { statusStorage.get() } returns DefaultState
+        every { statusStorage.get() } returns DefaultState()
 
         handler.handleNewMessage(messageData)
 
@@ -104,6 +105,28 @@ class NotificationHandlerTest {
             statusStorage.get()
             statusStorage.set(any<AmberState>())
             sender.send(ContactAndCheckin, 10001, R.string.notification_title, R.string.notification_text, any())
+        }
+    }
+
+    @Test
+    fun `test handleNewMessage - negative test result`() {
+        val messageData = mapOf(
+            "type" to "Test Result",
+            "result" to "NEGATIVE",
+            "testTimestamp" to "2020-04-23T18:34:00Z"
+        )
+        every { statusStorage.get() } returns DefaultState()
+
+        handler.handleNewMessage(messageData)
+
+        verify {
+            statusStorage.get()
+            UserStateTransitions.addTestResult(
+                DefaultState(),
+                "NEGATIVE",
+                DateTime("2020-04-23T18:34:00Z").toUtc()
+            )
+            statusStorage.set(any<DefaultState>())
         }
     }
 
@@ -144,7 +167,7 @@ class NotificationHandlerTest {
     @Test
     fun `test handleNewMessage - a notification with acknowledgmentUrl`() {
         every { ackDao.tryFind(any()) } returns null
-        every { statusStorage.get() } returns DefaultState
+        every { statusStorage.get() } returns DefaultState()
 
         val messageData =
             mapOf(

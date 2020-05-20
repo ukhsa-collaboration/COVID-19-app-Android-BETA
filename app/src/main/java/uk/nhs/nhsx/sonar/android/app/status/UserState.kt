@@ -5,7 +5,9 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone.*
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.AT_RISK
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
@@ -17,6 +19,8 @@ import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 sealed class UserState {
 
+    abstract val testResult: TestResult?
+
     companion object {
         const val NO_DAYS_IN_RED = 7
         const val NO_DAYS_IN_AMBER = 14
@@ -25,10 +29,15 @@ sealed class UserState {
             AmberState(today.after(NO_DAYS_IN_AMBER - 1).days().toUtc())
 
         fun checkin(
+            symptomsDate: DateTime?,
             symptoms: NonEmptySet<Symptom>,
             today: LocalDate = LocalDate.now()
         ): CheckinState =
-            CheckinState(today.after(1).day().toUtc(), symptoms)
+            CheckinState(
+                today.after(1).day().toUtc(),
+                symptoms,
+                symptomsDate
+            )
 
         fun red(
             symptomsDate: LocalDate,
@@ -37,9 +46,16 @@ sealed class UserState {
         ): RedState {
             val suggested = symptomsDate.after(NO_DAYS_IN_RED).days()
             val tomorrow = today.after(1).day()
+
+            // if symptomsDate > 7 days ago then red state is until tomorrow
+            // if symptomsDate <= 7 days ago then red state is until suggested
             val redStateUntil = latest(suggested, tomorrow)
 
-            return RedState(redStateUntil.toUtc(), symptoms)
+            return RedState(
+                redStateUntil.toUtc(),
+                symptoms,
+                symptomsDate.toDateTime(LocalTime(UTC))
+            )
         }
     }
 
@@ -76,27 +92,60 @@ sealed class UserState {
             is CheckinState -> symptoms
             else -> emptySet()
         }
+
+    fun displayTestResult(): Boolean = testResult != null && !testResult!!.dismissed
+
 }
 
 // Initial state
-object DefaultState : UserState()
+data class DefaultState(
+    override var testResult: TestResult? = null
+) : UserState()
 
 // State when you had symptoms and now you only have cough after more than seven days.
-object RecoveryState : UserState()
+data class RecoveryState(
+    override var testResult: TestResult? = null
+) : UserState()
 
 // State when you have been in contact with someone in RedState
-data class AmberState(val until: DateTime) : UserState()
+data class AmberState(
+    val until: DateTime,
+    override var testResult: TestResult? = null
+) : UserState()
 
 // State when you initially have symptoms. Prompted after 1 to 7 days to checkin.
-data class RedState(val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
+data class RedState(
+    val until: DateTime,
+    val symptoms: NonEmptySet<Symptom>,
+    val symptomsStartDate: DateTime? = null,
+    override var testResult: TestResult? = null
+) : UserState()
 
 // State after first checkin from RedState, does not get prompted again.
-data class CheckinState(val until: DateTime, val symptoms: NonEmptySet<Symptom>) : UserState()
+data class CheckinState(
+    val until: DateTime,
+    val symptoms: NonEmptySet<Symptom>,
+    val symptomsStartDate: DateTime? = null,
+    override var testResult: TestResult? = null
+) : UserState()
+
+// Test Result state
+data class TestResult(
+    val result: String,
+    val stateChanged: Boolean,
+    var dismissed: Boolean = false
+)
+
+enum class Result {
+    NEGATIVE,
+    POSITIVE,
+    UNKNOWN
+}
 
 enum class DisplayState {
-    OK,
-    AT_RISK,
-    ISOLATE
+    OK,         // Default
+    AT_RISK,    // Exposed
+    ISOLATE     // Symptomatic
 }
 
 enum class Symptom(val value: String) {

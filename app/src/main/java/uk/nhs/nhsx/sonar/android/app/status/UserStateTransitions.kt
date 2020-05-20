@@ -1,5 +1,6 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
+import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
@@ -22,34 +23,65 @@ object UserStateTransitions {
 
         return when {
             notConsideredContagious && isAmberState -> currentState
-            notConsideredContagious -> RecoveryState
+            notConsideredContagious -> RecoveryState()
             else -> UserState.red(symptomsDate, symptoms, today)
         }
     }
 
     fun diagnoseForCheckin(
+        symptomsDate: DateTime?,
         symptoms: Set<Symptom>,
         today: LocalDate = LocalDate.now()
     ): UserState =
         when {
             hasTemperature(symptoms) ->
-                UserState.checkin(NonEmptySet.create(symptoms)!!, today)
+                UserState.checkin(symptomsDate, NonEmptySet.create(symptoms)!!, today)
             hasCough(symptoms) || hasAnosmia(symptoms) ->
-                RecoveryState
+                RecoveryState()
             else ->
-                DefaultState
+                DefaultState()
         }
 
     fun transitionOnContactAlert(currentState: UserState): UserState? =
         when (currentState) {
-            DefaultState -> UserState.amber()
-            RecoveryState -> UserState.amber()
+            is DefaultState -> UserState.amber()
+            is RecoveryState -> UserState.amber()
             else -> null
         }
 
+    fun addTestResult(currentState: UserState, testResult: String, testDate: DateTime): UserState =
+        if (testResult == "NEGATIVE") handleNegativeResult(currentState, testDate)
+        else currentState
+
+    private fun handleNegativeResult(currentState: UserState, testDate: DateTime): UserState =
+        when (currentState) {
+            is DefaultState -> defaultNegativeTestResult(false)
+            is RecoveryState, is AmberState -> defaultNegativeTestResult(true)
+            is RedState -> {
+                if (currentState.symptomsStartDate()?.isAfter(testDate) == true) {
+                    currentState.copy(testResult = TestResult("NEGATIVE", false))
+                } else {
+                    defaultNegativeTestResult(true)
+                }
+            }
+            is CheckinState -> {
+                if (currentState.symptomsStartDate()?.isAfter(testDate) == true) {
+                    currentState.copy(testResult = TestResult("NEGATIVE", false))
+                } else {
+                    defaultNegativeTestResult(true)
+                }
+            }
+        }
+
+    private fun defaultNegativeTestResult(stateChange: Boolean) =
+        DefaultState(TestResult("NEGATIVE", stateChange))
+
+    fun dismissTestResult(currentState: UserState): UserState =
+        currentState.apply { testResult?.dismissed = true }
+
     fun expireAmberState(currentState: UserState): UserState =
         if (currentState is AmberState && currentState.hasExpired())
-            DefaultState
+            DefaultState()
         else
             currentState
 
