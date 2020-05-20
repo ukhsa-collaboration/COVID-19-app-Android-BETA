@@ -5,11 +5,11 @@
 package uk.nhs.nhsx.sonar.android.app.registration
 
 import org.json.JSONObject
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise
 import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.HttpMethod.POST
 import uk.nhs.nhsx.sonar.android.app.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
-import uk.nhs.nhsx.sonar.android.app.http.Promise
 import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
 import javax.inject.Inject
 

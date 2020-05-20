@@ -27,7 +27,7 @@ import uk.nhs.nhsx.sonar.android.app.analytics.registrationFailedWaitingForActiv
 import uk.nhs.nhsx.sonar.android.app.analytics.registrationFailedWaitingForFCMToken
 import uk.nhs.nhsx.sonar.android.app.analytics.registrationSendTokenCallFailed
 import uk.nhs.nhsx.sonar.android.app.analytics.registrationSucceeded
-import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.Deferred
 import uk.nhs.nhsx.sonar.android.app.http.failWithVolleyError
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.ACTIVATION_CODE_TIMED_OUT

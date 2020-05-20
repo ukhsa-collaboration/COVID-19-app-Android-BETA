@@ -7,7 +7,7 @@ package uk.nhs.nhsx.sonar.android.app.http
 import org.assertj.core.api.Assertions.assertThat
 import org.json.JSONObject
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.Deferred
 import java.util.Base64
 
 class SignableJsonObjectRequestTest {

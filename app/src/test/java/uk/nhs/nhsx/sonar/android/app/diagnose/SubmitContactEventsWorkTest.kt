@@ -21,7 +21,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEventsWork.Companion.
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
-import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.Deferred
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import java.util.Base64

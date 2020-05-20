@@ -12,7 +12,8 @@ import com.android.volley.toolbox.HurlStack
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.NoCache
 import org.json.JSONObject
-import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.Deferred
 import javax.crypto.SecretKey
 
 private fun createQueue(): RequestQueue =

@@ -6,10 +6,10 @@ package uk.nhs.nhsx.sonar.android.app.diagnose.review
 
 import org.json.JSONObject
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise
 import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.HttpMethod.PATCH
 import uk.nhs.nhsx.sonar.android.app.http.HttpRequest
-import uk.nhs.nhsx.sonar.android.app.http.Promise
 import uk.nhs.nhsx.sonar.android.app.http.SecretKeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
 import uk.nhs.nhsx.sonar.android.app.status.Symptom

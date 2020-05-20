@@ -7,7 +7,8 @@ package uk.nhs.nhsx.sonar.android.app.http
 import com.android.volley.Request
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
-import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Explanation
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.State.Explanation
 import java.nio.charset.Charset
 
 class RequestAssert(private val request: Request<*>) {

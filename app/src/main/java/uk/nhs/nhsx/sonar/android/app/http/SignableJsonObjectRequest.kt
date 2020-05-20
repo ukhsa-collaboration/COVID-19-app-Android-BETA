@@ -11,8 +11,8 @@ import com.android.volley.VolleyError
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
 import org.json.JSONObject
-import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
-import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Explanation
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.State.Explanation
 import javax.crypto.Mac
 import javax.crypto.SecretKey
 

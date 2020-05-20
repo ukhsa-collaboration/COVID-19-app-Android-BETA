@@ -2,12 +2,12 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app.http
+package uk.nhs.nhsx.sonar.android.app.functionaltypes
 
-import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Explanation
-import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Failed
-import uk.nhs.nhsx.sonar.android.app.http.Promise.State.InProgress
-import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Succeeded
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.State.Explanation
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.State.Failed
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.State.InProgress
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.State.Succeeded
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.suspendCoroutine
 
@@ -77,15 +77,7 @@ class Promise<T : Any?> private constructor() {
     fun mapToUnit(): Promise<Unit> =
         map {}
 
-    suspend fun toCoroutineUnsafe(): T =
-        suspendCoroutine { continuation ->
-            this
-                .onSuccess { continuation.resumeWith(kotlin.Result.success(it)) }
-                .onError {
-                    val exception = it.exception ?: IllegalStateException(it.message)
-                    continuation.resumeWith(kotlin.Result.failure(exception))
-                }
-        }
+    suspend fun toCoroutineUnsafe(): T = toCoroutine().orThrow()
 
     suspend fun toCoroutine(): Result<T> =
         suspendCoroutine { continuation ->

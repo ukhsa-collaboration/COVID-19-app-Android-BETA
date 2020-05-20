@@ -6,9 +6,9 @@ package uk.nhs.nhsx.sonar.android.app.http
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.State.Explanation
 import uk.nhs.nhsx.sonar.android.app.http.ExplanationAssert.Companion.assertThat
-import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
-import uk.nhs.nhsx.sonar.android.app.http.Promise.State.Explanation
 import uk.nhs.nhsx.sonar.android.app.http.PromiseAssert.Companion.assertThat
 import java.io.IOException
 

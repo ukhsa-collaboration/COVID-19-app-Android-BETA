@@ -20,7 +20,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise.Deferred
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel.State.Loaded
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel.State.Loading
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider

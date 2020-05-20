@@ -8,7 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.http.Promise
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.Promise
 
 @ExperimentalCoroutinesApi
 class TokenRefreshWorkTest {
