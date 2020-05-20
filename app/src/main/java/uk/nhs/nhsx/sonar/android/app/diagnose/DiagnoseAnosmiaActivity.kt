@@ -9,16 +9,21 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.anosmia_diagnosis_answer
+import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.anosmia_question
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.confirm_diagnosis
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.no
+import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.yes
 import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
+import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
 open class DiagnoseAnosmiaActivity : BaseActivity() {
@@ -32,6 +37,8 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_anosmia_diagnosis)
+
+        setQuestionnaireContent()
 
         confirm_diagnosis.setOnClickListener {
             when (anosmia_diagnosis_answer.checkedRadioButtonId) {
@@ -58,6 +65,18 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
+    private fun nextStep(symptoms: Set<Symptom>) {
+        val currentState = userStateStorage.get()
+        if (currentState.displayState() == DisplayState.ISOLATE) {
+            UserStateTransitions.diagnoseForCheckin(symptoms).also { newState ->
+                userStateStorage.set(newState)
+                navigateTo(newState)
+            }
+        } else {
+            DiagnoseSneezeActivity.start(this, symptoms)
+        }
+    }
+
     override fun handleInversion(inversionModeEnabled: Boolean) {
         if (inversionModeEnabled) {
             yes.setBackgroundResource(R.drawable.radio_button_background_selector_inverse)
@@ -70,8 +89,20 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
         }
     }
 
-    protected open fun nextStep(symptoms: Set<Symptom>) {
-        DiagnoseSneezeActivity.start(this, symptoms)
+    private fun setQuestionnaireContent() {
+        val state = userStateStorage.get()
+
+        if (state.displayState() == DisplayState.ISOLATE) {
+            progress.text = getString(R.string.progress_three_third)
+            progress.contentDescription = getString(R.string.page_3_of_3)
+            confirm_diagnosis.text = getString(R.string.submit)
+            anosmia_question.text = getString(R.string.anosmia_question_simplified)
+        } else {
+            progress.text = getString(R.string.progress_three_sixth)
+            confirm_diagnosis.text = getString(R.string.continue_button)
+            progress.contentDescription = getString(R.string.page_3_of_6)
+            anosmia_question.text = getString(R.string.anosmia_question)
+        }
     }
 
     companion object {

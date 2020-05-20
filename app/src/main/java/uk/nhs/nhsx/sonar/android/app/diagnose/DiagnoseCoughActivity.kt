@@ -23,8 +23,6 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
-import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
 class DiagnoseCoughActivity : BaseActivity() {
@@ -64,15 +62,7 @@ class DiagnoseCoughActivity : BaseActivity() {
     }
 
     private fun nextStep(symptoms: Set<Symptom>) {
-        val currentState = userStateStorage.get()
-        if (currentState.displayState() == ISOLATE) {
-            UserStateTransitions.diagnoseForCheckin(symptoms).also { newState ->
-                userStateStorage.set(newState)
-                navigateTo(newState)
-            }
-        } else {
-            DiagnoseAnosmiaActivity.start(this, symptoms)
-        }
+        DiagnoseAnosmiaActivity.start(this, symptoms)
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
@@ -91,9 +81,8 @@ class DiagnoseCoughActivity : BaseActivity() {
         val state = userStateStorage.get()
 
         if (state.displayState() == ISOLATE) {
-            progress.text = getString(R.string.progress_two_out_of_two)
-            progress.contentDescription = getString(R.string.page_2_of_2)
-            confirm_diagnosis.text = getString(R.string.submit)
+            progress.text = getString(R.string.progress_two_third)
+            progress.contentDescription = getString(R.string.page_2_of_3)
             new_cough_description.visibility = View.GONE
             cough_question.text = getString(R.string.cough_question_simplified)
         } else {

@@ -77,8 +77,8 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         val state = userStateStorage.get()
 
         if (state.displayState() == ISOLATE) {
-            progress.text = getString(R.string.progress_half)
-            progress.contentDescription = getString(R.string.page_1_of_2)
+            progress.text = getString(R.string.progress_one_third)
+            progress.contentDescription = getString(R.string.page_1_of_3)
             temperature_question.text = getString(R.string.temperature_question_simplified)
         } else {
             progress.text = getString(R.string.progress_one_sixth)
@@ -87,7 +87,7 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         }
     }
 
-    protected open fun nextStep(symptoms: Set<Symptom>) {
+    private fun nextStep(symptoms: Set<Symptom>) {
         DiagnoseCoughActivity.start(this, symptoms)
     }
 

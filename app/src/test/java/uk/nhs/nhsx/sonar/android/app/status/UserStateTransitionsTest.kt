@@ -102,6 +102,13 @@ class UserStateTransitionsTest {
     }
 
     @Test
+    fun `diagnoseForCheckin - with anosmia`() {
+        val state = diagnoseForCheckin(setOf(ANOSMIA), today)
+
+        assertThat(state).isEqualTo(RecoveryState)
+    }
+
+    @Test
     fun `diagnoseForCheckin - with no symptoms`() {
         val state = diagnoseForCheckin(emptySet(), today)
 

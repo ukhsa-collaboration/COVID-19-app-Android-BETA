@@ -34,7 +34,7 @@ object UserStateTransitions {
         when {
             hasTemperature(symptoms) ->
                 UserState.checkin(NonEmptySet.create(symptoms)!!, today)
-            hasCough(symptoms) ->
+            hasCough(symptoms) || hasAnosmia(symptoms) ->
                 RecoveryState
             else ->
                 DefaultState

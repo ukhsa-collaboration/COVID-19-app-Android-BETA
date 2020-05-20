@@ -750,12 +750,12 @@ class FlowTest {
     private fun checkCanTransitionToIsolateActivitySimplified() {
 
         // Temperature Step
-        checkViewHasText(R.id.progress, R.string.progress_half)
+        checkViewHasText(R.id.progress, R.string.progress_one_third)
         onView(withId(R.id.yes)).perform(click())
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
         // Cough Step
-        checkViewHasText(R.id.progress, R.string.progress_two_out_of_two)
+        checkViewHasText(R.id.progress, R.string.progress_two_third)
         onView(withId(R.id.no)).perform(click())
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
