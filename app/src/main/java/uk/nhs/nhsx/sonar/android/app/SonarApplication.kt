@@ -28,7 +28,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
-import uk.nhs.nhsx.sonar.android.app.util.registerShakeDetector
 import java.security.KeyStore
 import java.security.Security
 
@@ -50,12 +49,10 @@ class SonarApplication : Application() {
         when (BuildConfig.BUILD_TYPE) {
             "internal" -> {
                 Timber.plant(Timber.DebugTree())
-                registerShakeDetector()
             }
             "debug" -> {
                 Timber.plant(Timber.DebugTree())
                 logFirebaseToken()
-                registerShakeDetector()
                 FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
             }
         }

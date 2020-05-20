@@ -6,9 +6,11 @@ package uk.nhs.nhsx.sonar.android.app
 
 import android.bluetooth.BluetoothAdapter.STATE_OFF
 import android.os.Bundle
+import android.view.View
 import io.reactivex.disposables.Disposable
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStateBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.ble.LocationProviderChangedReceiver
+import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReAllowGrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableBluetoothActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableLocationActivity
@@ -30,6 +32,17 @@ abstract class BaseActivity : ColorInversionAwareActivity() {
         appComponent.inject(this)
 
         locationProviderChangedReceiver = LocationProviderChangedReceiver(locationHelper)
+    }
+
+    override fun setContentView(layoutResID: Int) {
+        super.setContentView(layoutResID)
+
+        when (BuildConfig.BUILD_TYPE) {
+            "internal", "debug" -> {
+                findViewById<View>(R.id.logo)
+                    ?.setOnClickListener { TesterActivity.start(this) }
+            }
+        }
     }
 
     override fun onResume() {
