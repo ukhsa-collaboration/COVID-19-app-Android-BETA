@@ -33,23 +33,24 @@ class SubmitContactEventsWorkTest {
     private val coLocationApi = mockk<CoLocationApi>()
     private val coLocationDataProvider = mockk<CoLocationDataProvider>()
     private val sonarIdProvider = mockk<SonarIdProvider>()
-    private val work =
-        SubmitContactEventsWork(coLocationApi, coLocationDataProvider, sonarIdProvider)
+    private val work = SubmitContactEventsWork(coLocationApi, coLocationDataProvider, sonarIdProvider)
 
     private val events: List<CoLocationEvent> = listOf(
         CoLocationEvent(
-            "001",
-            Base64.getEncoder().encodeToString(byteArrayOf(0, 10.toByte())),
-            listOf(0, 2),
-            "2s ago",
-            10,
-            1.toByte(),
-            2.toByte(),
-            18242.toShort(),
-            5,
-            Base64.getEncoder().encodeToString(Random.nextBytes(16))
+            encryptedRemoteContactId = "001",
+            rssiValues = byteArrayOf(0, 10.toByte()).toBase64(),
+            rssiIntervals = listOf(0, 2),
+            timestamp = "2s ago",
+            duration = 10,
+            txPowerInProtocol = 1.toByte(),
+            txPowerAdvertised = 2.toByte(),
+            countryCode = 18242.toShort(),
+            transmissionTime = 5,
+            hmacSignature = Random.nextBytes(16).toBase64()
         )
     )
+
+    private fun ByteArray.toBase64() = Base64.getEncoder().encodeToString(this)
 
     @Test
     fun `test doWork()`() = runBlockingTest {

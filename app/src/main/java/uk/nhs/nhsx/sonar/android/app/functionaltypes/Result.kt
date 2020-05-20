@@ -3,7 +3,7 @@ package uk.nhs.nhsx.sonar.android.app.functionaltypes
 sealed class Result<T> {
     data class Success<T>(val value: T) : Result<T>()
     data class Failure<T>(val reason: Explanation) : Result<T>() {
-        constructor(exception: Exception) : this(Explanation(exception))
+        constructor(exception: Throwable) : this(Explanation(exception))
     }
 
     fun <U> map(function: (T) -> U): Result<U> =
@@ -38,18 +38,15 @@ sealed class Result<T> {
 
     @Throws
     fun orThrow(): T =
-        orElse {
-            throw it.exception ?: IllegalStateException(it.message)
-        }
+        orElse { throw it.exception() }
 }
 
-data class Explanation(val message: String, val exception: Exception? = null) {
-    constructor(exception: Exception) : this(exception.message ?: "An exception occurred", exception)
+data class Explanation(val message: String, val exception: Throwable? = null) {
+    constructor(exception: Throwable) : this(exception.message ?: "An exception occurred", exception)
+
+    fun exception(): Throwable =
+        exception ?: Exception(message)
 }
 
-suspend fun <T> awaitSafely(function: suspend () -> T): Result<T> =
-    try {
-        Result.Success(function())
-    } catch (e: Exception) {
-        Result.Failure(e)
-    }
+suspend fun <T> runSafely(function: suspend () -> T): Result<T> =
+    runCatching { Result.Success(function()) }.getOrElse { Result.Failure(it) }

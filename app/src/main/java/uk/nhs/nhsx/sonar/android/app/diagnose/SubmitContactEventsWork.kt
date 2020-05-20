@@ -5,7 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.diagnose
 
 import androidx.work.Data
-import androidx.work.ListenableWorker.Result
+import androidx.work.ListenableWorker
 import androidx.work.workDataOf
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
@@ -13,6 +13,7 @@ import org.joda.time.LocalTime
 import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
+import uk.nhs.nhsx.sonar.android.app.functionaltypes.runSafely
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
@@ -37,24 +38,26 @@ class SubmitContactEventsWork @Inject constructor(
         }
     }
 
-    suspend fun doWork(data: Data): Result =
-        runCatching {
-            val symptomsTimestamp = data.getString(SYMPTOMS_DATE)!!
-            val symptomsArray = data.getStringArray(SYMPTOMS)!!
-            val symptoms = symptomsArray.mapNotNull { Symptom.fromValue(it) }
+    suspend fun doWork(data: Data): ListenableWorker.Result =
+        runSafely { saveEvents(data) }
+            .map { ListenableWorker.Result.success() }
+            .orElse { ListenableWorker.Result.retry() }
 
-            val coLocationData = CoLocationData(
-                sonarId = sonarIdProvider.get(),
-                symptomsTimestamp = symptomsTimestamp,
-                symptoms = symptoms,
-                contactEvents = coLocationDataProvider.getEvents()
-            )
+    private suspend fun saveEvents(data: Data) {
+        val contactEvents = coLocationDataProvider.getEvents()
 
-            coLocationApi.save(coLocationData).toCoroutineUnsafe()
-            coLocationDataProvider.clearData()
+        val symptomsTimestamp = data.getString(SYMPTOMS_DATE)!!
+        val symptomsArray = data.getStringArray(SYMPTOMS)!!
+        val symptoms = symptomsArray.mapNotNull { Symptom.fromValue(it) }
 
-            Result.success()
-        }.getOrElse {
-            Result.retry()
-        }
+        val coLocationData = CoLocationData(
+            sonarId = sonarIdProvider.get(),
+            symptomsTimestamp = symptomsTimestamp,
+            symptoms = symptoms,
+            contactEvents = contactEvents
+        )
+
+        coLocationApi.save(coLocationData).toCoroutine()
+        coLocationDataProvider.clearData()
+    }
 }
