@@ -59,14 +59,14 @@
     <string name="cough_description">Continuous: means coughing a lot for more than an hour, or 3 or more coughing episodes in 24 hours.</string>
     <string name="submit">Submit</string>
     <string name="radio_button_symptoms_error">Select yes if you have at least one of these symptoms</string>
-    <string name="radio_button_anosmia_error">Select yes if you have lost your sense of smell</string>
+    <string name="radio_button_anosmia_error">Select yes if you have recently lost your sense of smell</string>
     <string name="radio_button_temperature_error">Select yes if you have a high temperature</string>
     <string name="radio_button_cough_error">Select yes if you have a continuous cough</string>
     <string name="add_my_symptoms">Add my symptoms</string>
     <string name="yes_to_symptoms">Yes, I have at least one of these symptoms</string>
-    <string name="no_to_symptoms">No, I do not have any of these symptoms</string>
+    <string name="no_to_symptoms">No, I don\'t have any of these symptoms</string>
     <string name="yes_anosmia">Yes, I have a loss of smell</string>
-    <string name="no_anosmia">No, I do not have a loss of smell</string>
+    <string name="no_anosmia">No, I don\'t have a loss of smell</string>
     <string name="yes_temperature">Yes, I have a high temperature</string>
     <string name="no_temperature">No, I don’t have a high temperature</string>
     <string name="yes_cough">Yes, I have a new continuous cough</string>
@@ -111,15 +111,15 @@
     <string name="if_showing_other_symptoms">If you are showing other symptoms, or think you may have coronavirus, please visit</string>
     <string name="check_answers">Check your answers</string>
     <string name="i_do_temperature">I have a high temperature</string>
-    <string name="i_do_not_temperature">I do not have a high temperature</string>
+    <string name="i_do_not_temperature">I don\'t have a high temperature</string>
     <string name="i_do_cough">I have a new continuous cough</string>
     <string name="i_do_not_cough">I d not have a new continuous cough</string>
     <string name="i_do_anosmia">I have recently lost my sense of smell</string>
     <string name="i_do_not_anosmia">I have not recently lost my sense of smell</string>
     <string name="i_do_sneeze">I have at least one of these symptoms: a runny nose, feeling feverish or sneezing</string>
-    <string name="i_do_not_sneeze">I do not have any of these symptoms: a runny nose, feeling feverish or sneezing</string>
+    <string name="i_do_not_sneeze">I don\'t have any of these symptoms: a runny nose, feeling feverish or sneezing</string>
     <string name="i_do_stomach">I have at least one of these symptoms: diarrhoea, nausea, vomiting or loss of appetite</string>
-    <string name="i_do_not_stomach">I do not have any of these symptoms: diarrhoea, nausea, vomiting or loss of appetite</string>
+    <string name="i_do_not_stomach">I don\'t have any of these symptoms: diarrhoea, nausea, vomiting or loss of appetite</string>
     <string name="date_selection_error">Select the date from the dropdown</string>
     <string name="update_symptoms_prompt">Your symptoms started more than 7 days ago. Please update your symptoms to
         view latest advice.
