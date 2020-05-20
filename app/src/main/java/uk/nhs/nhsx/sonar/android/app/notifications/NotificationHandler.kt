@@ -22,14 +22,14 @@ class NotificationHandler @Inject constructor(
     private val acknowledgmentsDao: AcknowledgmentsDao,
     private val acknowledgmentsApi: AcknowledgmentsApi,
     private val sonarIdProvider: SonarIdProvider,
-    private val notificationTokenApi: NotificationTokenApi
+    private val tokenRefreshWorkScheduler: TokenRefreshWorkScheduler
 ) {
 
     fun handleNewToken(token: String) {
         if (!sonarIdProvider.hasProperSonarId())
             return
 
-        notificationTokenApi.updateToken(sonarIdProvider.get(), token)
+        tokenRefreshWorkScheduler.schedule(sonarIdProvider.get(), token)
     }
 
     fun handleNewMessage(messageData: Map<String, String>) {

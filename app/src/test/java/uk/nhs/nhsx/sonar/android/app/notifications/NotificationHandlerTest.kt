@@ -32,7 +32,7 @@ class NotificationHandlerTest {
     private val ackDao = mockk<AcknowledgmentsDao>(relaxUnitFun = true)
     private val ackApi = mockk<AcknowledgmentsApi>(relaxUnitFun = true)
     private val sonarIdProvider = mockk<SonarIdProvider>()
-    private val notificationTokenApi = mockk<NotificationTokenApi>(relaxUnitFun = true)
+    private val tokenRefreshWorkScheduler = mockk<TokenRefreshWorkScheduler>(relaxUnitFun = true)
     private val handler = NotificationHandler(
         sender,
         statusStorage,
@@ -41,7 +41,7 @@ class NotificationHandlerTest {
         ackDao,
         ackApi,
         sonarIdProvider,
-        notificationTokenApi
+        tokenRefreshWorkScheduler
     )
 
     @Test
@@ -51,7 +51,7 @@ class NotificationHandlerTest {
 
         handler.handleNewToken("some-token #1")
 
-        verify { notificationTokenApi.updateToken("sonar-id-200", "some-token #1") }
+        verify { tokenRefreshWorkScheduler.schedule("sonar-id-200", "some-token #1") }
     }
 
     @Test
@@ -60,7 +60,7 @@ class NotificationHandlerTest {
 
         handler.handleNewToken("some-token #1")
 
-        verify { notificationTokenApi wasNot Called }
+        verify { tokenRefreshWorkScheduler wasNot Called }
     }
 
     @Test
