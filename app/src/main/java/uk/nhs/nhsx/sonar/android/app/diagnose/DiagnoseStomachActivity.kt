@@ -20,6 +20,7 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import javax.inject.Inject
 
 open class DiagnoseStomachActivity : BaseActivity() {
@@ -56,7 +57,7 @@ open class DiagnoseStomachActivity : BaseActivity() {
     }
 
     private fun nextStep(symptoms: Set<Symptom>) {
-        when (symptoms.isNotEmpty()) {
+        when (UserStateTransitions.isSymptomatic(symptoms)) {
             true -> DiagnoseReviewActivity.start(this, symptoms)
             else -> DiagnoseCloseActivity.start(this)
         }

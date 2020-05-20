@@ -9,9 +9,13 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.SNEEZE
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.STOMACH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnose
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.isSymptomatic
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnoseForCheckin
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.expireAmberState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnContactAlert
@@ -25,9 +29,9 @@ class UserStateTransitionsTest {
 
     @Test
     fun `diagnose - when symptoms date is 7 days ago or more, and no temperature`() {
-        val `7 days ago or more` = today.minusDays(7)
+        val sevenDaysAgoOrMore = today.minusDays(7)
 
-        val state = diagnose(DefaultState, `7 days ago or more`, symptomsWithoutTemperature, today)
+        val state = diagnose(DefaultState, sevenDaysAgoOrMore, symptomsWithoutTemperature, today)
 
         assertThat(state).isEqualTo(RecoveryState)
     }
@@ -35,41 +39,41 @@ class UserStateTransitionsTest {
     @Test
     fun `diagnose - when symptoms date is 7 days ago or more, no temperature, and current state is Amber`() {
         val amberState = buildAmberState()
-        val `7 days ago or more` = today.minusDays(7)
+        val sevenDaysAgoOrMore = today.minusDays(7)
 
-        val state = diagnose(amberState, `7 days ago or more`, symptomsWithoutTemperature, today)
+        val state = diagnose(amberState, sevenDaysAgoOrMore, symptomsWithoutTemperature, today)
 
         assertThat(state).isEqualTo(amberState)
     }
 
     @Test
     fun `diagnose - when symptoms date is 7 days ago or more, with temperature`() {
-        val `7 days ago or more` = today.minusDays(7)
-        val `7 days after symptoms` = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
+        val sevenDaysAgoOrMore = today.minusDays(7)
+        val sevenDaysAfterSymptoms = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        val state = diagnose(DefaultState, `7 days ago or more`, symptomsWithTemperature, today)
+        val state = diagnose(DefaultState, sevenDaysAgoOrMore, symptomsWithTemperature, today)
 
-        assertThat(state).isEqualTo(RedState(`7 days after symptoms`, symptomsWithTemperature))
+        assertThat(state).isEqualTo(RedState(sevenDaysAfterSymptoms, symptomsWithTemperature))
     }
 
     @Test
     fun `diagnose - when symptoms date is less than 7 days ago, and no temperature`() {
-        val `less than 7 days ago` = today.minusDays(6)
-        val `7 days after symptoms` = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
+        val sevenDaysAgoOrMore = today.minusDays(6)
+        val sevenDaysAfterSymptoms = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        val state = diagnose(DefaultState, `less than 7 days ago`, symptomsWithoutTemperature, today)
+        val state = diagnose(DefaultState, sevenDaysAgoOrMore, symptomsWithoutTemperature, today)
 
-        assertThat(state).isEqualTo(RedState(`7 days after symptoms`, symptomsWithoutTemperature))
+        assertThat(state).isEqualTo(RedState(sevenDaysAfterSymptoms, symptomsWithoutTemperature))
     }
 
     @Test
     fun `diagnose - when symptoms date is less than 7 days ago, with temperature`() {
-        val `less than 7 days ago` = today.minusDays(6)
-        val `7 days after symptoms` = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
+        val sevenDaysAgoOrMore = today.minusDays(6)
+        val sevenDaysAfterSymptoms = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        val state = diagnose(DefaultState, `less than 7 days ago`, symptomsWithTemperature, today)
+        val state = diagnose(DefaultState, sevenDaysAgoOrMore, symptomsWithTemperature, today)
 
-        assertThat(state).isEqualTo(RedState(`7 days after symptoms`, symptomsWithTemperature))
+        assertThat(state).isEqualTo(RedState(sevenDaysAfterSymptoms, symptomsWithTemperature))
     }
 
     @Test
@@ -104,25 +108,25 @@ class UserStateTransitionsTest {
         assertThat(state).isEqualTo(DefaultState)
     }
 
-    private val amberState = buildAmberState()
-    private val redState = buildRedState()
-    private val checkinState = buildCheckinState()
-
-    private val expiredAmberState = buildAmberState(until = DateTime.now().minusSeconds(1))
-    private val expiredRedState = buildRedState(until = DateTime.now().minusSeconds(1))
-    private val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
-
     @Test
     fun `test transitionOnContactAlert`() {
         assertThat(transitionOnContactAlert(DefaultState)).isInstanceOf(AmberState::class.java)
         assertThat(transitionOnContactAlert(RecoveryState)).isInstanceOf(AmberState::class.java)
-        assertThat(transitionOnContactAlert(amberState)).isNull()
-        assertThat(transitionOnContactAlert(redState)).isNull()
-        assertThat(transitionOnContactAlert(checkinState)).isNull()
+        assertThat(transitionOnContactAlert(buildAmberState())).isNull()
+        assertThat(transitionOnContactAlert(buildRedState())).isNull()
+        assertThat(transitionOnContactAlert(buildCheckinState())).isNull()
     }
 
     @Test
     fun `test expireAmberState`() {
+        val amberState = buildAmberState()
+        val redState = buildRedState()
+        val checkinState = buildCheckinState()
+
+        val expiredAmberState = buildAmberState(until = DateTime.now().minusSeconds(1))
+        val expiredRedState = buildRedState(until = DateTime.now().minusSeconds(1))
+        val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
+
         assertThat(expireAmberState(DefaultState)).isEqualTo(DefaultState)
         assertThat(expireAmberState(RecoveryState)).isEqualTo(RecoveryState)
         assertThat(expireAmberState(amberState)).isEqualTo(amberState)
@@ -132,5 +136,17 @@ class UserStateTransitionsTest {
         assertThat(expireAmberState(expiredCheckinState)).isEqualTo(expiredCheckinState)
 
         assertThat(expireAmberState(expiredAmberState)).isEqualTo(DefaultState)
+    }
+
+    @Test
+    fun `isSymptomatic - with cough, temperature or loss of smell`() {
+        assertThat(isSymptomatic(setOf(COUGH))).isTrue()
+        assertThat(isSymptomatic(setOf(TEMPERATURE))).isTrue()
+        assertThat(isSymptomatic(setOf(ANOSMIA))).isTrue()
+    }
+
+    @Test
+    fun `isSymptomatic - with anything other than cough, temperature or loss of smell`() {
+        assertThat(isSymptomatic(setOf(STOMACH, SNEEZE))).isFalse()
     }
 }

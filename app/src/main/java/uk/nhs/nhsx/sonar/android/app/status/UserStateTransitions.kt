@@ -1,6 +1,9 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.LocalDate
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.isEarlierThan
@@ -50,12 +53,18 @@ object UserStateTransitions {
         else
             currentState
 
+    fun isSymptomatic(symptoms: Set<Symptom>): Boolean =
+        hasTemperature(symptoms) || hasCough(symptoms) || hasAnosmia(symptoms)
+
     private fun doesNotHaveTemperature(symptoms: Set<Symptom>): Boolean =
         !hasTemperature(symptoms)
 
     private fun hasTemperature(symptoms: Set<Symptom>): Boolean =
-        Symptom.TEMPERATURE in symptoms
+        TEMPERATURE in symptoms
 
     private fun hasCough(symptoms: Set<Symptom>): Boolean =
-        Symptom.COUGH in symptoms
+        COUGH in symptoms
+
+    private fun hasAnosmia(symptoms: Set<Symptom>): Boolean =
+        ANOSMIA in symptoms
 }
