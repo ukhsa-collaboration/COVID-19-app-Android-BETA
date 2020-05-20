@@ -54,7 +54,7 @@
     <string name="stomach_question">Do you have diarrhoea, nausea, vomiting or have a loss of appetite?</string>
     <string name="stomach_description">Diarrhoea: means loose stool, poos that are watery and/or more frequent than usual.\n\nNausea: means stomach discomfort and the sensation of wanting to vomit.\n\nLoss of appetite: means not feeling hungry.</string>
     <string name="temperature_question">Do you have a high temperature?</string>
-    <string name="temperature_description">You don\'t need a thermometer or to know a precise temperature. If you feel hot to touch on your chest or back answer \'yes\'.</string>
+    <string name="temperature_description">A fever is usually when your body temperature is 37.8C or higher. You may feel warm, cold or shivery.</string>
     <string name="cough_question">Do you have a new continuous cough?</string>
     <string name="cough_description">Continuous: means coughing a lot for more than an hour, or 3 or more coughing episodes in 24 hours.</string>
     <string name="submit">Submit</string>
@@ -204,9 +204,9 @@
     <string name="page_2_of_3">Page 2 of 3</string>
     <string name="page_3_of_3">Page 3 of 3</string>
     <string name="cough_description_new">New: means a cough that you\'ve not had before, or if you usually have a cough, it\'s got worse.</string>
-    <string name="anosmia_question_simplified">Have you recently lost your sense of smell?</string>
-    <string name="cough_question_simplified">Do you still have a continuous cough?</string>
-    <string name="temperature_question_simplified">Do you still have a high temperature?</string>
+    <string name="anosmia_question_simplified">Have you lost your sense of smell?</string>
+    <string name="cough_question_simplified">Do you have a continuous cough?</string>
+    <string name="temperature_question_simplified">Do you have a high temperature (fever)?</string>
     <string name="more_information">More information</string>
     <string name="submit_confirmation">I confirm that the information I have entered is accurate</string>
     <string name="please_confirm_the_information">Please confirm that the information you have entered is accurate</string>
