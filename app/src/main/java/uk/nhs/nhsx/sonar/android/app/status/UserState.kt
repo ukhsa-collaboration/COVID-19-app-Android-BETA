@@ -24,7 +24,10 @@ sealed class UserState {
         fun amber(today: LocalDate = LocalDate.now()): AmberState =
             AmberState(today.after(NO_DAYS_IN_AMBER - 1).days().toUtc())
 
-        fun checkin(symptoms: NonEmptySet<Symptom>, today: LocalDate = LocalDate.now()): CheckinState =
+        fun checkin(
+            symptoms: NonEmptySet<Symptom>,
+            today: LocalDate = LocalDate.now()
+        ): CheckinState =
             CheckinState(today.after(1).day().toUtc(), symptoms)
 
         fun red(
@@ -96,10 +99,14 @@ enum class DisplayState {
     ISOLATE
 }
 
-enum class Symptom {
-    COUGH,
-    TEMPERATURE,
-    ANOSMIA,
-    SNEEZE,
-    STOMACH
+enum class Symptom(val value: String) {
+    COUGH("COUGH"),
+    TEMPERATURE("TEMPERATURE"),
+    ANOSMIA("ANOSMIA"),
+    SNEEZE("SNEEZE"),
+    NAUSEA("NAUSEA");
+
+    companion object {
+        fun fromValue(value: String) = values().firstOrNull { it.value == value }
+    }
 }

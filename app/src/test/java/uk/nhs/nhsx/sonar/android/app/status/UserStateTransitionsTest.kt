@@ -11,13 +11,13 @@ import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.NAUSEA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.SNEEZE
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.STOMACH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnose
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.isSymptomatic
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnoseForCheckin
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.expireAmberState
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.isSymptomatic
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnContactAlert
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
@@ -154,6 +154,6 @@ class UserStateTransitionsTest {
 
     @Test
     fun `isSymptomatic - with anything other than cough, temperature or loss of smell`() {
-        assertThat(isSymptomatic(setOf(STOMACH, SNEEZE))).isFalse()
+        assertThat(isSymptomatic(setOf(NAUSEA, SNEEZE))).isFalse()
     }
 }

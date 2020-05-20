@@ -27,12 +27,12 @@ object UserStateSerialization {
             is RedState -> jsonOf(
                 "type" to state.type(),
                 "until" to state.until.millis,
-                "symptoms" to state.symptoms.map { it.toString() }
+                "symptoms" to state.symptoms.map { it.value }
             )
             is CheckinState -> jsonOf(
                 "type" to state.type(),
                 "until" to state.until.millis,
-                "symptoms" to state.symptoms.map { it.toString() }
+                "symptoms" to state.symptoms.map { it.value }
             )
         }
 
@@ -74,7 +74,7 @@ object UserStateSerialization {
 
         for (index in 0 until array.length()) {
             val stringValue = array.getString(index)
-            val symptom = Symptom.valueOf(stringValue)
+            val symptom = Symptom.fromValue(stringValue) ?: continue
             symptoms.add(symptom)
         }
 

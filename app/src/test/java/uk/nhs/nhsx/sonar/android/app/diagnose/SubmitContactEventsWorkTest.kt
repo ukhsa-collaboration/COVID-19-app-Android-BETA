@@ -16,11 +16,14 @@ import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
+import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEventsWork.Companion.SYMPTOMS
+import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEventsWork.Companion.SYMPTOMS_DATE
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
 import uk.nhs.nhsx.sonar.android.app.http.Promise.Deferred
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import java.util.Base64
 import kotlin.random.Random
 
@@ -52,6 +55,7 @@ class SubmitContactEventsWorkTest {
     fun `test doWork()`() = runBlockingTest {
         val residentId = "80baf81b-8afd-47e9-9915-50691525c910"
         val symptomsDate = "2020-04-24T11:04:10Z"
+        val symptoms = listOf(Symptom.NAUSEA, Symptom.ANOSMIA)
         val saveDeferred = Deferred<Unit>()
 
         every { sonarIdProvider.get() } returns residentId
@@ -61,11 +65,25 @@ class SubmitContactEventsWorkTest {
 
         saveDeferred.resolve(Unit)
 
-        val result = work.doWork(workDataOf("SYMPTOMS_DATE" to symptomsDate))
+        val result = work.doWork(
+            workDataOf(
+                SYMPTOMS_DATE to symptomsDate,
+                SYMPTOMS to symptoms.map { it.value }.toTypedArray()
+            )
+        )
 
         assertThat(result).isEqualTo(ListenableWorker.Result.success())
 
-        verify { coLocationApi.save(CoLocationData(residentId, symptomsDate, events)) }
+        verify {
+            coLocationApi.save(
+                CoLocationData(
+                    residentId,
+                    symptomsDate,
+                    symptoms,
+                    events
+                )
+            )
+        }
         coVerify { coLocationDataProvider.clearData() }
     }
 
@@ -81,7 +99,7 @@ class SubmitContactEventsWorkTest {
 
         saveDeferred.fail("Failed to save")
 
-        val result = work.doWork(workDataOf("SYMPTOMS_DATE" to symptomsDate))
+        val result = work.doWork(workDataOf(SYMPTOMS_DATE to symptomsDate))
 
         assertThat(result).isEqualTo(ListenableWorker.Result.retry())
 

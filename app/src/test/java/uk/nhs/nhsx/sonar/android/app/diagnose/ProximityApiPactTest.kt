@@ -39,6 +39,7 @@ import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.UTCClock
 import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeApi
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.nio.ByteBuffer
 import java.util.Base64
@@ -71,6 +72,7 @@ class ProximityApiPactTest {
     private val colocationData: CoLocationData = CoLocationData(
         sonarId,
         timestamp,
+        listOf(Symptom.NAUSEA, Symptom.ANOSMIA),
         (0..Random.nextInt(3, 10)).map { generateCoLocationEvent() }
     )
     private val getReferenceCodeRequest = jsonObjectOf("sonarId" to sonarId)

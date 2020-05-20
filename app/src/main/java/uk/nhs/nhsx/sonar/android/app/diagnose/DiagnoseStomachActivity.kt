@@ -37,7 +37,7 @@ open class DiagnoseStomachActivity : BaseActivity() {
 
         confirm_diagnosis.setOnClickListener {
             when (stomach_diagnosis_answer.checkedRadioButtonId) {
-                R.id.yes -> nextStep(symptoms.plus(Symptom.STOMACH))
+                R.id.yes -> nextStep(symptoms.plus(Symptom.NAUSEA))
                 R.id.no -> nextStep(symptoms)
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE

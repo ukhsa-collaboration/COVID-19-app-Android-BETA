@@ -12,6 +12,7 @@ import uk.nhs.nhsx.sonar.android.app.http.HttpRequest
 import uk.nhs.nhsx.sonar.android.app.http.Promise
 import uk.nhs.nhsx.sonar.android.app.http.SecretKeyStorage
 import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
 
 class CoLocationApi(
     private val baseUrl: String,
@@ -35,6 +36,7 @@ class CoLocationApi(
 data class CoLocationData(
     val sonarId: String,
     val symptomsTimestamp: String,
+    val symptoms: List<Symptom>,
     val contactEvents: List<CoLocationEvent>
 )
 
@@ -55,6 +57,7 @@ fun CoLocationData.toJson(): JSONObject =
     jsonObjectOf(
         "sonarId" to sonarId,
         "symptomsTimestamp" to symptomsTimestamp,
+        "symptoms" to convertSymptoms(symptoms),
         "contactEvents" to contactEvents.map {
             mapOf(
                 "encryptedRemoteContactId" to it.encryptedRemoteContactId,
@@ -70,3 +73,5 @@ fun CoLocationData.toJson(): JSONObject =
             )
         }
     )
+
+fun convertSymptoms(symptoms: List<Symptom>) = symptoms.map { it.value }

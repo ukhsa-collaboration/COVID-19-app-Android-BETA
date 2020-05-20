@@ -19,6 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.http.PromiseAssert.Companion.assertThat
 import uk.nhs.nhsx.sonar.android.app.http.RequestAssert.Companion.assertThat
 import uk.nhs.nhsx.sonar.android.app.http.TestQueue
 import uk.nhs.nhsx.sonar.android.app.http.generateSignatureKey
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import java.util.Base64
 
 class CoLocationApiTest {
@@ -68,7 +69,9 @@ class CoLocationApiTest {
             )
         )
 
-        val promise = coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", events))
+        val symptoms = listOf(Symptom.NAUSEA, Symptom.ANOSMIA)
+        val promise =
+            coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", symptoms, events))
 
         assertThat(promise).isInProgress()
 
@@ -78,6 +81,7 @@ class CoLocationApiTest {
         assertThat(request).bodyHasJson(
             "sonarId" to "::sonar-id::",
             "symptomsTimestamp" to "::timestamp::",
+            "symptoms" to symptoms.map { it.value },
             "contactEvents" to listOf(
                 mapOf(
                     "encryptedRemoteContactId" to "001",
@@ -118,7 +122,14 @@ class CoLocationApiTest {
     @Test
     fun `test save() on success`() {
         val promise =
-            coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", emptyList()))
+            coLocationApi.save(
+                CoLocationData(
+                    "::sonar-id::",
+                    "::timestamp::",
+                    emptyList(),
+                    emptyList()
+                )
+            )
 
         requestQueue.returnSuccess(JSONObject())
         assertThat(promise).succeeded()
@@ -127,7 +138,14 @@ class CoLocationApiTest {
     @Test
     fun `test save() on error`() {
         val promise =
-            coLocationApi.save(CoLocationData("::sonar-id::", "::timestamp::", emptyList()))
+            coLocationApi.save(
+                CoLocationData(
+                    "::sonar-id::",
+                    "::timestamp::",
+                    emptyList(),
+                    emptyList()
+                )
+            )
 
         requestQueue.returnError(VolleyError())
         assertThat(promise).failed()

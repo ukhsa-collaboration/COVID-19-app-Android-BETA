@@ -183,7 +183,7 @@ class DiagnoseReviewActivity : BaseActivity() {
             }
 
         review_answer_stomach.text =
-            when (Symptom.STOMACH in symptoms) {
+            when (Symptom.NAUSEA in symptoms) {
                 true -> getString(R.string.i_do_stomach)
                 false -> getString(R.string.i_do_not_stomach)
             }

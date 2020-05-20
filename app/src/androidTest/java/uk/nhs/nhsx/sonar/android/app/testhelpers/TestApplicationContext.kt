@@ -364,6 +364,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         val body = lastRequest?.body?.readUtf8() ?: ""
         assertThat(body).contains(""""symptomsTimestamp":""")
         assertThat(body).contains(""""contactEvents":[""")
+        assertThat(body).contains(""""symptoms":[""")
+        assertThat(body).contains("TEMPERATURE", "COUGH", "ANOSMIA", "SNEEZE", "NAUSEA")
         val rssiValues = listOf(10, 20, 15).map { it.toByte() }.toByteArray()
         assertThat(body).contains(
             jsonOf(

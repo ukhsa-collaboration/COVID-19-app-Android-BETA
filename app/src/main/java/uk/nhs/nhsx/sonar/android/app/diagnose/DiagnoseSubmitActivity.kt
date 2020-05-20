@@ -84,7 +84,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
                 return@setOnClickListener
             }
             needConfirmationHint.visibility = INVISIBLE
-            SubmitContactEventsWorker.schedule(this, symptomsDate)
+            SubmitContactEventsWorker.schedule(this, symptomsDate, symptoms.toList())
             updateStateAndNavigate()
         }
     }

@@ -15,6 +15,7 @@ import androidx.work.WorkerParameters
 import org.joda.time.LocalDate
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -34,7 +35,7 @@ class SubmitContactEventsWorker(
     }
 
     companion object {
-        fun schedule(context: Context, symptomsDate: LocalDate) {
+        fun schedule(context: Context, symptomsDate: LocalDate, symptoms: List<Symptom>) {
             val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
@@ -42,7 +43,7 @@ class SubmitContactEventsWorker(
             val request =
                 OneTimeWorkRequestBuilder<SubmitContactEventsWorker>()
                     .setConstraints(constraints)
-                    .setInputData(SubmitContactEventsWork.data(symptomsDate))
+                    .setInputData(SubmitContactEventsWork.data(symptomsDate, symptoms))
                     .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.MINUTES)
                     .build()
 
