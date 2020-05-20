@@ -64,7 +64,7 @@ class RegistrationStartPactTest {
         )
 
         val request = residentApi.register("a-valid-token-with-min-length-15")
-        runBlocking { request.toCoroutine() }
+        runBlocking { request.toCoroutineUnsafe() }
         assertThat(request.isSuccess).isTrue()
     }
 

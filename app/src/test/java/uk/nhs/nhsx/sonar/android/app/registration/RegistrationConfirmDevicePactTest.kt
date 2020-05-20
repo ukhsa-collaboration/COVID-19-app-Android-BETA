@@ -95,7 +95,7 @@ class RegistrationConfirmDevicePactTest {
         )
 
         val request = residentApi.confirmDevice(deviceConfirmation)
-        runBlocking { request.toCoroutine() }
+        runBlocking { request.toCoroutineUnsafe() }
 
         assertThat(request.isSuccess).isTrue()
         assertThat(request.value!!.id).isEqualTo(registrationId.toString())

@@ -80,7 +80,7 @@ class RegistrationUseCase @Inject constructor(
         residentApi
             .register(firebaseToken)
             .onError { analytics.trackEvent(registrationSendTokenCallFailed(it.code)) }
-            .toCoroutine()
+            .toCoroutineUnsafe()
 
     private suspend fun registerResident(
         activationCode: String,
@@ -99,7 +99,7 @@ class RegistrationUseCase @Inject constructor(
             .confirmDevice(confirmation)
             .onError { analytics.trackEvent(registrationActivationCallFailed(it.code)) }
             .map { it.id }
-            .toCoroutine()
+            .toCoroutineUnsafe()
     }
 
     private fun storeSonarId(sonarId: String) {

@@ -175,7 +175,7 @@ class ProximityApiPactTest {
         )
 
         val uploadRequest = coLocationApi.save(colocationData)
-        runBlocking { uploadRequest.toCoroutine() }
+        runBlocking { uploadRequest.toCoroutineUnsafe() }
 
         assertThat(uploadRequest.isSuccess).isTrue()
     }
@@ -193,7 +193,7 @@ class ProximityApiPactTest {
         )
 
         val referenceCodeRequest = referenceCodeApi.get(sonarId)
-        runBlocking { referenceCodeRequest.toCoroutine() }
+        runBlocking { referenceCodeRequest.toCoroutineUnsafe() }
 
         assertThat(referenceCodeRequest.isSuccess).isTrue()
     }

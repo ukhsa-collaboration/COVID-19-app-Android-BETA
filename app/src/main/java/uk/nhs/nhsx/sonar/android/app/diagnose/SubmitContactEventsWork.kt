@@ -44,7 +44,7 @@ class SubmitContactEventsWork @Inject constructor(
                 contactEvents = coLocationDataProvider.getEvents()
             )
 
-            coLocationApi.save(coLocationData).toCoroutine()
+            coLocationApi.save(coLocationData).toCoroutineUnsafe()
             coLocationDataProvider.clearData()
 
             Result.success()

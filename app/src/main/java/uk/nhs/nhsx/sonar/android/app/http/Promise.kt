@@ -77,13 +77,29 @@ class Promise<T : Any?> private constructor() {
     fun mapToUnit(): Promise<Unit> =
         map {}
 
-    suspend fun toCoroutine(): T =
+    suspend fun toCoroutineUnsafe(): T =
         suspendCoroutine { continuation ->
             this
-                .onSuccess { continuation.resumeWith(Result.success(it)) }
+                .onSuccess { continuation.resumeWith(kotlin.Result.success(it)) }
                 .onError {
                     val exception = it.exception ?: IllegalStateException(it.message)
-                    continuation.resumeWith(Result.failure(exception))
+                    continuation.resumeWith(kotlin.Result.failure(exception))
+                }
+        }
+
+    suspend fun toCoroutine(): Result<T> =
+        suspendCoroutine { continuation ->
+            this
+                .onSuccess {
+                    val result = Result.Success(it)
+                    val coroutineResult = kotlin.Result.success(result)
+                    continuation.resumeWith(coroutineResult)
+                }
+                .onError {
+                    val exception = it.exception ?: IllegalStateException(it.message)
+                    val result = Result.Failure<T>(exception)
+                    val coroutineResult = kotlin.Result.success(result)
+                    continuation.resumeWith(coroutineResult)
                 }
         }
 
