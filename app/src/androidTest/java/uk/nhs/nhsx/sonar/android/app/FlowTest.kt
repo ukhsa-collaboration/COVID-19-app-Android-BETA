@@ -759,6 +759,11 @@ class FlowTest {
         onView(withId(R.id.no)).perform(click())
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
+        // Anosmia Step
+        checkViewHasText(R.id.progress, R.string.progress_three_third)
+        onView(withId(R.id.no)).perform(click())
+        onView(withId(R.id.confirm_diagnosis)).perform(click())
+
         checkIsolateActivityIsShown()
     }
 
