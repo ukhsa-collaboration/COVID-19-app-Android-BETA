@@ -12,10 +12,6 @@ import au.com.dius.pact.consumer.junit.PactVerification
 import au.com.dius.pact.core.model.RequestResponsePact
 import au.com.dius.pact.core.model.annotations.Pact
 import au.com.dius.pact.core.model.annotations.PactFolder
-import com.android.volley.ExecutorDelivery
-import com.android.volley.RequestQueue
-import com.android.volley.toolbox.BasicNetwork
-import com.android.volley.toolbox.NoCache
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,6 +23,7 @@ import org.joda.time.DateTimeZone
 import org.joda.time.LocalDateTime
 import org.junit.Rule
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.StoppedUTCClock
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdSigner
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
@@ -34,36 +31,29 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationApi
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationData
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.toJson
+import uk.nhs.nhsx.sonar.android.app.encodeBase64
 import uk.nhs.nhsx.sonar.android.app.http.HttpClient
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
-import uk.nhs.nhsx.sonar.android.app.http.UTCClock
 import uk.nhs.nhsx.sonar.android.app.http.jsonObjectOf
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeApi
+import uk.nhs.nhsx.sonar.android.app.generateSecretKey
+import uk.nhs.nhsx.sonar.android.app.generateSignature
+import uk.nhs.nhsx.sonar.android.app.testQueue
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.nio.ByteBuffer
-import java.util.Base64
 import java.util.UUID
-import java.util.concurrent.Executors
-import javax.crypto.KeyGenerator
-import javax.crypto.Mac
 import javax.crypto.SecretKey
 import kotlin.random.Random
-
-class StoppedUTCClock(private val alwaysNow: LocalDateTime) : UTCClock {
-    override fun now(): LocalDateTime {
-        return alwaysNow
-    }
-}
 
 @ExperimentalCoroutinesApi
 @PactFolder("pacts")
 class ProximityApiPactTest {
-    private val base64encoder = Base64.getEncoder()
     private val sonarId: String = UUID.randomUUID().toString()
     private val utcNow: LocalDateTime = LocalDateTime.now(DateTimeZone.UTC)
     private val timestamp: String = utcNow.toString("yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private val secretKey: SecretKey = generatePrivateKey()
+    private val secretKey: SecretKey =
+        generateSecretKey()
 
     private val encryptionKeyStorage: KeyStorage = mockk<KeyStorage>(relaxed = true).apply {
         every { provideSecretKey() } returns secretKey
@@ -169,7 +159,8 @@ class ProximityApiPactTest {
     @PactVerification(fragment = "proximityUploadFragment")
     fun `verifies submission of proximity event data`() {
         val httpClient =
-            HttpClient(testQueue(), "some-header", StoppedUTCClock(utcNow), ::encodeBase64)
+            HttpClient(testQueue(), "some-header",
+                StoppedUTCClock(utcNow), ::encodeBase64)
         val coLocationApi = CoLocationApi(
             provider.url,
             encryptionKeyStorage,
@@ -186,7 +177,8 @@ class ProximityApiPactTest {
     @PactVerification(fragment = "getReferenceCodeFragment")
     fun `verifies getting a reference code`() {
         val httpClient =
-            HttpClient(testQueue(), "some-header", StoppedUTCClock(utcNow), ::encodeBase64)
+            HttpClient(testQueue(), "some-header",
+                StoppedUTCClock(utcNow), ::encodeBase64)
 
         val referenceCodeApi = ReferenceCodeApi(
             provider.url,
@@ -219,30 +211,6 @@ class ProximityApiPactTest {
         )
     }
 
-    private fun encodeBase64(byteArray: ByteArray): String {
-        return base64encoder.encodeToString(byteArray)
-    }
-
-    private fun generateSignature(
-        secretKey: SecretKey,
-        timestamp: String,
-        body: ByteArray
-    ): String {
-        val mac = Mac.getInstance("HMACSHA256")
-            .apply {
-                init(secretKey)
-                update(timestamp.toByteArray(Charsets.UTF_8))
-            }
-
-        val signature = mac.doFinal(body)
-
-        return encodeBase64(signature)
-    }
-
-    private fun generatePrivateKey(): SecretKey {
-        return KeyGenerator.getInstance("HMACSHA256").generateKey()
-    }
-
     private fun generateBluetoothIdentifier(): BluetoothIdentifier {
         val cryptogram = Cryptogram.fromBytes(
             Random.Default.nextBytes(Cryptogram.SIZE)
@@ -272,12 +240,4 @@ class ProximityApiPactTest {
     }
 
     private fun randomTxPower() = Random.nextInt(-20, -1)
-
-    private fun testQueue(): RequestQueue =
-        RequestQueue(
-            NoCache(),
-            BasicNetwork(OkHttpStack()),
-            1,
-            ExecutorDelivery(Executors.newSingleThreadExecutor())
-        ).apply { start() }
 }
