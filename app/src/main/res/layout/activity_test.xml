@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
@@ -18,7 +17,7 @@
         android:textStyle="normal"
         android:paddingVertical="4dp"
         android:textColor="@color/text_sub_title"
-        android:text="@string/for_debug_purposes_only" />
+        android:text="@string/for_debug_purposes_only"/>
 
     <TextView
         android:id="@+id/sonar_id"
@@ -29,7 +28,7 @@
         android:textStyle="normal"
         android:textIsSelectable="true"
         android:layout_marginBottom="8dp"
-        android:text="" />
+        android:text=""/>
 
     <TextView
         android:id="@+id/encrypted_broadcast_id"
@@ -43,56 +42,108 @@
         android:text=""
         android:maxLines="1"
         tools:text="4GqL81GilxTxb0lmD7bUU4Wb97wJ011I/LWdJTBwcVnKrj9ZvYnPDq++eR/bLw6lNWl9fkdutFOeJhM3t8niKaWyvSHk2uBdvs9K4rhZe0w/TdeF0Z4rMWnrLoq+I7GZpbcwgz9kC5My2w=="
-        />
+    />
 
     <View
         style="@style/HorizontalDivider"
         android:background="@color/gray"
         android:layout_height="1dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"/>
 
     <TextView
         android:id="@+id/no_events"
         android:textSize="12sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No events recorded." />
+        android:text="No events recorded."/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/events"
         android:textSize="12sp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
     <View
         style="@style/HorizontalDivider"
         android:background="@color/gray"
         android:layout_height="1dp"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/continue_button"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Continue" />
+            android:text="Change state"
+        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/reset_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reset" />
+            <Button
+                android:id="@+id/setRecoveryState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recovery"/>
 
-        <Button
-            android:id="@+id/exportButton"
-            android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/setAmberState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amber"/>
+
+            <Button
+                android:id="@+id/setRedState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Red"/>
+
+            <Button
+                android:id="@+id/setCheckinState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Checkin"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Export" />
+            android:text="Other actions"
+        />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/continueButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Continue"/>
+
+            <Button
+                android:id="@+id/resetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset"/>
+
+            <Button
+                android:id="@+id/exportButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Export"/>
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

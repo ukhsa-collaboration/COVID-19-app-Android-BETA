@@ -13,7 +13,18 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_test.*
+import kotlinx.android.synthetic.main.activity_test.continueButton
+import kotlinx.android.synthetic.main.activity_test.encrypted_broadcast_id
+import kotlinx.android.synthetic.main.activity_test.events
+import kotlinx.android.synthetic.main.activity_test.exportButton
+import kotlinx.android.synthetic.main.activity_test.no_events
+import kotlinx.android.synthetic.main.activity_test.resetButton
+import kotlinx.android.synthetic.main.activity_test.setAmberState
+import kotlinx.android.synthetic.main.activity_test.setCheckinState
+import kotlinx.android.synthetic.main.activity_test.setRecoveryState
+import kotlinx.android.synthetic.main.activity_test.setRedState
+import kotlinx.android.synthetic.main.activity_test.sonar_id
+import org.joda.time.LocalDate
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -23,7 +34,12 @@ import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
+import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.observe
 import javax.inject.Inject
 
@@ -77,11 +93,41 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         events.adapter = adapter
         events.layoutManager = LinearLayoutManager(this)
 
-        continue_button.setOnClickListener {
+        setRecoveryState.setOnClickListener {
+            userStateStorage.set(RecoveryState)
             finish()
         }
 
-        reset_button.setOnClickListener {
+        setAmberState.setOnClickListener {
+            userStateStorage.set(UserState.amber())
+            finish()
+        }
+
+        setRedState.setOnClickListener {
+            userStateStorage.set(
+                UserState.red(
+                    symptomsDate = LocalDate.now(),
+                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
+                )
+            )
+            finish()
+        }
+
+        setCheckinState.setOnClickListener {
+            userStateStorage.set(
+                UserState.checkin(
+                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE),
+                    today = LocalDate.now().minusDays(1)
+                )
+            )
+            finish()
+        }
+
+        continueButton.setOnClickListener {
+            finish()
+        }
+
+        resetButton.setOnClickListener {
             userStateStorage.clear()
             sonarIdProvider.clear()
             onboardingStatusProvider.clear()
