@@ -33,6 +33,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionRobot
+import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
 import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
@@ -100,6 +101,11 @@ class FlowTest {
             { MainActivityTest(testAppContext).testLaunchWhenStateIsAmber() },
             { MainActivityTest(testAppContext).testLaunchWhenStateIsRed() },
 
+            { PostCodeActivityTest(testAppContext).pristineState() },
+            { PostCodeActivityTest(testAppContext).emptyPostCodeShowsInvalidHint() },
+            { PostCodeActivityTest(testAppContext).invalidPostCodeShowsInvalidHint() },
+            { PostCodeActivityTest(testAppContext).validPostCodeProceedsToNextView() },
+
             { PermissionActivityTest(testAppContext).testUnsupportedDevice() },
             { PermissionActivityTest(testAppContext).testEnableBluetooth() },
             { PermissionActivityTest(testAppContext).testGrantLocationPermission() },
@@ -137,8 +143,6 @@ class FlowTest {
         mainRobot.clickConfirmOnboarding()
 
         postCodeRobot.checkActivityIsDisplayed()
-        postCodeRobot.clickContinue()
-        postCodeRobot.checkInvalidHintIsDisplayed()
         postCodeRobot.enterPostCode("E1")
         postCodeRobot.clickContinue()
 

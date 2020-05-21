@@ -1,22 +1,16 @@
 package uk.nhs.nhsx.sonar.android.app.onboarding
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.ActivityTestRule
-import org.junit.Rule
-import org.junit.Test
-import org.junit.runner.RunWith
+import uk.nhs.nhsx.sonar.android.app.startTestActivity
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 
-@RunWith(AndroidJUnit4::class)
-class PostCodeActivityTest {
+class PostCodeActivityTest(testAppContext: TestApplicationContext) {
 
-    @get:Rule
-    val activityRule: ActivityTestRule<PostCodeActivity> =
-        ActivityTestRule(PostCodeActivity::class.java)
-
+    private val app = testAppContext.app
     private val postCodeRobot = PostCodeRobot()
 
-    @Test
     fun pristineState() {
+        app.startTestActivity<PostCodeActivity>()
+
         postCodeRobot.checkActivityIsDisplayed()
         postCodeRobot.checkTitleIsDisplayed()
         postCodeRobot.checkExampleIsDisplayed()
@@ -25,21 +19,24 @@ class PostCodeActivityTest {
         postCodeRobot.checkRationaleIsVisible()
     }
 
-    @Test
     fun emptyPostCodeShowsInvalidHint() {
+        app.startTestActivity<PostCodeActivity>()
+
         postCodeRobot.clickContinue()
         postCodeRobot.checkInvalidHintIsDisplayed()
     }
 
-    @Test
     fun invalidPostCodeShowsInvalidHint() {
+        app.startTestActivity<PostCodeActivity>()
+
         postCodeRobot.enterPostCode("1")
         postCodeRobot.clickContinue()
         postCodeRobot.checkInvalidHintIsDisplayed()
     }
 
-    @Test
     fun validPostCodeProceedsToNextView() {
+        app.startTestActivity<PostCodeActivity>()
+
         postCodeRobot.enterPostCode("E1")
         postCodeRobot.clickContinue()
         postCodeRobot.checkActivityDoesNotExist()
