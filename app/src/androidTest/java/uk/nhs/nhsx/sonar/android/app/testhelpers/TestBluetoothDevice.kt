@@ -8,6 +8,7 @@ import com.polidea.rxandroidble2.RxBleConnection
 import com.polidea.rxandroidble2.RxBleConnection.RxBleConnectionState.CONNECTED
 import com.polidea.rxandroidble2.RxBleConnection.RxBleConnectionState.CONNECTING
 import com.polidea.rxandroidble2.RxBleConnection.RxBleConnectionState.DISCONNECTED
+import com.polidea.rxandroidble2.RxBleCustomOperation
 import com.polidea.rxandroidble2.RxBleDeviceServices
 import com.polidea.rxandroidble2.Timeout
 import com.polidea.rxandroidble2.exceptions.BleAlreadyConnectedException
@@ -71,5 +72,10 @@ class TestBluetoothConnection(services: RxBleDeviceServices, private val rssiLis
         }
 
         return Single.error(BleException("Test connection ran out of RSSI"))
+    }
+
+    override fun <RxBleConnection> queue(operation: RxBleCustomOperation<RxBleConnection>): Observable<RxBleConnection> {
+        @Suppress("UNCHECKED_CAST")
+        return Observable.just(this as RxBleConnection)
     }
 }

@@ -159,6 +159,12 @@ class Scanner @Inject constructor(
                 negotiateMTU(connection)
             }
             .flatMapSingle { connection ->
+                connection.queue { bluetoothGatt, _, _ ->
+                    DisableRetryOnUnauthenticatedRead.bypassAuthenticationRetry(bluetoothGatt)
+                    Observable.just(connection)
+                }.firstOrError()
+            }
+            .flatMapSingle { connection ->
                 read(connection, txPowerAdvertised, coroutineScope)
             }
             .doOnSubscribe {

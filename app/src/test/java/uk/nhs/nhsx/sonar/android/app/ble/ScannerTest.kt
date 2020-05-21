@@ -6,6 +6,7 @@ package uk.nhs.nhsx.sonar.android.app.ble
 
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
+import com.polidea.rxandroidble2.RxBleCustomOperation
 import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.exceptions.BleDisconnectedException
 import com.polidea.rxandroidble2.scan.ScanResult
@@ -82,6 +83,9 @@ class ScannerTest {
         )
         every { connection.requestMtu(BluetoothIdentifier.SIZE + 2) } returns Single.just(
             BluetoothIdentifier.SIZE + 2
+        )
+        every { connection.queue(any<RxBleCustomOperation<RxBleConnection>>()) } returns Observable.just(
+            connection
         )
         every { connection.readRssi() } returns Single.just(rssi)
 
