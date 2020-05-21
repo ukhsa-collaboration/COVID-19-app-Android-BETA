@@ -47,6 +47,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
@@ -72,6 +73,8 @@ class FlowTest {
     @get:Rule
     val permissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(*AndroidLocationHelper.requiredLocationPermissions)
+
+    private val postCodeRobot = PostCodeRobot()
 
     private lateinit var testAppContext: TestApplicationContext
     private val component: TestAppComponent
@@ -154,18 +157,16 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
-        checkPostCodeActivityIsShown()
-
-        onView(withId(R.id.postCodeContinue)).perform(click())
-
-        onView(withId(R.id.invalidPostCodeHint)).check(matches(isDisplayed()))
+        postCodeRobot.checkActivityIsShown()
+        postCodeRobot.clickContinue()
+        postCodeRobot.checkInvalidHintIsVisible()
 
         onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
         closeSoftKeyboard()
 
         testAppContext.simulateUnsupportedDevice()
 
-        onView(withId(R.id.postCodeContinue)).perform(click())
+        postCodeRobot.clickContinue()
 
         checkPermissionActivityIsShown()
 
@@ -181,16 +182,16 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
-        checkPostCodeActivityIsShown()
+        postCodeRobot.checkActivityIsShown()
 
-        onView(withId(R.id.postCodeContinue)).perform(click())
+        postCodeRobot.clickContinue()
 
-        onView(withId(R.id.invalidPostCodeHint)).check(matches(isDisplayed()))
+        postCodeRobot.checkInvalidHintIsVisible()
 
         onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
         closeSoftKeyboard()
 
-        onView(withId(R.id.postCodeContinue)).perform(click())
+        postCodeRobot.clickContinue()
 
         checkPermissionActivityIsShown()
 
@@ -215,12 +216,12 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
-        checkPostCodeActivityIsShown()
+        postCodeRobot.checkActivityIsShown()
 
         onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
         closeSoftKeyboard()
 
-        onView(withId(R.id.postCodeContinue)).perform(click())
+        postCodeRobot.clickContinue()
 
         checkPermissionActivityIsShown()
 
@@ -252,16 +253,16 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
-        checkPostCodeActivityIsShown()
+        postCodeRobot.checkActivityIsShown()
 
-        onView(withId(R.id.postCodeContinue)).perform(click())
+        postCodeRobot.clickContinue()
 
-        onView(withId(R.id.invalidPostCodeHint)).check(matches(isDisplayed()))
+        postCodeRobot.checkInvalidHintIsVisible()
 
         onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
         closeSoftKeyboard()
 
-        onView(withId(R.id.postCodeContinue)).perform(click())
+        postCodeRobot.clickContinue()
 
         checkPermissionActivityIsShown()
 
@@ -539,7 +540,7 @@ class FlowTest {
         onView(withId(R.id.confirm_onboarding)).perform(click())
         onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
         closeSoftKeyboard()
-        onView(withId(R.id.postCodeContinue)).perform(click())
+        postCodeRobot.clickContinue()
     }
 
     fun testResumeWhenBluetoothIsDisabled() {
@@ -649,10 +650,6 @@ class FlowTest {
 
     private fun checkMainActivityIsShown() {
         onView(withId(R.id.confirm_onboarding)).check(matches(isDisplayed()))
-    }
-
-    private fun checkPostCodeActivityIsShown() {
-        onView(withId(R.id.postCodeContinue)).check(matches(isDisplayed()))
     }
 
     private fun checkPermissionActivityIsShown() {
