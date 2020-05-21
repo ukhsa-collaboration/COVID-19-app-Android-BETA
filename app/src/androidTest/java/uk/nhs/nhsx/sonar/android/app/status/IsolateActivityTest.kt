@@ -14,8 +14,7 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
     private val applyForTestRobot = ApplyForTestRobot()
 
     private fun startActivity(state: RedState) {
-        testAppContext.setUserState(state)
-        testAppContext.setValidSonarId()
+        testAppContext.setFullValidUser(state)
 
         app.startTestActivity<IsolateActivity>()
     }

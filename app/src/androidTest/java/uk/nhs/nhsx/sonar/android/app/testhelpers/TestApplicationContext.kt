@@ -42,10 +42,13 @@ import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.PUBLIC_KEY
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.REFERENCE_CODE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.RESIDENT_ID
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.SECRET_KEY
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.encodedSecretKey
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import java.nio.ByteBuffer
 import java.security.KeyStore
@@ -152,18 +155,12 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         mockServer.shutdown()
     }
 
-    fun setUserState(state: UserState) {
+    fun setFullValidUser(state: UserState = DefaultState) {
         component.getUserStateStorage().set(state)
-    }
-
-    fun setValidSonarId() {
-        val sonarIdProvider = component.getSonarIdProvider()
-        sonarIdProvider.set(RESIDENT_ID)
-    }
-
-    fun setReferenceCode() {
-        val refCodeProvider = component.getReferenceCodeProvider()
-        refCodeProvider.set(ReferenceCode(TestSonarServiceDispatcher.REFERENCE_CODE))
+        component.getSonarIdProvider().set(RESIDENT_ID)
+        component.getKeyStorage().storeSecretKey(encodedSecretKey)
+        component.getKeyStorage().storeServerPublicKey(PUBLIC_KEY)
+        component.getReferenceCodeProvider().set(ReferenceCode(REFERENCE_CODE))
     }
 
     fun setFinishedOnboarding() {
@@ -174,14 +171,6 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun setValidPostcode() {
         val storage = component.getPostCodeProvider()
         storage.set("E1")
-    }
-
-    fun setValidSonarIdAndSecretKeyAndPublicKey() {
-        setValidSonarId()
-
-        val keyStorage = component.getKeyStorage()
-        keyStorage.storeSecretKey(TestSonarServiceDispatcher.encodedSecretKey)
-        keyStorage.storeServerPublicKey(PUBLIC_KEY)
     }
 
     private fun bluetoothAdapter(): BluetoothAdapter {

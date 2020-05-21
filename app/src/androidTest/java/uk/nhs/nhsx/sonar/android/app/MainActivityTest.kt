@@ -65,9 +65,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testLaunchWhenStateIsDefault() {
-        testAppContext.setUserState(DefaultState)
-        testAppContext.setValidSonarId()
-        testAppContext.setReferenceCode()
+        testAppContext.setFullValidUser(DefaultState)
 
         startMainActivity()
 
@@ -76,10 +74,9 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testLaunchWhenStateIsAmber() {
-        testAppContext.setUserState(AmberState(DateTime.now(UTC).plusDays(1)))
-        testAppContext.setValidSonarId()
-        testAppContext.setReferenceCode()
+        val amberState = AmberState(DateTime.now(UTC).plusDays(1))
 
+        testAppContext.setFullValidUser(amberState)
         startMainActivity()
 
         atRiskRobot.checkActivityIsDisplayed()
@@ -89,10 +86,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
     fun testLaunchWhenStateIsRed() {
         val redState = RedState(DateTime.now(UTC).plusDays(1), nonEmptySetOf(TEMPERATURE))
 
-        testAppContext.setUserState(redState)
-        testAppContext.setValidSonarId()
-        testAppContext.setReferenceCode()
-
+        testAppContext.setFullValidUser(redState)
         startMainActivity()
 
         isolateRobot.checkActivityIsDisplayed()

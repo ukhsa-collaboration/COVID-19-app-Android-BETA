@@ -14,9 +14,7 @@ class BaseActivityTest(private val testAppContext: TestApplicationContext) {
     private val edgeCaseRobot = EdgeCaseRobot()
 
     private fun startActivity() {
-        testAppContext.setUserState(DefaultState)
-        testAppContext.setValidSonarId()
-        testAppContext.setReferenceCode()
+        testAppContext.setFullValidUser(DefaultState)
 
         app.startTestActivity<OkActivity>()
     }

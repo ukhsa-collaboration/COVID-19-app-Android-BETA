@@ -8,46 +8,42 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isChecked
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import org.hamcrest.CoreMatchers.anything
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
-import org.joda.time.LocalDate
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseRobot
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseQuestionRobot
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivityTest
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewRobot
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivityTest
+import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
+import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
 import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.IsolateRobot
 import uk.nhs.nhsx.sonar.android.app.status.OkActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.OkRobot
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
-import uk.nhs.nhsx.sonar.android.app.testhelpers.SetChecked.Companion.setChecked
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestAppComponent
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
-import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
@@ -71,6 +67,10 @@ class FlowTest {
     private val permissionRobot = PermissionRobot()
     private val okRobot: OkRobot get() = OkRobot(app)
     private val atRiskRobot = AtRiskRobot()
+    private val diagnoseQuestionRobot = DiagnoseQuestionRobot()
+    private val diagnoseCloseRobot = DiagnoseCloseRobot()
+    private val diagnoseReviewRobot = DiagnoseReviewRobot()
+    private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
     private val isolateRobot = IsolateRobot()
 
     @Before
@@ -118,6 +118,17 @@ class FlowTest {
             { OkActivityTest(testAppContext).testRegistrationRetry() },
             { OkActivityTest(testAppContext).testRegistrationPushNotificationNotReceived() },
 
+            { AtRiskActivityTest(testAppContext).testHideStatusUpdateNotificationWhenNotClicked() },
+
+            { DiagnoseReviewActivityTest(testAppContext).testDisplayingYesAnswers() },
+            { DiagnoseReviewActivityTest(testAppContext).testDisplayingNoAnswers() },
+            { DiagnoseReviewActivityTest(testAppContext).testSubmittingWithoutDate() },
+            { DiagnoseReviewActivityTest(testAppContext).testShowingCalendarAndCanceling() },
+            { DiagnoseReviewActivityTest(testAppContext).testSelectingTodayFromCalendar() },
+            { DiagnoseReviewActivityTest(testAppContext).testSelectingYesterdayFromSpinner() },
+
+            { DiagnoseSubmitActivityTest(testAppContext).testConfirmationIsRequired() },
+
             { IsolateActivityTest(testAppContext).testWhenStateIsExpired() },
             { IsolateActivityTest(testAppContext).testClickOrderTestCardShowsApplyForTest() },
 
@@ -125,7 +136,6 @@ class FlowTest {
             ::testProximityDataUploadOnSymptomaticState,
             ::testQuestionnaireFlowWithNoSymptom,
             ::testReceivingStatusUpdateNotification,
-            ::testHideStatusUpdateNotificationWhenNotClicked,
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
             ::testEnableBluetoothThroughNotification
         )
@@ -158,37 +168,27 @@ class FlowTest {
     }
 
     fun testProximityDataUploadOnSymptomaticState() {
-        testAppContext.setUserState(DefaultState)
-        testAppContext.setValidSonarIdAndSecretKeyAndPublicKey()
-        testAppContext.setReferenceCode()
-
+        testAppContext.setFullValidUser()
         startMainActivity()
-
         testAppContext.simulateDeviceInProximity()
 
         checkQuestionnaireFlowWithSymptoms()
 
         testAppContext.verifyReceivedProximityRequest()
-
         isolateRobot.checkActivityIsDisplayed()
     }
 
     fun testQuestionnaireFlowWithNoSymptom() {
-        testAppContext.setUserState(DefaultState)
-        testAppContext.setValidSonarIdAndSecretKeyAndPublicKey()
-        testAppContext.setReferenceCode()
-
+        testAppContext.setFullValidUser()
         startMainActivity()
+
         checkQuestionnaireFlowWithNoSymptom()
 
         okRobot.checkActivityIsDisplayed()
     }
 
     fun testReceivingStatusUpdateNotification() {
-        testAppContext.setUserState(DefaultState)
-        testAppContext.setValidSonarId()
-        testAppContext.setReferenceCode()
-
+        testAppContext.setFullValidUser()
         startMainActivity()
 
         testAppContext.apply {
@@ -199,29 +199,10 @@ class FlowTest {
         atRiskRobot.checkActivityIsDisplayed()
     }
 
-    fun testHideStatusUpdateNotificationWhenNotClicked() {
-        testAppContext.setUserState(DefaultState)
-        testAppContext.setValidSonarId()
-        testAppContext.setReferenceCode()
-
-        val notificationTitle = R.string.notification_title
-        testAppContext.simulateStatusUpdateReceived()
-        testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = true)
-
-        startMainActivity()
-
-        testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = false)
-
-        atRiskRobot.checkActivityIsDisplayed()
-    }
-
     fun testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState() {
         val expiredRedState = RedState(DateTime.now(UTC).minusSeconds(1), nonEmptySetOf(TEMPERATURE))
 
-        testAppContext.setUserState(expiredRedState)
-        testAppContext.setValidSonarId()
-        testAppContext.setReferenceCode()
-
+        testAppContext.setFullValidUser(expiredRedState)
         startMainActivity()
 
         isolateRobot.checkPopUpIsDisplayed()
@@ -232,10 +213,7 @@ class FlowTest {
     }
 
     fun testEnableBluetoothThroughNotification() {
-        testAppContext.setUserState(DefaultState)
-        testAppContext.setValidSonarId()
-        testAppContext.setReferenceCode()
-
+        testAppContext.setFullValidUser()
         startMainActivity()
 
         testAppContext.ensureBluetoothDisabled()
@@ -250,112 +228,58 @@ class FlowTest {
         okRobot.checkActivityIsDisplayed()
     }
 
-    private fun startMainActivity() {
-        onView(withId(R.id.start_main_activity)).perform(click())
-    }
-
     private fun checkCanTransitionToIsolateActivitySimplified() {
+        diagnoseQuestionRobot.checkProgress(R.string.progress_one_third)
+        diagnoseQuestionRobot.answerYesTo(R.id.temperature_question)
 
-        // Temperature Step
-        checkViewHasText(R.id.progress, R.string.progress_one_third)
-        onView(withId(R.id.yes)).perform(click())
-        onView(withId(R.id.confirm_diagnosis)).perform(click())
+        diagnoseQuestionRobot.checkProgress(R.string.progress_two_third)
+        diagnoseQuestionRobot.answerNoTo(R.id.cough_question)
 
-        // Cough Step
-        checkViewHasText(R.id.progress, R.string.progress_two_third)
-        onView(withId(R.id.no)).perform(click())
-        onView(withId(R.id.confirm_diagnosis)).perform(click())
-
-        // Anosmia Step
-        checkViewHasText(R.id.progress, R.string.progress_three_third)
-        onView(withId(R.id.no)).perform(click())
-        onView(withId(R.id.confirm_diagnosis)).perform(click())
+        diagnoseQuestionRobot.checkProgress(R.string.progress_three_third)
+        diagnoseQuestionRobot.answerNoTo(R.id.anosmia_question)
 
         isolateRobot.checkActivityIsDisplayed()
     }
 
     private fun checkQuestionnaireFlowWithNoSymptom() {
-        onView(withId(R.id.status_not_feeling_well)).perform(scrollTo(), click())
+        clickNotFeelingWellCard()
 
-        answerNoTo(R.id.temperature_question)
-        answerNoTo(R.id.cough_question)
-        answerNoTo(R.id.anosmia_question)
-        answerNoTo(R.id.sneeze_question)
-        answerNoTo(R.id.stomach_question)
+        diagnoseQuestionRobot.answerNoTo(R.id.temperature_question)
+        diagnoseQuestionRobot.answerNoTo(R.id.cough_question)
+        diagnoseQuestionRobot.answerNoTo(R.id.anosmia_question)
+        diagnoseQuestionRobot.answerNoTo(R.id.sneeze_question)
+        diagnoseQuestionRobot.answerNoTo(R.id.stomach_question)
 
-        // Close Activity
-        onView(withId(R.id.close_review_btn)).check(matches(isDisplayed()))
-        onView(withId(R.id.close_review_btn)).perform(click())
+        diagnoseCloseRobot.checkActivityIsDisplayed()
+        diagnoseCloseRobot.close()
     }
 
     private fun checkQuestionnaireFlowWithSymptoms() {
+        clickNotFeelingWellCard()
+
+        diagnoseQuestionRobot.answerYesTo(R.id.temperature_question)
+        diagnoseQuestionRobot.answerYesTo(R.id.cough_question)
+        diagnoseQuestionRobot.answerYesTo(R.id.anosmia_question)
+        diagnoseQuestionRobot.answerYesTo(R.id.sneeze_question)
+        diagnoseQuestionRobot.answerYesTo(R.id.stomach_question)
+
+        diagnoseReviewRobot.checkActivityIsDisplayed()
+        diagnoseReviewRobot.selectYesterday()
+        diagnoseReviewRobot.submit()
+
+        diagnoseSubmitRobot.checkActivityIsDisplayed()
+        diagnoseSubmitRobot.selectConfirmation()
+        diagnoseSubmitRobot.submit()
+
+        isolateRobot.checkActivityIsDisplayed()
+    }
+
+    private fun clickNotFeelingWellCard() {
         onView(withId(R.id.status_not_feeling_well)).perform(scrollTo(), click())
-
-        answerYesTo(R.id.temperature_question)
-        answerYesTo(R.id.cough_question)
-        answerYesTo(R.id.anosmia_question)
-        answerYesTo(R.id.sneeze_question)
-        answerYesTo(R.id.stomach_question)
-
-        // Review Step
-        onView(withId(R.id.symptoms_date_prompt))
-            .check(matches(isDisplayed()))
-            .check(matches(withText(R.string.symptoms_date_prompt_all)))
-
-        onView(withId(R.id.review_answer_temperature))
-            .check(matches(withText(R.string.i_do_temperature)))
-
-        onView(withId(R.id.review_answer_cough))
-            .check(matches(withText(R.string.i_do_cough)))
-
-        onView(withId(R.id.submit_diagnosis)).perform(click())
-        onView(withId(R.id.symptoms_date_spinner)).perform(scrollTo())
-        onView(withId(R.id.date_selection_error)).check(matches(isDisplayed()))
-
-        onView(withId(R.id.symptoms_date_spinner)).check(matches(withSpinnerText(R.string.start_date)))
-
-        onView(withId(R.id.symptoms_date_spinner)).perform(scrollTo(), click())
-        onData(anything()).atPosition(3).perform(click())
-        onView(withText("Cancel")).perform(click())
-        onView(withId(R.id.symptoms_date_spinner)).check(matches(withSpinnerText(R.string.start_date)))
-
-        val todayAsString = LocalDate.now().toString("EEEE, MMMM dd")
-        onView(withId(R.id.symptoms_date_spinner)).perform(scrollTo(), click())
-        onData(anything()).atPosition(3).perform(click())
-        onView(withText("OK")).perform(click())
-        onView(withId(R.id.symptoms_date_spinner)).check(matches(withSpinnerText(todayAsString)))
-
-        onView(withId(R.id.symptoms_date_spinner)).perform(scrollTo(), click())
-        onData(anything()).atPosition(1).perform(click())
-        onView(withId(R.id.symptoms_date_spinner)).check(matches(withSpinnerText(R.string.yesterday)))
-
-        onView(withId(R.id.submit_diagnosis)).perform(click())
-
-        // Confirmation Step
-        onView(withId(R.id.submit_events_info)).check(matches(isDisplayed()))
-        onView(withId(R.id.submit_diagnosis)).perform(click())
-
-        onView(withId(R.id.needConfirmationHint)).check(matches(isDisplayed()))
-        onView(withId(R.id.confirmationCheckbox)).perform(scrollTo(), setChecked(true))
-        onView(withId(R.id.submit_diagnosis)).perform(click())
-
-        // Red State
-        onView(withId(R.id.status_red_title)).check(matches(isDisplayed()))
     }
 
-    private fun answerYesTo(questionId: Int) {
-        answerTo(questionId, R.id.yes)
-    }
-
-    private fun answerNoTo(questionId: Int) {
-        answerTo(questionId, R.id.no)
-    }
-
-    private fun answerTo(questionId: Int, answerId: Int) {
-        onView(withId(questionId)).check(matches(isDisplayed()))
-        onView(withId(answerId)).perform(click())
-        onView(withId(answerId)).check(matches(isChecked()))
-        onView(withId(R.id.confirm_diagnosis)).perform(click())
+    private fun startMainActivity() {
+        onView(withId(R.id.start_main_activity)).perform(click())
     }
 }
 
