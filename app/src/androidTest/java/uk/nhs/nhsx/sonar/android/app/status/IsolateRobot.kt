@@ -20,4 +20,8 @@ class IsolateRobot {
     fun clickBookTestCard() {
         onView(withId(R.id.book_test_card)).perform(click())
     }
+
+    fun clickHaveSymptoms() {
+        onView(withId(R.id.have_symptoms)).perform(click())
+    }
 }

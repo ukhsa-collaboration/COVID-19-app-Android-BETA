@@ -134,7 +134,7 @@ class FlowTest {
 
             ::testRegistration,
             ::testProximityDataUploadOnSymptomaticState,
-            ::testQuestionnaireFlowWithNoSymptom,
+            ::testQuestionnaireFlowWithNoSymptoms,
             ::testReceivingStatusUpdateNotification,
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
             ::testEnableBluetoothThroughNotification
@@ -172,17 +172,40 @@ class FlowTest {
         startMainActivity()
         testAppContext.simulateDeviceInProximity()
 
-        checkQuestionnaireFlowWithSymptoms()
+        clickNotFeelingWellCard()
 
-        testAppContext.verifyReceivedProximityRequest()
+        diagnoseQuestionRobot.answerYesTo(R.id.temperature_question)
+        diagnoseQuestionRobot.answerYesTo(R.id.cough_question)
+        diagnoseQuestionRobot.answerYesTo(R.id.anosmia_question)
+        diagnoseQuestionRobot.answerYesTo(R.id.sneeze_question)
+        diagnoseQuestionRobot.answerYesTo(R.id.stomach_question)
+
+        diagnoseReviewRobot.checkActivityIsDisplayed()
+        diagnoseReviewRobot.selectYesterday()
+        diagnoseReviewRobot.submit()
+
+        diagnoseSubmitRobot.checkActivityIsDisplayed()
+        diagnoseSubmitRobot.selectConfirmation()
+        diagnoseSubmitRobot.submit()
+
         isolateRobot.checkActivityIsDisplayed()
+        testAppContext.verifyReceivedProximityRequest()
     }
 
-    fun testQuestionnaireFlowWithNoSymptom() {
+    fun testQuestionnaireFlowWithNoSymptoms() {
         testAppContext.setFullValidUser()
         startMainActivity()
 
-        checkQuestionnaireFlowWithNoSymptom()
+        clickNotFeelingWellCard()
+
+        diagnoseQuestionRobot.answerNoTo(R.id.temperature_question)
+        diagnoseQuestionRobot.answerNoTo(R.id.cough_question)
+        diagnoseQuestionRobot.answerNoTo(R.id.anosmia_question)
+        diagnoseQuestionRobot.answerNoTo(R.id.sneeze_question)
+        diagnoseQuestionRobot.answerNoTo(R.id.stomach_question)
+
+        diagnoseCloseRobot.checkActivityIsDisplayed()
+        diagnoseCloseRobot.close()
 
         okRobot.checkActivityIsDisplayed()
     }
@@ -206,29 +229,8 @@ class FlowTest {
         startMainActivity()
 
         isolateRobot.checkPopUpIsDisplayed()
+        isolateRobot.clickHaveSymptoms()
 
-        onView(withId(R.id.have_symptoms)).perform(click())
-
-        checkCanTransitionToIsolateActivitySimplified()
-    }
-
-    fun testEnableBluetoothThroughNotification() {
-        testAppContext.setFullValidUser()
-        startMainActivity()
-
-        testAppContext.ensureBluetoothDisabled()
-
-        testAppContext.clickOnNotificationAction(
-            notificationTitleRes = R.string.notification_bluetooth_disabled_title,
-            notificationTextRes = R.string.notification_bluetooth_disabled_text,
-            notificationActionRes = R.string.notification_bluetooth_disabled_action
-        )
-
-        testAppContext.verifyBluetoothIsEnabled()
-        okRobot.checkActivityIsDisplayed()
-    }
-
-    private fun checkCanTransitionToIsolateActivitySimplified() {
         diagnoseQuestionRobot.checkProgress(R.string.progress_one_third)
         diagnoseQuestionRobot.answerYesTo(R.id.temperature_question)
 
@@ -241,37 +243,19 @@ class FlowTest {
         isolateRobot.checkActivityIsDisplayed()
     }
 
-    private fun checkQuestionnaireFlowWithNoSymptom() {
-        clickNotFeelingWellCard()
+    fun testEnableBluetoothThroughNotification() {
+        testAppContext.setFullValidUser()
+        startMainActivity()
+        testAppContext.ensureBluetoothDisabled()
 
-        diagnoseQuestionRobot.answerNoTo(R.id.temperature_question)
-        diagnoseQuestionRobot.answerNoTo(R.id.cough_question)
-        diagnoseQuestionRobot.answerNoTo(R.id.anosmia_question)
-        diagnoseQuestionRobot.answerNoTo(R.id.sneeze_question)
-        diagnoseQuestionRobot.answerNoTo(R.id.stomach_question)
+        testAppContext.clickOnNotificationAction(
+            notificationTitleRes = R.string.notification_bluetooth_disabled_title,
+            notificationTextRes = R.string.notification_bluetooth_disabled_text,
+            notificationActionRes = R.string.notification_bluetooth_disabled_action
+        )
 
-        diagnoseCloseRobot.checkActivityIsDisplayed()
-        diagnoseCloseRobot.close()
-    }
-
-    private fun checkQuestionnaireFlowWithSymptoms() {
-        clickNotFeelingWellCard()
-
-        diagnoseQuestionRobot.answerYesTo(R.id.temperature_question)
-        diagnoseQuestionRobot.answerYesTo(R.id.cough_question)
-        diagnoseQuestionRobot.answerYesTo(R.id.anosmia_question)
-        diagnoseQuestionRobot.answerYesTo(R.id.sneeze_question)
-        diagnoseQuestionRobot.answerYesTo(R.id.stomach_question)
-
-        diagnoseReviewRobot.checkActivityIsDisplayed()
-        diagnoseReviewRobot.selectYesterday()
-        diagnoseReviewRobot.submit()
-
-        diagnoseSubmitRobot.checkActivityIsDisplayed()
-        diagnoseSubmitRobot.selectConfirmation()
-        diagnoseSubmitRobot.submit()
-
-        isolateRobot.checkActivityIsDisplayed()
+        testAppContext.verifyBluetoothIsEnabled()
+        okRobot.checkActivityIsDisplayed()
     }
 
     private fun clickNotFeelingWellCard() {
