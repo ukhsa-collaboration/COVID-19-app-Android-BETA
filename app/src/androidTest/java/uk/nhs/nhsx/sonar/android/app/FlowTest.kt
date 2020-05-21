@@ -12,12 +12,10 @@ import android.os.Build
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
-import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
-import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -157,12 +155,10 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
-        postCodeRobot.checkActivityIsShown()
+        postCodeRobot.checkActivityIsDisplayed()
         postCodeRobot.clickContinue()
-        postCodeRobot.checkInvalidHintIsVisible()
-
-        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
-        closeSoftKeyboard()
+        postCodeRobot.checkInvalidHintIsDisplayed()
+        postCodeRobot.enterPostCode("E1")
 
         testAppContext.simulateUnsupportedDevice()
 
@@ -182,14 +178,10 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
-        postCodeRobot.checkActivityIsShown()
-
+        postCodeRobot.checkActivityIsDisplayed()
         postCodeRobot.clickContinue()
-
-        postCodeRobot.checkInvalidHintIsVisible()
-
-        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
-        closeSoftKeyboard()
+        postCodeRobot.checkInvalidHintIsDisplayed()
+        postCodeRobot.enterPostCode("E1")
 
         postCodeRobot.clickContinue()
 
@@ -216,10 +208,9 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
-        postCodeRobot.checkActivityIsShown()
+        postCodeRobot.checkActivityIsDisplayed()
 
-        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
-        closeSoftKeyboard()
+        postCodeRobot.enterPostCode("E1")
 
         postCodeRobot.clickContinue()
 
@@ -253,15 +244,10 @@ class FlowTest {
 
         onView(withId(R.id.confirm_onboarding)).perform(click())
 
-        postCodeRobot.checkActivityIsShown()
-
+        postCodeRobot.checkActivityIsDisplayed()
         postCodeRobot.clickContinue()
-
-        postCodeRobot.checkInvalidHintIsVisible()
-
-        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
-        closeSoftKeyboard()
-
+        postCodeRobot.checkInvalidHintIsDisplayed()
+        postCodeRobot.enterPostCode("E1")
         postCodeRobot.clickContinue()
 
         checkPermissionActivityIsShown()
@@ -538,8 +524,7 @@ class FlowTest {
     private fun onBoardUntilPermissionsScreen() {
         onView(withId(R.id.start_main_activity)).perform(click())
         onView(withId(R.id.confirm_onboarding)).perform(click())
-        onView(withId(R.id.postCodeEditText)).perform(typeText("E1"))
-        closeSoftKeyboard()
+        postCodeRobot.enterPostCode("E1")
         postCodeRobot.clickContinue()
     }
 

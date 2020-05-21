@@ -2,8 +2,11 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 
 import androidx.core.text.HtmlCompat
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -14,12 +17,21 @@ import uk.nhs.nhsx.sonar.android.app.SonarApplication
 
 class PostCodeRobot {
 
+    fun enterPostCode(postCode: String) {
+        onView(withId(R.id.postCodeEditText)).perform(typeText(postCode))
+        Espresso.closeSoftKeyboard()
+    }
+
     fun clickContinue() {
         onView(withId(R.id.postCodeContinue)).perform(click())
     }
 
-    fun checkActivityIsShown() {
+    fun checkActivityIsDisplayed() {
         onView(withId(R.id.postCodeContinue)).check(matches(isDisplayed()))
+    }
+
+    fun checkActivityDoesNotExist() {
+        onView(withId(R.id.postCodeContinue)).check(doesNotExist())
     }
 
     fun checkTitleIsDisplayed() {
@@ -30,11 +42,11 @@ class PostCodeRobot {
         onView(withText(R.string.post_code_example)).check(matches(isDisplayed()))
     }
 
-    fun checkInvalidHintIsHidden() {
+    fun checkInvalidHintIsNotDisplayed() {
         onView(withId(R.id.invalidPostCodeHint)).check(matches(not(isDisplayed())))
     }
 
-    fun checkInvalidHintIsVisible() {
+    fun checkInvalidHintIsDisplayed() {
         onView(withId(R.id.invalidPostCodeHint)).check(matches(isDisplayed()))
     }
 

@@ -17,17 +17,31 @@ class PostCodeActivityTest {
 
     @Test
     fun pristineState() {
-        postCodeRobot.checkActivityIsShown()
+        postCodeRobot.checkActivityIsDisplayed()
         postCodeRobot.checkTitleIsDisplayed()
         postCodeRobot.checkExampleIsDisplayed()
-        postCodeRobot.checkInvalidHintIsHidden()
+        postCodeRobot.checkInvalidHintIsNotDisplayed()
         postCodeRobot.checkEditTextIs("")
         postCodeRobot.checkRationaleIsVisible()
     }
 
     @Test
-    fun clickContinueWithEmptyPostCodeShouldShowHint() {
+    fun emptyPostCodeShowsInvalidHint() {
         postCodeRobot.clickContinue()
-        postCodeRobot.checkInvalidHintIsVisible()
+        postCodeRobot.checkInvalidHintIsDisplayed()
+    }
+
+    @Test
+    fun invalidPostCodeShowsInvalidHint() {
+        postCodeRobot.enterPostCode("1")
+        postCodeRobot.clickContinue()
+        postCodeRobot.checkInvalidHintIsDisplayed()
+    }
+
+    @Test
+    fun validPostCodeProceedsToNextView() {
+        postCodeRobot.enterPostCode("E1")
+        postCodeRobot.clickContinue()
+        postCodeRobot.checkActivityDoesNotExist()
     }
 }
