@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
 import kotlinx.android.synthetic.main.activity_review_close.nhs_service
 import kotlinx.android.synthetic.main.banner.toolbar_info
-import kotlinx.android.synthetic.main.status_footer_view.medical_workers_card
+import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -84,7 +84,7 @@ class OkActivity : BaseActivity() {
             openUrl(URL_NHS_LOCAL_SUPPORT)
         }
 
-        medical_workers_card.setOnClickListener {
+        workplace_guidance_card.setOnClickListener {
             WorkplaceGuidanceActivity.start(this)
         }
 
@@ -181,7 +181,7 @@ class OkActivity : BaseActivity() {
         read_current_advice.cardColourInversion(inversionModeEnabled)
         status_not_feeling_well.cardColourInversion(inversionModeEnabled)
 
-        medical_workers_card.cardColourInversion(inversionModeEnabled)
+        workplace_guidance_card.cardColourInversion(inversionModeEnabled)
         reference_link_card.cardColourInversion(inversionModeEnabled)
     }
 

@@ -4,14 +4,10 @@
 
 package uk.nhs.nhsx.sonar.android.app
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.os.Build
-import android.view.View
-import androidx.annotation.IdRes
-import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -19,8 +15,6 @@ import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isEnabled
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSpinnerText
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -28,38 +22,33 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import androidx.test.uiautomator.By
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiObject2
-import androidx.test.uiautomator.Until
-import org.awaitility.kotlin.await
-import org.awaitility.kotlin.until
 import org.hamcrest.CoreMatchers.anything
-import org.hamcrest.CoreMatchers.not
-import org.hamcrest.Matcher
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone
+import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
+import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
-import uk.nhs.nhsx.sonar.android.app.status.AmberState
+import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
+import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.status.IsolateActivityTest
+import uk.nhs.nhsx.sonar.android.app.status.IsolateRobot
+import uk.nhs.nhsx.sonar.android.app.status.OkActivityTest
+import uk.nhs.nhsx.sonar.android.app.status.OkRobot
 import uk.nhs.nhsx.sonar.android.app.status.RedState
-import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.UserState
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.SetChecked.Companion.setChecked
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestAppComponent
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.REFERENCE_CODE
+import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
-import kotlin.test.fail
 
 @RunWith(AndroidJUnit4::class)
 class FlowTest {
@@ -72,27 +61,27 @@ class FlowTest {
     val permissionRule: GrantPermissionRule =
         GrantPermissionRule.grant(*AndroidLocationHelper.requiredLocationPermissions)
 
-    private val postCodeRobot = PostCodeRobot()
+    lateinit var testAppContext: TestApplicationContext
+    private val app: SonarApplication get() = testAppContext.app
+    private val component: TestAppComponent get() = testAppContext.component
 
-    private lateinit var testAppContext: TestApplicationContext
-    private val component: TestAppComponent
-        get() = testAppContext.component
+    private val mainRobot = MainRobot()
+    private val postCodeRobot = PostCodeRobot()
+    private val permissionRobot = PermissionRobot()
+    private val okRobot: OkRobot get() = OkRobot(app)
+    private val atRiskRobot = AtRiskRobot()
+    private val isolateRobot = IsolateRobot()
 
     @Before
     fun setup() {
         testAppContext = TestApplicationContext(activityRule)
         testAppContext.closeNotificationPanel()
-        ensureBluetoothEnabled()
+        testAppContext.ensureBluetoothEnabled()
     }
 
     private fun resetApp() {
         testAppContext.reset()
-
-        val instrumentation = InstrumentationRegistry.getInstrumentation()
-        val intent = Intent(testAppContext.app, FlowTestStartActivity::class.java).apply {
-            addFlags(FLAG_ACTIVITY_NEW_TASK)
-        }
-        instrumentation.startActivitySync(intent)
+        app.startTestActivity<FlowTestStartActivity>()
     }
 
     @After
@@ -102,30 +91,37 @@ class FlowTest {
 
     @Test
     fun testRunner() {
-        val tests = listOf(
-            ::testUnsupportedDevice,
-            ::testUnsupportedDeviceOnThePermissionScreen,
-            ::testTabletNotSupported,
+        val tests = listOf<() -> Unit>(
+            { MainActivityTest(testAppContext).testExplanation() },
+            { MainActivityTest(testAppContext).testUnsupportedDevice() },
+            { MainActivityTest(testAppContext).testTabletNotSupported() },
+            { MainActivityTest(testAppContext).testLaunchWhenOnboardingIsFinishedButNotRegistered() },
+            { MainActivityTest(testAppContext).testLaunchWhenStateIsDefault() },
+            { MainActivityTest(testAppContext).testLaunchWhenStateIsAmber() },
+            { MainActivityTest(testAppContext).testLaunchWhenStateIsRed() },
+
+            { PermissionActivityTest(testAppContext).testUnsupportedDevice() },
+            { PermissionActivityTest(testAppContext).testEnableBluetooth() },
+            { PermissionActivityTest(testAppContext).testGrantLocationPermission() },
+            { PermissionActivityTest(testAppContext).testEnableLocationAccess() },
+
+            { BaseActivityTest(testAppContext).testResumeWhenBluetoothIsDisabled() },
+            { BaseActivityTest(testAppContext).testResumeWhenLocationAccessIsDisabled() },
+            { BaseActivityTest(testAppContext).testResumeWhenLocationPermissionIsRevoked() },
+
+            { OkActivityTest(testAppContext).testRegistrationRetry() },
+            { OkActivityTest(testAppContext).testRegistrationPushNotificationNotReceived() },
+
+            { IsolateActivityTest(testAppContext).testWhenStateIsExpired() },
+            { IsolateActivityTest(testAppContext).testClickOrderTestCardShowsApplyForTest() },
+
             ::testRegistration,
-            ::testRegistrationRetry,
-            ::testRegistrationPushNotificationNotReceived,
-            ::testProximityDataUploadOnSympotomaticState,
+            ::testProximityDataUploadOnSymptomaticState,
             ::testQuestionnaireFlowWithNoSymptom,
             ::testReceivingStatusUpdateNotification,
             ::testHideStatusUpdateNotificationWhenNotClicked,
-            ::testExplanation,
-            ::testLaunchWhenStateIsDefault,
-            ::testLaunchWhenStateIsAmber,
-            ::testLaunchWhenStateIsRed,
-            ::testLaunchWhenStateIsRedAndExpired,
             ::testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState,
-            ::testLaunchWhenOnboardingIsFinishedButNotRegistered,
-            ::testOnboardingWhenPermissionsNeedToBeSet,
-            ::testResumeWhenBluetoothIsDisabled,
-            ::testResumeWhenLocationAccessIsDisabled,
-            ::testResumeWhenLocationPermissionIsRevoked,
-            ::testEnableBluetoothThroughNotification,
-            ::testClickOrderTestCardShowsApplyForTest
+            ::testEnableBluetoothThroughNotification
         )
 
         tests.forEach {
@@ -134,115 +130,11 @@ class FlowTest {
         }
     }
 
-    fun testUnsupportedDevice() {
-        testAppContext.simulateUnsupportedDevice()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        checkViewHasText(R.id.edgeCaseTitle, R.string.device_not_supported_title)
-    }
-
-    fun testTabletNotSupported() {
-        testAppContext.simulateTablet()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        checkViewHasText(R.id.edgeCaseTitle, R.string.tablet_support_title)
-    }
-
-    fun testUnsupportedDeviceOnThePermissionScreen() {
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        onView(withId(R.id.confirm_onboarding)).perform(click())
-
-        postCodeRobot.checkActivityIsDisplayed()
-        postCodeRobot.clickContinue()
-        postCodeRobot.checkInvalidHintIsDisplayed()
-        postCodeRobot.enterPostCode("E1")
-
-        testAppContext.simulateUnsupportedDevice()
-
-        postCodeRobot.clickContinue()
-
-        checkPermissionActivityIsShown()
-
-        onView(withId(R.id.permission_continue)).perform(click())
-
-        checkViewHasText(R.id.edgeCaseTitle, R.string.device_not_supported_title)
-    }
-
     fun testRegistration() {
         testAppContext.simulateBackendDelay(400)
 
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        onView(withId(R.id.confirm_onboarding)).perform(click())
-
-        postCodeRobot.checkActivityIsDisplayed()
-        postCodeRobot.clickContinue()
-        postCodeRobot.checkInvalidHintIsDisplayed()
-        postCodeRobot.enterPostCode("E1")
-
-        postCodeRobot.clickContinue()
-
-        checkPermissionActivityIsShown()
-
-        onView(withId(R.id.permission_continue)).perform(click())
-
-        checkOkActivityIsShown()
-
-        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
-
-        testAppContext.verifyRegistrationFlow()
-        checkViewHasText(
-            R.id.registrationStatusText,
-            R.string.registration_everything_is_working_ok
-        )
-        verifyCheckMySymptomsButton(isEnabled())
-    }
-
-    fun testRegistrationRetry() {
-        testAppContext.simulateBackendResponse(error = true)
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        onView(withId(R.id.confirm_onboarding)).perform(click())
-
-        postCodeRobot.checkActivityIsDisplayed()
-
-        postCodeRobot.enterPostCode("E1")
-
-        postCodeRobot.clickContinue()
-
-        checkPermissionActivityIsShown()
-
-        onView(withId(R.id.permission_continue)).perform(click())
-
-        checkOkActivityIsShown()
-
-        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
-        verifyCheckMySymptomsButton(not(isEnabled()))
-
-        testAppContext.simulateBackendResponse(error = false)
-
-        testAppContext.verifyRegistrationRetry()
-
-        // job retries after at least 10 seconds
-        waitForText(R.string.registration_everything_is_working_ok, timeoutInMs = 20000)
-
-        checkViewHasText(
-            R.id.registrationStatusText,
-            R.string.registration_everything_is_working_ok
-        )
-        verifyCheckMySymptomsButton(isEnabled())
-    }
-
-    fun testRegistrationPushNotificationNotReceived() {
-        testAppContext.simulateBackendDelay(400)
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        onView(withId(R.id.confirm_onboarding)).perform(click())
+        startMainActivity()
+        mainRobot.clickConfirmOnboarding()
 
         postCodeRobot.checkActivityIsDisplayed()
         postCodeRobot.clickContinue()
@@ -250,31 +142,23 @@ class FlowTest {
         postCodeRobot.enterPostCode("E1")
         postCodeRobot.clickContinue()
 
-        checkPermissionActivityIsShown()
+        permissionRobot.checkActivityIsDisplayed()
+        permissionRobot.clickContinue()
 
-        onView(withId(R.id.permission_continue)).perform(click())
-
-        checkOkActivityIsShown()
-
-        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
-
-        testAppContext.verifyReceivedRegistrationRequest()
+        okRobot.checkActivityIsDisplayed()
+        okRobot.checkFinalisingSetup()
 
         testAppContext.verifyRegistrationFlow()
 
-        checkViewHasText(
-            R.id.registrationStatusText,
-            R.string.registration_everything_is_working_ok
-        )
-        verifyCheckMySymptomsButton(isEnabled())
+        okRobot.checkEverythingIsWorking()
     }
 
-    fun testProximityDataUploadOnSympotomaticState() {
-        setUserState(DefaultState)
-        setValidSonarIdAndSecretKeyAndPublicKey()
-        setReferenceCode()
+    fun testProximityDataUploadOnSymptomaticState() {
+        testAppContext.setUserState(DefaultState)
+        testAppContext.setValidSonarIdAndSecretKeyAndPublicKey()
+        testAppContext.setReferenceCode()
 
-        onView(withId(R.id.start_main_activity)).perform(click())
+        startMainActivity()
 
         testAppContext.simulateDeviceInProximity()
 
@@ -282,318 +166,75 @@ class FlowTest {
 
         testAppContext.verifyReceivedProximityRequest()
 
-        checkIsolateActivityIsShown()
+        isolateRobot.checkActivityIsDisplayed()
     }
 
     fun testQuestionnaireFlowWithNoSymptom() {
-        setUserState(DefaultState)
-        setValidSonarIdAndSecretKeyAndPublicKey()
-        setReferenceCode()
+        testAppContext.setUserState(DefaultState)
+        testAppContext.setValidSonarIdAndSecretKeyAndPublicKey()
+        testAppContext.setReferenceCode()
 
-        onView(withId(R.id.start_main_activity)).perform(click())
-
+        startMainActivity()
         checkQuestionnaireFlowWithNoSymptom()
 
-        checkOkActivityIsShown()
+        okRobot.checkActivityIsDisplayed()
     }
 
     fun testReceivingStatusUpdateNotification() {
-        setUserState(DefaultState)
-        setValidSonarId()
-        setReferenceCode()
+        testAppContext.setUserState(DefaultState)
+        testAppContext.setValidSonarId()
+        testAppContext.setReferenceCode()
 
-        onView(withId(R.id.start_main_activity)).perform(click())
+        startMainActivity()
 
         testAppContext.apply {
             simulateStatusUpdateReceived()
             clickOnNotification(R.string.notification_title, R.string.notification_text)
         }
 
-        checkAtRiskActivityIsShown()
+        atRiskRobot.checkActivityIsDisplayed()
     }
 
     fun testHideStatusUpdateNotificationWhenNotClicked() {
-        setUserState(DefaultState)
-        setValidSonarId()
-        setReferenceCode()
+        testAppContext.setUserState(DefaultState)
+        testAppContext.setValidSonarId()
+        testAppContext.setReferenceCode()
 
         val notificationTitle = R.string.notification_title
+        testAppContext.simulateStatusUpdateReceived()
+        testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = true)
 
-        testAppContext.apply {
-            simulateStatusUpdateReceived()
-            isNotificationDisplayed(notificationTitle, isDisplayed = true)
-        }
+        startMainActivity()
 
-        onView(withId(R.id.start_main_activity)).perform(click())
+        testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = false)
 
-        testAppContext.apply {
-            isNotificationDisplayed(notificationTitle, isDisplayed = false)
-        }
-
-        checkAtRiskActivityIsShown()
-    }
-
-    fun testExplanation() {
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        onView(withId(R.id.explanation_link)).perform(scrollTo(), click())
-
-        checkExplanationActivityIsShown()
-
-        onView(withId(R.id.explanation_back)).perform(click())
-
-        checkMainActivityIsShown()
-    }
-
-    fun testLaunchWhenStateIsDefault() {
-        setUserState(DefaultState)
-        setValidSonarId()
-        setReferenceCode()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        checkOkActivityIsShown()
-        checkDisplayOfReferenceCode()
-        checkDisplayOfMedicalWorkersInstructions()
-    }
-
-    fun testLaunchWhenStateIsAmber() {
-        setUserState(AmberState(DateTime.now(DateTimeZone.UTC).plusDays(1)))
-        setValidSonarId()
-        setReferenceCode()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        checkAtRiskActivityIsShown()
-        checkDisplayOfReferenceCode()
-        checkDisplayOfMedicalWorkersInstructions()
-    }
-
-    fun testLaunchWhenStateIsRed() {
-        setUserState(
-            RedState(
-                DateTime.now(DateTimeZone.UTC).plusDays(1),
-                nonEmptySetOf(Symptom.TEMPERATURE)
-            )
-        )
-        setValidSonarId()
-        setReferenceCode()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        checkIsolateActivityIsShown()
-        checkDisplayOfReferenceCode()
-        checkDisplayOfMedicalWorkersInstructions()
-    }
-
-    fun testClickOrderTestCardShowsApplyForTest() {
-        setUserState(
-            RedState(
-                DateTime.now(DateTimeZone.UTC).plusDays(1),
-                nonEmptySetOf(Symptom.TEMPERATURE)
-            )
-        )
-        setValidSonarId()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        onView(withId(R.id.book_test_card)).perform(click())
-
-        checkApplyForTestActivityIsShown()
-    }
-
-    private fun checkApplyForTestActivityIsShown() {
-        onView(withId(R.id.apply_for_test_title)).check(matches(isDisplayed()))
-    }
-
-    fun testLaunchWhenStateIsRedAndExpired() {
-        setUserState(
-            RedState(
-                DateTime.now(DateTimeZone.UTC).minusDays(1),
-                nonEmptySetOf(Symptom.TEMPERATURE)
-            )
-        )
-        setValidSonarId()
-        setReferenceCode()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        checkIsolateActivityPopUpIsShown()
+        atRiskRobot.checkActivityIsDisplayed()
     }
 
     fun testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState() {
-        setUserState(
-            RedState(
-                DateTime.now(DateTimeZone.UTC).minusDays(1),
-                nonEmptySetOf(Symptom.TEMPERATURE)
-            )
-        )
-        setValidSonarId()
-        setReferenceCode()
+        val expiredRedState = RedState(DateTime.now(UTC).minusSeconds(1), nonEmptySetOf(TEMPERATURE))
 
-        onView(withId(R.id.start_main_activity)).perform(click())
+        testAppContext.setUserState(expiredRedState)
+        testAppContext.setValidSonarId()
+        testAppContext.setReferenceCode()
 
-        checkIsolateActivityPopUpIsShown()
+        startMainActivity()
+
+        isolateRobot.checkPopUpIsDisplayed()
 
         onView(withId(R.id.have_symptoms)).perform(click())
 
         checkCanTransitionToIsolateActivitySimplified()
     }
 
-    fun testLaunchWhenOnboardingIsFinishedButNotRegistered() {
-        setFinishedOnboarding()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        checkOkActivityIsShown()
-    }
-
-    private fun findButton(text: String): UiObject2? =
-        testAppContext.device.let {
-            it.findObject(By.text(text))
-                ?: it.findObject(By.text(text.toLowerCase()))
-                ?: it.findObject(By.text(text.toUpperCase()))
-        }
-
-    fun testOnboardingWhenPermissionsNeedToBeSet() {
-        fun testEnableBluetooth() {
-            onView(withId(R.id.permission_continue)).perform(click())
-
-            testAppContext.device.apply {
-                wait(Until.hasObject(By.textContains("wants to turn on Bluetooth")), 500)
-
-                val button = sequenceOf("Allow", "Yes", "Ok", "Accept")
-                    .mapNotNull(::findButton)
-                    .firstOrNull()
-                    ?: fail("Looks like we could not find the acceptance button for bluetooth.")
-
-                button.click()
-            }
-        }
-
-        fun testGrantLocationPermission() {
-            if (Build.VERSION.SDK_INT >= 29) {
-                checkViewHasText(R.id.edgeCaseTitle, R.string.grant_location_permission_title)
-            } else {
-                checkViewHasText(
-                    R.id.edgeCaseTitle,
-                    R.string.grant_location_permission_title_pre_10
-                )
-            }
-
-            onView(withId(R.id.takeActionButton)).perform(click())
-
-            // ensure we leave the screen before moving on
-            waitUntilCannotFindText(R.string.grant_location_permission_title)
-            waitUntilCannotFindText(R.string.grant_location_permission_title_pre_10)
-
-            // moving on...
-            testAppContext.grantLocationPermission()
-            testAppContext.device.pressBack()
-
-            checkPermissionActivityIsShown()
-        }
-
-        fun testEnableLocationAccess() {
-            onView(withId(R.id.permission_continue)).perform(click())
-
-            onView(withId(R.id.edgeCaseTitle)).check(matches(withText(R.string.enable_location_service_title)))
-
-            onView(withId(R.id.takeActionButton)).perform(click())
-            testAppContext.enableLocationAccess()
-            testAppContext.device.pressBack()
-
-            checkPermissionActivityIsShown()
-        }
-
-        onBoardUntilPermissionsScreen()
-
-        ensureBluetoothDisabled()
-        testAppContext.disableLocationAccess()
-        testAppContext.revokeLocationPermission()
-
-        testEnableBluetooth()
-        testGrantLocationPermission()
-        testEnableLocationAccess()
-
-        onView(withId(R.id.permission_continue)).perform(click())
-
-        checkOkActivityIsShown()
-    }
-
-    private fun onBoardUntilPermissionsScreen() {
-        onView(withId(R.id.start_main_activity)).perform(click())
-        onView(withId(R.id.confirm_onboarding)).perform(click())
-        postCodeRobot.enterPostCode("E1")
-        postCodeRobot.clickContinue()
-    }
-
-    fun testResumeWhenBluetoothIsDisabled() {
-        setUserState(DefaultState)
-        setValidSonarId()
-        setReferenceCode()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        onView(withId(R.id.read_current_advice)).perform(click())
-        ensureBluetoothDisabled()
-        testAppContext.device.pressBack()
-
-        checkViewHasText(R.id.edgeCaseTitle, R.string.re_enable_bluetooth_title)
-
-        onView(withId(R.id.takeActionButton)).perform(click())
-
-        waitForText(R.string.status_initial_title, timeoutInMs = 6_000)
-    }
-
-    fun testResumeWhenLocationAccessIsDisabled() {
-        setUserState(DefaultState)
-        setValidSonarId()
-        setReferenceCode()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        testAppContext.disableLocationAccess()
-
-        waitForText(R.string.re_enable_location_title)
-
-        testAppContext.enableLocationAccess()
-
-        waitForText(R.string.status_initial_title)
-    }
-
-    fun testResumeWhenLocationPermissionIsRevoked() {
-        setUserState(DefaultState)
-        setValidSonarId()
-        setReferenceCode()
-
-        onView(withId(R.id.start_main_activity)).perform(click())
-
-        onView(withId(R.id.read_current_advice)).perform(click())
-        testAppContext.revokeLocationPermission()
-        testAppContext.device.pressBack()
-
-        checkViewHasText(R.id.edgeCaseTitle, R.string.re_allow_location_permission_title)
-
-        onView(withId(R.id.takeActionButton)).perform(click())
-        testAppContext.device.wait(
-            Until.gone(By.text("Allow this app to access your location to continue")),
-            500
-        )
-        testAppContext.grantLocationPermission()
-        testAppContext.device.pressBack()
-
-        waitForText(R.string.status_initial_title)
-    }
-
     fun testEnableBluetoothThroughNotification() {
-        setUserState(DefaultState)
-        setValidSonarId()
-        setReferenceCode()
+        testAppContext.setUserState(DefaultState)
+        testAppContext.setValidSonarId()
+        testAppContext.setReferenceCode()
 
-        onView(withId(R.id.start_main_activity)).perform(click())
+        startMainActivity()
 
-        ensureBluetoothDisabled()
+        testAppContext.ensureBluetoothDisabled()
 
         testAppContext.clickOnNotificationAction(
             notificationTitleRes = R.string.notification_bluetooth_disabled_title,
@@ -601,132 +242,12 @@ class FlowTest {
             notificationActionRes = R.string.notification_bluetooth_disabled_action
         )
 
-        verifyBluetoothIsEnabled()
-        checkOkActivityIsShown()
+        testAppContext.verifyBluetoothIsEnabled()
+        okRobot.checkActivityIsDisplayed()
     }
 
-    private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
-        onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
-    }
-
-    private fun waitUntilCannotFindText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
-        testAppContext.device.wait(Until.gone(By.text(getString(stringId))), timeoutInMs)
-    }
-
-    private fun getString(@StringRes stringId: Int): String {
-        val context = testAppContext.app.applicationContext
-        return context.getString(stringId)
-    }
-
-    private fun waitForText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
-        waitForText(getString(stringId), timeoutInMs)
-    }
-
-    private fun waitForText(text: String, timeoutInMs: Long = 500) {
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-        device.wait(Until.findObject(By.text(text)), timeoutInMs)
-            ?: fail("Timed out waiting for text: $text")
-    }
-
-    private fun checkViewHasText(@IdRes viewId: Int, @StringRes stringId: Int) {
-        onView(withId(viewId)).check(matches(withText(stringId)))
-    }
-
-    private fun checkMainActivityIsShown() {
-        onView(withId(R.id.confirm_onboarding)).check(matches(isDisplayed()))
-    }
-
-    private fun checkPermissionActivityIsShown() {
-        onView(withId(R.id.permission_continue)).check(matches(isDisplayed()))
-    }
-
-    private fun checkExplanationActivityIsShown() {
-        onView(withId(R.id.explanation_back)).check(matches(isDisplayed()))
-    }
-
-    private fun checkOkActivityIsShown() {
-        waitForText(R.string.status_initial_title, 1000)
-        onView(withId(R.id.status_initial_title)).check(matches(isDisplayed()))
-    }
-
-    private fun checkAtRiskActivityIsShown() {
-        onView(withId(R.id.status_amber_title)).check(matches(isDisplayed()))
-    }
-
-    private fun checkIsolateActivityIsShown() {
-        onView(withId(R.id.status_red_title)).check(matches(isDisplayed()))
-    }
-
-    private fun checkIsolateActivityPopUpIsShown() {
-        onView(withId(R.id.bottom_sheet_isolate)).check(matches(isDisplayed()))
-    }
-
-    private fun checkDisplayOfReferenceCode() {
-        onView(withId(R.id.reference_link_card)).perform(scrollTo(), click())
-
-        onView(withId(R.id.reference_code)).check(matches(withText(REFERENCE_CODE)))
-
-        onView(withContentDescription(R.string.go_back)).perform(click())
-    }
-
-    private fun checkDisplayOfMedicalWorkersInstructions() {
-        onView(withId(R.id.medicalWorkersInstructions)).perform(scrollTo(), click())
-        onView(withId(R.id.workplace_guidance_title)).check(matches(isDisplayed()))
-        onView(withContentDescription(R.string.go_back)).perform(click())
-    }
-
-    private fun setUserState(state: UserState) {
-        component.getUserStateStorage().set(state)
-    }
-
-    private fun setFinishedOnboarding() {
-        val storage = component.getOnboardingStatusProvider()
-        storage.set(true)
-    }
-
-    private fun setValidSonarId() {
-        val sonarIdProvider = component.getSonarIdProvider()
-        sonarIdProvider.set(TestSonarServiceDispatcher.RESIDENT_ID)
-    }
-
-    private fun setValidSonarIdAndSecretKeyAndPublicKey() {
-        setValidSonarId()
-
-        val keyStorage = component.getKeyStorage()
-        keyStorage.storeSecretKey(TestSonarServiceDispatcher.encodedSecretKey)
-        keyStorage.storeServerPublicKey(TestSonarServiceDispatcher.PUBLIC_KEY)
-    }
-
-    private fun setReferenceCode() {
-        val refCodeProvider = component.getReferenceCodeProvider()
-        refCodeProvider.set(ReferenceCode(REFERENCE_CODE))
-    }
-
-    private fun bluetoothAdapter(): BluetoothAdapter {
-        val context = testAppContext.app.applicationContext
-        val manager = context.getSystemService(BluetoothManager::class.java) as BluetoothManager
-        return manager.adapter
-    }
-
-    private fun ensureBluetoothEnabled() {
-        bluetoothAdapter().let {
-            it.enable()
-            await until { it.isEnabled }
-        }
-    }
-
-    private fun verifyBluetoothIsEnabled() {
-        bluetoothAdapter().let {
-            await until { it.isEnabled }
-        }
-    }
-
-    private fun ensureBluetoothDisabled() {
-        bluetoothAdapter().let {
-            it.disable()
-            await until { !it.isEnabled }
-        }
+    private fun startMainActivity() {
+        onView(withId(R.id.start_main_activity)).perform(click())
     }
 
     private fun checkCanTransitionToIsolateActivitySimplified() {
@@ -746,25 +267,16 @@ class FlowTest {
         onView(withId(R.id.no)).perform(click())
         onView(withId(R.id.confirm_diagnosis)).perform(click())
 
-        checkIsolateActivityIsShown()
+        isolateRobot.checkActivityIsDisplayed()
     }
 
     private fun checkQuestionnaireFlowWithNoSymptom() {
         onView(withId(R.id.status_not_feeling_well)).perform(scrollTo(), click())
 
-        // Temperature step
         answerNoTo(R.id.temperature_question)
-
-        // Cough Step
         answerNoTo(R.id.cough_question)
-
-        // Anosmia Step
         answerNoTo(R.id.anosmia_question)
-
-        // Sneeze Step
         answerNoTo(R.id.sneeze_question)
-
-        // Stomach Step
         answerNoTo(R.id.stomach_question)
 
         // Close Activity
@@ -775,19 +287,10 @@ class FlowTest {
     private fun checkQuestionnaireFlowWithSymptoms() {
         onView(withId(R.id.status_not_feeling_well)).perform(scrollTo(), click())
 
-        // Temperature step
         answerYesTo(R.id.temperature_question)
-
-        // Cough Step
         answerYesTo(R.id.cough_question)
-
-        // Anosmia Step
         answerYesTo(R.id.anosmia_question)
-
-        // Sneeze Step
         answerYesTo(R.id.sneeze_question)
-
-        // Stomach Step
         answerYesTo(R.id.stomach_question)
 
         // Review Step
@@ -850,4 +353,14 @@ class FlowTest {
         onView(withId(answerId)).check(matches(isChecked()))
         onView(withId(R.id.confirm_diagnosis)).perform(click())
     }
+}
+
+inline fun <reified T : Activity> Context.startTestActivity(config: Intent.() -> Unit = {}) {
+    val intent = Intent(this, T::class.java)
+        .apply { addFlags(FLAG_ACTIVITY_NEW_TASK) }
+        .apply(config)
+
+    InstrumentationRegistry
+        .getInstrumentation()
+        .startActivitySync(intent)
 }

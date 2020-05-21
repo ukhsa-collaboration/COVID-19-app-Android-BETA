@@ -4,6 +4,8 @@
 
 package uk.nhs.nhsx.sonar.android.app.testhelpers
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.ContextWrapper
 import android.content.Intent
 import android.util.Base64
@@ -37,8 +39,10 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
+import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.PUBLIC_KEY
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.RESIDENT_ID
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.SECRET_KEY
@@ -148,9 +152,57 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         mockServer.shutdown()
     }
 
-    private fun simulateActivationCodeReceived() {
-        val msg = RemoteMessage(bundleOf("activationCode" to "test activation code #001"))
-        notificationService.onMessageReceived(msg)
+    fun setUserState(state: UserState) {
+        component.getUserStateStorage().set(state)
+    }
+
+    fun setValidSonarId() {
+        val sonarIdProvider = component.getSonarIdProvider()
+        sonarIdProvider.set(RESIDENT_ID)
+    }
+
+    fun setReferenceCode() {
+        val refCodeProvider = component.getReferenceCodeProvider()
+        refCodeProvider.set(ReferenceCode(TestSonarServiceDispatcher.REFERENCE_CODE))
+    }
+
+    fun setFinishedOnboarding() {
+        val storage = component.getOnboardingStatusProvider()
+        storage.set(true)
+    }
+
+    fun setValidSonarIdAndSecretKeyAndPublicKey() {
+        setValidSonarId()
+
+        val keyStorage = component.getKeyStorage()
+        keyStorage.storeSecretKey(TestSonarServiceDispatcher.encodedSecretKey)
+        keyStorage.storeServerPublicKey(PUBLIC_KEY)
+    }
+
+    private fun bluetoothAdapter(): BluetoothAdapter {
+        val context = app.applicationContext
+        val manager = context.getSystemService(BluetoothManager::class.java) as BluetoothManager
+        return manager.adapter
+    }
+
+    fun ensureBluetoothEnabled() {
+        bluetoothAdapter().let {
+            it.enable()
+            await until { it.isEnabled }
+        }
+    }
+
+    fun verifyBluetoothIsEnabled() {
+        bluetoothAdapter().let {
+            await until { it.isEnabled }
+        }
+    }
+
+    fun ensureBluetoothDisabled() {
+        bluetoothAdapter().let {
+            it.disable()
+            await until { !it.isEnabled }
+        }
     }
 
     fun simulateStatusUpdateReceived() {
@@ -246,6 +298,11 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     fun verifyRegistrationRetry() {
         verifyReceivedRegistrationRequest()
         simulateActivationCodeReceived()
+    }
+
+    private fun simulateActivationCodeReceived() {
+        val msg = RemoteMessage(bundleOf("activationCode" to "test activation code #001"))
+        notificationService.onMessageReceived(msg)
     }
 
     fun verifyReceivedRegistrationRequest() {

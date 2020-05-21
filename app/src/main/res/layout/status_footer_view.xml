@@ -42,7 +42,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/medical_workers_card"
+        android:id="@+id/workplace_guidance_card"
         style="@style/PrimaryCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
         android:focusable="true">
 
         <TextView
-            android:id="@+id/medicalWorkersInstructions"
+            android:id="@+id/workplaceGuidance"
             style="@style/TextViewActionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,10 +59,7 @@
             android:paddingHorizontal="16dp"
             android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
             android:text="@string/guidance_for_workplace" />
-
     </com.google.android.material.card.MaterialCardView>
-
-
 
     <TextView
         android:id="@+id/need_medical_advice"
