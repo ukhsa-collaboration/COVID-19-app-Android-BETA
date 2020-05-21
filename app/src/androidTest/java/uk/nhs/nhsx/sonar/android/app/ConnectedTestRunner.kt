@@ -25,7 +25,6 @@ import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.OkActivityTest
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestAppComponent
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 
@@ -41,8 +40,6 @@ class ConnectedTestRunner {
         GrantPermissionRule.grant(*AndroidLocationHelper.requiredLocationPermissions)
 
     lateinit var testAppContext: TestApplicationContext
-    private val app: SonarApplication get() = testAppContext.app
-    private val component: TestAppComponent get() = testAppContext.component
 
     @Before
     fun setup() {
@@ -51,7 +48,7 @@ class ConnectedTestRunner {
 
     private fun resetApp() {
         testAppContext.reset()
-        app.startTestActivity<FlowTestStartActivity>()
+        testAppContext.app.startTestActivity<FlowTestStartActivity>()
     }
 
     @After
