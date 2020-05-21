@@ -11,6 +11,7 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.edgecases.EdgeCaseRobot
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
@@ -22,20 +23,26 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
     private val app = testAppContext.app
     private val permissionRobot = PermissionRobot()
     private val okRobot = OkRobot(app)
+    private val edgeCaseRobot = EdgeCaseRobot()
+
+    private fun startActivity() {
+        testAppContext.setValidPostcode()
+        app.startTestActivity<PermissionActivity>()
+    }
 
     fun testUnsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()
 
-        app.startTestActivity<PermissionActivity>()
+        startActivity()
         permissionRobot.clickContinue()
 
-        checkViewHasText(R.id.edgeCaseTitle, R.string.device_not_supported_title)
+        edgeCaseRobot.checkTitle(R.string.device_not_supported_title)
     }
 
     fun testEnableBluetooth() {
         testAppContext.ensureBluetoothDisabled()
 
-        app.startTestActivity<PermissionActivity>()
+        startActivity()
         permissionRobot.clickContinue()
 
         testAppContext.device.apply {
@@ -50,12 +57,13 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
         }
 
         testAppContext.verifyBluetoothIsEnabled()
+        okRobot.checkActivityIsDisplayed()
     }
 
     fun testGrantLocationPermission() {
         testAppContext.revokeLocationPermission()
 
-        app.startTestActivity<PermissionActivity>()
+        startActivity()
         permissionRobot.clickContinue()
 
         if (Build.VERSION.SDK_INT >= 29) {
@@ -85,7 +93,7 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
     fun testEnableLocationAccess() {
         testAppContext.disableLocationAccess()
 
-        app.startTestActivity<PermissionActivity>()
+        startActivity()
         permissionRobot.clickContinue()
 
         onView(withId(R.id.edgeCaseTitle))

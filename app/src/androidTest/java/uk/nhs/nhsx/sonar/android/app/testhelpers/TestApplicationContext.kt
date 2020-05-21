@@ -171,6 +171,11 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         storage.set(true)
     }
 
+    fun setValidPostcode() {
+        val storage = component.getPostCodeProvider()
+        storage.set("E1")
+    }
+
     fun setValidSonarIdAndSecretKeyAndPublicKey() {
         setValidSonarId()
 
