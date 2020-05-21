@@ -517,7 +517,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         testLocationHelper.reset()
 
         WorkManager.getInstance(app).cancelAllWork()
+
         resetTestMockServer()
+        closeNotificationPanel()
+        ensureBluetoothEnabled()
     }
 }
 
