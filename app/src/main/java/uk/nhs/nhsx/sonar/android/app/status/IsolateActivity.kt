@@ -131,7 +131,10 @@ class IsolateActivity : BaseActivity() {
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
+        latest_advice_red.cardColourInversion(inversionModeEnabled)
         book_test_card.cardColourInversion(inversionModeEnabled)
+
+        medical_workers_card.cardColourInversion(inversionModeEnabled)
         reference_link_card.cardColourInversion(inversionModeEnabled)
     }
 

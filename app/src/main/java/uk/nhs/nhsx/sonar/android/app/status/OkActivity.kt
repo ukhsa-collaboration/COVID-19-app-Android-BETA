@@ -176,9 +176,12 @@ class OkActivity : BaseActivity() {
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
-        status_not_feeling_well.cardColourInversion(inversionModeEnabled)
-        medical_workers_card.cardColourInversion(inversionModeEnabled)
         notificationPanel.cardColourInversion(inversionModeEnabled)
+
+        read_current_advice.cardColourInversion(inversionModeEnabled)
+        status_not_feeling_well.cardColourInversion(inversionModeEnabled)
+
+        medical_workers_card.cardColourInversion(inversionModeEnabled)
         reference_link_card.cardColourInversion(inversionModeEnabled)
     }
 

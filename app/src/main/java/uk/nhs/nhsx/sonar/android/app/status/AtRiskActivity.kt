@@ -91,8 +91,11 @@ class AtRiskActivity : BaseActivity() {
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
+        latest_advice_amber.cardColourInversion(inversionModeEnabled)
         status_not_feeling_well.cardColourInversion(inversionModeEnabled)
+
         medical_workers_card.cardColourInversion(inversionModeEnabled)
+        reference_link_card.cardColourInversion(inversionModeEnabled)
     }
 
     companion object {
