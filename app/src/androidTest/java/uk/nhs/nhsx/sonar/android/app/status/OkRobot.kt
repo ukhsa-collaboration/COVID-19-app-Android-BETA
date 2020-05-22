@@ -1,7 +1,5 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
-import android.content.Context
-import android.content.ContextWrapper
 import android.view.View
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -15,7 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import uk.nhs.nhsx.sonar.android.app.testhelpers.waitForText
 
-class OkRobot(context: Context) : ContextWrapper(context) {
+class OkRobot {
 
     fun checkActivityIsDisplayed() {
         waitForText(R.string.status_initial_title, 6_000)

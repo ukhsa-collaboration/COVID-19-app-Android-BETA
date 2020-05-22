@@ -22,7 +22,7 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
 
     private val app = testAppContext.app
     private val permissionRobot = PermissionRobot()
-    private val okRobot = OkRobot(app)
+    private val okRobot = OkRobot()
     private val edgeCaseRobot = EdgeCaseRobot()
 
     private fun startActivity() {

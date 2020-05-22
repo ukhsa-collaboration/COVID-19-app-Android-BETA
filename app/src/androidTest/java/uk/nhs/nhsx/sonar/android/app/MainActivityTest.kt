@@ -20,12 +20,9 @@ import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class MainActivityTest(private val testAppContext: TestApplicationContext) {
 
-    private val app = testAppContext.app
-    private val component = testAppContext.component
-
     private val mainRobot = MainRobot()
     private val explanationRobot = ExplanationRobot()
-    private val okRobot = OkRobot(app)
+    private val okRobot = OkRobot()
     private val atRiskRobot = AtRiskRobot()
     private val isolateRobot = IsolateRobot()
     private val statusFooterRobot = StatusFooterRobot()

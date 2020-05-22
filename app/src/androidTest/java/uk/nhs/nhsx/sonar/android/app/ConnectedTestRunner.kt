@@ -58,7 +58,7 @@ class ConnectedTestRunner {
 
     @Test
     fun runAllTests() {
-        val tests = listOf<() -> Unit>(
+        val tests = listOf(
             { MainActivityTest(testAppContext).testExplanation() },
             { MainActivityTest(testAppContext).testUnsupportedDevice() },
             { MainActivityTest(testAppContext).testTabletNotSupported() },
@@ -96,7 +96,8 @@ class ConnectedTestRunner {
 
             { DiagnoseSubmitActivityTest(testAppContext).testConfirmationIsRequired() },
 
-            { IsolateActivityTest(testAppContext).testWhenStateIsExpired() },
+            { IsolateActivityTest(testAppContext).testBottomDialogWhenStateIsExpiredSelectingUpdatingSymptoms() },
+            { IsolateActivityTest(testAppContext).testBottomDialogWhenStateIsExpiredSelectingNoSymptoms() },
             { IsolateActivityTest(testAppContext).testClickOrderTestCardShowsApplyForTest() },
 
             { FlowTest(testAppContext).testRegistration() },
@@ -104,6 +105,7 @@ class ConnectedTestRunner {
             { FlowTest(testAppContext).testQuestionnaireFlowWithNoSymptoms() },
             { FlowTest(testAppContext).testReceivingStatusUpdateNotification() },
             { FlowTest(testAppContext).testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState() },
+            { FlowTest(testAppContext).testExpiredRedStateUpdatingWithNoSymptomsNavigatesToOkActivity() },
             { FlowTest(testAppContext).testEnableBluetoothThroughNotification() }
         )
 

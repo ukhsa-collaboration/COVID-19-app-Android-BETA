@@ -7,7 +7,7 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 class OkActivityTest(private val testAppContext: TestApplicationContext) {
 
     private val app = testAppContext.app
-    private val okRobot = OkRobot(app)
+    private val okRobot = OkRobot()
     private val bottomDialogRobot = BottomDialogRobot()
 
     fun testRegistrationRetry() {

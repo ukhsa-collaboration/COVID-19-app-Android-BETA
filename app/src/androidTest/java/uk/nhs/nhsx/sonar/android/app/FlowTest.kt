@@ -23,12 +23,10 @@ import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class FlowTest(private val testAppContext: TestApplicationContext) {
 
-    private val app = testAppContext.app
-
     private val mainRobot = MainRobot()
     private val postCodeRobot = PostCodeRobot()
     private val permissionRobot = PermissionRobot()
-    private val okRobot = OkRobot(app)
+    private val okRobot = OkRobot()
     private val atRiskRobot = AtRiskRobot()
     private val diagnoseQuestionRobot = DiagnoseQuestionRobot()
     private val diagnoseCloseRobot = DiagnoseCloseRobot()
@@ -133,6 +131,19 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         diagnoseQuestionRobot.answerNoTo(R.id.anosmia_question)
 
         isolateRobot.checkActivityIsDisplayed()
+    }
+
+    fun testExpiredRedStateUpdatingWithNoSymptomsNavigatesToOkActivity() {
+        val expiredRedState =
+            RedState(DateTime.now(UTC).minusSeconds(1), nonEmptySetOf(TEMPERATURE))
+
+        testAppContext.setFullValidUser(expiredRedState)
+        startMainActivity()
+
+        bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
+        bottomDialogRobot.clickSecondCtaButton()
+
+        okRobot.checkActivityIsDisplayed()
     }
 
     fun testEnableBluetoothThroughNotification() {

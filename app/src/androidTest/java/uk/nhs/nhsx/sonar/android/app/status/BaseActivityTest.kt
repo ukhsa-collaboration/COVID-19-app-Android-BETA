@@ -10,7 +10,7 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 class BaseActivityTest(private val testAppContext: TestApplicationContext) {
 
     private val app = testAppContext.app
-    private val okRobot = OkRobot(app)
+    private val okRobot = OkRobot()
     private val edgeCaseRobot = EdgeCaseRobot()
 
     private fun startActivity() {
@@ -29,6 +29,7 @@ class BaseActivityTest(private val testAppContext: TestApplicationContext) {
         edgeCaseRobot.checkTitle(R.string.re_enable_bluetooth_title)
         edgeCaseRobot.clickTakeAction()
 
+        // TODO: fix flaky check
         okRobot.checkActivityIsDisplayed()
     }
 
