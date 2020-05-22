@@ -20,7 +20,7 @@ class SignableJsonObjectRequest(
     private val httpRequest: HttpRequest,
     deferred: Deferred<JSONObject>,
     private val sonarHeaderValue: String,
-    val appVersion: String,
+    private val appVersion: String,
     private val utcClock: UTCClock = RealUTCClock(),
     private val base64enc: (ByteArray) -> String
 ) :

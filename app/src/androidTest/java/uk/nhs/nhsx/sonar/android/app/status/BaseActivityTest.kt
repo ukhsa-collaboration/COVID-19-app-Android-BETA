@@ -36,7 +36,6 @@ class BaseActivityTest(private val testAppContext: TestApplicationContext) {
         startActivity()
 
         testAppContext.disableLocationAccess()
-        // app.waitForText(R.string.re_enable_location_title)
         edgeCaseRobot.checkTitle(R.string.re_enable_location_title)
 
         testAppContext.enableLocationAccess()

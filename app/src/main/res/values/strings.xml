@@ -19,11 +19,11 @@
     <string name="default_notification_channel_id" translatable="false">colocate-locate</string>
     <string name="default_notification_channel_name">General</string>
     <string name="foreground_service_channel_id" translatable="false">colocate-foreground-service</string>
-    <string name="foreground_service_channel_name">Application Service</string>
+    <string name="foreground_service_channel_name">Application service</string>
     <string name="permissions_and_access_channel_id" translatable="false">colocate-permissions-and-access</string>
-    <string name="permissions_and_access_channel_name">Permissions &amp; Access</string>
+    <string name="permissions_and_access_channel_name">Bluetooth and location reminders</string>
     <string name="contact_and_checkin_channel_id" translatable="false">colocate-contact-and-checkin</string>
-    <string name="contact_and_checkin_channel_name">Contact &amp; Checkin</string>
+    <string name="contact_and_checkin_channel_name">Coronavirus notifications</string>
     <string name="start_main_activity">Start main activity</string>
     <string name="notification_title">Your advice has changed</string>
     <string name="notification_text">Please open the app to learn what to do next. Your help saves lives.</string>
