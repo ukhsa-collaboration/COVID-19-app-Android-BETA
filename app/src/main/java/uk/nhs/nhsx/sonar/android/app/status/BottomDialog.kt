@@ -2,8 +2,10 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.bottom_sheet.bottomDialogCtaButton
+import kotlinx.android.synthetic.main.bottom_sheet.bottomDialogFirstCta
+import kotlinx.android.synthetic.main.bottom_sheet.bottomDialogSecondCta
 import kotlinx.android.synthetic.main.bottom_sheet.bottomDialogText
 import kotlinx.android.synthetic.main.bottom_sheet.bottomDialogTitle
 import uk.nhs.nhsx.sonar.android.app.R
@@ -12,7 +14,8 @@ class BottomDialog(
     context: Context,
     configuration: BottomDialogConfiguration,
     onCancel: () -> Unit = {},
-    onButtonClick: () -> Unit
+    onFirstCtaClick: () -> Unit = {},
+    onSecondCtaClick: () -> Unit
 ) : BottomSheetDialog(context, R.style.PersistentBottomSheet) {
     init {
         setContentView(layoutInflater.inflate(R.layout.bottom_sheet, null))
@@ -20,12 +23,22 @@ class BottomDialog(
 
         bottomDialogTitle.setText(configuration.titleResId)
         bottomDialogText.setText(configuration.textResId)
-        bottomDialogCtaButton.setText(configuration.ctaButtonTextResId)
+        bottomDialogSecondCta.setText(configuration.secondCtaResId)
+        if (configuration.firstCtaResId != null) {
+            bottomDialogFirstCta.setText(configuration.firstCtaResId)
+            bottomDialogFirstCta.isVisible = true
+        }
 
-        bottomDialogCtaButton.setOnClickListener {
-            onButtonClick()
+        bottomDialogFirstCta.setOnClickListener {
+            onFirstCtaClick()
             dismiss()
         }
+
+        bottomDialogSecondCta.setOnClickListener {
+            onSecondCtaClick()
+            dismiss()
+        }
+
         setOnCancelListener {
             onCancel()
             dismiss()
@@ -36,8 +49,9 @@ class BottomDialog(
 }
 
 data class BottomDialogConfiguration(
+    val isHideable: Boolean,
     @StringRes val titleResId: Int,
     @StringRes val textResId: Int,
-    @StringRes val ctaButtonTextResId: Int,
-    val isHideable: Boolean
+    @StringRes val firstCtaResId: Int? = null,
+    @StringRes val secondCtaResId: Int
 )

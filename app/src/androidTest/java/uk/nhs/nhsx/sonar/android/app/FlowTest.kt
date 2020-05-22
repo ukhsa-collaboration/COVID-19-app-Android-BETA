@@ -18,6 +18,7 @@ import uk.nhs.nhsx.sonar.android.app.status.OkRobot
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class FlowTest(private val testAppContext: TestApplicationContext) {
@@ -34,6 +35,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
     private val diagnoseReviewRobot = DiagnoseReviewRobot()
     private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
     private val isolateRobot = IsolateRobot()
+    private val bottomDialogRobot = BottomDialogRobot()
 
     fun testRegistration() {
         testAppContext.simulateBackendDelay(400)
@@ -112,13 +114,14 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState() {
-        val expiredRedState = RedState(DateTime.now(UTC).minusSeconds(1), nonEmptySetOf(TEMPERATURE))
+        val expiredRedState =
+            RedState(DateTime.now(UTC).minusSeconds(1), nonEmptySetOf(TEMPERATURE))
 
         testAppContext.setFullValidUser(expiredRedState)
         startMainActivity()
 
-        isolateRobot.checkPopUpIsDisplayed()
-        isolateRobot.clickHaveSymptoms()
+        bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
+        bottomDialogRobot.clickFirstCtaButton()
 
         diagnoseQuestionRobot.checkProgress(R.string.progress_one_third)
         diagnoseQuestionRobot.answerYesTo(R.id.temperature_question)

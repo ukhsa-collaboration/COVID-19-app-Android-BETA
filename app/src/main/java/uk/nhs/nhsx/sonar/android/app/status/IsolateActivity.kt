@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -16,9 +15,9 @@ import kotlinx.android.synthetic.main.activity_isolate.follow_until
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
 import kotlinx.android.synthetic.main.activity_isolate.registrationPanel
 import kotlinx.android.synthetic.main.banner.toolbar_info
-import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
 import kotlinx.android.synthetic.main.status_footer_view.nhs_service
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
+import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -92,28 +91,25 @@ class IsolateActivity : BaseActivity() {
     }
 
     private fun setUpdateSymptomsDialog() {
-        updateSymptomsDialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
-        updateSymptomsDialog.setContentView(
-            layoutInflater.inflate(
-                R.layout.bottom_sheet_isolate,
-                null
-            )
+        val configuration = BottomDialogConfiguration(
+            isHideable = false,
+            titleResId = R.string.status_today_feeling,
+            textResId = R.string.update_symptoms_prompt,
+            firstCtaResId = R.string.update_my_symptoms,
+            secondCtaResId = R.string.no_symptoms
         )
-        updateSymptomsDialog.behavior.isHideable = false
-
-        updateSymptomsDialog.findViewById<Button>(R.id.no_symptoms)?.setOnClickListener {
-            userStateStorage.set(DefaultState())
-            navigateTo(userStateStorage.get())
-            updateSymptomsDialog.cancel()
-        }
-
-        updateSymptomsDialog.setOnCancelListener {
-            finish()
-        }
-
-        updateSymptomsDialog.findViewById<Button>(R.id.have_symptoms)?.setOnClickListener {
-            DiagnoseTemperatureActivity.start(this)
-        }
+        updateSymptomsDialog = BottomDialog(this, configuration,
+            onCancel = {
+                finish()
+            },
+            onFirstCtaClick = {
+                DiagnoseTemperatureActivity.start(this)
+            },
+            onSecondCtaClick = {
+                userStateStorage.set(DefaultState())
+                navigateTo(userStateStorage.get())
+            }
+        )
     }
 
     override fun onResume() {

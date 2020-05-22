@@ -13,15 +13,7 @@ class IsolateRobot {
         onView(withId(R.id.status_red_title)).check(matches(isDisplayed()))
     }
 
-    fun checkPopUpIsDisplayed() {
-        onView(withId(R.id.bottom_sheet_isolate)).check(matches(isDisplayed()))
-    }
-
     fun clickBookTestCard() {
         onView(withId(R.id.book_test_card)).perform(click())
-    }
-
-    fun clickHaveSymptoms() {
-        onView(withId(R.id.have_symptoms)).perform(click())
     }
 }

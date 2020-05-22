@@ -2,11 +2,13 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 
 class OkActivityTest(private val testAppContext: TestApplicationContext) {
 
     private val app = testAppContext.app
     private val okRobot = OkRobot(app)
+    private val bottomDialogRobot = BottomDialogRobot()
 
     fun testRegistrationRetry() {
         testAppContext.setFinishedOnboarding()
@@ -39,8 +41,8 @@ class OkActivityTest(private val testAppContext: TestApplicationContext) {
 
         app.startTestActivity<OkActivity>()
 
-        okRobot.checkRecoveryDialogIsDisplayed()
-        okRobot.clickRecoveryDialogCtaButton()
-        okRobot.checkRecoveryDialogIsNotDisplayed()
+        bottomDialogRobot.checkRecoveryDialogIsDisplayed()
+        bottomDialogRobot.clickSecondCtaButton()
+        bottomDialogRobot.checkBottomDialogIsNotDisplayed()
     }
 }

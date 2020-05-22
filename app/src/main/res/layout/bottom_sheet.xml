@@ -11,6 +11,7 @@
     android:background="@drawable/bottom_sheet_rounded_background"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
+    android:paddingBottom="24dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <TextView
@@ -27,18 +28,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="32dp"
         android:textAlignment="textStart"
         android:textColor="@color/text_sub_title"
         android:textSize="16sp"
         tools:text="@string/recovery_dialog_description" />
 
     <Button
-        android:id="@+id/bottomDialogCtaButton"
+        android:id="@+id/bottomDialogFirstCta"
+        style="@style/PrimaryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:visibility="gone"
+        tools:text="@string/update_my_symptoms"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/bottomDialogSecondCta"
         style="@style/SecondaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="24dp"
         tools:text="@string/okay" />
 
 

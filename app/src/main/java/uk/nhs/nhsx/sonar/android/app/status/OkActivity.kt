@@ -149,16 +149,16 @@ class OkActivity : BaseActivity() {
 
     private fun setRecoveryDialog() {
         val configuration = BottomDialogConfiguration(
+            isHideable = false,
             titleResId = R.string.recovery_dialog_title,
             textResId = R.string.recovery_dialog_description,
-            ctaButtonTextResId = R.string.okay,
-            isHideable = false
+            secondCtaResId = R.string.okay
         )
         recoveryDialog = BottomDialog(this, configuration,
             onCancel = {
                 finish()
             },
-            onButtonClick = {
+            onSecondCtaClick = {
                 userStateStorage.set(DefaultState())
             })
     }
@@ -167,7 +167,7 @@ class OkActivity : BaseActivity() {
         val configuration = BottomDialogConfiguration(
             titleResId = R.string.negative_test_result_title,
             textResId = R.string.negative_test_result_description,
-            ctaButtonTextResId = R.string.close,
+            secondCtaResId = R.string.close,
             isHideable = false
         )
         testResultDialog = BottomDialog(this, configuration,
@@ -179,7 +179,7 @@ class OkActivity : BaseActivity() {
                 }
                 finish()
             },
-            onButtonClick = {
+            onSecondCtaClick = {
                 userStateStorage.set(DefaultState())
             })
     }
