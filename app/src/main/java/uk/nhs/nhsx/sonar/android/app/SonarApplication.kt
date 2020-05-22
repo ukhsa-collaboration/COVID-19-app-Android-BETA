@@ -40,9 +40,7 @@ class SonarApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        val appVersion = packageManager.getPackageInfo(packageName, 0).versionName
-
-        appComponent = buildApplicationComponent(appVersion)
+        appComponent = buildApplicationComponent()
         appComponent.provideNotificationChannels().createChannels()
 
         configureBouncyCastleProvider()
@@ -90,7 +88,7 @@ class SonarApplication : Application() {
         }
     }
 
-    private fun buildApplicationComponent(appVersion: String): ApplicationComponent =
+    private fun buildApplicationComponent(): ApplicationComponent =
         DaggerApplicationComponent.builder()
             .appModule(AppModule(this, AndroidLocationHelper(this), AppCenterAnalytics()))
             .persistenceModule(PersistenceModule(this))
@@ -103,7 +101,7 @@ class SonarApplication : Application() {
             )
             .networkModule(
                 NetworkModule(
-                    appVersion = appVersion,
+                    appVersion = appVersion(),
                     baseUrl = BASE_URL,
                     sonarHeaderValue = SONAR_HEADER_VALUE
                 )

@@ -13,6 +13,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_test.app_version
 import kotlinx.android.synthetic.main.activity_test.continueButton
 import kotlinx.android.synthetic.main.activity_test.encrypted_broadcast_id
 import kotlinx.android.synthetic.main.activity_test.events
@@ -29,6 +30,7 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.appVersion
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
@@ -79,6 +81,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
         sonar_id.text = sonarIdProvider.get()
+        app_version.text = appVersion()
         if (cryptogramProvider.canProvideCryptogram()) {
             val cryptogramBytes = cryptogramProvider.provideCryptogram().asBytes()
             val (cryptogramColour, inverseColour) = cryptogramColourAndInverse(cryptogramBytes)
