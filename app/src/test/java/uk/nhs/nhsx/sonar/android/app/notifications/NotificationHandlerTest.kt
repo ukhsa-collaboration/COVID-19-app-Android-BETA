@@ -4,6 +4,7 @@
 
 package uk.nhs.nhsx.sonar.android.app.notifications
 
+import io.mockk.Call
 import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
@@ -20,10 +21,10 @@ import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.status.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
-import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class NotificationHandlerTest {
 
@@ -121,10 +122,10 @@ class NotificationHandlerTest {
 
         verify {
             statusStorage.get()
-            UserStateTransitions.addTestResult(
+            UserStateTransitions.addTestInfo(
                 DefaultState(),
-                "NEGATIVE",
-                DateTime("2020-04-23T18:34:00Z").toUtc()
+                TestResult.NEGATIVE,
+                DateTime("2020-04-23T18:34:00Z")
             )
             statusStorage.set(any<DefaultState>())
         }

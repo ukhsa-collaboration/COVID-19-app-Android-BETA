@@ -19,46 +19,50 @@ class UserStateSerializationTest {
     fun `serialize default state`() {
 
         assertThat(serialize(DefaultState()))
-            .isEqualTo("""{"type":"DefaultState","testResult":"null"}""")
+            .isEqualTo("""{"type":"DefaultState","testInfo":"null"}""")
     }
 
     @Test
     fun `serialize default state with test result`() {
+        val testDate = DateTime(15872413022578L, UTC)
         assertThat(
             serialize(
                 DefaultState(
-                    TestResult(
-                        "NEGATIVE",
+                    TestInfo(
+                        TestResult.NEGATIVE,
+                        testDate,
                         stateChanged = true,
                         dismissed = false
                     )
                 )
             )
         )
-            .isEqualTo("""{"type":"DefaultState","testResult":"{\"result\":\"NEGATIVE\",\"stateChanged\":true,\"dismissed\":false}"}""")
+            .isEqualTo("""{"type":"DefaultState","testInfo":"{\"result\":\"NEGATIVE\",\"dismissed\":false,\"stateChanged\":true,\"testDate\":15872413022578}"}""")
     }
 
     @Test
     fun `serialize recovery state`() {
 
         assertThat(serialize(RecoveryState()))
-            .isEqualTo("""{"type":"RecoveryState","testResult":"null"}""")
+            .isEqualTo("""{"type":"RecoveryState","testInfo":"null"}""")
     }
 
     @Test
     fun `serialize recovery state with test result`() {
+        val testDate = DateTime(15872413022578L, UTC)
         assertThat(
             serialize(
                 RecoveryState(
-                    TestResult(
-                        "NEGATIVE",
+                    TestInfo(
+                        TestResult.NEGATIVE,
+                        testDate,
                         stateChanged = true,
                         dismissed = false
                     )
                 )
             )
         )
-            .isEqualTo("""{"type":"RecoveryState","testResult":"{\"result\":\"NEGATIVE\",\"stateChanged\":true,\"dismissed\":false}"}""")
+            .isEqualTo("""{"type":"RecoveryState","testInfo":"{\"result\":\"NEGATIVE\",\"dismissed\":false,\"stateChanged\":true,\"testDate\":15872413022578}"}""")
     }
 
     @Test
@@ -73,19 +77,21 @@ class UserStateSerializationTest {
             )
         )
             .isEqualTo(
-                """{"type":"AmberState","testResult":"null","until":1587241302262}"""
+                """{"type":"AmberState","testInfo":"null","until":1587241302262}"""
             )
     }
 
     @Test
     fun `serialize amber state with test result`() {
         val until = DateTime(1587241302262L, UTC)
+        val testDate = DateTime(15872413022578L, UTC)
 
         assertThat(
             serialize(
                 AmberState(
-                    until, TestResult(
-                        "NEGATIVE",
+                    until, TestInfo(
+                        TestResult.NEGATIVE,
+                        testDate,
                         stateChanged = true,
                         dismissed = false
                     )
@@ -93,7 +99,7 @@ class UserStateSerializationTest {
             )
         )
             .isEqualTo(
-                """{"type":"AmberState","testResult":"{\"result\":\"NEGATIVE\",\"stateChanged\":true,\"dismissed\":false}","until":1587241302262}"""
+                """{"type":"AmberState","testInfo":"{\"result\":\"NEGATIVE\",\"dismissed\":false,\"stateChanged\":true,\"testDate\":15872413022578}","until":1587241302262}"""
             )
     }
 
@@ -104,7 +110,7 @@ class UserStateSerializationTest {
 
         assertThat(serialize(RedState(until, symptoms)))
             .isEqualTo(
-                """{"symptoms":["COUGH","TEMPERATURE"],"until":1587241302263,"type":"RedState","testResult":"null","symptomsStartDate":-1}"""
+                """{"symptoms":["COUGH","TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"RedState","symptomsStartDate":-1}"""
             )
     }
 
@@ -115,7 +121,7 @@ class UserStateSerializationTest {
         val symptomsStartDate = DateTime(1587241303263L, UTC)
         assertThat(serialize(RedState(until, symptoms, symptomsStartDate)))
             .isEqualTo(
-                """{"symptoms":["TEMPERATURE"],"until":1587241302263,"type":"RedState","testResult":"null","symptomsStartDate":1587241303263}"""
+                """{"symptoms":["TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"RedState","symptomsStartDate":1587241303263}"""
             )
     }
 
@@ -126,7 +132,7 @@ class UserStateSerializationTest {
 
         assertThat(serialize(CheckinState(until, symptoms)))
             .isEqualTo(
-                """{"symptoms":["TEMPERATURE"],"until":1587241302263,"type":"CheckinState","testResult":"null","symptomsStartDate":-1}"""
+                """{"symptoms":["TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"CheckinState","symptomsStartDate":-1}"""
             )
     }
 
@@ -138,7 +144,7 @@ class UserStateSerializationTest {
 
         assertThat(serialize(CheckinState(until, symptoms, symptomsStartDate)))
             .isEqualTo(
-                """{"symptoms":["TEMPERATURE"],"until":1587241302263,"type":"CheckinState","testResult":"null","symptomsStartDate":1587241303263}"""
+                """{"symptoms":["TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"CheckinState","symptomsStartDate":1587241303263}"""
             )
     }
 
@@ -150,7 +156,7 @@ class UserStateSerializationTest {
 
     @Test
     fun `deserialize default state`() {
-        assertThat(deserialize("""{"type":"DefaultState","testResult":"null"}"""))
+        assertThat(deserialize("""{"type":"DefaultState","testInfo":"null"}"""))
             .isEqualTo(DefaultState())
     }
 
@@ -186,17 +192,19 @@ class UserStateSerializationTest {
 
         assertThat(deserialize("""{"until":1587241302262,"type":"AmberState"}"""))
             .isEqualTo(AmberState(until))
-        assertThat(deserialize("""{"type":"AmberState","testResult":"null","until":1587241302262}"""))
+        assertThat(deserialize("""{"type":"AmberState","testInfo":"null","until":1587241302262}"""))
             .isEqualTo(AmberState(until))
     }
 
     @Test
     fun `deserialize amber state with test result`() {
         val until = DateTime(1587241302262L, UTC)
+        val testDate = DateTime(15872413022578L, UTC)
 
         val state = AmberState(
-            until, TestResult(
-                "NEGATIVE",
+            until, TestInfo(
+                TestResult.NEGATIVE,
+                testDate,
                 stateChanged = true,
                 dismissed = false
             )
@@ -205,7 +213,7 @@ class UserStateSerializationTest {
             deserialize(
                 """{
             "type":"AmberState",
-            "testResult":"{\"result\":\"NEGATIVE\",\"stateChanged\":true,\"dismissed\":false}",
+            "testInfo":"{\"result\":\"NEGATIVE\",\"testDate\":15872413022578,\"stateChanged\":true,\"dismissed\":false}",
             "until":1587241302262
             }"""
             )
@@ -224,12 +232,14 @@ class UserStateSerializationTest {
     @Test
     fun `deserialize red state with test result`() {
         val until = DateTime(1587241302262L, UTC)
+        val testDate = DateTime(15872413022578L, UTC)
 
         val state = RedState(
             until,
             nonEmptySetOf(Symptom.COUGH),
-            testResult = TestResult(
-                "NEGATIVE",
+            testInfo = TestInfo(
+                TestResult.NEGATIVE,
+                testDate,
                 stateChanged = true,
                 dismissed = false
             )
@@ -239,7 +249,7 @@ class UserStateSerializationTest {
                 """{
             "type":"RedState",
             "symptoms":["COUGH"],
-            "testResult":"{\"result\":\"NEGATIVE\",\"stateChanged\":true,\"dismissed\":false}",
+            "testInfo":"{\"result\":\"NEGATIVE\",\"testDate\":15872413022578,\"stateChanged\":true,\"dismissed\":false}",
             "until":1587241302262
             }"""
             )

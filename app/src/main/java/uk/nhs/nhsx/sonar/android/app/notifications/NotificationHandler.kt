@@ -11,9 +11,9 @@ import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
+import uk.nhs.nhsx.sonar.android.app.status.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
-import uk.nhs.nhsx.sonar.android.app.util.toUtc
 import javax.inject.Inject
 
 class NotificationHandler @Inject constructor(
@@ -56,11 +56,11 @@ class NotificationHandler @Inject constructor(
                 }
                 isTestResult(messageData) -> {
                     userStateStorage.get()
-                        .let {
-                            UserStateTransitions.addTestResult(
-                                it,
-                                testResult = messageData.getValue(TEST_RESULT_KEY),
-                                testDate = DateTime(messageData.getValue(TEST_RESULT_TIMESTAMP)).toUtc() // TODO make sure is correct time from local time
+                        .let { currentState ->
+                            UserStateTransitions.addTestInfo(
+                                currentState,
+                                TestResult.valueOf(messageData.getValue(TEST_RESULT_KEY)),
+                                DateTime(messageData.getValue(TEST_RESULT_DATE_KEY))
                             )
                         }
                         .let {
@@ -104,7 +104,9 @@ class NotificationHandler @Inject constructor(
         data.containsKey(ACTIVATION_CODE_KEY)
 
     private fun isTestResult(data: Map<String, String>) =
-        data[TYPE_KEY] == TYPE_TEST_RESULT && data[TEST_RESULT_KEY] == TEST_RESULT_NEGATIVE
+        data[TYPE_KEY] == TYPE_TEST_RESULT
+            && data.containsKey(TEST_RESULT_KEY)
+            && data.containsKey(TEST_RESULT_DATE_KEY)
 
     companion object {
         private const val TYPE_KEY = "type"
@@ -113,7 +115,7 @@ class NotificationHandler @Inject constructor(
         private const val STATUS_KEY = "status"
         private const val STATUS_POTENTIAL = "Potential"
         private const val TEST_RESULT_KEY = "result"
-        private const val TEST_RESULT_TIMESTAMP = "testTimestamp"
+        private const val TEST_RESULT_DATE_KEY = "testTimestamp"
         private const val TEST_RESULT_NEGATIVE = "NEGATIVE"
         private const val ACTIVATION_CODE_KEY = "activationCode"
         private const val ACKNOWLEDGMENT_URL = "acknowledgmentUrl"

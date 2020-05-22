@@ -9,6 +9,7 @@ import org.joda.time.DateTimeZone
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
+import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 object UserStateSerialization {
 
@@ -16,39 +17,40 @@ object UserStateSerialization {
         when (state) {
             is DefaultState -> jsonOf(
                 "type" to state.type(),
-                "testResult" to state.testResult.serialize()
+                "testInfo" to state.testInfo.serialize()
             )
             is RecoveryState -> jsonOf(
                 "type" to state.type(),
-                "testResult" to state.testResult.serialize()
+                "testInfo" to state.testInfo.serialize()
             )
             is AmberState -> jsonOf(
                 "type" to state.type(),
                 "until" to state.until.millis,
-                "testResult" to state.testResult.serialize()
+                "testInfo" to state.testInfo.serialize()
             )
             is RedState -> jsonOf(
                 "type" to state.type(),
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.value },
                 "symptomsStartDate" to state.symptomsStartDate.serialize(),
-                "testResult" to state.testResult.serialize()
+                "testInfo" to state.testInfo.serialize()
             )
             is CheckinState -> jsonOf(
                 "type" to state.type(),
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.value },
                 "symptomsStartDate" to state.symptomsStartDate.serialize(),
-                "testResult" to state.testResult.serialize()
+                "testInfo" to state.testInfo.serialize()
             )
         }
 
-    private fun TestResult?.serialize(): String =
+    private fun TestInfo?.serialize(): String =
         this?.let {
             jsonOf(
-                "result" to result,
+                "result" to testResult,
                 "stateChanged" to stateChanged,
-                "dismissed" to dismissed
+                "dismissed" to dismissed,
+                "testDate" to testDate.millis
             )
         } ?: "null"
 
@@ -76,22 +78,22 @@ object UserStateSerialization {
 
 
     private fun JSONObject.getDefaultState() =
-        DefaultState(getTestResult())
+        DefaultState(getTestInfo())
 
     private fun JSONObject.getRecoveryState() =
-        RecoveryState(getTestResult())
+        RecoveryState(getTestInfo())
 
     private fun JSONObject.getAmberState() =
-        AmberState(getUntil(), getTestResult())
+        AmberState(getUntil(), getTestInfo())
 
     private fun JSONObject.getRedState(): RedState? {
         return getSymptoms()?.let { symptoms ->
-            RedState(getUntil(), symptoms, getSymptomsDate(), getTestResult())
+            RedState(getUntil(), symptoms, getSymptomsDate(), getTestInfo())
         }
     }
 
     private fun JSONObject.getCheckinState() =
-        getSymptoms()?.let { CheckinState(getUntil(), it, getSymptomsDate(), getTestResult()) }
+        getSymptoms()?.let { CheckinState(getUntil(), it, getSymptomsDate(), getTestInfo()) }
 
     private fun UserState.type() =
         javaClass.simpleName
@@ -106,14 +108,24 @@ object UserStateSerialization {
             DateTime(it, DateTimeZone.UTC)
         }
 
-    private fun JSONObject.getTestResult(): TestResult? =
-        getStringOrNull("testResult")?.let {
+    private fun JSONObject.getTestInfo(): TestInfo? =
+        getStringOrNull("testInfo")?.let {
             val json = JSONObject(it)
             val dismissed = json.optBoolean("dismissed", true)
             val stateChanged = json.optBoolean("stateChanged", false)
-            val result = json.optString("result", "INVALID")
-            TestResult(result, stateChanged, dismissed)
+            val result = TestResult.valueOf(json.optString("result", "INVALID"))
+            val testDate = json.getTestDate()
+
+            TestInfo(result, testDate, stateChanged, dismissed)
         }
+
+    private fun JSONObject.getTestDate(): DateTime =
+        getDateTime("testDate")
+
+    private fun JSONObject.getDateTime(key: String) : DateTime =
+        getLongOrNull(key)?.let {
+            DateTime(it, DateTimeZone.UTC)
+        } ?: DateTime.now(DateTimeZone.UTC)
 
     private fun JSONObject.getSymptoms(): NonEmptySet<Symptom>? {
         //  TODO("fix this to handle null symptoms")
