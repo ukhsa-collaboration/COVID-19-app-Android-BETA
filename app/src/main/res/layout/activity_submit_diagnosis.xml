@@ -82,6 +82,7 @@
                 android:layout_marginBottom="8dp"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/please_confirm_the_information"
+                android:accessibilityHeading="true"
                 android:textColor="@color/colorDanger"
                 android:textSize="16sp"
                 android:visibility="invisible"

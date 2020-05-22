@@ -4,25 +4,25 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uk.nhs.nhsx.sonar.android.app">
+          package="uk.nhs.nhsx.sonar.android.app">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <!--  Fine location needed for bluetooth on Android 9+ : https://developer.android.com/guide/topics/connectivity/bluetooth-le   -->
     <!--  Our minimum is 26 at the moment   -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE"/>
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
-        android:required="true" />
+        android:required="true"/>
 
     <application
         android:name=".SonarApplication"
@@ -36,75 +36,108 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
+            android:value="@string/default_notification_channel_id"/>
         <meta-data
             android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
+            android:resource="@array/preloaded_fonts"/>
 
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-        <activity android:name=".diagnose.DiagnoseTemperatureActivity" />
-        <activity android:name=".status.AtRiskActivity" />
-        <activity android:name=".status.OkActivity" />
-        <activity android:name=".status.IsolateActivity" />
-        <activity android:name=".FlowTestStartActivity" />
-        <activity android:name=".onboarding.PermissionActivity" />
-        <activity android:name=".onboarding.ExplanationActivity" />
-        <activity android:name=".debug.TesterActivity" />
-        <activity android:name=".diagnose.review.DiagnoseReviewActivity" />
-        <activity android:name=".diagnose.DiagnoseCoughActivity" />
-        <activity
-            android:name=".onboarding.PostCodeActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".diagnose.DiagnoseCloseActivity" />
-        <activity android:name=".onboarding.EnableBluetoothActivity" />
-        <activity android:name=".onboarding.GrantLocationPermissionActivity" />
-        <activity android:name=".onboarding.EnableLocationActivity" />
-        <activity android:name=".edgecases.ReEnableBluetoothActivity" />
-        <activity android:name=".edgecases.ReAllowGrantLocationPermissionActivity" />
-        <activity android:name=".edgecases.ReEnableLocationActivity" />
-        <activity android:name=".edgecases.DeviceNotSupportedActivity" />
-        <activity android:name=".diagnose.DiagnoseSubmitActivity" />
-        <activity android:name=".edgecases.TabletNotSupportedActivity" />
-        <activity android:name=".tests.ApplyForTestActivity" />
-        <activity android:name=".referencecode.ReferenceCodeActivity" />
-        <activity android:name=".tests.WorkplaceGuidanceActivity" />
-        <activity android:name=".diagnose.DiagnoseStomachActivity" />
-        <activity android:name=".diagnose.DiagnoseSneezeActivity" />
-        <activity android:name=".diagnose.DiagnoseAnosmiaActivity" />
+
+        <activity android:name=".FlowTestStartActivity"/>
+        <activity android:name=".debug.TesterActivity"/>
+
+        <activity android:name=".onboarding.MainOnboardingActivity"
+                  android:label="@string/onboarding_title"/>
+        <activity android:name=".onboarding.ExplanationActivity"
+                  android:label="@string/explanation_title"/>
+        <activity android:name=".onboarding.PostCodeActivity"
+                  android:label="@string/post_code_title"
+                  android:windowSoftInputMode="stateHidden|adjustPan"/>
+        <activity android:name=".onboarding.PermissionActivity"
+                  android:label="@string/permission_title"/>
+        <activity android:name=".onboarding.EnableBluetoothActivity"
+                  android:label="@string/enable_bluetooth_title"/>
+        <activity android:name=".onboarding.GrantLocationPermissionActivity"
+                  android:label="@string/grant_location_permission_title_pre_10"/>
+        <activity android:name=".onboarding.EnableLocationActivity"
+                  android:label="@string/enable_location_service_title"/>
+
+        <activity android:name=".edgecases.ReEnableBluetoothActivity"
+                  android:label="@string/re_enable_bluetooth_title"/>
+        <activity android:name=".edgecases.ReAllowGrantLocationPermissionActivity"
+                  android:label="@string/re_allow_location_permission_title"/>
+        <activity android:name=".edgecases.ReEnableLocationActivity"
+                  android:label="@string/re_enable_location_title"/>
+        <activity android:name=".edgecases.DeviceNotSupportedActivity"
+                  android:label="@string/device_not_supported_title"/>
+        <activity android:name=".edgecases.TabletNotSupportedActivity"
+                  android:label="@string/tablet_support_title"/>
+
+        <activity android:name=".status.OkActivity"
+                  android:label="@string/status_initial_title"/>
+        <activity android:name=".status.AtRiskActivity"
+                  android:label="@string/status_amber_title"/>
+        <activity android:name=".status.IsolateActivity"
+                  android:label="@string/status_red_title"/>
+
+        <activity android:name=".referencecode.ReferenceCodeActivity"
+                  android:label="@string/reference_code_title"/>
+
+        <activity android:name=".diagnose.DiagnoseTemperatureActivity"
+                  android:label="@string/temperature_question"/>
+        <activity android:name=".diagnose.DiagnoseCoughActivity"
+                  android:label="@string/cough_question"/>
+        <activity android:name=".diagnose.review.DiagnoseReviewActivity"
+                  android:label="@string/check_answers"/>
+        <activity android:name=".diagnose.DiagnoseCloseActivity"
+                  android:label="@string/you_do_not_have_symptoms"/>
+        <activity android:name=".diagnose.DiagnoseSubmitActivity"
+                  android:label="@string/please_confirm_the_information"/>
+        <activity android:name=".diagnose.DiagnoseStomachActivity"
+                  android:label="@string/stomach_question"/>
+        <activity android:name=".diagnose.DiagnoseSneezeActivity"
+                  android:label="@string/sneeze_question"/>
+        <activity android:name=".diagnose.DiagnoseAnosmiaActivity"
+                  android:label="@string/anosmia_question"/>
+
+        <activity android:name=".tests.WorkplaceGuidanceActivity"
+                  android:label="@string/guidance_for_workplace"/>
+        <activity android:name=".tests.ApplyForTestActivity"
+                  android:label="@string/apply_for_test"/>
 
         <service
             android:name=".ble.BluetoothService"
-            android:enabled="true" />
+            android:enabled="true"/>
 
         <service
             android:name=".notifications.NotificationService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
 
         <receiver android:name=".BootCompletedReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
         <receiver android:name=".PackageReplacedReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".TurnBluetoothOnReceiver" />
-        <receiver android:name=".ServiceRestarterBroadcastReceiver" />
+        <receiver android:name=".TurnBluetoothOnReceiver"/>
+        <receiver android:name=".ServiceRestarterBroadcastReceiver"/>
         <receiver android:name=".notifications.ReminderBroadcastReceiver">
 
         </receiver>
@@ -117,11 +150,7 @@
 
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
+                android:resource="@xml/file_paths"/>
         </provider>
-
-
     </application>
-
-
 </manifest>

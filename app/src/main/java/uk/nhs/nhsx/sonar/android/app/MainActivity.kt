@@ -7,14 +7,11 @@ package uk.nhs.nhsx.sonar.android.app
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
-import kotlinx.android.synthetic.main.activity_main.explanation_link
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedActivity
-import uk.nhs.nhsx.sonar.android.app.onboarding.ExplanationActivity
+import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
@@ -56,30 +53,15 @@ class MainActivity : ColorInversionAwareActivity() {
                 return
             }
             onboardingStatusProvider.get() -> {
-                OkActivity.start(this)
                 finish()
+                OkActivity.start(this)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 return
             }
         }
 
-        setContentView(R.layout.activity_main)
-
-        confirm_onboarding.setOnClickListener {
-            PostCodeActivity.start(this)
-        }
-
-        explanation_link.setOnClickListener {
-            ExplanationActivity.start(this)
-        }
-    }
-
-    override fun handleInversion(inversionModeEnabled: Boolean) {
-        if (inversionModeEnabled) {
-            confirm_onboarding.setBackgroundResource(R.drawable.button_round_background_inversed)
-        } else {
-            confirm_onboarding.setBackgroundResource(R.drawable.button_round_background)
-        }
+        finish()
+        MainOnboardingActivity.start(this)
     }
 
     companion object {

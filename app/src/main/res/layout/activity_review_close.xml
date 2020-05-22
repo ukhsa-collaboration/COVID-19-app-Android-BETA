@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
+                android:accessibilityHeading="true"
                 android:text="@string/you_do_not_have_symptoms" />
 
             <TextView

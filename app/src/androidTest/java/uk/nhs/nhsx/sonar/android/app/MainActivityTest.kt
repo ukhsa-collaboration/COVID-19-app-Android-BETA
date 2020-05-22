@@ -5,7 +5,6 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
-import uk.nhs.nhsx.sonar.android.app.onboarding.ExplanationRobot
 import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
@@ -20,22 +19,10 @@ import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class MainActivityTest(private val testAppContext: TestApplicationContext) {
 
-    private val mainRobot = MainRobot()
-    private val explanationRobot = ExplanationRobot()
     private val okRobot = OkRobot()
     private val atRiskRobot = AtRiskRobot()
     private val isolateRobot = IsolateRobot()
     private val statusFooterRobot = StatusFooterRobot()
-
-    fun testExplanation() {
-        startMainActivity()
-        mainRobot.clickExplanationLink()
-
-        explanationRobot.checkActivityIsDisplayed()
-        explanationRobot.clickBackButton()
-
-        mainRobot.checkActivityIsDisplayed()
-    }
 
     fun testUnsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()

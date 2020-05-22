@@ -10,6 +10,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseRobot
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseQuestionRobot
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewRobot
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitRobot
+import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
@@ -23,7 +24,7 @@ import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class FlowTest(private val testAppContext: TestApplicationContext) {
 
-    private val mainRobot = MainRobot()
+    private val mainOnboardingRobot = MainOnboardingRobot()
     private val postCodeRobot = PostCodeRobot()
     private val permissionRobot = PermissionRobot()
     private val okRobot = OkRobot()
@@ -39,7 +40,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         testAppContext.simulateBackendDelay(400)
 
         startMainActivity()
-        mainRobot.clickConfirmOnboarding()
+        mainOnboardingRobot.clickConfirmOnboarding()
 
         postCodeRobot.checkActivityIsDisplayed()
         postCodeRobot.enterPostCode("E1")
