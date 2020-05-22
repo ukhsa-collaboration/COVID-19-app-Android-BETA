@@ -134,7 +134,7 @@ class IsolateActivity : BaseActivity() {
         latest_advice_red.cardColourInversion(inversionModeEnabled)
         book_test_card.cardColourInversion(inversionModeEnabled)
 
-        medical_workers_card.cardColourInversion(inversionModeEnabled)
+        workplace_guidance_card.cardColourInversion(inversionModeEnabled)
         reference_link_card.cardColourInversion(inversionModeEnabled)
     }
 
