@@ -27,7 +27,8 @@ class GattWrapper(
     private val coroutineScope: CoroutineScope,
     private val bluetoothManager: BluetoothManager,
     private val bluetoothIdProvider: BluetoothIdProvider,
-    private val keepAliveCharacteristic: BluetoothGattCharacteristic
+    private val keepAliveCharacteristic: BluetoothGattCharacteristic,
+    private val randomValueGenerator: () -> ByteArray = { Random.nextBytes(1) }
 ) {
     var notifyJob: Job? = null
 
@@ -100,7 +101,7 @@ class GattWrapper(
                         bluetoothManager.getConnectedDevices(BluetoothProfile.GATT)
                             .intersect(subscribedDevices)
 
-                    keepAliveCharacteristic.value = Random.Default.nextBytes(1)
+                    keepAliveCharacteristic.value = randomValueGenerator()
                     connectedSubscribers.forEach {
                         server?.notifyCharacteristicChanged(it, keepAliveCharacteristic, false)
                     }

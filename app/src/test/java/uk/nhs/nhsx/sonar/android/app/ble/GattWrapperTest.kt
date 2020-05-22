@@ -46,12 +46,15 @@ class GattWrapperTest {
 
     private lateinit var identifierBytes: ByteArray
 
+    private val fixedRandom = Random(5903)
+    private val randomValueGenerator = { fixedRandom.nextBytes(1) }
     private val gattWrapper = GattWrapper(
         server,
         coroutineScope,
         bluetoothManager,
         bluetoothIdProvider,
-        keepAliveCharacteristic
+        keepAliveCharacteristic,
+        randomValueGenerator
     )
 
     @Before
