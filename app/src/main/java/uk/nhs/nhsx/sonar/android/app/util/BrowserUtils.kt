@@ -24,13 +24,11 @@ private const val UTM_CONTENT_GENERAL = "utm_content=general"
 private const val UTM_CONTENT_SYMPTOMS = "utm_content=symptoms"
 private const val UTM_CONTENT_NOTIFIED = "utm_content=notified"
 
-private const val PAGE_ADVICE_DEFAULT =
-    "https://www.gov.uk/government/publications/full-guidance-on-staying-at-home-and-away-from-others/full-guidance-on-staying-at-home-and-away-from-others"
+private const val PAGE_ADVICE_DEFAULT = "https://faq.covid19.nhs.uk/article/KA-01062/en-us"
 
-private const val PAGE_ADVICE_RED =
-    "https://www.gov.uk/government/publications/covid-19-stay-at-home-guidance/stay-at-home-guidance-for-households-with-possible-coronavirus-covid-19-infection"
+private const val PAGE_ADVICE_RED = "https://faq.covid19.nhs.uk/article/KA-01078/en-us"
 
-private const val PAGE_ADVICE_AMBER = "https://www.gov.uk/coronavirus"
+private const val PAGE_ADVICE_AMBER = "https://faq.covid19.nhs.uk/article/KA-01063/en-us"
 
 const val URL_LATEST_ADVICE_DEFAULT =
     "$PAGE_ADVICE_DEFAULT?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_GENERAL"
