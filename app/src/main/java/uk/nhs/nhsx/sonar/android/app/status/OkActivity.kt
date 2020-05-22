@@ -57,7 +57,9 @@ class OkActivity : BaseActivity() {
     @Inject
     lateinit var postCodeProvider: PostCodeProvider
 
-    private lateinit var recoveryDialog: BottomSheetDialog
+    private lateinit var recoveryDialog: BottomDialog
+
+    private lateinit var testResultDialog: BottomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,6 +112,7 @@ class OkActivity : BaseActivity() {
         viewModel.onStart()
 
         setRecoveryDialog()
+        setTestResultDialog()
     }
 
     private fun toggleNotFeelingCard(enabled: Boolean) {
@@ -160,17 +163,46 @@ class OkActivity : BaseActivity() {
             })
     }
 
+    private fun setTestResultDialog() {
+        val configuration = BottomDialogConfiguration(
+            titleResId = R.string.negative_test_result_title,
+            textResId = R.string.negative_test_result_description,
+            ctaButtonTextResId = R.string.close,
+            isHideable = false
+        )
+        testResultDialog = BottomDialog(this, configuration,
+            onCancel = {
+                userStateStorage.get().let {state ->
+                    UserStateTransitions.dismissTestResult(state)
+                }.let {
+                    userState -> userStateStorage.set(userState)
+                }
+                finish()
+            },
+            onButtonClick = {
+                userStateStorage.set(DefaultState())
+            })
+    }
+
     override fun onResume() {
         super.onResume()
 
         val state = userStateStorage.get()
         navigateTo(state)
 
+        if (state.displayTestResult()) {
+            testResultDialog.showExpanded()
+        } else {
+            testResultDialog.dismiss()
+        }
+
         if (state is RecoveryState) {
             recoveryDialog.showExpanded()
         } else {
             recoveryDialog.dismiss()
         }
+
+
 
         notificationPanel.isVisible =
             !NotificationManagerCompat.from(this).areNotificationsEnabled()

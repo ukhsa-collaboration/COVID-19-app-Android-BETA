@@ -237,4 +237,6 @@
     <string name="symptomatic_state_advice_info">If you develop symptoms, please come back to this app.</string>
     <string name="more_options">More Options</string>
     <string name="app_version">App version:</string>
+    <string name="negative_test_result_title">Your test result indicates that you don’t have coronavirus</string>
+    <string name="negative_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
 </resources>

@@ -31,6 +31,8 @@ class BottomDialog(
             dismiss()
         }
     }
+
+
 }
 
 data class BottomDialogConfiguration(
