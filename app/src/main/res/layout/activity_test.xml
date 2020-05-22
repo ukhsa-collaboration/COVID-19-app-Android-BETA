@@ -27,7 +27,6 @@
         android:textColor="@color/colorPrimary"
         android:textStyle="normal"
         android:textIsSelectable="true"
-        android:layout_marginBottom="8dp"
         android:text=""/>
 
     <TextView
@@ -61,7 +60,6 @@
         android:textIsSelectable="true"
         android:layout_marginBottom="8dp"
         android:text=""
-        android:maxLines="1"
         tools:text="4GqL81GilxTxb0lmD7bUU4Wb97wJ011I/LWdJTBwcVnKrj9ZvYnPDq++eR/bLw6lNWl9fkdutFOeJhM3t8niKaWyvSHk2uBdvs9K4rhZe0w/TdeF0Z4rMWnrLoq+I7GZpbcwgz9kC5My2w=="
     />
 
