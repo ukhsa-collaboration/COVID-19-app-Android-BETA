@@ -17,7 +17,11 @@ import java.util.Base64
 class HttpClientTest {
 
     private val queue = TestQueue()
-    private val httpClient = HttpClient(queue, "someValue") { Base64.getEncoder().encodeToString(it) }
+    private val httpClient = HttpClient(
+        queue,
+        sonarHeaderValue = "someValue",
+        appVersion = "buildInfo"
+    ) { Base64.getEncoder().encodeToString(it) }
 
     @Test
     fun `test send() POST request, without encryption key`() {
@@ -40,6 +44,7 @@ class HttpClientTest {
         val headers = request.headers
         assertThat(headers).containsEntry("Accept", "application/json")
         assertThat(headers).containsEntry("X-Sonar-Foundation", "someValue")
+        assertThat(headers).containsEntry("X-Sonar-App-Version", "buildInfo")
     }
 
     @Test

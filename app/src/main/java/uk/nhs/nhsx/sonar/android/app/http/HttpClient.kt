@@ -22,10 +22,23 @@ private fun createQueue(): RequestQueue =
 class HttpClient(
     private val queue: RequestQueue,
     private val sonarHeaderValue: String,
+    private val appVersion: String,
     private val utcClock: UTCClock = RealUTCClock(),
-    private val base64enc: (ByteArray) -> String = { Base64.encodeToString(it, Base64.DEFAULT) }
+    private val base64enc: (ByteArray) -> String = {
+        Base64.encodeToString(
+            it,
+            Base64.DEFAULT
+        )
+    }
 ) {
-    constructor(sonarHeaderValue: String) : this(createQueue(), sonarHeaderValue)
+    constructor(
+        sonarHeaderValue: String,
+        appVersion: String
+    ) : this(
+        queue = createQueue(),
+        sonarHeaderValue = sonarHeaderValue,
+        appVersion = appVersion
+    )
 
     fun send(request: HttpRequest): Promise<JSONObject> {
         val deferred = Deferred<JSONObject>()
@@ -43,9 +56,10 @@ class HttpClient(
         SignableJsonObjectRequest(
             httpRequest = request,
             deferred = deferred,
-            base64enc = base64enc,
+            sonarHeaderValue = sonarHeaderValue,
+            appVersion = appVersion,
             utcClock = utcClock,
-            sonarHeaderValue = sonarHeaderValue
+            base64enc = base64enc
         ).apply {
             retryPolicy = DefaultRetryPolicy(
                 30 * 1000,

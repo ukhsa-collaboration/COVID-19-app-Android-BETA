@@ -24,7 +24,11 @@ class ReferenceCodeApiTest {
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
     private val secretKeyStorage = mockk<SecretKeyStorage>()
-    private val httpClient = HttpClient(requestQueue, "someValue") { Base64.getEncoder().encodeToString(it) }
+    private val httpClient = HttpClient(
+        queue = requestQueue,
+        sonarHeaderValue = "someValue",
+        appVersion = "buildInfo"
+    ) { Base64.getEncoder().encodeToString(it) }
 
     private val api = ReferenceCodeApi(baseUrl, secretKeyStorage, httpClient)
 

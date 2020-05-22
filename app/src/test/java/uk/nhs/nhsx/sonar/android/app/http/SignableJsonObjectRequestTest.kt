@@ -22,7 +22,8 @@ class SignableJsonObjectRequestTest {
                 secretKey = generateSignatureKey()
             ),
             Deferred(),
-            sonarHeaderValue = "someValue"
+            sonarHeaderValue = "someValue",
+            appVersion = "buildInfo"
         ) { Base64.getEncoder().encodeToString(it) }
 
         val headers = request.headers
@@ -30,6 +31,7 @@ class SignableJsonObjectRequestTest {
         assertThat(headers).containsKey("Sonar-Request-Timestamp")
         assertThat(headers["Sonar-Request-Timestamp"]).matches("\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z")
         assertThat(headers).containsEntry("X-Sonar-Foundation", "someValue")
+        assertThat(headers).containsEntry("X-Sonar-App-Version", "buildInfo")
     }
 
     @Test
@@ -42,7 +44,8 @@ class SignableJsonObjectRequestTest {
                 secretKey = generateSignatureKey()
             ),
             Deferred(),
-            sonarHeaderValue = "someValue"
+            sonarHeaderValue = "someValue",
+            appVersion = "buildInfo"
         ) { Base64.getEncoder().encodeToString(it) }
 
         val headers = request.headers

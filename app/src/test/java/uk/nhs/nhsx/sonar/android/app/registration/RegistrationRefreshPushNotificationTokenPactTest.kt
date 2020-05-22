@@ -283,10 +283,11 @@ class RegistrationRefreshPushNotificationTokenPactTest {
     private fun refreshPushNotificationTokenAPI(datetime: LocalDateTime): NotificationTokenApi {
         val httpClient =
             HttpClient(
-                testQueue(),
-                "some-header",
-                StoppedUTCClock(datetime),
-                ::encodeBase64
+                queue = testQueue(),
+                sonarHeaderValue = "some-header",
+                appVersion = "buildInfo",
+                utcClock = StoppedUTCClock(datetime),
+                base64enc = ::encodeBase64
             )
 
         val api = NotificationTokenApi(

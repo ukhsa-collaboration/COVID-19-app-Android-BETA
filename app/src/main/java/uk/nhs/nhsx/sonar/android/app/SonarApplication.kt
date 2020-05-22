@@ -16,6 +16,8 @@ import io.reactivex.plugins.RxJavaPlugins
 import net.danlew.android.joda.JodaTimeAndroid
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.BuildConfig.BASE_URL
+import uk.nhs.nhsx.sonar.android.app.BuildConfig.SONAR_HEADER_VALUE
 import uk.nhs.nhsx.sonar.android.app.analytics.AppCenterAnalytics
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWorker
 import uk.nhs.nhsx.sonar.android.app.crypto.PROVIDER_NAME
@@ -38,7 +40,9 @@ class SonarApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        appComponent = buildApplicationComponent()
+        val appVersion = packageManager.getPackageInfo(packageName, 0).versionName
+
+        appComponent = buildApplicationComponent(appVersion)
         appComponent.provideNotificationChannels().createChannels()
 
         configureBouncyCastleProvider()
@@ -86,7 +90,7 @@ class SonarApplication : Application() {
         }
     }
 
-    private fun buildApplicationComponent(): ApplicationComponent =
+    private fun buildApplicationComponent(appVersion: String): ApplicationComponent =
         DaggerApplicationComponent.builder()
             .appModule(AppModule(this, AndroidLocationHelper(this), AppCenterAnalytics()))
             .persistenceModule(PersistenceModule(this))
@@ -97,7 +101,13 @@ class SonarApplication : Application() {
                     KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
                 )
             )
-            .networkModule(NetworkModule(BuildConfig.BASE_URL, BuildConfig.SONAR_HEADER_VALUE))
+            .networkModule(
+                NetworkModule(
+                    appVersion = appVersion,
+                    baseUrl = BASE_URL,
+                    sonarHeaderValue = SONAR_HEADER_VALUE
+                )
+            )
             .notificationsModule(NotificationsModule())
             .build()
 

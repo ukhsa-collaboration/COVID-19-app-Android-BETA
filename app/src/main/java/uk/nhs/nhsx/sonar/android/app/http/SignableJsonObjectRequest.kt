@@ -20,6 +20,7 @@ class SignableJsonObjectRequest(
     private val httpRequest: HttpRequest,
     deferred: Deferred<JSONObject>,
     private val sonarHeaderValue: String,
+    val appVersion: String,
     private val utcClock: UTCClock = RealUTCClock(),
     private val base64enc: (ByteArray) -> String
 ) :
@@ -41,7 +42,8 @@ class SignableJsonObjectRequest(
     override fun getHeaders(): Map<String, String> {
         val defaultHeaders = arrayOf(
             "Accept" to "application/json",
-            "X-Sonar-Foundation" to sonarHeaderValue
+            "X-Sonar-Foundation" to sonarHeaderValue,
+            "X-Sonar-App-Version" to appVersion
         )
 
         return when (httpRequest.secretKey) {

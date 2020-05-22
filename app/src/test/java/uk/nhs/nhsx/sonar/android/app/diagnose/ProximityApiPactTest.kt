@@ -158,13 +158,10 @@ class ProximityApiPactTest {
     @Test
     @PactVerification(fragment = "proximityUploadFragment")
     fun `verifies submission of proximity event data`() {
-        val httpClient =
-            HttpClient(testQueue(), "some-header",
-                StoppedUTCClock(utcNow), ::encodeBase64)
         val coLocationApi = CoLocationApi(
             provider.url,
             encryptionKeyStorage,
-            httpClient
+            createHttpClient()
         )
 
         val uploadRequest = coLocationApi.save(colocationData)
@@ -176,14 +173,10 @@ class ProximityApiPactTest {
     @Test
     @PactVerification(fragment = "getReferenceCodeFragment")
     fun `verifies getting a reference code`() {
-        val httpClient =
-            HttpClient(testQueue(), "some-header",
-                StoppedUTCClock(utcNow), ::encodeBase64)
-
         val referenceCodeApi = ReferenceCodeApi(
             provider.url,
             encryptionKeyStorage,
-            httpClient
+            createHttpClient()
         )
 
         val referenceCodeRequest = referenceCodeApi.get(sonarId)
@@ -240,4 +233,12 @@ class ProximityApiPactTest {
     }
 
     private fun randomTxPower() = Random.nextInt(-20, -1)
+
+    private fun createHttpClient() = HttpClient(
+            queue = testQueue(),
+            sonarHeaderValue = "some-header",
+            appVersion = "buildInfo",
+            utcClock = StoppedUTCClock(utcNow),
+            base64enc = ::encodeBase64
+        )
 }

@@ -79,7 +79,11 @@ class RegistrationConfirmDevicePactTest {
     @PactVerification
     fun `verifies the contract for device confirmation`() {
         val encryptionKeyStorage = mockk<KeyStorage>(relaxed = true)
-        val httpClient = HttpClient(testQueue(), "some-header")
+        val httpClient = HttpClient(
+            queue = testQueue(),
+            sonarHeaderValue = "some-header",
+            appVersion = "buildInfo"
+        )
         val residentApi = ResidentApi(
             provider.url,
             encryptionKeyStorage,

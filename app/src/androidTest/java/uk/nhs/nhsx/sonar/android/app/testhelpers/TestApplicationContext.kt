@@ -136,7 +136,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                     keyStore
                 )
             )
-            .networkModule(NetworkModule(mockServerUrl, "someValue"))
+            .networkModule(NetworkModule(mockServerUrl, "someValue", "buildInfo"))
             .testNotificationsModule(TestNotificationsModule())
             .build()
 

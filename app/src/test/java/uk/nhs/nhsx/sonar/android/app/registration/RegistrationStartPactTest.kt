@@ -56,7 +56,11 @@ class RegistrationStartPactTest {
     @PactVerification
     fun `verifies contract for starting a registration`() {
         val encryptionKeyStorage = mockk<KeyStorage>(relaxed = true)
-        val httpClient = HttpClient(testQueue(), "some-header")
+        val httpClient = HttpClient(
+            queue = testQueue(),
+            sonarHeaderValue = "some-header",
+            appVersion = "buildInfo"
+        )
         val residentApi = ResidentApi(
             provider.url,
             encryptionKeyStorage,

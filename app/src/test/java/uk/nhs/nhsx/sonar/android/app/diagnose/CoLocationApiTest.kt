@@ -29,7 +29,11 @@ class CoLocationApiTest {
     }
     private val requestQueue = TestQueue()
     private val baseUrl = "http://api.example.com"
-    private val httpClient = HttpClient(requestQueue, "someValue")
+    private val httpClient = HttpClient(
+        requestQueue,
+        "someValue",
+        "buildInfo"
+    )
     private val coLocationApi = CoLocationApi(baseUrl, encryptionKeyStorage, httpClient)
 
     @Test

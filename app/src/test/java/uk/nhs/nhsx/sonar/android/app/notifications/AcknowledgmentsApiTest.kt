@@ -13,7 +13,11 @@ import uk.nhs.nhsx.sonar.android.app.http.TestQueue
 class AcknowledgmentsApiTest {
 
     private val requestQueue = TestQueue()
-    private val httpClient = HttpClient(requestQueue, "someValue")
+    private val httpClient = HttpClient(
+        queue = requestQueue,
+        sonarHeaderValue = "someValue",
+        appVersion = "buildInfo"
+    )
     private val acknowledgmentsApi = AcknowledgmentsApi(httpClient)
 
     @Test
