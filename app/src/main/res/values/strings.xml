@@ -114,7 +114,7 @@
     <string name="i_do_temperature">I have a high temperature</string>
     <string name="i_do_not_temperature">I don\'t have a high temperature</string>
     <string name="i_do_cough">I have a new continuous cough</string>
-    <string name="i_do_not_cough">I d not have a new continuous cough</string>
+    <string name="i_do_not_cough">I don\'t have a new continuous cough</string>
     <string name="i_do_anosmia">I have recently lost my sense of smell</string>
     <string name="i_do_not_anosmia">I have not recently lost my sense of smell</string>
     <string name="i_do_sneeze">I have at least one of these symptoms: a runny nose, feeling feverish or sneezing</string>
