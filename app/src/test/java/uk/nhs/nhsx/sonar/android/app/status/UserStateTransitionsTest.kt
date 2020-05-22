@@ -26,7 +26,6 @@ import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.isSymptomatic
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnContactAlert
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
-import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTransitionsTest {
@@ -203,7 +202,6 @@ class UserStateTransitionsTest {
         assertThat(isSymptomatic(setOf(NAUSEA, SNEEZE))).isFalse()
     }
 
-
     @Test
     fun `add test with negative result to default state`() {
         val currentState = DefaultState()
@@ -242,7 +240,6 @@ class UserStateTransitionsTest {
         )
         assertThat(state).isEqualTo(expected)
     }
-
 
     @Test
     fun `add test info with negative result and test date after the date of symptoms to RedState`() {

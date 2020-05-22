@@ -12,7 +12,6 @@ import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_ok.notificationPanel
 import kotlinx.android.synthetic.main.activity_ok.read_current_advice
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
@@ -172,7 +171,7 @@ class OkActivity : BaseActivity() {
         )
         testResultDialog = BottomDialog(this, configuration,
             onCancel = {
-                userStateStorage.get().let {state ->
+                userStateStorage.get().let { state ->
                     UserStateTransitions.dismissTestResult(state)
                 }.let {
                     userState -> userStateStorage.set(userState)
@@ -201,8 +200,6 @@ class OkActivity : BaseActivity() {
         } else {
             recoveryDialog.dismiss()
         }
-
-
 
         notificationPanel.isVisible =
             !NotificationManagerCompat.from(this).areNotificationsEnabled()

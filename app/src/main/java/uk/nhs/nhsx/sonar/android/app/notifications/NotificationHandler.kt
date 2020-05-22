@@ -104,9 +104,9 @@ class NotificationHandler @Inject constructor(
         data.containsKey(ACTIVATION_CODE_KEY)
 
     private fun isTestResult(data: Map<String, String>) =
-        data[TYPE_KEY] == TYPE_TEST_RESULT
-            && data.containsKey(TEST_RESULT_KEY)
-            && data.containsKey(TEST_RESULT_DATE_KEY)
+        data[TYPE_KEY] == TYPE_TEST_RESULT &&
+            data.containsKey(TEST_RESULT_KEY) &&
+            data.containsKey(TEST_RESULT_DATE_KEY)
 
     companion object {
         private const val TYPE_KEY = "type"
@@ -116,7 +116,6 @@ class NotificationHandler @Inject constructor(
         private const val STATUS_POTENTIAL = "Potential"
         private const val TEST_RESULT_KEY = "result"
         private const val TEST_RESULT_DATE_KEY = "testTimestamp"
-        private const val TEST_RESULT_NEGATIVE = "NEGATIVE"
         private const val ACTIVATION_CODE_KEY = "activationCode"
         private const val ACKNOWLEDGMENT_URL = "acknowledgmentUrl"
         private const val NOTIFICATION_SERVICE_ID = 10001

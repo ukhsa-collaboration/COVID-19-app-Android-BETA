@@ -25,6 +25,7 @@ import kotlinx.android.synthetic.main.activity_test.setCheckinState
 import kotlinx.android.synthetic.main.activity_test.setRecoveryState
 import kotlinx.android.synthetic.main.activity_test.setRedState
 import kotlinx.android.synthetic.main.activity_test.sonar_id
+import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
@@ -97,7 +98,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         events.layoutManager = LinearLayoutManager(this)
 
         setRecoveryState.setOnClickListener {
-            userStateStorage.set(RecoveryState)
+            userStateStorage.set(RecoveryState())
             finish()
         }
 
@@ -119,6 +120,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         setCheckinState.setOnClickListener {
             userStateStorage.set(
                 UserState.checkin(
+                    symptomsDate = DateTime.now(),
                     symptoms = nonEmptySetOf(COUGH, TEMPERATURE),
                     today = LocalDate.now().minusDays(1)
                 )

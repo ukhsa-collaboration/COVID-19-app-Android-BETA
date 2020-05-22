@@ -9,7 +9,6 @@ import org.joda.time.DateTimeZone
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
-import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 object UserStateSerialization {
 
@@ -47,7 +46,7 @@ object UserStateSerialization {
     private fun TestInfo?.serialize(): String =
         this?.let {
             jsonOf(
-                "result" to testResult,
+                "testResult" to testResult,
                 "stateChanged" to stateChanged,
                 "dismissed" to dismissed,
                 "testDate" to testDate.millis
@@ -75,7 +74,6 @@ object UserStateSerialization {
 
         return deserialized ?: DefaultState()
     }
-
 
     private fun JSONObject.getDefaultState() =
         DefaultState(getTestInfo())
@@ -113,16 +111,13 @@ object UserStateSerialization {
             val json = JSONObject(it)
             val dismissed = json.optBoolean("dismissed", true)
             val stateChanged = json.optBoolean("stateChanged", false)
-            val result = TestResult.valueOf(json.optString("result", "INVALID"))
-            val testDate = json.getTestDate()
+            val result = TestResult.valueOf(json.optString("testResult", "INVALID"))
+            val testDate = json.getDateTime("testDate")
 
             TestInfo(result, testDate, stateChanged, dismissed)
         }
 
-    private fun JSONObject.getTestDate(): DateTime =
-        getDateTime("testDate")
-
-    private fun JSONObject.getDateTime(key: String) : DateTime =
+    private fun JSONObject.getDateTime(key: String): DateTime =
         getLongOrNull(key)?.let {
             DateTime(it, DateTimeZone.UTC)
         } ?: DateTime.now(DateTimeZone.UTC)

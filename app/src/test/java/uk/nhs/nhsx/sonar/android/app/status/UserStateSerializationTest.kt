@@ -37,7 +37,7 @@ class UserStateSerializationTest {
                 )
             )
         )
-            .isEqualTo("""{"type":"DefaultState","testInfo":"{\"result\":\"NEGATIVE\",\"dismissed\":false,\"stateChanged\":true,\"testDate\":15872413022578}"}""")
+            .isEqualTo("""{"type":"DefaultState","testInfo":"{\"dismissed\":false,\"testResult\":\"NEGATIVE\",\"stateChanged\":true,\"testDate\":15872413022578}"}""")
     }
 
     @Test
@@ -62,7 +62,7 @@ class UserStateSerializationTest {
                 )
             )
         )
-            .isEqualTo("""{"type":"RecoveryState","testInfo":"{\"result\":\"NEGATIVE\",\"dismissed\":false,\"stateChanged\":true,\"testDate\":15872413022578}"}""")
+            .isEqualTo("""{"type":"RecoveryState","testInfo":"{\"dismissed\":false,\"testResult\":\"NEGATIVE\",\"stateChanged\":true,\"testDate\":15872413022578}"}""")
     }
 
     @Test
@@ -99,7 +99,7 @@ class UserStateSerializationTest {
             )
         )
             .isEqualTo(
-                """{"type":"AmberState","testInfo":"{\"result\":\"NEGATIVE\",\"dismissed\":false,\"stateChanged\":true,\"testDate\":15872413022578}","until":1587241302262}"""
+                """{"type":"AmberState","testInfo":"{\"dismissed\":false,\"testResult\":\"NEGATIVE\",\"stateChanged\":true,\"testDate\":15872413022578}","until":1587241302262}"""
             )
     }
 
@@ -213,7 +213,7 @@ class UserStateSerializationTest {
             deserialize(
                 """{
             "type":"AmberState",
-            "testInfo":"{\"result\":\"NEGATIVE\",\"testDate\":15872413022578,\"stateChanged\":true,\"dismissed\":false}",
+            "testInfo":"{\"testResult\":\"NEGATIVE\",\"testDate\":15872413022578,\"stateChanged\":true,\"dismissed\":false}",
             "until":1587241302262
             }"""
             )
@@ -249,7 +249,7 @@ class UserStateSerializationTest {
                 """{
             "type":"RedState",
             "symptoms":["COUGH"],
-            "testInfo":"{\"result\":\"NEGATIVE\",\"testDate\":15872413022578,\"stateChanged\":true,\"dismissed\":false}",
+            "testInfo":"{\"testResult\":\"NEGATIVE\",\"testDate\":15872413022578,\"stateChanged\":true,\"dismissed\":false}",
             "until":1587241302262
             }"""
             )

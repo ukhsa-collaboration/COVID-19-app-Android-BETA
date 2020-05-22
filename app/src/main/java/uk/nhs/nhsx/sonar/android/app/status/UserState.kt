@@ -151,7 +151,7 @@ enum class TestResult {
     NEGATIVE,
     POSITIVE,
     INVALID,
-    PRESUMED_POSTIVE
+    PRESUMED_POSITIVE
 }
 
 enum class DisplayState {

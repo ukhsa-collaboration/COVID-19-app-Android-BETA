@@ -4,7 +4,6 @@
 
 package uk.nhs.nhsx.sonar.android.app.notifications
 
-import io.mockk.Call
 import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
