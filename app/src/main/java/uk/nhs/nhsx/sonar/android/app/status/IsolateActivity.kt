@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_isolate.follow_until
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
 import kotlinx.android.synthetic.main.activity_isolate.registrationPanel
 import kotlinx.android.synthetic.main.banner.toolbar_info
-import kotlinx.android.synthetic.main.status_footer_view.medical_workers_card
+import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
 import kotlinx.android.synthetic.main.status_footer_view.nhs_service
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -80,7 +80,7 @@ class IsolateActivity : BaseActivity() {
             ApplyForTestActivity.start(this)
         }
 
-        medical_workers_card.setOnClickListener {
+        workplace_guidance_card.setOnClickListener {
             WorkplaceGuidanceActivity.start(this)
         }
 
@@ -134,7 +134,7 @@ class IsolateActivity : BaseActivity() {
         latest_advice_red.cardColourInversion(inversionModeEnabled)
         book_test_card.cardColourInversion(inversionModeEnabled)
 
-        medical_workers_card.cardColourInversion(inversionModeEnabled)
+        workplace_guidance_card.cardColourInversion(inversionModeEnabled)
         reference_link_card.cardColourInversion(inversionModeEnabled)
     }
 

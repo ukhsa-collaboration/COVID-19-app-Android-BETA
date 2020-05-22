@@ -190,7 +190,6 @@ class DiagnoseReviewActivity : BaseActivity() {
     }
 
     companion object {
-
         fun start(context: Context, symptoms: Set<Symptom>) =
             context.startActivity(getIntent(context, symptoms))
 

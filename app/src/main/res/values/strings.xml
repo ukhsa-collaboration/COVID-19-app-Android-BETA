@@ -183,10 +183,6 @@
     <string name="confirm_diagnosis_text_1">The information you have provided will be used to help protect your community and the NHS. The NHS needs accurate data on the number of people with symptoms.</string>
     <string name="confirm_diagnosis_text_2">Together we can help save lives, protect the NHS, and stop the spread of coronavirus in the UK.</string>
     <string name="guidance_for_workplace">Guidance for your workplace</string>
-    <string name="medical_workers_instructions_title">Turn off your Bluetooth when you put on your PPE</string>
-    <string name="medical_workers_instructions_text">Your interactions at work should not be captured when you are
-        wearing personal protective equipment.
-    </string>
     <string name="high_temperature">High temperature</string>
     <string name="continuous_cough">Continuous cough</string>
     <string name="info">Link to more information about NHS COVID-19 app</string>
