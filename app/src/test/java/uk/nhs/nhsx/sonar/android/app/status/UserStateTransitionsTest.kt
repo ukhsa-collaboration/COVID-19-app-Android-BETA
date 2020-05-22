@@ -18,12 +18,16 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.NAUSEA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.SNEEZE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.addTestInfo
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnose
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnoseForCheckin
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.expireAmberState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.isSymptomatic
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnContactAlert
+import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
+import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
+import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTransitionsTest {
 
@@ -197,6 +201,67 @@ class UserStateTransitionsTest {
     @Test
     fun `isSymptomatic - with anything other than cough, temperature or loss of smell`() {
         assertThat(isSymptomatic(setOf(NAUSEA, SNEEZE))).isFalse()
+    }
+
+
+    @Test
+    fun `add test with negative result to default state`() {
+        val currentState = DefaultState()
+
+        val testResult = TestResult.NEGATIVE
+        val testStartDate = DateTime.now().toUtc()
+
+        val state = addTestInfo(currentState, testResult, testStartDate)
+
+        val expected = DefaultState(
+            TestInfo(
+                testResult, testStartDate,
+                stateChanged = false,
+                dismissed = false
+            )
+        )
+        assertThat(state).isEqualTo(expected)
+    }
+
+    @Test
+    fun `add test info with negative result and test date prior to symptoms date to RedState`() {
+        val symptomDate = LocalDate.now().minusDays(2)
+        val testDate = DateTime.now().minusDays(6)
+        val currentState = UserState.red(symptomDate, NonEmptySet.create(COUGH))
+        val testResult = TestResult.NEGATIVE
+
+        val state = addTestInfo(currentState, testResult, testDate)
+
+        val expected = currentState.copy(
+            testInfo = TestInfo(
+                testResult,
+                testDate,
+                stateChanged = false,
+                dismissed = false
+            )
+        )
+        assertThat(state).isEqualTo(expected)
+    }
+
+
+    @Test
+    fun `add test info with negative result and test date after the date of symptoms to RedState`() {
+        val symptomDate = LocalDate.now().minusDays(6)
+        val testDate = DateTime.now().minusDays(3)
+        val currentState = UserState.red(symptomDate, NonEmptySet.create(COUGH))
+        val testResult = TestResult.NEGATIVE
+
+        val state = addTestInfo(currentState, testResult, testDate)
+
+        val expected = DefaultState(
+            testInfo = TestInfo(
+                testResult,
+                testDate,
+                stateChanged = true,
+                dismissed = false
+            )
+        )
+        assertThat(state).isEqualTo(expected)
     }
 
     @After
