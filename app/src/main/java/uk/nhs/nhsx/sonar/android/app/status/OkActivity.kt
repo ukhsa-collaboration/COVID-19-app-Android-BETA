@@ -9,7 +9,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
-import android.widget.Button
 import androidx.activity.viewModels
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
@@ -20,8 +19,8 @@ import kotlinx.android.synthetic.main.activity_ok.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
 import kotlinx.android.synthetic.main.activity_review_close.nhs_service
 import kotlinx.android.synthetic.main.banner.toolbar_info
-import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
+import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -146,17 +145,19 @@ class OkActivity : BaseActivity() {
     }
 
     private fun setRecoveryDialog() {
-        recoveryDialog = BottomSheetDialog(this, R.style.PersistentBottomSheet)
-        recoveryDialog.setContentView(layoutInflater.inflate(R.layout.bottom_sheet_recovery, null))
-        recoveryDialog.behavior.isHideable = false
-
-        recoveryDialog.findViewById<Button>(R.id.ok)?.setOnClickListener {
-            userStateStorage.set(DefaultState())
-            recoveryDialog.dismiss()
-        }
-        recoveryDialog.setOnCancelListener {
-            finish()
-        }
+        val configuration = BottomDialogConfiguration(
+            titleResId = R.string.recovery_dialog_title,
+            textResId = R.string.recovery_dialog_description,
+            ctaButtonTextResId = R.string.okay,
+            isHideable = false
+        )
+        recoveryDialog = BottomDialog(this, configuration,
+            onCancel = {
+                finish()
+            },
+            onButtonClick = {
+                userStateStorage.set(DefaultState())
+            })
     }
 
     override fun onResume() {

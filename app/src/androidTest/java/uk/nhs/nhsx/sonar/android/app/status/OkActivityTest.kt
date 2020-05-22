@@ -33,4 +33,14 @@ class OkActivityTest(private val testAppContext: TestApplicationContext) {
 
         okRobot.checkEverythingIsWorking()
     }
+
+    fun testShowsRecoveryDialogOnResume() {
+        testAppContext.setFullValidUser(RecoveryState())
+
+        app.startTestActivity<OkActivity>()
+
+        okRobot.checkRecoveryDialogIsDisplayed()
+        okRobot.clickRecoveryDialogCtaButton()
+        okRobot.checkRecoveryDialogIsNotDisplayed()
+    }
 }

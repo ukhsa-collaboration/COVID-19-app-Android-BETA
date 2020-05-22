@@ -65,7 +65,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testLaunchWhenStateIsDefault() {
-        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.setFullValidUser(DefaultState())
 
         startMainActivity()
 

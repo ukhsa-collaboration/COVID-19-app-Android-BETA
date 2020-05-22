@@ -83,6 +83,7 @@ class ConnectedTestRunner {
 
             { OkActivityTest(testAppContext).testRegistrationRetry() },
             { OkActivityTest(testAppContext).testRegistrationPushNotificationNotReceived() },
+            { OkActivityTest(testAppContext).testShowsRecoveryDialogOnResume() },
 
             { AtRiskActivityTest(testAppContext).testHideStatusUpdateNotificationWhenNotClicked() },
 

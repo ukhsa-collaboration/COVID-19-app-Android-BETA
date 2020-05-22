@@ -14,7 +14,7 @@ class BaseActivityTest(private val testAppContext: TestApplicationContext) {
     private val edgeCaseRobot = EdgeCaseRobot()
 
     private fun startActivity() {
-        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.setFullValidUser(DefaultState())
 
         app.startTestActivity<OkActivity>()
     }

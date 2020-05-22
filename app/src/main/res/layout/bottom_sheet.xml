@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottom_sheet_recovery"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomSheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bottom_sheet_rounded_background"
@@ -14,30 +14,32 @@
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
     <TextView
+        android:id="@+id/bottomDialogTitle"
         style="@style/BottomSheetTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:accessibilityHeading="true"
-        android:text="@string/recovery_dialog_title"/>
+        tools:text="@string/recovery_dialog_title" />
 
     <TextView
+        android:id="@+id/bottomDialogText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAlignment="textStart"
         android:layout_marginTop="16dp"
+        android:textAlignment="textStart"
         android:textColor="@color/text_sub_title"
         android:textSize="16sp"
-        android:text="@string/recovery_dialog_description"/>
+        tools:text="@string/recovery_dialog_description" />
 
     <Button
-        android:id="@+id/ok"
+        android:id="@+id/bottomDialogCtaButton"
         style="@style/SecondaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="24dp"
-        android:text="@string/okay" />
+        tools:text="@string/okay" />
 
 
 </LinearLayout>
