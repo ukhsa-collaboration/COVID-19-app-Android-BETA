@@ -18,14 +18,12 @@ import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 sealed class UserState {
 
-    abstract val testInfo: TestInfo?
-
     companion object {
         const val NO_DAYS_IN_RED = 7
         const val NO_DAYS_IN_AMBER = 14
 
-        fun default(testInfo: TestInfo?): DefaultState =
-            DefaultState(testInfo)
+        fun default(): DefaultState =
+            DefaultState
 
         fun amber(today: LocalDate = LocalDate.now()): AmberState =
             AmberState(today.after(NO_DAYS_IN_AMBER - 1).days().toUtc())
@@ -101,57 +99,30 @@ sealed class UserState {
             is CheckinState -> symptoms
             else -> emptySet()
         }
-
-    fun displayTestResult(): Boolean =
-        testInfo != null && !testInfo!!.dismissed
 }
 
 // Initial state
-data class DefaultState(
-    override var testInfo: TestInfo? = null
-) : UserState()
+object DefaultState : UserState()
 
 // State when you had symptoms and now you only have cough after more than seven days.
-data class RecoveryState(
-    override var testInfo: TestInfo? = null
-) : UserState()
+object RecoveryState : UserState()
 
 // State when you have been in contact with someone in RedState
-data class AmberState(
-    val until: DateTime,
-    override var testInfo: TestInfo? = null
-) : UserState()
+data class AmberState(val until: DateTime) : UserState()
 
 // State when you initially have symptoms. Prompted after 1 to 7 days to checkin.
 data class RedState(
     val since: DateTime,
     val until: DateTime,
-    val symptoms: NonEmptySet<Symptom>,
-    override var testInfo: TestInfo? = null
+    val symptoms: NonEmptySet<Symptom>
 ) : UserState()
 
 // State after first checkin from RedState, does not get prompted again.
 data class CheckinState(
     val since: DateTime,
     val until: DateTime,
-    val symptoms: NonEmptySet<Symptom>,
-    override var testInfo: TestInfo? = null
+    val symptoms: NonEmptySet<Symptom>
 ) : UserState()
-
-// Test Info
-data class TestInfo(
-    val testResult: TestResult,
-    val testDate: DateTime,
-    val stateChanged: Boolean,
-    var dismissed: Boolean = false
-)
-
-enum class TestResult {
-    NEGATIVE,
-    POSITIVE,
-    INVALID,
-    PRESUMED_POSITIVE
-}
 
 enum class DisplayState {
     OK, // Default

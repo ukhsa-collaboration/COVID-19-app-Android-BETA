@@ -106,7 +106,7 @@ class IsolateActivity : BaseActivity() {
                 DiagnoseTemperatureActivity.start(this)
             },
             onSecondCtaClick = {
-                userStateStorage.set(DefaultState())
+                userStateStorage.set(DefaultState)
                 navigateTo(userStateStorage.get())
             }
         )

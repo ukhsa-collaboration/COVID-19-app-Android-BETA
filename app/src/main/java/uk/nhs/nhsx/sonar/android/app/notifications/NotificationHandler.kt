@@ -11,7 +11,7 @@ import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
-import uk.nhs.nhsx.sonar.android.app.status.TestResult
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import javax.inject.Inject
@@ -57,7 +57,7 @@ class NotificationHandler @Inject constructor(
                 isTestResult(messageData) -> {
                     userStateStorage.get()
                         .let { currentState ->
-                            UserStateTransitions.addTestInfo(
+                            UserStateTransitions.transitionOnTestResult(
                                 currentState,
                                 TestResult.valueOf(messageData.getValue(TEST_RESULT_KEY)),
                                 DateTime(messageData.getValue(TEST_RESULT_DATE_KEY))

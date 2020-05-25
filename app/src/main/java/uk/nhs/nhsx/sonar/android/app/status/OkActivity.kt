@@ -26,6 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
@@ -45,6 +46,9 @@ class OkActivity : BaseActivity() {
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
+
+    @Inject
+    lateinit var userInbox: UserInbox
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<OkViewModel>
@@ -158,7 +162,7 @@ class OkActivity : BaseActivity() {
                 finish()
             },
             onSecondCtaClick = {
-                userStateStorage.set(DefaultState())
+                userStateStorage.set(DefaultState)
             })
     }
 
@@ -171,15 +175,11 @@ class OkActivity : BaseActivity() {
         )
         testResultDialog = BottomDialog(this, configuration,
             onCancel = {
-                userStateStorage.get().let { state ->
-                    UserStateTransitions.dismissTestResult(state)
-                }.let {
-                    userState -> userStateStorage.set(userState)
-                }
+                userInbox.dismissTestResult()
                 finish()
             },
             onSecondCtaClick = {
-                userStateStorage.set(DefaultState())
+                userStateStorage.set(DefaultState)
             })
     }
 
@@ -189,7 +189,7 @@ class OkActivity : BaseActivity() {
         val state = userStateStorage.get()
         navigateTo(state)
 
-        if (state.displayTestResult()) {
+        if (userInbox.hasTestResult()) {
             testResultDialog.showExpanded()
         } else {
             testResultDialog.dismiss()

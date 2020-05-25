@@ -20,7 +20,7 @@ import uk.nhs.nhsx.sonar.android.app.status.AmberState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
-import uk.nhs.nhsx.sonar.android.app.status.TestResult
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
@@ -97,7 +97,7 @@ class NotificationHandlerTest {
             "type" to "Status Update",
             "status" to "Potential"
         )
-        every { statusStorage.get() } returns DefaultState()
+        every { statusStorage.get() } returns DefaultState
 
         handler.handleNewMessage(messageData)
 
@@ -115,14 +115,14 @@ class NotificationHandlerTest {
             "result" to "NEGATIVE",
             "testTimestamp" to "2020-04-23T18:34:00Z"
         )
-        every { statusStorage.get() } returns DefaultState()
+        every { statusStorage.get() } returns DefaultState
 
         handler.handleNewMessage(messageData)
 
         verify {
             statusStorage.get()
-            UserStateTransitions.addTestInfo(
-                DefaultState(),
+            UserStateTransitions.transitionOnTestResult(
+                DefaultState,
                 TestResult.NEGATIVE,
                 DateTime("2020-04-23T18:34:00Z")
             )
@@ -167,7 +167,7 @@ class NotificationHandlerTest {
     @Test
     fun `test handleNewMessage - a notification with acknowledgmentUrl`() {
         every { ackDao.tryFind(any()) } returns null
-        every { statusStorage.get() } returns DefaultState()
+        every { statusStorage.get() } returns DefaultState
 
         val messageData =
             mapOf(

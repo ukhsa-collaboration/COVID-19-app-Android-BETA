@@ -12,12 +12,13 @@ import org.joda.time.LocalDate
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.NAUSEA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.SNEEZE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.addTestInfo
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnose
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnoseForCheckin
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.expireAmberState
@@ -43,9 +44,9 @@ class UserStateTransitionsTest {
     fun `diagnose - when symptoms date is 7 days ago or more, and no temperature`() {
         val sevenDaysAgoOrMore = today.minusDays(7)
 
-        val state = diagnose(DefaultState(), sevenDaysAgoOrMore, symptomsWithoutTemperature, today)
+        val state = diagnose(DefaultState, sevenDaysAgoOrMore, symptomsWithoutTemperature, today)
 
-        assertThat(state).isEqualTo(RecoveryState())
+        assertThat(state).isEqualTo(RecoveryState)
     }
 
     @Test
@@ -64,7 +65,7 @@ class UserStateTransitionsTest {
         val sevenDaysAfterSymptoms = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
         val state = diagnose(
-            DefaultState(),
+            DefaultState,
             sevenDaysAgoOrMore,
             symptomsWithTemperature,
             today
@@ -84,7 +85,7 @@ class UserStateTransitionsTest {
         val sevenDaysAfterSymptoms = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
         val state = diagnose(
-            DefaultState(),
+            DefaultState,
             lessThanSevenDaysAgo,
             symptomsWithoutTemperature,
             today
@@ -105,7 +106,7 @@ class UserStateTransitionsTest {
         val sevenDaysAfterSymptoms = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
         val state = diagnose(
-            DefaultState(),
+            DefaultState,
             lessThanSevenDaysAgo,
             symptomsWithTemperature,
             today
@@ -144,7 +145,7 @@ class UserStateTransitionsTest {
 
         val state = diagnoseForCheckin(tomorrow, setOf(COUGH), today)
 
-        assertThat(state).isEqualTo(RecoveryState())
+        assertThat(state).isEqualTo(RecoveryState)
     }
 
     @Test
@@ -153,7 +154,7 @@ class UserStateTransitionsTest {
 
         val state = diagnoseForCheckin(tomorrow, setOf(ANOSMIA), today)
 
-        assertThat(state).isEqualTo(RecoveryState())
+        assertThat(state).isEqualTo(RecoveryState)
     }
 
     @Test
@@ -162,13 +163,13 @@ class UserStateTransitionsTest {
 
         val state = diagnoseForCheckin(tomorrow, emptySet(), today)
 
-        assertThat(state).isEqualTo(DefaultState())
+        assertThat(state).isEqualTo(DefaultState)
     }
 
     @Test
     fun `test transitionOnContactAlert`() {
-        assertThat(transitionOnContactAlert(DefaultState())).isInstanceOf(AmberState::class.java)
-        assertThat(transitionOnContactAlert(RecoveryState())).isInstanceOf(AmberState::class.java)
+        assertThat(transitionOnContactAlert(DefaultState)).isInstanceOf(AmberState::class.java)
+        assertThat(transitionOnContactAlert(RecoveryState)).isInstanceOf(AmberState::class.java)
         assertThat(transitionOnContactAlert(buildAmberState())).isNull()
         assertThat(transitionOnContactAlert(buildRedState())).isNull()
         assertThat(transitionOnContactAlert(buildCheckinState())).isNull()
@@ -184,15 +185,15 @@ class UserStateTransitionsTest {
         val expiredRedState = buildRedState(until = DateTime.now().minusSeconds(1))
         val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
 
-        assertThat(expireAmberState(DefaultState())).isEqualTo(DefaultState())
-        assertThat(expireAmberState(RecoveryState())).isEqualTo(RecoveryState())
+        assertThat(expireAmberState(DefaultState)).isEqualTo(DefaultState)
+        assertThat(expireAmberState(RecoveryState)).isEqualTo(RecoveryState)
         assertThat(expireAmberState(amberState)).isEqualTo(amberState)
         assertThat(expireAmberState(redState)).isEqualTo(redState)
         assertThat(expireAmberState(checkinState)).isEqualTo(checkinState)
         assertThat(expireAmberState(expiredRedState)).isEqualTo(expiredRedState)
         assertThat(expireAmberState(expiredCheckinState)).isEqualTo(expiredCheckinState)
 
-        assertThat(expireAmberState(expiredAmberState)).isEqualTo(DefaultState())
+        assertThat(expireAmberState(expiredAmberState)).isEqualTo(DefaultState)
     }
 
     @Test
@@ -208,62 +209,39 @@ class UserStateTransitionsTest {
     }
 
     @Test
-    fun `add test with negative result to default state`() {
-        val currentState = DefaultState()
+    fun `transitionOnTestResult - with negative result to default state`() {
+        val currentState = DefaultState
 
         val testResult = TestResult.NEGATIVE
         val testStartDate = DateTime.now().toUtc()
 
-        val state = addTestInfo(currentState, testResult, testStartDate)
+        val state = transitionOnTestResult(currentState, testResult, testStartDate)
 
-        val expected = DefaultState(
-            TestInfo(
-                testResult, testStartDate,
-                stateChanged = false,
-                dismissed = false
-            )
-        )
-        assertThat(state).isEqualTo(expected)
+        assertThat(state).isEqualTo(DefaultState)
     }
 
     @Test
-    fun `add test info with negative result and test date prior to symptoms date to RedState`() {
+    fun `transitionOnTestResult - with negative result and test date prior to symptoms date to RedState`() {
         val symptomDate = LocalDate.now().minusDays(2)
         val testDate = DateTime.now().minusDays(6)
         val currentState = UserState.red(symptomDate, NonEmptySet.create(COUGH))
         val testResult = TestResult.NEGATIVE
 
-        val state = addTestInfo(currentState, testResult, testDate)
+        val state = transitionOnTestResult(currentState, testResult, testDate)
 
-        val expected = currentState.copy(
-            testInfo = TestInfo(
-                testResult,
-                testDate,
-                stateChanged = false,
-                dismissed = false
-            )
-        )
-        assertThat(state).isEqualTo(expected)
+        assertThat(state).isEqualTo(currentState)
     }
 
     @Test
-    fun `add test info with negative result and test date after the date of symptoms to RedState`() {
+    fun `transitionOnTestResult - with negative result and test date after the date of symptoms to RedState`() {
         val symptomDate = LocalDate.now().minusDays(6)
         val testDate = DateTime.now().minusDays(3)
         val currentState = UserState.red(symptomDate, NonEmptySet.create(COUGH))
         val testResult = TestResult.NEGATIVE
 
-        val state = addTestInfo(currentState, testResult, testDate)
+        val state = transitionOnTestResult(currentState, testResult, testDate)
 
-        val expected = DefaultState(
-            testInfo = TestInfo(
-                testResult,
-                testDate,
-                stateChanged = true,
-                dismissed = false
-            )
-        )
-        assertThat(state).isEqualTo(expected)
+        assertThat(state).isEqualTo(DefaultState)
     }
 
     @After

@@ -98,7 +98,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         events.layoutManager = LinearLayoutManager(this)
 
         setRecoveryState.setOnClickListener {
-            userStateStorage.set(RecoveryState())
+            userStateStorage.set(RecoveryState)
             finish()
         }
 

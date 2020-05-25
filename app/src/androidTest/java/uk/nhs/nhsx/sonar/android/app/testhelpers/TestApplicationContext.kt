@@ -155,7 +155,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         mockServer.shutdown()
     }
 
-    fun setFullValidUser(state: UserState = DefaultState()) {
+    fun setFullValidUser(state: UserState = DefaultState) {
         component.getUserStateStorage().set(state)
         component.getSonarIdProvider().set(RESIDENT_ID)
         component.getKeyStorage().storeSecretKey(encodedSecretKey)
