@@ -21,12 +21,18 @@ import kotlinx.android.synthetic.main.activity_test.exportButton
 import kotlinx.android.synthetic.main.activity_test.no_events
 import kotlinx.android.synthetic.main.activity_test.resetButton
 import kotlinx.android.synthetic.main.activity_test.setCheckinState
+import kotlinx.android.synthetic.main.activity_test.setDefaultState
+import kotlinx.android.synthetic.main.activity_test.setExposedNotification
 import kotlinx.android.synthetic.main.activity_test.setExposedState
+import kotlinx.android.synthetic.main.activity_test.setPositiveState
 import kotlinx.android.synthetic.main.activity_test.setRecovery
 import kotlinx.android.synthetic.main.activity_test.setSymptomaticState
 import kotlinx.android.synthetic.main.activity_test.setTestInvalid
+import kotlinx.android.synthetic.main.activity_test.setTestInvalidNotification
 import kotlinx.android.synthetic.main.activity_test.setTestNegative
+import kotlinx.android.synthetic.main.activity_test.setTestNegativeNotification
 import kotlinx.android.synthetic.main.activity_test.setTestPositive
+import kotlinx.android.synthetic.main.activity_test.setTestPositiveNotification
 import kotlinx.android.synthetic.main.activity_test.sonar_id
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -40,6 +46,7 @@ import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
+import uk.nhs.nhsx.sonar.android.app.notifications.NotificationHandler
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
@@ -50,6 +57,7 @@ import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.observe
+import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import javax.inject.Inject
 
 fun cryptogramColourAndInverse(cryptogramBytes: ByteArray): Pair<Int, Int> {
@@ -85,6 +93,9 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory<TestViewModel>
 
+    @Inject
+    lateinit var notificationHandler: NotificationHandler
+
     private val viewModel: TestViewModel by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,50 +117,15 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         events.adapter = adapter
         events.layoutManager = LinearLayoutManager(this)
 
-        setExposedState.setOnClickListener {
-            userStateStorage.set(UserState.exposed())
-            finish()
-        }
+        setStates()
 
-        setSymptomaticState.setOnClickListener {
-            userStateStorage.set(
-                UserState.symptomatic(
-                    symptomsDate = LocalDate.now(),
-                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
-                )
-            )
-            finish()
-        }
+        setTestResults()
 
-        setCheckinState.setOnClickListener {
-            userStateStorage.set(
-                UserState.checkin(
-                    since = DateTime.now(),
-                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE),
-                    today = LocalDate.now().minusDays(1)
-                )
-            )
-            finish()
-        }
+        setNotifications()
 
         setRecovery.setOnClickListener {
             userStateStorage.set(DefaultState)
             userInbox.addRecovery()
-            finish()
-        }
-
-        setTestPositive.setOnClickListener {
-            userInbox.addTestResult(TestInfo(TestResult.POSITIVE, DateTime.now()))
-            finish()
-        }
-
-        setTestNegative.setOnClickListener {
-            userInbox.addTestResult(TestInfo(TestResult.NEGATIVE, DateTime.now()))
-            finish()
-        }
-
-        setTestInvalid.setOnClickListener {
-            userInbox.addTestResult(TestInfo(TestResult.INVALID, DateTime.now()))
             finish()
         }
 
@@ -182,6 +158,99 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         viewModel.observeConnectionEvents()
+    }
+
+    private fun setStates() {
+        setDefaultState.setOnClickListener {
+            userStateStorage.set(DefaultState)
+            finish()
+        }
+
+        setExposedState.setOnClickListener {
+            userStateStorage.set(UserState.exposed())
+            finish()
+        }
+
+        setSymptomaticState.setOnClickListener {
+            userStateStorage.set(
+                UserState.symptomatic(
+                    symptomsDate = LocalDate.now(),
+                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
+                )
+            )
+            finish()
+        }
+
+        setCheckinState.setOnClickListener {
+            userStateStorage.set(
+                UserState.checkin(
+                    since = DateTime.now(),
+                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE),
+                    today = LocalDate.now().minusDays(1)
+                )
+            )
+            finish()
+        }
+
+        setPositiveState.setOnClickListener {
+            userStateStorage.set(
+                UserState.positive(
+                    testDate = DateTime.now(),
+                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
+                )
+            )
+            finish()
+        }
+    }
+
+    private fun setTestResults() {
+        setTestPositive.setOnClickListener {
+            userInbox.addTestResult(TestInfo(TestResult.POSITIVE, DateTime.now()))
+            finish()
+        }
+
+        setTestNegative.setOnClickListener {
+            userInbox.addTestResult(TestInfo(TestResult.NEGATIVE, DateTime.now()))
+            finish()
+        }
+
+        setTestInvalid.setOnClickListener {
+            userInbox.addTestResult(TestInfo(TestResult.INVALID, DateTime.now()))
+            finish()
+        }
+    }
+
+    private fun setNotifications() {
+        setTestPositiveNotification.setOnClickListener {
+            notificationHandler.handleNewMessage(testResultMessageData(TestResult.POSITIVE))
+        }
+
+        setTestNegativeNotification.setOnClickListener {
+            notificationHandler.handleNewMessage(testResultMessageData(TestResult.NEGATIVE))
+        }
+
+        setTestInvalidNotification.setOnClickListener {
+            notificationHandler.handleNewMessage(testResultMessageData(TestResult.INVALID))
+        }
+
+        setExposedNotification.setOnClickListener {
+            notificationHandler.handleNewMessage(exposedMessageData())
+        }
+    }
+
+    private fun testResultMessageData(result: TestResult): Map<String, String> {
+        return mapOf(
+            "type" to "Test Result",
+            "result" to result.toString(),
+            "testTimestamp" to DateTime.now().toUtcIsoFormat()
+        )
+    }
+
+    private fun exposedMessageData(): Map<String, String> {
+        return mapOf(
+            "type" to "Status Update",
+            "status" to "Potential"
+        )
     }
 
     companion object {

@@ -2,204 +2,269 @@
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
-<LinearLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="8dp"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textStyle="normal"
-        android:paddingVertical="4dp"
-        android:textColor="@color/text_sub_title"
-        android:text="@string/for_debug_purposes_only"/>
-
-    <TextView
-        android:id="@+id/sonar_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="normal"
-        android:textIsSelectable="true"
-        android:text=""/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textStyle="normal"
-        android:paddingVertical="4dp"
-        android:textColor="@color/text_sub_title"
-        android:text="@string/app_version"/>
-
-    <TextView
-        android:id="@+id/app_version"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="normal"
-        android:textIsSelectable="true"
-        android:layout_marginBottom="8dp"
-        android:text=""/>
-
-
-    <TextView
-        android:id="@+id/encrypted_broadcast_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="@color/colorPrimary"
-        android:textStyle="normal"
-        android:textIsSelectable="true"
-        android:layout_marginBottom="8dp"
-        android:text=""
-        tools:text="4GqL81GilxTxb0lmD7bUU4Wb97wJ011I/LWdJTBwcVnKrj9ZvYnPDq++eR/bLw6lNWl9fkdutFOeJhM3t8niKaWyvSHk2uBdvs9K4rhZe0w/TdeF0Z4rMWnrLoq+I7GZpbcwgz9kC5My2w=="
-    />
-
-    <View
-        style="@style/HorizontalDivider"
-        android:background="@color/gray"
-        android:layout_height="1dp"
-        android:layout_marginBottom="8dp"/>
-
-    <TextView
-        android:id="@+id/no_events"
-        android:textSize="12sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No events recorded."/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/events"
-        android:textSize="12sp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <View
-        style="@style/HorizontalDivider"
-        android:background="@color/gray"
-        android:layout_height="1dp"
-        android:layout_marginBottom="8dp"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="8dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Change state"
-        />
-        <LinearLayout
+            android:paddingVertical="4dp"
+            android:text="@string/for_debug_purposes_only"
+            android:textColor="@color/text_sub_title"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/sonar_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-            <Button
-                android:id="@+id/setExposedState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Exposed"/>
-
-            <Button
-                android:id="@+id/setSymptomaticState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Symptomatic"/>
-
-            <Button
-                android:id="@+id/setCheckinState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Checkin"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            android:textStyle="normal" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Messages"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:paddingVertical="4dp"
+            android:text="@string/app_version"
+            android:textColor="@color/text_sub_title"
+            android:textSize="12sp"
+            android:textStyle="normal" />
 
-            <Button
-                android:id="@+id/setRecovery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Recovery"/>
-
-            <Button
-                android:id="@+id/setTestPositive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+ Test"/>
-
-            <Button
-                android:id="@+id/setTestNegative"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="- Test"/>
-
-            <Button
-                android:id="@+id/setTestInvalid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="\? Test"/>
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
         <TextView
+            android:id="@+id/app_version"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Other actions"
-        />
+            android:layout_marginBottom="8dp"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            android:textStyle="normal" />
+
+
+        <TextView
+            android:id="@+id/encrypted_broadcast_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            android:textStyle="normal"
+            tools:text="4GqL81GilxTxb0lmD7bUU4Wb97wJ011I/LWdJTBwcVnKrj9ZvYnPDq++eR/bLw6lNWl9fkdutFOeJhM3t8niKaWyvSHk2uBdvs9K4rhZe0w/TdeF0Z4rMWnrLoq+I7GZpbcwgz9kC5My2w==" />
+
+        <View
+            style="@style/HorizontalDivider"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/gray" />
+
+        <TextView
+            android:id="@+id/no_events"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No events recorded."
+            android:textSize="12sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/events"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:minHeight="300dp"
+            android:layout_weight="1"
+            android:textSize="12sp" />
+
+        <View
+            style="@style/HorizontalDivider"
+            android:layout_height="1dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/gray" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/continueButton"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Continue"/>
+                android:text="States" />
 
-            <Button
-                android:id="@+id/resetButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Reset"/>
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/exportButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Export"/>
+                <Button
+                    android:id="@+id/setDefaultState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="70dp"
+                    android:text="DEF" />
+
+                <Button
+                    android:id="@+id/setExposedState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="70dp"
+                    android:text="EXP" />
+
+                <Button
+                    android:id="@+id/setSymptomaticState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="70dp"
+                    android:text="SYM" />
+
+                <Button
+                    android:id="@+id/setCheckinState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="70dp"
+                    android:text="CHE" />
+
+                <Button
+                    android:id="@+id/setPositiveState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="70dp"
+                    android:text="POS" />
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Notifications" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <Button
+                    android:id="@+id/setExposedNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Exposed" />
+
+                <Button
+                    android:id="@+id/setTestPositiveNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ Test" />
+
+                <Button
+                    android:id="@+id/setTestNegativeNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- Test" />
+
+                <Button
+                    android:id="@+id/setTestInvalidNotification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\? Test" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Overlays" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/setRecovery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Recovery" />
+
+                <Button
+                    android:id="@+id/setTestPositive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="+ Test" />
+
+                <Button
+                    android:id="@+id/setTestNegative"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="- Test" />
+
+                <Button
+                    android:id="@+id/setTestInvalid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="\? Test" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Other actions" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/continueButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Continue" />
+
+                <Button
+                    android:id="@+id/resetButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reset" />
+
+                <Button
+                    android:id="@+id/exportButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Export" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
