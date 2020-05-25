@@ -63,7 +63,8 @@ sealed class UserState {
             symptoms: NonEmptySet<Symptom>,
             today: LocalDate = LocalDate.now()
         ): PositiveState {
-            val suggested = testDate.toLocalDate().after(NO_DAYS_IN_SYMPTOMATIC).days()
+            val testLocalDate = testDate.toLocalDate()
+            val suggested = testLocalDate.after(NO_DAYS_IN_SYMPTOMATIC).days()
             val tomorrow = today.after(1).day()
 
             // if symptomsDate > 7 days ago then positive state is until tomorrow
@@ -71,7 +72,7 @@ sealed class UserState {
             val until = latest(suggested, tomorrow)
 
             return PositiveState(
-                testDate.atSevenAm().toUtc(),
+                testLocalDate.atSevenAm().toUtc(),
                 until.toUtc(),
                 symptoms
             )

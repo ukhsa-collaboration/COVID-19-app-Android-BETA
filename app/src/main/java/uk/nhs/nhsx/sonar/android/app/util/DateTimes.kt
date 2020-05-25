@@ -32,9 +32,6 @@ fun latest(a: DateTime, b: DateTime) =
 fun LocalDate.atSevenAm(): DateTime =
     toDateTime(LocalTime.parse(SEVEN_AM))
 
-fun DateTime.atSevenAm(): DateTime =
-    this.withTime(LocalTime.parse(SEVEN_AM))
-
 fun LocalDate.after(count: Int): After =
     After(this, count)
 

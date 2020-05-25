@@ -8,8 +8,10 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_SYMPTOMATIC
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.positive
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.isEarlierThan
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 object UserStateTransitions {
 
@@ -39,12 +41,6 @@ object UserStateTransitions {
                 DefaultState
         }
 
-    fun transitionOnContactAlert(currentState: UserState): UserState? =
-        when (currentState) {
-            is DefaultState -> UserState.exposed()
-            else -> null
-        }
-
     fun expireExposedState(currentState: UserState): UserState =
         if (currentState is ExposedState && currentState.hasExpired())
             DefaultState
@@ -54,13 +50,19 @@ object UserStateTransitions {
     fun isSymptomatic(symptoms: Set<Symptom>): Boolean =
         hasTemperature(symptoms) || hasCough(symptoms) || hasAnosmia(symptoms)
 
+    fun transitionOnContactAlert(currentState: UserState): UserState? =
+        when (currentState) {
+            is DefaultState -> UserState.exposed()
+            else -> null
+        }
+
     fun transitionOnTestResult(
         currentState: UserState,
         testInfo: TestInfo
     ): UserState =
         when (testInfo.result) {
             TestResult.NEGATIVE -> handleNegativeTestResult(currentState, testInfo.date)
-            TestResult.POSITIVE -> currentState
+            TestResult.POSITIVE -> handlePositiveTestResult(currentState, testInfo.date)
             TestResult.INVALID -> currentState
             TestResult.PRESUMED_POSITIVE -> currentState
         }
@@ -77,6 +79,20 @@ object UserStateTransitions {
                 if (state.since.isAfter(testDate)) state else DefaultState
             else ->
                 DefaultState
+        }
+
+    private fun handlePositiveTestResult(state: UserState, testDate: DateTime): UserState =
+        when (state) {
+            is SymptomaticState ->
+                positive(testDate, state.symptoms)
+            is PositiveState ->
+                state
+            is CheckinState ->
+                positive(testDate, state.symptoms)
+            is ExposedState ->
+                if (state.since.isAfter(testDate)) state else positive(testDate, nonEmptySetOf(TEMPERATURE))
+            is DefaultState ->
+                positive(testDate, nonEmptySetOf(TEMPERATURE))
         }
 
     private fun hasTemperature(symptoms: Set<Symptom>): Boolean =
