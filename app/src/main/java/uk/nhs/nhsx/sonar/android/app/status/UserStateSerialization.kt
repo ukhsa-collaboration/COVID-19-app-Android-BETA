@@ -8,6 +8,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_AMBER
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 
@@ -23,17 +24,18 @@ object UserStateSerialization {
             )
             is AmberState -> jsonOf(
                 "type" to state.type(),
+                "since" to state.since.millis,
                 "until" to state.until.millis
             )
             is RedState -> jsonOf(
                 "type" to state.type(),
-                "since" to state.since.serialize(),
+                "since" to state.since.millis,
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.value }
             )
             is CheckinState -> jsonOf(
                 "type" to state.type(),
-                "since" to state.since.serialize(),
+                "since" to state.since.millis,
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.value }
             )
@@ -53,7 +55,11 @@ object UserStateSerialization {
         } ?: DefaultState
     }
 
-    private fun JSONObject.getAmberState() = AmberState(getUntil())
+    private fun JSONObject.getAmberState(): AmberState {
+        val until = getUntil()
+        val since = getSince() ?: until.minusDays(NO_DAYS_IN_AMBER)
+        return AmberState(since, until)
+    }
 
     private fun JSONObject.getRedState(): RedState? {
         return getSymptoms()?.let { symptoms ->
@@ -70,8 +76,6 @@ object UserStateSerialization {
             CheckinState(since, until, it)
         }
     }
-
-    private fun DateTime?.serialize(): Long = this?.let { millis } ?: -1
 
     private fun UserState.type() = javaClass.simpleName
 

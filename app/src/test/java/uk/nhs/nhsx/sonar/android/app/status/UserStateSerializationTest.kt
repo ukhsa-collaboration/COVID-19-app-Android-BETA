@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_AMBER
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
@@ -32,17 +33,12 @@ class UserStateSerializationTest {
 
     @Test
     fun `serialize amber state`() {
+        val since = DateTime(1387241302262L, UTC)
         val until = DateTime(1587241302262L, UTC)
 
-        assertThat(
-            serialize(
-                AmberState(
-                    until
-                )
-            )
-        )
+        assertThat(serialize(AmberState(since, until)))
             .isEqualTo(
-                """{"type":"AmberState","until":1587241302262}"""
+                """{"type":"AmberState","until":1587241302262,"since":1387241302262}"""
             )
     }
 
@@ -127,17 +123,24 @@ class UserStateSerializationTest {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"EmberState"}"""))
-            .isEqualTo(AmberState(until))
+            .isEqualTo(AmberState(until.minusDays(NO_DAYS_IN_AMBER), until))
     }
 
     @Test
-    fun `deserialize amber state`() {
+    fun `deserialize amber state without symptom date`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"AmberState"}"""))
-            .isEqualTo(AmberState(until))
-        assertThat(deserialize("""{"type":"AmberState","until":1587241302262}"""))
-            .isEqualTo(AmberState(until))
+            .isEqualTo(AmberState(until.minusDays(NO_DAYS_IN_AMBER), until))
+    }
+
+    @Test
+    fun `deserialize amber state with symptom date`() {
+        val since = DateTime(1587241300000L, UTC)
+        val until = DateTime(1587241302262L, UTC)
+
+        assertThat(deserialize("""{"since":1587241300000,"until":1587241302262,"type":"AmberState"}"""))
+            .isEqualTo(AmberState(since, until))
     }
 
     @Test

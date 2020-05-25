@@ -102,7 +102,7 @@ class BootCompletedReceiverTest {
 
     @Test
     fun `onReceive - without red state`() {
-        every { stateStorage.get() } returns AmberState(DateTime.now())
+        every { stateStorage.get() } returns AmberState(DateTime.now(), DateTime.now())
         every { sonarIdProvider.hasProperSonarId() } returns true
         every { BluetoothService.start(any()) } returns Unit
 

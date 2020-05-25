@@ -26,7 +26,7 @@ sealed class UserState {
             DefaultState
 
         fun amber(today: LocalDate = LocalDate.now()): AmberState =
-            AmberState(today.after(NO_DAYS_IN_AMBER - 1).days().toUtc())
+            AmberState(today.atSevenAm().toUtc(), today.after(NO_DAYS_IN_AMBER - 1).days().toUtc())
 
         fun checkin(
             symptomsDate: DateTime,
@@ -108,7 +108,7 @@ object DefaultState : UserState()
 object RecoveryState : UserState()
 
 // State when you have been in contact with someone in RedState
-data class AmberState(val until: DateTime) : UserState()
+data class AmberState(val since: DateTime, val until: DateTime) : UserState()
 
 // State when you initially have symptoms. Prompted after 1 to 7 days to checkin.
 data class RedState(

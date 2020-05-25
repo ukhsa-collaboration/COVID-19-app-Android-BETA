@@ -5,8 +5,9 @@ import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 fun buildAmberState(
+    since: DateTime = DateTime.now().plusDays(1),
     until: DateTime = DateTime.now().plusDays(1)
-) = AmberState(until)
+) = AmberState(until, until)
 
 fun buildRedState(
     until: DateTime = DateTime.now().plusDays(1),

@@ -143,7 +143,7 @@ class NotificationHandlerTest {
             "type" to "Status Update",
             "status" to "Potential"
         )
-        every { userStateStorage.get() } returns AmberState(DateTime.now())
+        every { userStateStorage.get() } returns AmberState(DateTime.now(), DateTime.now())
 
         handler.handleNewMessage(messageData)
 

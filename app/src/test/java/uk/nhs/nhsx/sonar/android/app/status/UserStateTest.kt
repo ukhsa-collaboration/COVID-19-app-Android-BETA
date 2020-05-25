@@ -14,7 +14,9 @@ import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
+import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTest {
 
@@ -33,7 +35,7 @@ class UserStateTest {
         val state = UserState.amber(today)
 
         val thirteenDaysFromNowAt7 = DateTime(2020, 4, 23, 7, 0).toDateTime(DateTimeZone.UTC)
-        assertThat(state).isEqualTo(AmberState(thirteenDaysFromNowAt7))
+        assertThat(state).isEqualTo(AmberState(today.atSevenAm().toUtc(), thirteenDaysFromNowAt7))
     }
 
     @Test
