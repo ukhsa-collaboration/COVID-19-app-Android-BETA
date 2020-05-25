@@ -21,10 +21,10 @@ object UserStateTransitions {
     ): UserState {
         val startedOver7DaysAgo = symptomsDate.isEarlierThan(days = NO_DAYS_IN_RED, from = today)
         val notConsideredContagious = doesNotHaveTemperature(symptoms) && startedOver7DaysAgo
-        val isAmberState = currentState is AmberState
+        val isExposedState = currentState is ExposedState
 
         return when {
-            notConsideredContagious && isAmberState -> currentState
+            notConsideredContagious && isExposedState -> currentState
             notConsideredContagious -> RecoveryState
             else -> UserState.red(symptomsDate, symptoms, today)
         }
@@ -46,13 +46,13 @@ object UserStateTransitions {
 
     fun transitionOnContactAlert(currentState: UserState): UserState? =
         when (currentState) {
-            is DefaultState -> UserState.amber()
-            is RecoveryState -> UserState.amber()
+            is DefaultState -> UserState.exposed()
+            is RecoveryState -> UserState.exposed()
             else -> null
         }
 
-    fun expireAmberState(currentState: UserState): UserState =
-        if (currentState is AmberState && currentState.hasExpired())
+    fun expireExposedState(currentState: UserState): UserState =
+        if (currentState is ExposedState && currentState.hasExpired())
             DefaultState
         else
             currentState

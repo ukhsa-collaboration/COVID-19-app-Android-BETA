@@ -22,7 +22,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnose
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnoseForCheckin
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.expireAmberState
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.expireExposedState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.isSymptomatic
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnContactAlert
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
@@ -51,13 +51,13 @@ class UserStateTransitionsTest {
     }
 
     @Test
-    fun `diagnose - when symptoms date is 7 days ago or more, no temperature, and current state is Amber`() {
-        val amberState = buildAmberState()
+    fun `diagnose - when symptoms date is 7 days ago or more, no temperature, and current state is Exposed`() {
+        val exposedState = buildExposedState()
         val sevenDaysAgoOrMore = today.minusDays(7)
 
-        val state = diagnose(amberState, sevenDaysAgoOrMore, symptomsWithoutTemperature, today)
+        val state = diagnose(exposedState, sevenDaysAgoOrMore, symptomsWithoutTemperature, today)
 
-        assertThat(state).isEqualTo(amberState)
+        assertThat(state).isEqualTo(exposedState)
     }
 
     @Test
@@ -169,32 +169,32 @@ class UserStateTransitionsTest {
 
     @Test
     fun `test transitionOnContactAlert`() {
-        assertThat(transitionOnContactAlert(DefaultState)).isInstanceOf(AmberState::class.java)
-        assertThat(transitionOnContactAlert(RecoveryState)).isInstanceOf(AmberState::class.java)
-        assertThat(transitionOnContactAlert(buildAmberState())).isNull()
+        assertThat(transitionOnContactAlert(DefaultState)).isInstanceOf(ExposedState::class.java)
+        assertThat(transitionOnContactAlert(RecoveryState)).isInstanceOf(ExposedState::class.java)
+        assertThat(transitionOnContactAlert(buildExposedState())).isNull()
         assertThat(transitionOnContactAlert(buildRedState())).isNull()
         assertThat(transitionOnContactAlert(buildCheckinState())).isNull()
     }
 
     @Test
-    fun `test expireAmberState`() {
-        val amberState = buildAmberState()
+    fun `test expireExposedState`() {
+        val exposedState = buildExposedState()
         val redState = buildRedState()
         val checkinState = buildCheckinState()
 
-        val expiredAmberState = buildAmberState(until = DateTime.now().minusSeconds(1))
+        val expiredExposedState = buildExposedState(until = DateTime.now().minusSeconds(1))
         val expiredRedState = buildRedState(until = DateTime.now().minusSeconds(1))
         val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
 
-        assertThat(expireAmberState(DefaultState)).isEqualTo(DefaultState)
-        assertThat(expireAmberState(RecoveryState)).isEqualTo(RecoveryState)
-        assertThat(expireAmberState(amberState)).isEqualTo(amberState)
-        assertThat(expireAmberState(redState)).isEqualTo(redState)
-        assertThat(expireAmberState(checkinState)).isEqualTo(checkinState)
-        assertThat(expireAmberState(expiredRedState)).isEqualTo(expiredRedState)
-        assertThat(expireAmberState(expiredCheckinState)).isEqualTo(expiredCheckinState)
+        assertThat(expireExposedState(DefaultState)).isEqualTo(DefaultState)
+        assertThat(expireExposedState(RecoveryState)).isEqualTo(RecoveryState)
+        assertThat(expireExposedState(exposedState)).isEqualTo(exposedState)
+        assertThat(expireExposedState(redState)).isEqualTo(redState)
+        assertThat(expireExposedState(checkinState)).isEqualTo(checkinState)
+        assertThat(expireExposedState(expiredRedState)).isEqualTo(expiredRedState)
+        assertThat(expireExposedState(expiredCheckinState)).isEqualTo(expiredCheckinState)
 
-        assertThat(expireAmberState(expiredAmberState)).isEqualTo(DefaultState)
+        assertThat(expireExposedState(expiredExposedState)).isEqualTo(DefaultState)
     }
 
     @Test

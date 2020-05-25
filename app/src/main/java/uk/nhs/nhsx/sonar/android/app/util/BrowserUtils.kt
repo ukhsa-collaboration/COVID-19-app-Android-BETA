@@ -28,7 +28,7 @@ private const val PAGE_ADVICE_DEFAULT = "https://faq.covid19.nhs.uk/article/KA-0
 
 private const val PAGE_ADVICE_RED = "https://faq.covid19.nhs.uk/article/KA-01078/en-us"
 
-private const val PAGE_ADVICE_AMBER = "https://faq.covid19.nhs.uk/article/KA-01063/en-us"
+private const val PAGE_ADVICE_EXPOSED = "https://faq.covid19.nhs.uk/article/KA-01063/en-us"
 
 const val URL_LATEST_ADVICE_DEFAULT =
     "$PAGE_ADVICE_DEFAULT?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_GENERAL"
@@ -36,8 +36,8 @@ const val URL_LATEST_ADVICE_DEFAULT =
 const val URL_LATEST_ADVICE_RED =
     "$PAGE_ADVICE_RED?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_SYMPTOMS#main-messages"
 
-const val URL_LATEST_ADVICE_AMBER =
-    "$PAGE_ADVICE_AMBER?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_NOTIFIED"
+const val URL_LATEST_ADVICE_EXPOSED =
+    "$PAGE_ADVICE_EXPOSED?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_NOTIFIED"
 
 const val URL_SYMPTOM_CHECKER = "https://111.nhs.uk/covid-19/"
 

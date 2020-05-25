@@ -83,7 +83,7 @@
         <activity android:name=".status.OkActivity"
                   android:label="@string/status_initial_title"/>
         <activity android:name=".status.AtRiskActivity"
-                  android:label="@string/status_amber_title"/>
+                  android:label="@string/status_exposed_title"/>
         <activity android:name=".status.IsolateActivity"
                   android:label="@string/status_red_title"/>
 

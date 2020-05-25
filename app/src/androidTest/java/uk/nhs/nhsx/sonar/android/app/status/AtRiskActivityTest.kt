@@ -10,7 +10,7 @@ class AtRiskActivityTest(private val testAppContext: TestApplicationContext) {
     private val atRiskRobot = AtRiskRobot()
 
     private fun startActivity() {
-        testAppContext.setFullValidUser(UserState.amber())
+        testAppContext.setFullValidUser(UserState.exposed())
 
         app.startTestActivity<AtRiskActivity>()
     }

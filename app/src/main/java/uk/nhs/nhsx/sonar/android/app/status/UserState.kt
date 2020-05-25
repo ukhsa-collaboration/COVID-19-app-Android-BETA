@@ -20,13 +20,13 @@ sealed class UserState {
 
     companion object {
         const val NO_DAYS_IN_RED = 7
-        const val NO_DAYS_IN_AMBER = 14
+        const val NO_DAYS_IN_EXPOSED = 14
 
         fun default(): DefaultState =
             DefaultState
 
-        fun amber(today: LocalDate = LocalDate.now()): AmberState =
-            AmberState(today.atSevenAm().toUtc(), today.after(NO_DAYS_IN_AMBER - 1).days().toUtc())
+        fun exposed(today: LocalDate = LocalDate.now()): ExposedState =
+            ExposedState(today.atSevenAm().toUtc(), today.after(NO_DAYS_IN_EXPOSED - 1).days().toUtc())
 
         fun checkin(
             symptomsDate: DateTime,
@@ -70,7 +70,7 @@ sealed class UserState {
         when (this) {
             is DefaultState -> null
             is RecoveryState -> null
-            is AmberState -> until
+            is ExposedState -> until
             is RedState -> until
             is CheckinState -> until
         }
@@ -82,7 +82,7 @@ sealed class UserState {
         when (this) {
             is DefaultState -> OK
             is RecoveryState -> OK
-            is AmberState -> AT_RISK
+            is ExposedState -> AT_RISK
             is RedState -> ISOLATE
             is CheckinState -> ISOLATE
         }
@@ -108,7 +108,7 @@ object DefaultState : UserState()
 object RecoveryState : UserState()
 
 // State when you have been in contact with someone in RedState
-data class AmberState(val since: DateTime, val until: DateTime) : UserState()
+data class ExposedState(val since: DateTime, val until: DateTime) : UserState()
 
 // State when you initially have symptoms. Prompted after 1 to 7 days to checkin.
 data class RedState(

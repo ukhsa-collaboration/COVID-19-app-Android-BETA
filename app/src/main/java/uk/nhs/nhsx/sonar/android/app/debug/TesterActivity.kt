@@ -20,8 +20,8 @@ import kotlinx.android.synthetic.main.activity_test.events
 import kotlinx.android.synthetic.main.activity_test.exportButton
 import kotlinx.android.synthetic.main.activity_test.no_events
 import kotlinx.android.synthetic.main.activity_test.resetButton
-import kotlinx.android.synthetic.main.activity_test.setAmberState
 import kotlinx.android.synthetic.main.activity_test.setCheckinState
+import kotlinx.android.synthetic.main.activity_test.setExposedState
 import kotlinx.android.synthetic.main.activity_test.setRecoveryState
 import kotlinx.android.synthetic.main.activity_test.setRedState
 import kotlinx.android.synthetic.main.activity_test.sonar_id
@@ -102,8 +102,8 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             finish()
         }
 
-        setAmberState.setOnClickListener {
-            userStateStorage.set(UserState.amber())
+        setExposedState.setOnClickListener {
+            userStateStorage.set(UserState.exposed())
             finish()
         }
 

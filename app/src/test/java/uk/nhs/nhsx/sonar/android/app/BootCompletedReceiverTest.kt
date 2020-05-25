@@ -18,7 +18,7 @@ import testsupport.mockContextWithMockedAppComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.AmberState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
@@ -102,7 +102,7 @@ class BootCompletedReceiverTest {
 
     @Test
     fun `onReceive - without red state`() {
-        every { stateStorage.get() } returns AmberState(DateTime.now(), DateTime.now())
+        every { stateStorage.get() } returns ExposedState(DateTime.now(), DateTime.now())
         every { sonarIdProvider.hasProperSonarId() } returns true
         every { BluetoothService.start(any()) } returns Unit
 

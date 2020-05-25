@@ -111,10 +111,10 @@
                 android:text="Recovery"/>
 
             <Button
-                android:id="@+id/setAmberState"
+                android:id="@+id/setExposedState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Amber"/>
+                android:text="Exposed"/>
 
             <Button
                 android:id="@+id/setRedState"

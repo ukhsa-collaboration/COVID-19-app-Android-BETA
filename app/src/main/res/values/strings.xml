@@ -15,7 +15,7 @@
     <string name="bluetooth_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near
         another phone with this app. For this app to work, Bluetooth needs to be kept on at all times.
     </string>
-    <string name="status_amber_title">You have been near someone who has coronavirus symptoms</string>
+    <string name="status_exposed_title">You have been near someone who has coronavirus symptoms</string>
     <string name="default_notification_channel_id" translatable="false">colocate-locate</string>
     <string name="default_notification_channel_name">General</string>
     <string name="foreground_service_channel_id" translatable="false">colocate-foreground-service</string>

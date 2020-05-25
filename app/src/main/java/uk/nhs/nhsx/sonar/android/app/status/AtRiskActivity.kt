@@ -10,7 +10,7 @@ import android.os.Bundle
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import kotlinx.android.synthetic.main.activity_at_risk.follow_until
-import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_amber
+import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_exposed
 import kotlinx.android.synthetic.main.activity_at_risk.registrationPanel
 import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
 import kotlinx.android.synthetic.main.banner.toolbar_info
@@ -26,7 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.notifications.cancelStatusNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
-import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_AMBER
+import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_EXPOSED
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -57,8 +57,8 @@ class AtRiskActivity : BaseActivity() {
 
         registrationPanel.setState(RegistrationState.Complete)
 
-        latest_advice_amber.setOnClickListener {
-            openUrl(URL_LATEST_ADVICE_AMBER)
+        latest_advice_exposed.setOnClickListener {
+            openUrl(URL_LATEST_ADVICE_EXPOSED)
         }
 
         nhs_service.setOnClickListener {
@@ -82,16 +82,16 @@ class AtRiskActivity : BaseActivity() {
         super.onResume()
 
         val oldState = userStateStorage.get()
-        if (oldState is AmberState) cancelStatusNotification()
+        if (oldState is ExposedState) cancelStatusNotification()
         navigateTo(oldState)
 
-        val newState = UserStateTransitions.expireAmberState(oldState)
+        val newState = UserStateTransitions.expireExposedState(oldState)
         userStateStorage.set(newState)
         navigateTo(newState)
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
-        latest_advice_amber.cardColourInversion(inversionModeEnabled)
+        latest_advice_exposed.cardColourInversion(inversionModeEnabled)
         status_not_feeling_well.cardColourInversion(inversionModeEnabled)
 
         workplace_guidance_card.cardColourInversion(inversionModeEnabled)

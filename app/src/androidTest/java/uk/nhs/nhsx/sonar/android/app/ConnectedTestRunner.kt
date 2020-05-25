@@ -64,7 +64,7 @@ class ConnectedTestRunner {
             { MainActivityTest(testAppContext).testTabletNotSupported() },
             { MainActivityTest(testAppContext).testLaunchWhenOnboardingIsFinishedButNotRegistered() },
             { MainActivityTest(testAppContext).testLaunchWhenStateIsDefault() },
-            { MainActivityTest(testAppContext).testLaunchWhenStateIsAmber() },
+            { MainActivityTest(testAppContext).testLaunchWhenStateIsExposed() },
             { MainActivityTest(testAppContext).testLaunchWhenStateIsRed() },
 
             { MainOnboardingActivityTest(testAppContext).testExplanation() },

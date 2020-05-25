@@ -17,7 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.AmberState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.RedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
@@ -107,7 +107,7 @@ class NotificationHandlerTest {
 
         verifyAll {
             userStateStorage.get()
-            userStateStorage.set(any<AmberState>())
+            userStateStorage.set(any<ExposedState>())
             sender.send(ContactAndCheckin, 10001, R.string.notification_title, R.string.notification_text, any())
         }
     }
@@ -138,12 +138,12 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun `test handleNewMessage - status update in amber state`() {
+    fun `test handleNewMessage - status update in exposed state`() {
         val messageData = mapOf(
             "type" to "Status Update",
             "status" to "Potential"
         )
-        every { userStateStorage.get() } returns AmberState(DateTime.now(), DateTime.now())
+        every { userStateStorage.get() } returns ExposedState(DateTime.now(), DateTime.now())
 
         handler.handleNewMessage(messageData)
 
@@ -151,7 +151,7 @@ class NotificationHandlerTest {
             userStateStorage.get()
             sender wasNot Called
         }
-        verify(exactly = 0) { userStateStorage.set(any<AmberState>()) }
+        verify(exactly = 0) { userStateStorage.set(any<ExposedState>()) }
     }
 
     @Test
@@ -168,7 +168,7 @@ class NotificationHandlerTest {
             userStateStorage.get()
             sender wasNot Called
         }
-        verify(exactly = 0) { userStateStorage.set(any<AmberState>()) }
+        verify(exactly = 0) { userStateStorage.set(any<ExposedState>()) }
     }
 
     @Test
@@ -187,7 +187,7 @@ class NotificationHandlerTest {
 
         verifyAll {
             userStateStorage.get()
-            userStateStorage.set(any<AmberState>())
+            userStateStorage.set(any<ExposedState>())
             sender.send(ContactAndCheckin, 10001, R.string.notification_title, R.string.notification_text, any())
             ackApi.send("https://api.example.com/ack/100")
             ackDao.tryFind("https://api.example.com/ack/100")

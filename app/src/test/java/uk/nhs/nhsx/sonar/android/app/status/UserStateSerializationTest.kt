@@ -8,7 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_AMBER
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_EXPOSED
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
@@ -32,13 +32,13 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `serialize amber state`() {
+    fun `serialize exposed state`() {
         val since = DateTime(1387241302262L, UTC)
         val until = DateTime(1587241302262L, UTC)
 
-        assertThat(serialize(AmberState(since, until)))
+        assertThat(serialize(ExposedState(since, until)))
             .isEqualTo(
-                """{"type":"AmberState","until":1587241302262,"since":1387241302262}"""
+                """{"type":"ExposedState","until":1587241302262,"since":1387241302262}"""
             )
     }
 
@@ -123,24 +123,32 @@ class UserStateSerializationTest {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"EmberState"}"""))
-            .isEqualTo(AmberState(until.minusDays(NO_DAYS_IN_AMBER), until))
+            .isEqualTo(ExposedState(until.minusDays(NO_DAYS_IN_EXPOSED), until))
     }
 
     @Test
-    fun `deserialize amber state without symptom date`() {
+    fun `deserialize legacy amber state`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"AmberState"}"""))
-            .isEqualTo(AmberState(until.minusDays(NO_DAYS_IN_AMBER), until))
+            .isEqualTo(ExposedState(until.minusDays(NO_DAYS_IN_EXPOSED), until))
     }
 
     @Test
-    fun `deserialize amber state with symptom date`() {
+    fun `deserialize exposed state without symptom date`() {
+        val until = DateTime(1587241302262L, UTC)
+
+        assertThat(deserialize("""{"until":1587241302262,"type":"ExposedState"}"""))
+            .isEqualTo(ExposedState(until.minusDays(NO_DAYS_IN_EXPOSED), until))
+    }
+
+    @Test
+    fun `deserialize exposed state with symptom date`() {
         val since = DateTime(1587241300000L, UTC)
         val until = DateTime(1587241302262L, UTC)
 
-        assertThat(deserialize("""{"since":1587241300000,"until":1587241302262,"type":"AmberState"}"""))
-            .isEqualTo(AmberState(since, until))
+        assertThat(deserialize("""{"since":1587241300000,"until":1587241302262,"type":"ExposedState"}"""))
+            .isEqualTo(ExposedState(since, until))
     }
 
     @Test

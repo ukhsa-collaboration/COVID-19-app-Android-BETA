@@ -5,7 +5,7 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
-import uk.nhs.nhsx.sonar.android.app.status.AmberState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.IsolateRobot
@@ -57,10 +57,10 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
         statusFooterRobot.checkFooterIsDisplayed()
     }
 
-    fun testLaunchWhenStateIsAmber() {
-        val amberState = AmberState(DateTime.now(UTC).plusDays(1))
+    fun testLaunchWhenStateIsExposed() {
+        val exposedState = ExposedState(DateTime.now(UTC), DateTime.now(UTC).plusDays(1))
 
-        testAppContext.setFullValidUser(amberState)
+        testAppContext.setFullValidUser(exposedState)
         startMainActivity()
 
         atRiskRobot.checkActivityIsDisplayed()

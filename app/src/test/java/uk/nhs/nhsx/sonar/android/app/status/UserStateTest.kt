@@ -20,22 +20,22 @@ import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTest {
 
-    private val amberState = buildAmberState()
+    private val exposedState = buildExposedState()
     private val redState = buildRedState()
     private val checkinState = buildCheckinState()
 
-    private val expiredAmberState = buildAmberState(until = DateTime.now().minusSeconds(1))
+    private val expiredExposedState = buildExposedState(until = DateTime.now().minusSeconds(1))
     private val expiredRedState = buildRedState(until = DateTime.now().minusSeconds(1))
     private val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
 
     private val today = LocalDate(2020, 4, 10)
 
     @Test
-    fun `amber state factory method`() {
-        val state = UserState.amber(today)
+    fun `exposed state factory method`() {
+        val state = UserState.exposed(today)
 
         val thirteenDaysFromNowAt7 = DateTime(2020, 4, 23, 7, 0).toDateTime(DateTimeZone.UTC)
-        assertThat(state).isEqualTo(AmberState(today.atSevenAm().toUtc(), thirteenDaysFromNowAt7))
+        assertThat(state).isEqualTo(ExposedState(today.atSevenAm().toUtc(), thirteenDaysFromNowAt7))
     }
 
     @Test
@@ -73,7 +73,7 @@ class UserStateTest {
     fun `test until`() {
         assertThat(DefaultState.until()).isNull()
         assertThat(RecoveryState.until()).isNull()
-        assertThat(amberState.until()).isEqualTo(amberState.until)
+        assertThat(exposedState.until()).isEqualTo(exposedState.until)
         assertThat(redState.until()).isEqualTo(redState.until)
         assertThat(checkinState.until()).isEqualTo(checkinState.until)
     }
@@ -82,11 +82,11 @@ class UserStateTest {
     fun `test hasExpired`() {
         assertThat(DefaultState.hasExpired()).isFalse()
         assertThat(RecoveryState.hasExpired()).isFalse()
-        assertThat(amberState.hasExpired()).isFalse()
+        assertThat(exposedState.hasExpired()).isFalse()
         assertThat(redState.hasExpired()).isFalse()
         assertThat(checkinState.hasExpired()).isFalse()
 
-        assertThat(expiredAmberState.hasExpired()).isTrue()
+        assertThat(expiredExposedState.hasExpired()).isTrue()
         assertThat(expiredRedState.hasExpired()).isTrue()
         assertThat(expiredCheckinState.hasExpired()).isTrue()
     }
@@ -95,7 +95,7 @@ class UserStateTest {
     fun `test displayState`() {
         assertThat(DefaultState.displayState()).isEqualTo(DisplayState.OK)
         assertThat(RecoveryState.displayState()).isEqualTo(DisplayState.OK)
-        assertThat(amberState.displayState()).isEqualTo(DisplayState.AT_RISK)
+        assertThat(exposedState.displayState()).isEqualTo(DisplayState.AT_RISK)
         assertThat(redState.displayState()).isEqualTo(DisplayState.ISOLATE)
         assertThat(checkinState.displayState()).isEqualTo(DisplayState.ISOLATE)
     }
@@ -110,7 +110,7 @@ class UserStateTest {
         RecoveryState.scheduleCheckInReminder(reminders)
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
-        amberState.scheduleCheckInReminder(reminders)
+        exposedState.scheduleCheckInReminder(reminders)
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
         redState.scheduleCheckInReminder(reminders)
@@ -120,7 +120,7 @@ class UserStateTest {
         checkinState.scheduleCheckInReminder(reminders)
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
-        expiredAmberState.scheduleCheckInReminder(reminders)
+        expiredExposedState.scheduleCheckInReminder(reminders)
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
         expiredRedState.scheduleCheckInReminder(reminders)
@@ -134,7 +134,7 @@ class UserStateTest {
     fun `test symptoms`() {
         assertThat(DefaultState.symptoms()).isEmpty()
         assertThat(RecoveryState.symptoms()).isEmpty()
-        assertThat(amberState.symptoms()).isEmpty()
+        assertThat(exposedState.symptoms()).isEmpty()
         assertThat(redState.symptoms()).isEqualTo(redState.symptoms)
         assertThat(checkinState.symptoms()).isEqualTo(checkinState.symptoms)
     }

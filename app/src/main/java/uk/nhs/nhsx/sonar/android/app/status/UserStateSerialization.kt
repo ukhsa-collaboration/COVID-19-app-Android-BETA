@@ -8,7 +8,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_AMBER
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_EXPOSED
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 
@@ -22,7 +22,7 @@ object UserStateSerialization {
             is RecoveryState -> jsonOf(
                 "type" to state.type()
             )
-            is AmberState -> jsonOf(
+            is ExposedState -> jsonOf(
                 "type" to state.type(),
                 "since" to state.since.millis,
                 "until" to state.until.millis
@@ -47,7 +47,7 @@ object UserStateSerialization {
         val jsonObj = JSONObject(json)
 
         return when (jsonObj.getString("type")) {
-            "AmberState", "EmberState" -> jsonObj.getAmberState()
+            "ExposedState", "AmberState", "EmberState" -> jsonObj.getExposedState()
             "RedState" -> jsonObj.getRedState()
             "CheckinState" -> jsonObj.getCheckinState()
             "RecoveryState" -> RecoveryState
@@ -55,10 +55,10 @@ object UserStateSerialization {
         } ?: DefaultState
     }
 
-    private fun JSONObject.getAmberState(): AmberState {
+    private fun JSONObject.getExposedState(): ExposedState {
         val until = getUntil()
-        val since = getSince() ?: until.minusDays(NO_DAYS_IN_AMBER)
-        return AmberState(since, until)
+        val since = getSince() ?: until.minusDays(NO_DAYS_IN_EXPOSED)
+        return ExposedState(since, until)
     }
 
     private fun JSONObject.getRedState(): RedState? {

@@ -9,6 +9,6 @@ import uk.nhs.nhsx.sonar.android.app.R
 class AtRiskRobot {
 
     fun checkActivityIsDisplayed() {
-        onView(withId(R.id.status_amber_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_exposed_title)).check(matches(isDisplayed()))
     }
 }
