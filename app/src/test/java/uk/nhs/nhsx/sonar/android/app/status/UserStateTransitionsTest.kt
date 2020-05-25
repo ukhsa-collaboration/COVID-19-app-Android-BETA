@@ -73,7 +73,7 @@ class UserStateTransitionsTest {
         )
 
         assertThat(state).isEqualTo(
-            RedState(
+            SymptomaticState(
                 sevenDaysAgoOrMore.atSevenAm().toUtc(),
                 sevenDaysAfterSymptoms,
                 symptomsWithTemperature)
@@ -93,7 +93,7 @@ class UserStateTransitionsTest {
         )
 
         assertThat(state).isEqualTo(
-            RedState(
+            SymptomaticState(
                 lessThanSevenDaysAgo.atSevenAm().toUtc(),
                 sevenDaysAfterSymptoms,
                 symptomsWithoutTemperature
@@ -114,7 +114,7 @@ class UserStateTransitionsTest {
         )
 
         assertThat(state).isEqualTo(
-            RedState(
+            SymptomaticState(
                 lessThanSevenDaysAgo.atSevenAm().toUtc(),
                 sevenDaysAfterSymptoms,
                 symptomsWithTemperature
@@ -172,26 +172,26 @@ class UserStateTransitionsTest {
         assertThat(transitionOnContactAlert(DefaultState)).isInstanceOf(ExposedState::class.java)
         assertThat(transitionOnContactAlert(RecoveryState)).isInstanceOf(ExposedState::class.java)
         assertThat(transitionOnContactAlert(buildExposedState())).isNull()
-        assertThat(transitionOnContactAlert(buildRedState())).isNull()
+        assertThat(transitionOnContactAlert(buildSymptomaticState())).isNull()
         assertThat(transitionOnContactAlert(buildCheckinState())).isNull()
     }
 
     @Test
     fun `test expireExposedState`() {
         val exposedState = buildExposedState()
-        val redState = buildRedState()
+        val symptomaticState = buildSymptomaticState()
         val checkinState = buildCheckinState()
 
         val expiredExposedState = buildExposedState(until = DateTime.now().minusSeconds(1))
-        val expiredRedState = buildRedState(until = DateTime.now().minusSeconds(1))
+        val expiredSymptomaticState = buildSymptomaticState(until = DateTime.now().minusSeconds(1))
         val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
 
         assertThat(expireExposedState(DefaultState)).isEqualTo(DefaultState)
         assertThat(expireExposedState(RecoveryState)).isEqualTo(RecoveryState)
         assertThat(expireExposedState(exposedState)).isEqualTo(exposedState)
-        assertThat(expireExposedState(redState)).isEqualTo(redState)
+        assertThat(expireExposedState(symptomaticState)).isEqualTo(symptomaticState)
         assertThat(expireExposedState(checkinState)).isEqualTo(checkinState)
-        assertThat(expireExposedState(expiredRedState)).isEqualTo(expiredRedState)
+        assertThat(expireExposedState(expiredSymptomaticState)).isEqualTo(expiredSymptomaticState)
         assertThat(expireExposedState(expiredCheckinState)).isEqualTo(expiredCheckinState)
 
         assertThat(expireExposedState(expiredExposedState)).isEqualTo(DefaultState)
@@ -221,9 +221,9 @@ class UserStateTransitionsTest {
     }
 
     @Test
-    fun `transitionOnTestResult - with negative result and test date prior to symptoms date to RedState`() {
+    fun `transitionOnTestResult - with negative result and test date prior to symptoms date to SymptomaticState`() {
         val symptomDate = LocalDate.now().minusDays(2)
-        val currentState = UserState.red(symptomDate, NonEmptySet.create(COUGH))
+        val currentState = UserState.symptomatic(symptomDate, NonEmptySet.create(COUGH))
         val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now().minusDays(6))
 
         val state = transitionOnTestResult(currentState, testInfo)
@@ -232,9 +232,9 @@ class UserStateTransitionsTest {
     }
 
     @Test
-    fun `transitionOnTestResult - with negative result and test date after the date of symptoms to RedState`() {
+    fun `transitionOnTestResult - with negative result and test date after the date of symptoms to SymptomaticState`() {
         val symptomDate = LocalDate.now().minusDays(6)
-        val currentState = UserState.red(symptomDate, NonEmptySet.create(COUGH))
+        val currentState = UserState.symptomatic(symptomDate, NonEmptySet.create(COUGH))
         val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now().minusDays(3))
 
         val state = transitionOnTestResult(currentState, testInfo)

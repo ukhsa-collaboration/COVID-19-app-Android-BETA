@@ -7,7 +7,7 @@ import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.isEarlierThan
 
@@ -19,14 +19,14 @@ object UserStateTransitions {
         symptoms: NonEmptySet<Symptom>,
         today: LocalDate = LocalDate.now()
     ): UserState {
-        val startedOver7DaysAgo = symptomsDate.isEarlierThan(days = NO_DAYS_IN_RED, from = today)
+        val startedOver7DaysAgo = symptomsDate.isEarlierThan(days = NO_DAYS_IN_SYMPTOMATIC, from = today)
         val notConsideredContagious = doesNotHaveTemperature(symptoms) && startedOver7DaysAgo
         val isExposedState = currentState is ExposedState
 
         return when {
             notConsideredContagious && isExposedState -> currentState
             notConsideredContagious -> RecoveryState
-            else -> UserState.red(symptomsDate, symptoms, today)
+            else -> UserState.symptomatic(symptomsDate, symptoms, today)
         }
     }
 
@@ -73,7 +73,7 @@ object UserStateTransitions {
 
     private fun handleNegativeTestResult(currentState: UserState, testDate: DateTime): UserState =
         when (currentState) {
-            is RedState ->
+            is SymptomaticState ->
                 if (symptomsAfterTest(currentState, testDate)) currentState else DefaultState
             is CheckinState ->
                 if (symptomsAfterTest(currentState, testDate)) currentState else DefaultState

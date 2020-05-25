@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_test.resetButton
 import kotlinx.android.synthetic.main.activity_test.setCheckinState
 import kotlinx.android.synthetic.main.activity_test.setExposedState
 import kotlinx.android.synthetic.main.activity_test.setRecoveryState
-import kotlinx.android.synthetic.main.activity_test.setRedState
+import kotlinx.android.synthetic.main.activity_test.setSymptomaticState
 import kotlinx.android.synthetic.main.activity_test.sonar_id
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -107,9 +107,9 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             finish()
         }
 
-        setRedState.setOnClickListener {
+        setSymptomaticState.setOnClickListener {
             userStateStorage.set(
-                UserState.red(
+                UserState.symptomatic(
                     symptomsDate = LocalDate.now(),
                     symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
                 )

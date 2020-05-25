@@ -12,7 +12,7 @@ import androidx.core.text.buildSpannedString
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_isolate.book_test_card
 import kotlinx.android.synthetic.main.activity_isolate.follow_until
-import kotlinx.android.synthetic.main.activity_isolate.latest_advice_red
+import kotlinx.android.synthetic.main.activity_isolate.latest_advice_symptomatic
 import kotlinx.android.synthetic.main.activity_isolate.registrationPanel
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import kotlinx.android.synthetic.main.status_footer_view.nhs_service
@@ -28,7 +28,7 @@ import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.tests.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
-import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_RED
+import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -58,13 +58,13 @@ class IsolateActivity : BaseActivity() {
         registrationPanel.setState(RegistrationState.Complete)
         follow_until.text = buildSpannedString {
             bold {
-                append(getString(R.string.follow_until_red_pre, state.until().toUiFormat()))
+                append(getString(R.string.follow_until_symptomatic_pre, state.until().toUiFormat()))
             }
-            append(" ${getString(R.string.follow_until_red)}")
+            append(" ${getString(R.string.follow_until_symptomatic)}")
         }
 
-        latest_advice_red.setOnClickListener {
-            openUrl(URL_LATEST_ADVICE_RED)
+        latest_advice_symptomatic.setOnClickListener {
+            openUrl(URL_LATEST_ADVICE_SYMPTOMATIC)
         }
 
         nhs_service.setOnClickListener {
@@ -127,7 +127,7 @@ class IsolateActivity : BaseActivity() {
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
-        latest_advice_red.cardColourInversion(inversionModeEnabled)
+        latest_advice_symptomatic.cardColourInversion(inversionModeEnabled)
         book_test_card.cardColourInversion(inversionModeEnabled)
 
         workplace_guidance_card.cardColourInversion(inversionModeEnabled)

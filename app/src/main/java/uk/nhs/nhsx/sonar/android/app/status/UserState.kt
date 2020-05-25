@@ -19,7 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.util.toUtc
 sealed class UserState {
 
     companion object {
-        const val NO_DAYS_IN_RED = 7
+        const val NO_DAYS_IN_SYMPTOMATIC = 7
         const val NO_DAYS_IN_EXPOSED = 14
 
         fun default(): DefaultState =
@@ -39,21 +39,21 @@ sealed class UserState {
                 symptoms
             )
 
-        fun red(
+        fun symptomatic(
             symptomsDate: LocalDate,
             symptoms: NonEmptySet<Symptom>,
             today: LocalDate = LocalDate.now()
-        ): RedState {
-            val suggested = symptomsDate.after(NO_DAYS_IN_RED).days()
+        ): SymptomaticState {
+            val suggested = symptomsDate.after(NO_DAYS_IN_SYMPTOMATIC).days()
             val tomorrow = today.after(1).day()
 
-            // if symptomsDate > 7 days ago then red state is until tomorrow
-            // if symptomsDate <= 7 days ago then red state is until suggested
-            val redStateUntil = latest(suggested, tomorrow)
+            // if symptomsDate > 7 days ago then symptomatic state is until tomorrow
+            // if symptomsDate <= 7 days ago then symptomatic state is until suggested
+            val until = latest(suggested, tomorrow)
 
-            return RedState(
+            return SymptomaticState(
                 symptomsDate.atSevenAm().toUtc(),
-                redStateUntil.toUtc(),
+                until.toUtc(),
                 symptoms
             )
         }
@@ -61,8 +61,9 @@ sealed class UserState {
 
     fun since(): DateTime? =
         when (this) {
-            is RedState -> since
+            is SymptomaticState -> since
             is CheckinState -> since
+            is ExposedState -> since
             else -> null
         }
 
@@ -71,7 +72,7 @@ sealed class UserState {
             is DefaultState -> null
             is RecoveryState -> null
             is ExposedState -> until
-            is RedState -> until
+            is SymptomaticState -> until
             is CheckinState -> until
         }
 
@@ -83,19 +84,19 @@ sealed class UserState {
             is DefaultState -> OK
             is RecoveryState -> OK
             is ExposedState -> AT_RISK
-            is RedState -> ISOLATE
+            is SymptomaticState -> ISOLATE
             is CheckinState -> ISOLATE
         }
 
     fun scheduleCheckInReminder(reminders: Reminders) =
         when {
-            (this is RedState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
+            (this is SymptomaticState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
             else -> Unit
         }
 
     fun symptoms(): Set<Symptom> =
         when (this) {
-            is RedState -> symptoms
+            is SymptomaticState -> symptoms
             is CheckinState -> symptoms
             else -> emptySet()
         }
@@ -107,17 +108,17 @@ object DefaultState : UserState()
 // State when you had symptoms and now you only have cough after more than seven days.
 object RecoveryState : UserState()
 
-// State when you have been in contact with someone in RedState
+// State when you have been in contact with someone in SymptomaticState
 data class ExposedState(val since: DateTime, val until: DateTime) : UserState()
 
 // State when you initially have symptoms. Prompted after 1 to 7 days to checkin.
-data class RedState(
+data class SymptomaticState(
     val since: DateTime,
     val until: DateTime,
     val symptoms: NonEmptySet<Symptom>
 ) : UserState()
 
-// State after first checkin from RedState, does not get prompted again.
+// State after first checkin from SymptomaticState, does not get prompted again.
 data class CheckinState(
     val since: DateTime,
     val until: DateTime,

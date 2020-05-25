@@ -14,21 +14,21 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
     private val isolateRobot = IsolateRobot()
     private val applyForTestRobot = ApplyForTestRobot()
     private val bottomDialogRobot = BottomDialogRobot()
-    private val expiredRedState =
-        RedState(
+    private val expiredSymptomaticState =
+        SymptomaticState(
             DateTime.now(UTC).minusSeconds(1),
             DateTime.now(UTC).minusSeconds(1),
             nonEmptySetOf(TEMPERATURE)
         )
 
-    private fun startActivity(state: RedState) {
+    private fun startActivity(state: SymptomaticState) {
         testAppContext.setFullValidUser(state)
 
         app.startTestActivity<IsolateActivity>()
     }
 
     fun testBottomDialogWhenStateIsExpiredSelectingUpdatingSymptoms() {
-        startActivity(expiredRedState)
+        startActivity(expiredSymptomaticState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickFirstCtaButton()
@@ -36,7 +36,7 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testBottomDialogWhenStateIsExpiredSelectingNoSymptoms() {
-        startActivity(expiredRedState)
+        startActivity(expiredSymptomaticState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickSecondCtaButton()
@@ -45,9 +45,9 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
 
     fun testClickOrderTestCardShowsApplyForTest() {
         val date = DateTime.now(UTC).plusDays(1)
-        val redState = RedState(date, date, nonEmptySetOf(TEMPERATURE))
+        val symptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
-        startActivity(redState)
+        startActivity(symptomaticState)
 
         isolateRobot.clickBookTestCard()
         applyForTestRobot.checkActivityIsDisplayed()

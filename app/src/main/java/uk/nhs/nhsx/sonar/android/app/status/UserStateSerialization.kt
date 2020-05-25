@@ -9,7 +9,7 @@ import org.joda.time.DateTimeZone
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_EXPOSED
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 
 object UserStateSerialization {
@@ -27,7 +27,7 @@ object UserStateSerialization {
                 "since" to state.since.millis,
                 "until" to state.until.millis
             )
-            is RedState -> jsonOf(
+            is SymptomaticState -> jsonOf(
                 "type" to state.type(),
                 "since" to state.since.millis,
                 "until" to state.until.millis,
@@ -48,7 +48,7 @@ object UserStateSerialization {
 
         return when (jsonObj.getString("type")) {
             "ExposedState", "AmberState", "EmberState" -> jsonObj.getExposedState()
-            "RedState" -> jsonObj.getRedState()
+            "SymptomaticState", "RedState" -> jsonObj.getSymptomaticState()
             "CheckinState" -> jsonObj.getCheckinState()
             "RecoveryState" -> RecoveryState
             else -> DefaultState
@@ -61,18 +61,18 @@ object UserStateSerialization {
         return ExposedState(since, until)
     }
 
-    private fun JSONObject.getRedState(): RedState? {
+    private fun JSONObject.getSymptomaticState(): SymptomaticState? {
         return getSymptoms()?.let { symptoms ->
             val until = getUntil()
-            val since = getSince() ?: until.minusDays(NO_DAYS_IN_RED)
-            RedState(since, getUntil(), symptoms)
+            val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
+            SymptomaticState(since, getUntil(), symptoms)
         }
     }
 
     private fun JSONObject.getCheckinState(): CheckinState? {
         return getSymptoms()?.let {
             val until = getUntil()
-            val since = getSince() ?: until.minusDays(NO_DAYS_IN_RED)
+            val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
             CheckinState(since, until, it)
         }
     }

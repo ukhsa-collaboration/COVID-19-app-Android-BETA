@@ -65,7 +65,7 @@ class ConnectedTestRunner {
             { MainActivityTest(testAppContext).testLaunchWhenOnboardingIsFinishedButNotRegistered() },
             { MainActivityTest(testAppContext).testLaunchWhenStateIsDefault() },
             { MainActivityTest(testAppContext).testLaunchWhenStateIsExposed() },
-            { MainActivityTest(testAppContext).testLaunchWhenStateIsRed() },
+            { MainActivityTest(testAppContext).testLaunchWhenStateIsSymptomatic() },
 
             { MainOnboardingActivityTest(testAppContext).testExplanation() },
 
@@ -106,8 +106,8 @@ class ConnectedTestRunner {
             { FlowTest(testAppContext).testProximityDataUploadOnSymptomaticState() },
             { FlowTest(testAppContext).testQuestionnaireFlowWithNoSymptoms() },
             { FlowTest(testAppContext).testReceivingStatusUpdateNotification() },
-            { FlowTest(testAppContext).testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState() },
-            { FlowTest(testAppContext).testExpiredRedStateUpdatingWithNoSymptomsNavigatesToOkActivity() },
+            { FlowTest(testAppContext).testExpiredSymptomaticStateRevisitsQuestionnaireAndRemainsToSymptomaticState() },
+            { FlowTest(testAppContext).testExpiredSymptomaticStateUpdatingWithNoSymptomsNavigatesToOkActivity() },
             { FlowTest(testAppContext).testEnableBluetoothThroughNotification() }
         )
 

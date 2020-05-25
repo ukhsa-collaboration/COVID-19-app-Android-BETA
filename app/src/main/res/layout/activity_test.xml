@@ -117,10 +117,10 @@
                 android:text="Exposed"/>
 
             <Button
-                android:id="@+id/setRedState"
+                android:id="@+id/setSymptomaticState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Red"/>
+                android:text="Symptomatic"/>
 
             <Button
                 android:id="@+id/setCheckinState"

@@ -19,7 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
-import uk.nhs.nhsx.sonar.android.app.status.RedState
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
@@ -55,11 +55,11 @@ class BootCompletedReceiverTest {
     }
 
     @Test
-    fun `onReceive - with sonarId, with not expired red state`() {
+    fun `onReceive - with sonarId, with not expired symptomatic state`() {
         val until = DateTime.now().plusDays(1)
 
         every { sonarIdProvider.hasProperSonarId() } returns true
-        every { stateStorage.get() } returns RedState(until, until, nonEmptySetOf(Symptom.COUGH))
+        every { stateStorage.get() } returns SymptomaticState(until, until, nonEmptySetOf(Symptom.COUGH))
         every { reminders.scheduleCheckInReminder(any()) } returns Unit
         every { BluetoothService.start(any()) } returns Unit
 
@@ -72,11 +72,11 @@ class BootCompletedReceiverTest {
     }
 
     @Test
-    fun `onReceive - with sonarId, with expired red state`() {
+    fun `onReceive - with sonarId, with expired symptomatic state`() {
         val until = DateTime.now().minusDays(1)
 
         every { sonarIdProvider.hasProperSonarId() } returns true
-        every { stateStorage.get() } returns RedState(until, until, nonEmptySetOf(Symptom.COUGH))
+        every { stateStorage.get() } returns SymptomaticState(until, until, nonEmptySetOf(Symptom.COUGH))
         every { BluetoothService.start(any()) } returns Unit
 
         receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
@@ -90,7 +90,7 @@ class BootCompletedReceiverTest {
     @Test
     fun `onReceive - without sonarId`() {
         every { sonarIdProvider.hasProperSonarId() } returns false
-        every { stateStorage.get() } returns RedState(DateTime.now(), DateTime.now(), nonEmptySetOf(Symptom.COUGH))
+        every { stateStorage.get() } returns SymptomaticState(DateTime.now(), DateTime.now(), nonEmptySetOf(Symptom.COUGH))
         every { reminders.scheduleCheckInReminder(any()) } returns Unit
 
         receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
@@ -101,7 +101,7 @@ class BootCompletedReceiverTest {
     }
 
     @Test
-    fun `onReceive - without red state`() {
+    fun `onReceive - without symptomatic state`() {
         every { stateStorage.get() } returns ExposedState(DateTime.now(), DateTime.now())
         every { sonarIdProvider.hasProperSonarId() } returns true
         every { BluetoothService.start(any()) } returns Unit

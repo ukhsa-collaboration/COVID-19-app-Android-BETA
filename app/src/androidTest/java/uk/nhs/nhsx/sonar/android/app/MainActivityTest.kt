@@ -10,7 +10,7 @@ import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.IsolateRobot
 import uk.nhs.nhsx.sonar.android.app.status.OkRobot
-import uk.nhs.nhsx.sonar.android.app.status.RedState
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.StatusFooterRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
@@ -67,11 +67,11 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
         statusFooterRobot.checkFooterIsDisplayed()
     }
 
-    fun testLaunchWhenStateIsRed() {
+    fun testLaunchWhenStateIsSymptomatic() {
         val date = DateTime.now(UTC).plusDays(1)
-        val redState = RedState(date, date, nonEmptySetOf(TEMPERATURE))
+        val symptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
-        testAppContext.setFullValidUser(redState)
+        testAppContext.setFullValidUser(symptomaticState)
         startMainActivity()
 
         isolateRobot.checkActivityIsDisplayed()

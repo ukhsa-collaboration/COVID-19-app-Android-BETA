@@ -19,7 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.RedState
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
@@ -160,7 +160,7 @@ class NotificationHandlerTest {
             "type" to "Status Update",
             "status" to "Potential"
         )
-        every { userStateStorage.get() } returns RedState(DateTime.now(), DateTime.now(), nonEmptySetOf(TEMPERATURE))
+        every { userStateStorage.get() } returns SymptomaticState(DateTime.now(), DateTime.now(), nonEmptySetOf(TEMPERATURE))
 
         handler.handleNewMessage(messageData)
 

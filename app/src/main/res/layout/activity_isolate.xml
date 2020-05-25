@@ -53,12 +53,12 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/status_red_title"
+                            android:id="@+id/status_symptomatic_title"
                             style="@style/TextViewStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:accessibilityHeading="true"
-                            android:text="@string/status_red_title" />
+                            android:text="@string/status_symptomatic_title" />
 
                         <TextView
                             android:id="@+id/follow_until"
@@ -67,7 +67,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
 
-                            tools:text="@string/follow_until_red" />
+                            tools:text="@string/follow_until_symptomatic" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -84,7 +84,7 @@
                     android:textAllCaps="true" />
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/latest_advice_red"
+                    android:id="@+id/latest_advice_symptomatic"
                     style="@style/PrimaryCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

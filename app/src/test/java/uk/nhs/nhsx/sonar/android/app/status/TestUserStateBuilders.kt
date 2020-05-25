@@ -9,10 +9,10 @@ fun buildExposedState(
     until: DateTime = DateTime.now().plusDays(1)
 ) = ExposedState(since, until)
 
-fun buildRedState(
+fun buildSymptomaticState(
     until: DateTime = DateTime.now().plusDays(1),
     symptoms: NonEmptySet<Symptom> = nonEmptySetOf(Symptom.COUGH)
-) = RedState(until, until, symptoms)
+) = SymptomaticState(until, until, symptoms)
 
 fun buildCheckinState(
     until: DateTime = DateTime.now().plusDays(1),

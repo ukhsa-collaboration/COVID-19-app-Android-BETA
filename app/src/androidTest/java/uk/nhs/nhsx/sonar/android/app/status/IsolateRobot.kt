@@ -10,7 +10,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 class IsolateRobot {
 
     fun checkActivityIsDisplayed() {
-        onView(withId(R.id.status_red_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.status_symptomatic_title)).check(matches(isDisplayed()))
     }
 
     fun clickBookTestCard() {

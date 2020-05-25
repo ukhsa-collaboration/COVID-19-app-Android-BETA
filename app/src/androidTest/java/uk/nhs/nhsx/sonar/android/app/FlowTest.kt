@@ -16,7 +16,7 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
 import uk.nhs.nhsx.sonar.android.app.status.IsolateRobot
 import uk.nhs.nhsx.sonar.android.app.status.OkRobot
-import uk.nhs.nhsx.sonar.android.app.status.RedState
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
@@ -112,11 +112,11 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         atRiskRobot.checkActivityIsDisplayed()
     }
 
-    fun testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState() {
+    fun testExpiredSymptomaticStateRevisitsQuestionnaireAndRemainsToSymptomaticState() {
         val date = DateTime.now(UTC).minusSeconds(1)
-        val expiredRedState = RedState(date, date, nonEmptySetOf(TEMPERATURE))
+        val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
-        testAppContext.setFullValidUser(expiredRedState)
+        testAppContext.setFullValidUser(expiredSymptomaticState)
         startMainActivity()
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
@@ -134,11 +134,11 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         isolateRobot.checkActivityIsDisplayed()
     }
 
-    fun testExpiredRedStateUpdatingWithNoSymptomsNavigatesToOkActivity() {
+    fun testExpiredSymptomaticStateUpdatingWithNoSymptomsNavigatesToOkActivity() {
         val date = DateTime.now(UTC).minusSeconds(1)
-        val expiredRedState = RedState(date, date, nonEmptySetOf(TEMPERATURE))
+        val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
-        testAppContext.setFullValidUser(expiredRedState)
+        testAppContext.setFullValidUser(expiredSymptomaticState)
         startMainActivity()
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
