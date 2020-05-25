@@ -15,7 +15,11 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
     private val applyForTestRobot = ApplyForTestRobot()
     private val bottomDialogRobot = BottomDialogRobot()
     private val expiredRedState =
-        RedState(DateTime.now(UTC).minusSeconds(1), nonEmptySetOf(TEMPERATURE))
+        RedState(
+            DateTime.now(UTC).minusSeconds(1),
+            DateTime.now(UTC).minusSeconds(1),
+            nonEmptySetOf(TEMPERATURE)
+        )
 
     private fun startActivity(state: RedState) {
         testAppContext.setFullValidUser(state)
@@ -40,7 +44,8 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testClickOrderTestCardShowsApplyForTest() {
-        val redState = RedState(DateTime.now(UTC).plusDays(1), nonEmptySetOf(TEMPERATURE))
+        val date = DateTime.now(UTC).plusDays(1)
+        val redState = RedState(date, date, nonEmptySetOf(TEMPERATURE))
 
         startActivity(redState)
 

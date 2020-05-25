@@ -68,7 +68,8 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testLaunchWhenStateIsRed() {
-        val redState = RedState(DateTime.now(UTC).plusDays(1), nonEmptySetOf(TEMPERATURE))
+        val date = DateTime.now(UTC).plusDays(1)
+        val redState = RedState(date, date, nonEmptySetOf(TEMPERATURE))
 
         testAppContext.setFullValidUser(redState)
         startMainActivity()

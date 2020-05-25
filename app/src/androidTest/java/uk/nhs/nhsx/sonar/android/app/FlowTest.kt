@@ -113,8 +113,8 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testExpiredRedStateRevisitsQuestionnaireAndRemainsToRedState() {
-        val expiredRedState =
-            RedState(DateTime.now(UTC).minusSeconds(1), nonEmptySetOf(TEMPERATURE))
+        val date = DateTime.now(UTC).minusSeconds(1)
+        val expiredRedState = RedState(date, date, nonEmptySetOf(TEMPERATURE))
 
         testAppContext.setFullValidUser(expiredRedState)
         startMainActivity()
@@ -135,8 +135,8 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testExpiredRedStateUpdatingWithNoSymptomsNavigatesToOkActivity() {
-        val expiredRedState =
-            RedState(DateTime.now(UTC).minusSeconds(1), nonEmptySetOf(TEMPERATURE))
+        val date = DateTime.now(UTC).minusSeconds(1)
+        val expiredRedState = RedState(date, date, nonEmptySetOf(TEMPERATURE))
 
         testAppContext.setFullValidUser(expiredRedState)
         startMainActivity()
