@@ -19,14 +19,11 @@ object UserStateTransitions {
         symptoms: NonEmptySet<Symptom>,
         today: LocalDate = LocalDate.now()
     ): UserState {
-        val startedOver7DaysAgo = symptomsDate.isEarlierThan(days = NO_DAYS_IN_SYMPTOMATIC, from = today)
-        val notConsideredContagious = doesNotHaveTemperature(symptoms) && startedOver7DaysAgo
-        val isExposedState = currentState is ExposedState
+        val isInSevenDayWindow = !symptomsDate.isEarlierThan(NO_DAYS_IN_SYMPTOMATIC, today)
 
-        return when {
-            notConsideredContagious && isExposedState -> currentState
-            notConsideredContagious -> RecoveryState
-            else -> UserState.symptomatic(symptomsDate, symptoms, today)
+        return when (hasTemperature(symptoms) || isInSevenDayWindow) {
+            true -> UserState.symptomatic(symptomsDate, symptoms, today)
+            else -> currentState
         }
     }
 
@@ -38,8 +35,6 @@ object UserStateTransitions {
         when {
             hasTemperature(symptoms) ->
                 UserState.checkin(symptomsDate, NonEmptySet.create(symptoms)!!, today)
-            hasCough(symptoms) || hasAnosmia(symptoms) ->
-                RecoveryState
             else ->
                 DefaultState
         }
@@ -47,7 +42,6 @@ object UserStateTransitions {
     fun transitionOnContactAlert(currentState: UserState): UserState? =
         when (currentState) {
             is DefaultState -> UserState.exposed()
-            is RecoveryState -> UserState.exposed()
             else -> null
         }
 

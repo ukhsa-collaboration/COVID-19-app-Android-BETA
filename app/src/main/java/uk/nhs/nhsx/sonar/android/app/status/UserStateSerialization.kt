@@ -19,9 +19,6 @@ object UserStateSerialization {
             is DefaultState -> jsonOf(
                 "type" to state.type()
             )
-            is RecoveryState -> jsonOf(
-                "type" to state.type()
-            )
             is ExposedState -> jsonOf(
                 "type" to state.type(),
                 "since" to state.since.millis,
@@ -50,7 +47,6 @@ object UserStateSerialization {
             "ExposedState", "AmberState", "EmberState" -> jsonObj.getExposedState()
             "SymptomaticState", "RedState" -> jsonObj.getSymptomaticState()
             "CheckinState" -> jsonObj.getCheckinState()
-            "RecoveryState" -> RecoveryState
             else -> DefaultState
         } ?: DefaultState
     }

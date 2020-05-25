@@ -47,7 +47,7 @@ class UserStateTransitionsTest {
 
         val state = diagnose(DefaultState, sevenDaysAgoOrMore, symptomsWithoutTemperature, today)
 
-        assertThat(state).isEqualTo(RecoveryState)
+        assertThat(state).isEqualTo(DefaultState)
     }
 
     @Test
@@ -146,7 +146,7 @@ class UserStateTransitionsTest {
 
         val state = diagnoseForCheckin(tomorrow, setOf(COUGH), today)
 
-        assertThat(state).isEqualTo(RecoveryState)
+        assertThat(state).isEqualTo(DefaultState)
     }
 
     @Test
@@ -155,7 +155,7 @@ class UserStateTransitionsTest {
 
         val state = diagnoseForCheckin(tomorrow, setOf(ANOSMIA), today)
 
-        assertThat(state).isEqualTo(RecoveryState)
+        assertThat(state).isEqualTo(DefaultState)
     }
 
     @Test
@@ -170,7 +170,6 @@ class UserStateTransitionsTest {
     @Test
     fun `test transitionOnContactAlert`() {
         assertThat(transitionOnContactAlert(DefaultState)).isInstanceOf(ExposedState::class.java)
-        assertThat(transitionOnContactAlert(RecoveryState)).isInstanceOf(ExposedState::class.java)
         assertThat(transitionOnContactAlert(buildExposedState())).isNull()
         assertThat(transitionOnContactAlert(buildSymptomaticState())).isNull()
         assertThat(transitionOnContactAlert(buildCheckinState())).isNull()
@@ -187,7 +186,6 @@ class UserStateTransitionsTest {
         val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
 
         assertThat(expireExposedState(DefaultState)).isEqualTo(DefaultState)
-        assertThat(expireExposedState(RecoveryState)).isEqualTo(RecoveryState)
         assertThat(expireExposedState(exposedState)).isEqualTo(exposedState)
         assertThat(expireExposedState(symptomaticState)).isEqualTo(symptomaticState)
         assertThat(expireExposedState(checkinState)).isEqualTo(checkinState)

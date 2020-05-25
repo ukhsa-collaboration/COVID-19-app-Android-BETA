@@ -26,6 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeProvider
@@ -51,6 +52,7 @@ interface TestAppComponent : ApplicationComponent {
     fun getKeyStorage(): KeyStorage
     fun getAppDatabase(): AppDatabase
     fun getUserStateStorage(): UserStateStorage
+    fun getUserInbox(): UserInbox
     fun getOnboardingStatusProvider(): OnboardingStatusProvider
     fun getActivationCodeProvider(): ActivationCodeProvider
     fun getReferenceCodeProvider(): ReferenceCodeProvider

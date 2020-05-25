@@ -13,8 +13,9 @@ import org.junit.Test
 
 class UserInboxTest {
     private val testInfoProvider = mockk<TestInfoProvider>()
+    private val recoveryProvider = mockk<RecoveryProvider>()
 
-    private val userInbox = UserInbox(testInfoProvider)
+    private val userInbox = UserInbox(testInfoProvider, recoveryProvider)
 
     @Test
     fun `adds new test result`() {
@@ -51,6 +52,42 @@ class UserInboxTest {
 
         verify {
             testInfoProvider.clear()
+        }
+    }
+
+    @Test
+    fun `adds new recovery message`() {
+        every { recoveryProvider.set(any()) } returns Unit
+
+        userInbox.addRecovery()
+
+        verify {
+            recoveryProvider.set("Recovery")
+        }
+    }
+
+    @Test
+    fun `checks for existing recovery message`() {
+        every { recoveryProvider.has() } returns true
+
+        assertThat(userInbox.hasRecovery()).isTrue()
+    }
+
+    @Test
+    fun `checks for non-existing recovery message`() {
+        every { recoveryProvider.has() } returns false
+
+        assertThat(userInbox.hasRecovery()).isFalse()
+    }
+
+    @Test
+    fun `dismisses a recovery message`() {
+        every { recoveryProvider.clear() } returns Unit
+
+        assertThat(userInbox.dismissRecovery())
+
+        verify {
+            recoveryProvider.clear()
         }
     }
 }

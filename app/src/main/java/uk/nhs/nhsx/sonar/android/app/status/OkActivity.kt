@@ -159,10 +159,11 @@ class OkActivity : BaseActivity() {
         )
         recoveryDialog = BottomDialog(this, configuration,
             onCancel = {
+                userInbox.dismissRecovery()
                 finish()
             },
             onSecondCtaClick = {
-                userStateStorage.set(DefaultState)
+                userInbox.dismissRecovery()
             })
     }
 
@@ -179,7 +180,7 @@ class OkActivity : BaseActivity() {
                 finish()
             },
             onSecondCtaClick = {
-                userStateStorage.set(DefaultState)
+                userInbox.dismissTestResult()
             })
     }
 
@@ -195,7 +196,7 @@ class OkActivity : BaseActivity() {
             testResultDialog.dismiss()
         }
 
-        if (state is RecoveryState) {
+        if (userInbox.hasRecovery()) {
             recoveryDialog.showExpanded()
         } else {
             recoveryDialog.dismiss()

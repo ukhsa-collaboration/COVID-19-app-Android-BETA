@@ -19,6 +19,8 @@ import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
@@ -30,6 +32,9 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
+
+    @Inject
+    lateinit var userInbox: UserInbox
 
     private val symptoms: Set<Symptom> by lazy { intent.getSymptoms() }
 
@@ -68,10 +73,14 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
     private fun nextStep(symptoms: Set<Symptom>) {
         val currentState = userStateStorage.get()
         if (currentState.displayState() == DisplayState.ISOLATE) {
-            UserStateTransitions.diagnoseForCheckin(currentState.since()!!, symptoms).also { newState ->
-                userStateStorage.set(newState)
-                navigateTo(newState)
-            }
+            UserStateTransitions.diagnoseForCheckin(currentState.since()!!, symptoms)
+                .also { newState ->
+                    if (newState is DefaultState && symptoms.isNotEmpty()) {
+                        userInbox.addRecovery()
+                    }
+                    userStateStorage.set(newState)
+                    navigateTo(newState)
+                }
         } else {
             DiagnoseSneezeActivity.start(this, symptoms)
         }

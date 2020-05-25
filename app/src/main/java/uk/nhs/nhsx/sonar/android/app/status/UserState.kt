@@ -70,7 +70,6 @@ sealed class UserState {
     fun until(): DateTime? =
         when (this) {
             is DefaultState -> null
-            is RecoveryState -> null
             is ExposedState -> until
             is SymptomaticState -> until
             is CheckinState -> until
@@ -82,7 +81,6 @@ sealed class UserState {
     fun displayState(): DisplayState =
         when (this) {
             is DefaultState -> OK
-            is RecoveryState -> OK
             is ExposedState -> AT_RISK
             is SymptomaticState -> ISOLATE
             is CheckinState -> ISOLATE
@@ -104,9 +102,6 @@ sealed class UserState {
 
 // Initial state
 object DefaultState : UserState()
-
-// State when you had symptoms and now you only have cough after more than seven days.
-object RecoveryState : UserState()
 
 // State when you have been in contact with someone in SymptomaticState
 data class ExposedState(val since: DateTime, val until: DateTime) : UserState()

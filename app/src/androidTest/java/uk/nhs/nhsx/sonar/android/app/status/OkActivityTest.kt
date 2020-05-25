@@ -37,7 +37,8 @@ class OkActivityTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testShowsRecoveryDialogOnResume() {
-        testAppContext.setFullValidUser(RecoveryState)
+        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.addRecoveryMessage()
 
         app.startTestActivity<OkActivity>()
 

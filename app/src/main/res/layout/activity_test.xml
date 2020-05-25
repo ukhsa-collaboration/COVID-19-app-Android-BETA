@@ -104,11 +104,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/setRecoveryState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Recovery"/>
 
             <Button
                 android:id="@+id/setExposedState"
@@ -127,6 +122,48 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Checkin"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Messages"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/setRecovery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recovery"/>
+
+            <Button
+                android:id="@+id/setTestPositive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ Test"/>
+
+            <Button
+                android:id="@+id/setTestNegative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="- Test"/>
+
+            <Button
+                android:id="@+id/setTestInvalid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\? Test"/>
+
         </LinearLayout>
     </LinearLayout>
 

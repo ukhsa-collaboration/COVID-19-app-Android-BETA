@@ -163,6 +163,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         component.getReferenceCodeProvider().set(ReferenceCode(REFERENCE_CODE))
     }
 
+    fun addRecoveryMessage() {
+        component.getUserInbox().addRecovery()
+    }
+
     fun setFinishedOnboarding() {
         val storage = component.getOnboardingStatusProvider()
         storage.set(true)

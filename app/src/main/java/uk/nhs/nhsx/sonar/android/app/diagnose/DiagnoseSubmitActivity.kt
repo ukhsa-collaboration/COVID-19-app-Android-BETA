@@ -26,7 +26,9 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
@@ -37,6 +39,9 @@ import javax.inject.Inject
 class DiagnoseSubmitActivity : BaseActivity() {
     @Inject
     protected lateinit var userStateStorage: UserStateStorage
+
+    @Inject
+    lateinit var userInbox: UserInbox
 
     @Inject
     protected lateinit var reminders: Reminders
@@ -104,6 +109,11 @@ class DiagnoseSubmitActivity : BaseActivity() {
             symptomsDate,
             NonEmptySet.create(symptoms)!!
         )
+
+        if (state is DefaultState && symptoms.isNotEmpty()) {
+            userInbox.addRecovery()
+        }
+
         state.scheduleCheckInReminder(reminders)
         userStateStorage.set(state)
 

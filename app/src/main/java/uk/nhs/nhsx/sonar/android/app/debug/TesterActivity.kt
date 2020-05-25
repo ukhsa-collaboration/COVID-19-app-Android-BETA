@@ -22,8 +22,11 @@ import kotlinx.android.synthetic.main.activity_test.no_events
 import kotlinx.android.synthetic.main.activity_test.resetButton
 import kotlinx.android.synthetic.main.activity_test.setCheckinState
 import kotlinx.android.synthetic.main.activity_test.setExposedState
-import kotlinx.android.synthetic.main.activity_test.setRecoveryState
+import kotlinx.android.synthetic.main.activity_test.setRecovery
 import kotlinx.android.synthetic.main.activity_test.setSymptomaticState
+import kotlinx.android.synthetic.main.activity_test.setTestInvalid
+import kotlinx.android.synthetic.main.activity_test.setTestNegative
+import kotlinx.android.synthetic.main.activity_test.setTestPositive
 import kotlinx.android.synthetic.main.activity_test.sonar_id
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -34,10 +37,13 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.appVersion
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
+import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.RecoveryState
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserState
@@ -57,6 +63,9 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
+
+    @Inject
+    lateinit var userInbox: UserInbox
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider
@@ -97,11 +106,6 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         events.adapter = adapter
         events.layoutManager = LinearLayoutManager(this)
 
-        setRecoveryState.setOnClickListener {
-            userStateStorage.set(RecoveryState)
-            finish()
-        }
-
         setExposedState.setOnClickListener {
             userStateStorage.set(UserState.exposed())
             finish()
@@ -125,6 +129,27 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
                     today = LocalDate.now().minusDays(1)
                 )
             )
+            finish()
+        }
+
+        setRecovery.setOnClickListener {
+            userStateStorage.set(DefaultState)
+            userInbox.addRecovery()
+            finish()
+        }
+
+        setTestPositive.setOnClickListener {
+            userInbox.addTestResult(TestInfo(TestResult.POSITIVE, DateTime.now()))
+            finish()
+        }
+
+        setTestNegative.setOnClickListener {
+            userInbox.addTestResult(TestInfo(TestResult.NEGATIVE, DateTime.now()))
+            finish()
+        }
+
+        setTestInvalid.setOnClickListener {
+            userInbox.addTestResult(TestInfo(TestResult.INVALID, DateTime.now()))
             finish()
         }
 

@@ -6,15 +6,25 @@ package uk.nhs.nhsx.sonar.android.app.inbox
 
 import android.content.Context
 import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceSerializingProvider
+import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceStringProvider
 import javax.inject.Inject
 
-class UserInbox @Inject constructor(private val testInfoProvider: TestInfoProvider) {
+class UserInbox @Inject constructor(
+    private val testInfoProvider: TestInfoProvider,
+    private val recoveryProvider: RecoveryProvider
+) {
 
     fun addTestResult(testInfo: TestInfo): Unit = testInfoProvider.set(testInfo)
 
     fun hasTestResult(): Boolean = testInfoProvider.has()
 
     fun dismissTestResult(): Unit = testInfoProvider.clear()
+
+    fun addRecovery(): Unit = recoveryProvider.set("Recovery")
+
+    fun hasRecovery(): Boolean = recoveryProvider.has()
+
+    fun dismissRecovery(): Unit = recoveryProvider.clear()
 }
 
 class TestInfoProvider @Inject constructor(context: Context) :
@@ -24,4 +34,11 @@ class TestInfoProvider @Inject constructor(context: Context) :
         preferenceKey = "user_test_info",
         serialize = TestInfoSerialization::serialize,
         deserialize = TestInfoSerialization::deserialize
+    )
+
+class RecoveryProvider @Inject constructor(context: Context) :
+    SharedPreferenceStringProvider(
+        context,
+        preferenceName = "user_recovery_storage",
+        preferenceKey = "user_recovery"
     )

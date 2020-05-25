@@ -25,13 +25,6 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `serialize recovery state`() {
-
-        assertThat(serialize(RecoveryState))
-            .isEqualTo("""{"type":"RecoveryState"}""")
-    }
-
-    @Test
     fun `serialize exposed state`() {
         val since = DateTime(1387241302262L, UTC)
         val until = DateTime(1587241302262L, UTC)
@@ -81,18 +74,6 @@ class UserStateSerializationTest {
     fun `deserialize default state - with legacy until timestamp`() {
         assertThat(deserialize("""{"until":1587241302261,"type":"DefaultState"}"""))
             .isEqualTo(DefaultState)
-    }
-
-    @Test
-    fun `deserialize recovery state`() {
-        assertThat(deserialize("""{"type":"RecoveryState"}"""))
-            .isEqualTo(RecoveryState)
-    }
-
-    @Test
-    fun `deserialize recovery state - with legacy until timestamp`() {
-        assertThat(deserialize("""{"until":1587241302262,"type":"RecoveryState"}"""))
-            .isEqualTo(RecoveryState)
     }
 
     @Test

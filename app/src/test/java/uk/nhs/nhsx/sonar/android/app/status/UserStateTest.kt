@@ -72,7 +72,6 @@ class UserStateTest {
     @Test
     fun `test until`() {
         assertThat(DefaultState.until()).isNull()
-        assertThat(RecoveryState.until()).isNull()
         assertThat(exposedState.until()).isEqualTo(exposedState.until)
         assertThat(symptomaticState.until()).isEqualTo(symptomaticState.until)
         assertThat(checkinState.until()).isEqualTo(checkinState.until)
@@ -81,7 +80,6 @@ class UserStateTest {
     @Test
     fun `test hasExpired`() {
         assertThat(DefaultState.hasExpired()).isFalse()
-        assertThat(RecoveryState.hasExpired()).isFalse()
         assertThat(exposedState.hasExpired()).isFalse()
         assertThat(symptomaticState.hasExpired()).isFalse()
         assertThat(checkinState.hasExpired()).isFalse()
@@ -94,7 +92,6 @@ class UserStateTest {
     @Test
     fun `test displayState`() {
         assertThat(DefaultState.displayState()).isEqualTo(DisplayState.OK)
-        assertThat(RecoveryState.displayState()).isEqualTo(DisplayState.OK)
         assertThat(exposedState.displayState()).isEqualTo(DisplayState.AT_RISK)
         assertThat(symptomaticState.displayState()).isEqualTo(DisplayState.ISOLATE)
         assertThat(checkinState.displayState()).isEqualTo(DisplayState.ISOLATE)
@@ -105,9 +102,6 @@ class UserStateTest {
         val reminders = mockk<Reminders>(relaxUnitFun = true)
 
         DefaultState.scheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
-
-        RecoveryState.scheduleCheckInReminder(reminders)
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
         exposedState.scheduleCheckInReminder(reminders)
@@ -133,7 +127,6 @@ class UserStateTest {
     @Test
     fun `test symptoms`() {
         assertThat(DefaultState.symptoms()).isEmpty()
-        assertThat(RecoveryState.symptoms()).isEmpty()
         assertThat(exposedState.symptoms()).isEmpty()
         assertThat(symptomaticState.symptoms()).isEqualTo(symptomaticState.symptoms)
         assertThat(checkinState.symptoms()).isEqualTo(checkinState.symptoms)
