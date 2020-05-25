@@ -5,15 +5,14 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
-import org.joda.time.LocalTime
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.AT_RISK
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.OK
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.after
+import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.latest
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
@@ -32,14 +31,14 @@ sealed class UserState {
             AmberState(today.after(NO_DAYS_IN_AMBER - 1).days().toUtc())
 
         fun checkin(
-            symptomsDate: DateTime?,
+            symptomsDate: DateTime,
             symptoms: NonEmptySet<Symptom>,
             today: LocalDate = LocalDate.now()
         ): CheckinState =
             CheckinState(
+                symptomsDate,
                 today.after(1).day().toUtc(),
-                symptoms,
-                symptomsDate
+                symptoms
             )
 
         fun red(
@@ -55,12 +54,19 @@ sealed class UserState {
             val redStateUntil = latest(suggested, tomorrow)
 
             return RedState(
+                symptomsDate.atSevenAm().toUtc(),
                 redStateUntil.toUtc(),
-                symptoms,
-                symptomsDate.toDateTime(LocalTime(UTC))
+                symptoms
             )
         }
     }
+
+    fun since(): DateTime? =
+        when (this) {
+            is RedState -> since
+            is CheckinState -> since
+            else -> null
+        }
 
     fun until(): DateTime? =
         when (this) {
@@ -98,13 +104,6 @@ sealed class UserState {
 
     fun displayTestResult(): Boolean =
         testInfo != null && !testInfo!!.dismissed
-
-    fun symptomsStartDate(): DateTime? =
-        when (this) {
-            is RedState -> symptomsStartDate
-            is CheckinState -> symptomsStartDate
-            else -> null
-        }
 }
 
 // Initial state
@@ -125,17 +124,17 @@ data class AmberState(
 
 // State when you initially have symptoms. Prompted after 1 to 7 days to checkin.
 data class RedState(
+    val since: DateTime,
     val until: DateTime,
     val symptoms: NonEmptySet<Symptom>,
-    val symptomsStartDate: DateTime? = null,
     override var testInfo: TestInfo? = null
 ) : UserState()
 
 // State after first checkin from RedState, does not get prompted again.
 data class CheckinState(
+    val since: DateTime,
     val until: DateTime,
     val symptoms: NonEmptySet<Symptom>,
-    val symptomsStartDate: DateTime? = null,
     override var testInfo: TestInfo? = null
 ) : UserState()
 

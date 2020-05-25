@@ -59,7 +59,7 @@ class BootCompletedReceiverTest {
         val until = DateTime.now().plusDays(1)
 
         every { sonarIdProvider.hasProperSonarId() } returns true
-        every { stateStorage.get() } returns RedState(until, nonEmptySetOf(Symptom.COUGH))
+        every { stateStorage.get() } returns RedState(until, until, nonEmptySetOf(Symptom.COUGH))
         every { reminders.scheduleCheckInReminder(any()) } returns Unit
         every { BluetoothService.start(any()) } returns Unit
 
@@ -76,7 +76,7 @@ class BootCompletedReceiverTest {
         val until = DateTime.now().minusDays(1)
 
         every { sonarIdProvider.hasProperSonarId() } returns true
-        every { stateStorage.get() } returns RedState(until, nonEmptySetOf(Symptom.COUGH))
+        every { stateStorage.get() } returns RedState(until, until, nonEmptySetOf(Symptom.COUGH))
         every { BluetoothService.start(any()) } returns Unit
 
         receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
@@ -90,7 +90,7 @@ class BootCompletedReceiverTest {
     @Test
     fun `onReceive - without sonarId`() {
         every { sonarIdProvider.hasProperSonarId() } returns false
-        every { stateStorage.get() } returns RedState(DateTime.now(), nonEmptySetOf(Symptom.COUGH))
+        every { stateStorage.get() } returns RedState(DateTime.now(), DateTime.now(), nonEmptySetOf(Symptom.COUGH))
         every { reminders.scheduleCheckInReminder(any()) } returns Unit
 
         receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))

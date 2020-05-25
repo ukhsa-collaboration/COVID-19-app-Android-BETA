@@ -11,9 +11,9 @@ fun buildAmberState(
 fun buildRedState(
     until: DateTime = DateTime.now().plusDays(1),
     symptoms: NonEmptySet<Symptom> = nonEmptySetOf(Symptom.COUGH)
-) = RedState(until, symptoms)
+) = RedState(until, until, symptoms)
 
 fun buildCheckinState(
     until: DateTime = DateTime.now().plusDays(1),
     symptoms: NonEmptySet<Symptom> = nonEmptySetOf(Symptom.COUGH)
-) = CheckinState(until, symptoms)
+) = CheckinState(until, until, symptoms)

@@ -68,7 +68,7 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
     private fun nextStep(symptoms: Set<Symptom>) {
         val currentState = userStateStorage.get()
         if (currentState.displayState() == DisplayState.ISOLATE) {
-            UserStateTransitions.diagnoseForCheckin(currentState.symptomsStartDate(), symptoms).also { newState ->
+            UserStateTransitions.diagnoseForCheckin(currentState.since()!!, symptoms).also { newState ->
                 userStateStorage.set(newState)
                 navigateTo(newState)
             }

@@ -32,17 +32,18 @@ class UserStateTest {
     fun `amber state factory method`() {
         val state = UserState.amber(today)
 
-        val `13daysFromNowAt7` = DateTime(2020, 4, 23, 7, 0).toDateTime(DateTimeZone.UTC)
-        assertThat(state).isEqualTo(AmberState(`13daysFromNowAt7`))
+        val thirteenDaysFromNowAt7 = DateTime(2020, 4, 23, 7, 0).toDateTime(DateTimeZone.UTC)
+        assertThat(state).isEqualTo(AmberState(thirteenDaysFromNowAt7))
     }
 
     @Test
     fun `checkin state factory method`() {
         val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        val state = UserState.checkin(null, symptoms, today)
+        val symptomsDate = DateTime.now()
+        val state = UserState.checkin(symptomsDate, symptoms, today)
 
         val tomorrowAt7 = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
-        assertThat(state).isEqualTo(CheckinState(tomorrowAt7, symptoms))
+        assertThat(state).isEqualTo(CheckinState(symptomsDate, tomorrowAt7, symptoms))
     }
 
     @Test
@@ -62,8 +63,8 @@ class UserStateTest {
         val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
         val state = UserState.red(lessThan7daysAgo, symptoms, today)
 
-        val `7daysAfterSymptomsStart` = DateTime(2020, 4, 12, 7, 0).toDateTime(DateTimeZone.UTC)
-        assertThat(state.until()).isEqualTo(`7daysAfterSymptomsStart`)
+        val sevenDaysAfterSymptomsStart = DateTime(2020, 4, 12, 7, 0).toDateTime(DateTimeZone.UTC)
+        assertThat(state.until()).isEqualTo(sevenDaysAfterSymptomsStart)
     }
 
     @Test

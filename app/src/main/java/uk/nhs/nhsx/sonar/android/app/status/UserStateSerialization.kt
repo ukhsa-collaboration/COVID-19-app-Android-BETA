@@ -8,6 +8,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 
 object UserStateSerialization {
@@ -29,16 +30,16 @@ object UserStateSerialization {
             )
             is RedState -> jsonOf(
                 "type" to state.type(),
+                "since" to state.since.serialize(),
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.value },
-                "symptomsStartDate" to state.symptomsStartDate.serialize(),
                 "testInfo" to state.testInfo.serialize()
             )
             is CheckinState -> jsonOf(
                 "type" to state.type(),
+                "since" to state.since.serialize(),
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.value },
-                "symptomsStartDate" to state.symptomsStartDate.serialize(),
                 "testInfo" to state.testInfo.serialize()
             )
         }
@@ -86,12 +87,19 @@ object UserStateSerialization {
 
     private fun JSONObject.getRedState(): RedState? {
         return getSymptoms()?.let { symptoms ->
-            RedState(getUntil(), symptoms, getSymptomsDate(), getTestInfo())
+            val until = getUntil()
+            val since = getSince() ?: until.minusDays(NO_DAYS_IN_RED)
+            RedState(since, getUntil(), symptoms, getTestInfo())
         }
     }
 
-    private fun JSONObject.getCheckinState() =
-        getSymptoms()?.let { CheckinState(getUntil(), it, getSymptomsDate(), getTestInfo()) }
+    private fun JSONObject.getCheckinState(): CheckinState? {
+        return getSymptoms()?.let {
+            val until = getUntil()
+            val since = getSince() ?: until.minusDays(NO_DAYS_IN_RED)
+            CheckinState(since, until, it, getTestInfo())
+        }
+    }
 
     private fun UserState.type() =
         javaClass.simpleName
@@ -101,10 +109,11 @@ object UserStateSerialization {
             DateTime(it, DateTimeZone.UTC)
         } ?: DateTime.now(DateTimeZone.UTC)
 
-    private fun JSONObject.getSymptomsDate(): DateTime? =
-        getLongOrNull("symptomsStartDate")?.let {
+    private fun JSONObject.getSince(): DateTime? {
+        return getLongOrNull("since")?.let {
             DateTime(it, DateTimeZone.UTC)
         }
+    }
 
     private fun JSONObject.getTestInfo(): TestInfo? =
         getStringOrNull("testInfo")?.let {

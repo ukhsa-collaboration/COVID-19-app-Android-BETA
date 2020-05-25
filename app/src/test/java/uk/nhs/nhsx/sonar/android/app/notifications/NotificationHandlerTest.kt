@@ -153,7 +153,7 @@ class NotificationHandlerTest {
             "type" to "Status Update",
             "status" to "Potential"
         )
-        every { statusStorage.get() } returns RedState(DateTime.now(), nonEmptySetOf(TEMPERATURE))
+        every { statusStorage.get() } returns RedState(DateTime.now(), DateTime.now(), nonEmptySetOf(TEMPERATURE))
 
         handler.handleNewMessage(messageData)
 

@@ -38,7 +38,7 @@ fun LocalDate.after(count: Int): After =
 fun DateTime.toUtc(): DateTime =
     toDateTime(DateTimeZone.UTC)
 
-class After(val date: LocalDate, val count: Int) {
+class After(val date: LocalDate, private val count: Int) {
     fun days(): DateTime =
         date.plusDays(count).atSevenAm()
 

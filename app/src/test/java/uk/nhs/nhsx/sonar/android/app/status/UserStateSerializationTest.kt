@@ -8,6 +8,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_RED
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class UserStateSerializationTest {
@@ -105,46 +106,48 @@ class UserStateSerializationTest {
 
     @Test
     fun `serialize red state`() {
+        val since = DateTime(1387241302263L, UTC)
         val until = DateTime(1587241302263L, UTC)
         val symptoms = nonEmptySetOf(Symptom.COUGH, Symptom.TEMPERATURE)
 
-        assertThat(serialize(RedState(until, symptoms)))
+        assertThat(serialize(RedState(since, until, symptoms)))
             .isEqualTo(
-                """{"symptoms":["COUGH","TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"RedState","symptomsStartDate":-1}"""
+                """{"symptoms":["COUGH","TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"RedState","since":1387241302263}"""
             )
     }
 
     @Test
     fun `serialize red state with symptoms start date`() {
+        val since = DateTime(1587241303263L, UTC)
         val until = DateTime(1587241302263L, UTC)
         val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        val symptomsStartDate = DateTime(1587241303263L, UTC)
-        assertThat(serialize(RedState(until, symptoms, symptomsStartDate)))
+        assertThat(serialize(RedState(since, until, symptoms)))
             .isEqualTo(
-                """{"symptoms":["TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"RedState","symptomsStartDate":1587241303263}"""
+                """{"symptoms":["TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"RedState","since":1587241303263}"""
             )
     }
 
     @Test
     fun `serialize checkin state`() {
+        val since = DateTime(1387241302263L, UTC)
         val until = DateTime(1587241302263L, UTC)
         val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
 
-        assertThat(serialize(CheckinState(until, symptoms)))
+        assertThat(serialize(CheckinState(since, until, symptoms)))
             .isEqualTo(
-                """{"symptoms":["TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"CheckinState","symptomsStartDate":-1}"""
+                """{"symptoms":["TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"CheckinState","since":1387241302263}"""
             )
     }
 
     @Test
     fun `serialize checkin state with symptoms start date`() {
+        val since = DateTime(1587241303263L, UTC)
         val until = DateTime(1587241302263L, UTC)
         val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        val symptomsStartDate = DateTime(1587241303263L, UTC)
 
-        assertThat(serialize(CheckinState(until, symptoms, symptomsStartDate)))
+        assertThat(serialize(CheckinState(since, until, symptoms)))
             .isEqualTo(
-                """{"symptoms":["TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"CheckinState","symptomsStartDate":1587241303263}"""
+                """{"symptoms":["TEMPERATURE"],"testInfo":"null","until":1587241302263,"type":"CheckinState","since":1587241303263}"""
             )
     }
 
@@ -179,7 +182,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize ember(typo) state`() {
+    fun `deserialize legacy ember(typo) state`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"EmberState"}"""))
@@ -222,19 +225,21 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize red state`() {
+    fun `deserialize red state without symptom date`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"RedState"}"""))
-            .isEqualTo(RedState(until, nonEmptySetOf(Symptom.COUGH)))
+            .isEqualTo(RedState(until.minusDays(NO_DAYS_IN_RED), until, nonEmptySetOf(Symptom.COUGH)))
     }
 
     @Test
     fun `deserialize red state with test result`() {
+        val since = DateTime(1387241302262L, UTC)
         val until = DateTime(1587241302262L, UTC)
         val testDate = DateTime(15872413022578L, UTC)
 
         val state = RedState(
+            since,
             until,
             nonEmptySetOf(Symptom.COUGH),
             testInfo = TestInfo(
@@ -248,9 +253,10 @@ class UserStateSerializationTest {
             deserialize(
                 """{
             "type":"RedState",
+            "since":1387241302262,
+            "until":1587241302262,
             "symptoms":["COUGH"],
-            "testInfo":"{\"testResult\":\"NEGATIVE\",\"testDate\":15872413022578,\"stateChanged\":true,\"dismissed\":false}",
-            "until":1587241302262
+            "testInfo":"{\"testResult\":\"NEGATIVE\",\"testDate\":15872413022578,\"stateChanged\":true,\"dismissed\":false}"
             }"""
             )
         )
@@ -259,20 +265,21 @@ class UserStateSerializationTest {
 
     @Test
     fun `deserialize red state with symptoms date`() {
+        val since = DateTime(1587241300000L, UTC)
         val until = DateTime(1587241302262L, UTC)
 
         val state = RedState(
+            since,
             until,
-            nonEmptySetOf(Symptom.COUGH),
-            symptomsStartDate = until
+            nonEmptySetOf(Symptom.COUGH)
         )
         assertThat(
             deserialize(
                 """{
-            "type":"RedState",
+            "since":1587241300000,
+            "until":1587241302262,
             "symptoms":["COUGH"],
-            "symptomsStartDate":1587241302262,
-            "until":1587241302262
+            "type":"RedState"
             }"""
             )
         )
@@ -280,11 +287,20 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize checkin state`() {
+    fun `deserialize checkin state without symptom date`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"CheckinState"}"""))
-            .isEqualTo(CheckinState(until, nonEmptySetOf(Symptom.COUGH)))
+            .isEqualTo(CheckinState(until.minusDays(NO_DAYS_IN_RED), until, nonEmptySetOf(Symptom.COUGH)))
+    }
+
+    @Test
+    fun `deserialize checkin state with symptom date`() {
+        val since = DateTime(1587241302262L, UTC)
+        val until = DateTime(1587241302262L, UTC)
+
+        assertThat(deserialize("""{"since":1587241302262,"until":1587241302262,"symptoms":["COUGH"],"type":"CheckinState"}"""))
+            .isEqualTo(CheckinState(since, until, nonEmptySetOf(Symptom.COUGH)))
     }
 
     @Test

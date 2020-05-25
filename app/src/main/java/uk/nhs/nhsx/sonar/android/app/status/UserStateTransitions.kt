@@ -29,7 +29,7 @@ object UserStateTransitions {
     }
 
     fun diagnoseForCheckin(
-        symptomsDate: DateTime?,
+        symptomsDate: DateTime,
         symptoms: Set<Symptom>,
         today: LocalDate = LocalDate.now()
     ): UserState =
@@ -78,7 +78,7 @@ object UserStateTransitions {
         }
 
     private fun symptomsAfterTest(currentState: UserState, testDate: DateTime): Boolean =
-        currentState.symptomsStartDate()?.isAfter(testDate) == true
+        currentState.since()?.isAfter(testDate) == true
 
     private fun defaultStateWithNegativeResult(testDate: DateTime, stateChange: Boolean = true) =
         DefaultState(TestInfo(TestResult.NEGATIVE, testDate, stateChange))
