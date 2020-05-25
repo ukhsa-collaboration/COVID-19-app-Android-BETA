@@ -16,6 +16,8 @@ abstract class SharedPreferenceProvider<T>(
 
     fun clear() = sharedPreferences.edit { clear() }
 
+    fun has(): Boolean = sharedPreferences.contains(preferenceKey)
+
     abstract fun get(): T
 
     abstract fun set(value: T)

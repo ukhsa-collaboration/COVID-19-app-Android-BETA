@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.inbox
 
 import org.assertj.core.api.AssertionsForClassTypes.assertThat
+import org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.junit.Test
@@ -35,7 +36,9 @@ class TestInfoSerializationTest {
 
     @Test
     fun `deserialize null test information`() {
-        assertThat(deserialize(null)).isNull()
+        assertThatThrownBy {
+            deserialize(null)
+        }.isInstanceOf(IllegalArgumentException::class.java)
     }
 
     @Test

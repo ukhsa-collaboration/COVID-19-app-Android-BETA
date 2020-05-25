@@ -12,6 +12,7 @@ import org.joda.time.LocalDate
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
@@ -212,10 +213,9 @@ class UserStateTransitionsTest {
     fun `transitionOnTestResult - with negative result to default state`() {
         val currentState = DefaultState
 
-        val testResult = TestResult.NEGATIVE
-        val testStartDate = DateTime.now().toUtc()
+        val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now().toUtc())
 
-        val state = transitionOnTestResult(currentState, testResult, testStartDate)
+        val state = transitionOnTestResult(currentState, testInfo)
 
         assertThat(state).isEqualTo(DefaultState)
     }
@@ -223,11 +223,10 @@ class UserStateTransitionsTest {
     @Test
     fun `transitionOnTestResult - with negative result and test date prior to symptoms date to RedState`() {
         val symptomDate = LocalDate.now().minusDays(2)
-        val testDate = DateTime.now().minusDays(6)
         val currentState = UserState.red(symptomDate, NonEmptySet.create(COUGH))
-        val testResult = TestResult.NEGATIVE
+        val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now().minusDays(6))
 
-        val state = transitionOnTestResult(currentState, testResult, testDate)
+        val state = transitionOnTestResult(currentState, testInfo)
 
         assertThat(state).isEqualTo(currentState)
     }
@@ -235,11 +234,10 @@ class UserStateTransitionsTest {
     @Test
     fun `transitionOnTestResult - with negative result and test date after the date of symptoms to RedState`() {
         val symptomDate = LocalDate.now().minusDays(6)
-        val testDate = DateTime.now().minusDays(3)
         val currentState = UserState.red(symptomDate, NonEmptySet.create(COUGH))
-        val testResult = TestResult.NEGATIVE
+        val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now().minusDays(3))
 
-        val state = transitionOnTestResult(currentState, testResult, testDate)
+        val state = transitionOnTestResult(currentState, testInfo)
 
         assertThat(state).isEqualTo(DefaultState)
     }

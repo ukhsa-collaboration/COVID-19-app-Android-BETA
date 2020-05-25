@@ -2,6 +2,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
@@ -61,11 +62,10 @@ object UserStateTransitions {
 
     fun transitionOnTestResult(
         currentState: UserState,
-        testResult: TestResult,
-        testDate: DateTime
+        testInfo: TestInfo
     ): UserState =
-        when (testResult) {
-            TestResult.NEGATIVE -> handleNegativeTestResult(currentState, testDate)
+        when (testInfo.result) {
+            TestResult.NEGATIVE -> handleNegativeTestResult(currentState, testInfo.date)
             TestResult.POSITIVE -> currentState
             TestResult.INVALID -> currentState
             TestResult.PRESUMED_POSITIVE -> currentState

@@ -6,12 +6,14 @@ package uk.nhs.nhsx.sonar.android.app.notifications
 
 import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import javax.inject.Inject
@@ -19,6 +21,7 @@ import javax.inject.Inject
 class NotificationHandler @Inject constructor(
     private val sender: NotificationSender,
     private val userStateStorage: UserStateStorage,
+    private val userInbox: UserInbox,
     private val activationCodeProvider: ActivationCodeProvider,
     private val registrationManager: RegistrationManager,
     private val acknowledgmentsDao: AcknowledgmentsDao,
@@ -55,16 +58,18 @@ class NotificationHandler @Inject constructor(
                         }
                 }
                 isTestResult(messageData) -> {
+                    val testInfo = TestInfo(
+                        TestResult.valueOf(messageData.getValue(TEST_RESULT_KEY)),
+                        DateTime(messageData.getValue(TEST_RESULT_DATE_KEY))
+                    )
+
                     userStateStorage.get()
                         .let { currentState ->
-                            UserStateTransitions.transitionOnTestResult(
-                                currentState,
-                                TestResult.valueOf(messageData.getValue(TEST_RESULT_KEY)),
-                                DateTime(messageData.getValue(TEST_RESULT_DATE_KEY))
-                            )
+                            UserStateTransitions.transitionOnTestResult(currentState, testInfo)
                         }
                         .let {
                             userStateStorage.set(it)
+                            userInbox.addTestResult(testInfo)
                         }
                 }
             }

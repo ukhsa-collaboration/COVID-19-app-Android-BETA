@@ -17,8 +17,8 @@ object TestInfoSerialization {
             "date" to info.date.millis
         )
 
-    fun deserialize(json: String?): TestInfo? {
-        if (json == null) return null
+    fun deserialize(json: String?): TestInfo {
+        if (json == null) throw IllegalArgumentException("null json object")
 
         return JSONObject(json).let {
             TestInfo(
