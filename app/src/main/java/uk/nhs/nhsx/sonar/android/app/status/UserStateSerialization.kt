@@ -30,6 +30,12 @@ object UserStateSerialization {
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.value }
             )
+            is PositiveState -> jsonOf(
+                "type" to state.type(),
+                "since" to state.since.millis,
+                "until" to state.until.millis,
+                "symptoms" to state.symptoms.map { it.value }
+            )
             is CheckinState -> jsonOf(
                 "type" to state.type(),
                 "since" to state.since.millis,
@@ -46,6 +52,7 @@ object UserStateSerialization {
         return when (jsonObj.getString("type")) {
             "ExposedState", "AmberState", "EmberState" -> jsonObj.getExposedState()
             "SymptomaticState", "RedState" -> jsonObj.getSymptomaticState()
+            "PositiveState" -> jsonObj.getPositiveState()
             "CheckinState" -> jsonObj.getCheckinState()
             else -> DefaultState
         } ?: DefaultState
@@ -62,6 +69,14 @@ object UserStateSerialization {
             val until = getUntil()
             val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
             SymptomaticState(since, getUntil(), symptoms)
+        }
+    }
+
+    private fun JSONObject.getPositiveState(): PositiveState? {
+        return getSymptoms()?.let { symptoms ->
+            val until = getUntil()
+            val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
+            PositiveState(since, getUntil(), symptoms)
         }
     }
 

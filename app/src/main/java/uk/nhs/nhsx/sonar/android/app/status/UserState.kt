@@ -57,6 +57,25 @@ sealed class UserState {
                 symptoms
             )
         }
+
+        fun positive(
+            testDate: DateTime,
+            symptoms: NonEmptySet<Symptom>,
+            today: LocalDate = LocalDate.now()
+        ): PositiveState {
+            val suggested = testDate.toLocalDate().after(NO_DAYS_IN_SYMPTOMATIC).days()
+            val tomorrow = today.after(1).day()
+
+            // if symptomsDate > 7 days ago then positive state is until tomorrow
+            // if symptomsDate <= 7 days ago then positive state is until suggested
+            val until = latest(suggested, tomorrow)
+
+            return PositiveState(
+                testDate.atSevenAm().toUtc(),
+                until.toUtc(),
+                symptoms
+            )
+        }
     }
 
     fun since(): DateTime? =
@@ -64,6 +83,7 @@ sealed class UserState {
             is SymptomaticState -> since
             is CheckinState -> since
             is ExposedState -> since
+            is PositiveState -> since
             else -> null
         }
 
@@ -73,6 +93,7 @@ sealed class UserState {
             is ExposedState -> until
             is SymptomaticState -> until
             is CheckinState -> until
+            is PositiveState -> until
         }
 
     fun hasExpired(): Boolean =
@@ -84,24 +105,29 @@ sealed class UserState {
             is ExposedState -> AT_RISK
             is SymptomaticState -> ISOLATE
             is CheckinState -> ISOLATE
+            is PositiveState -> ISOLATE
         }
 
     fun scheduleCheckInReminder(reminders: Reminders) =
         when {
             (this is SymptomaticState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
+            (this is PositiveState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
             else -> Unit
         }
 
     fun symptoms(): Set<Symptom> =
         when (this) {
             is SymptomaticState -> symptoms
+            is PositiveState -> symptoms
             is CheckinState -> symptoms
             else -> emptySet()
         }
 }
 
 // Initial state
-object DefaultState : UserState()
+object DefaultState : UserState() {
+    override fun toString(): String = "DefaultState"
+}
 
 // State when you have been in contact with someone in SymptomaticState
 data class ExposedState(val since: DateTime, val until: DateTime) : UserState()
@@ -115,6 +141,13 @@ data class SymptomaticState(
 
 // State after first checkin from SymptomaticState, does not get prompted again.
 data class CheckinState(
+    val since: DateTime,
+    val until: DateTime,
+    val symptoms: NonEmptySet<Symptom>
+) : UserState()
+
+// State when user has tested and the test result was positive
+data class PositiveState(
     val since: DateTime,
     val until: DateTime,
     val symptoms: NonEmptySet<Symptom>

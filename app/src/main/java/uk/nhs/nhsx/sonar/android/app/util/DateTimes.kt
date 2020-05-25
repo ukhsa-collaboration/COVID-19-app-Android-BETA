@@ -32,11 +32,14 @@ fun latest(a: DateTime, b: DateTime) =
 fun LocalDate.atSevenAm(): DateTime =
     toDateTime(LocalTime.parse(SEVEN_AM))
 
+fun DateTime.atSevenAm(): DateTime =
+    this.withTime(LocalTime.parse(SEVEN_AM))
+
 fun LocalDate.after(count: Int): After =
     After(this, count)
 
 fun DateTime.toUtc(): DateTime =
-    toDateTime(DateTimeZone.UTC)
+    if (this.zone == DateTimeZone.UTC) this else toDateTime(DateTimeZone.UTC)
 
 class After(val date: LocalDate, private val count: Int) {
     fun days(): DateTime =

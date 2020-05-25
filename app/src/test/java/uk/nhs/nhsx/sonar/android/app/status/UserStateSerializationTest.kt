@@ -48,6 +48,18 @@ class UserStateSerializationTest {
     }
 
     @Test
+    fun `serialize positive state`() {
+        val since = DateTime(1387241302263L, UTC)
+        val until = DateTime(1587241302263L, UTC)
+        val symptoms = nonEmptySetOf(Symptom.COUGH, Symptom.TEMPERATURE)
+
+        assertThat(serialize(PositiveState(since, until, symptoms)))
+            .isEqualTo(
+                """{"symptoms":["COUGH","TEMPERATURE"],"until":1587241302263,"type":"PositiveState","since":1387241302263}"""
+            )
+    }
+
+    @Test
     fun `serialize checkin state`() {
         val since = DateTime(1387241302263L, UTC)
         val until = DateTime(1587241302263L, UTC)
@@ -142,6 +154,29 @@ class UserStateSerializationTest {
             "until":1587241302262,
             "symptoms":["COUGH"],
             "type":"SymptomaticState"
+            }"""
+            )
+        )
+            .isEqualTo(state)
+    }
+
+    @Test
+    fun `deserialize positive state`() {
+        val since = DateTime(1587241300000L, UTC)
+        val until = DateTime(1587241302262L, UTC)
+
+        val state = PositiveState(
+            since,
+            until,
+            nonEmptySetOf(Symptom.COUGH)
+        )
+        assertThat(
+            deserialize(
+                """{
+            "since":1587241300000,
+            "until":1587241302262,
+            "symptoms":["COUGH"],
+            "type":"PositiveState"
             }"""
             )
         )

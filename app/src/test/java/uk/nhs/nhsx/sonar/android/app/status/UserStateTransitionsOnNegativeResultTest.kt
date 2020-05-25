@@ -51,6 +51,28 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
+    fun `positive, if new test is after current one, becomes default`() {
+        val testDate = DateTime.now().minusDays(6)
+        val positive = UserState.positive(testDate, NonEmptySet.create(COUGH))
+        val testInfo = TestInfo(TestResult.NEGATIVE, positive.since.plusDays(1))
+
+        val state = transitionOnTestResult(positive, testInfo)
+
+        assertThat(state).isEqualTo(DefaultState)
+    }
+
+    @Test
+    fun `positive, if new test is before current one, remains positive`() {
+        val testDate = DateTime.now().minusDays(2)
+        val positive = UserState.positive(testDate, NonEmptySet.create(COUGH))
+        val testInfo = TestInfo(TestResult.NEGATIVE, positive.since.minusDays(1))
+
+        val state = transitionOnTestResult(positive, testInfo)
+
+        assertThat(state).isEqualTo(positive)
+    }
+
+    @Test
     fun `checkin, if symptoms onset is prior test, becomes default`() {
         val since = LocalDate.now().minusDays(6).atSevenAm().toUtc()
         val checkin = UserState.checkin(since, NonEmptySet.create(TEMPERATURE))

@@ -69,6 +69,8 @@ object UserStateTransitions {
         when (state) {
             is SymptomaticState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
+            is PositiveState ->
+                if (state.since.isAfter(testDate)) state else DefaultState
             is CheckinState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
             is ExposedState ->

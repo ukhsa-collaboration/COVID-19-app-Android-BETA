@@ -14,7 +14,6 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
-import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTransitionsOnInvalidResultTest {
@@ -36,6 +35,16 @@ class UserStateTransitionsOnInvalidResultTest {
         val state = transitionOnTestResult(symptomatic, testInfo)
 
         assertThat(state).isEqualTo(symptomatic)
+    }
+
+    @Test
+    fun `positive remains positive`() {
+        val positive = UserState.positive(DateTime.now(), NonEmptySet.create(COUGH))
+        val testInfo = TestInfo(TestResult.INVALID, DateTime.now().toUtc())
+
+        val state = transitionOnTestResult(positive, testInfo)
+
+        assertThat(state).isEqualTo(positive)
     }
 
     @Test
