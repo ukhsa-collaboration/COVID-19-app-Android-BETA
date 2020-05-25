@@ -124,7 +124,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         setCheckinState.setOnClickListener {
             userStateStorage.set(
                 UserState.checkin(
-                    symptomsDate = DateTime.now(),
+                    since = DateTime.now(),
                     symptoms = nonEmptySetOf(COUGH, TEMPERATURE),
                     today = LocalDate.now().minusDays(1)
                 )

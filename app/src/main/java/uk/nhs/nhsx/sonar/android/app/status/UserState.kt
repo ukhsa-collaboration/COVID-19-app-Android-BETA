@@ -29,12 +29,12 @@ sealed class UserState {
             ExposedState(today.atSevenAm().toUtc(), today.after(NO_DAYS_IN_EXPOSED - 1).days().toUtc())
 
         fun checkin(
-            symptomsDate: DateTime,
+            since: DateTime,
             symptoms: NonEmptySet<Symptom>,
             today: LocalDate = LocalDate.now()
         ): CheckinState =
             CheckinState(
-                symptomsDate,
+                since,
                 today.after(1).day().toUtc(),
                 symptoms
             )

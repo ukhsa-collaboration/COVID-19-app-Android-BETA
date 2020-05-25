@@ -65,21 +65,17 @@ object UserStateTransitions {
             TestResult.PRESUMED_POSITIVE -> currentState
         }
 
-    private fun handleNegativeTestResult(currentState: UserState, testDate: DateTime): UserState =
-        when (currentState) {
+    private fun handleNegativeTestResult(state: UserState, testDate: DateTime): UserState =
+        when (state) {
             is SymptomaticState ->
-                if (symptomsAfterTest(currentState, testDate)) currentState else DefaultState
+                if (state.since.isAfter(testDate)) state else DefaultState
             is CheckinState ->
-                if (symptomsAfterTest(currentState, testDate)) currentState else DefaultState
+                if (state.since.isAfter(testDate)) state else DefaultState
+            is ExposedState ->
+                if (state.since.isAfter(testDate)) state else DefaultState
             else ->
                 DefaultState
         }
-
-    private fun symptomsAfterTest(currentState: UserState, testDate: DateTime): Boolean =
-        currentState.since()?.isAfter(testDate) == true
-
-    private fun doesNotHaveTemperature(symptoms: Set<Symptom>): Boolean =
-        !hasTemperature(symptoms)
 
     private fun hasTemperature(symptoms: Set<Symptom>): Boolean =
         TEMPERATURE in symptoms

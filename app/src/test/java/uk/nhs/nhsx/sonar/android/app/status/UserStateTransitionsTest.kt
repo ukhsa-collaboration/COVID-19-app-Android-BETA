@@ -12,20 +12,16 @@ import org.joda.time.LocalDate
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
-import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.NAUSEA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.SNEEZE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnose
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnoseForCheckin
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.expireExposedState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.isSymptomatic
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnContactAlert
-import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
@@ -205,39 +201,6 @@ class UserStateTransitionsTest {
     @Test
     fun `isSymptomatic - with anything other than cough, temperature or loss of smell`() {
         assertThat(isSymptomatic(setOf(NAUSEA, SNEEZE))).isFalse()
-    }
-
-    @Test
-    fun `transitionOnTestResult - with negative result to default state`() {
-        val currentState = DefaultState
-
-        val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now().toUtc())
-
-        val state = transitionOnTestResult(currentState, testInfo)
-
-        assertThat(state).isEqualTo(DefaultState)
-    }
-
-    @Test
-    fun `transitionOnTestResult - with negative result and test date prior to symptoms date to SymptomaticState`() {
-        val symptomDate = LocalDate.now().minusDays(2)
-        val currentState = UserState.symptomatic(symptomDate, NonEmptySet.create(COUGH))
-        val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now().minusDays(6))
-
-        val state = transitionOnTestResult(currentState, testInfo)
-
-        assertThat(state).isEqualTo(currentState)
-    }
-
-    @Test
-    fun `transitionOnTestResult - with negative result and test date after the date of symptoms to SymptomaticState`() {
-        val symptomDate = LocalDate.now().minusDays(6)
-        val currentState = UserState.symptomatic(symptomDate, NonEmptySet.create(COUGH))
-        val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now().minusDays(3))
-
-        val state = transitionOnTestResult(currentState, testInfo)
-
-        assertThat(state).isEqualTo(DefaultState)
     }
 
     @After
