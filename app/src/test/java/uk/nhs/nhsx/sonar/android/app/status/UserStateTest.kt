@@ -14,6 +14,7 @@ import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
@@ -42,7 +43,7 @@ class UserStateTest {
 
     @Test
     fun `checkin state factory method`() {
-        val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
+        val symptoms = nonEmptySetOf(TEMPERATURE)
         val symptomsDate = DateTime.now()
         val state = UserState.checkin(symptomsDate, symptoms, today)
 
@@ -53,7 +54,7 @@ class UserStateTest {
     @Test
     fun `symptomatic state factory method - when symptoms started more than 7 days ago`() {
         val over7daysAgo = LocalDate(2020, 4, 2)
-        val symptoms = nonEmptySetOf(COUGH, Symptom.TEMPERATURE)
+        val symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
         val state = UserState.symptomatic(over7daysAgo, symptoms, today)
 
         val tomorrowAt7 = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
@@ -64,7 +65,7 @@ class UserStateTest {
     @Test
     fun `symptomatic state factory method - when symptoms started less than 7 days ago`() {
         val lessThan7daysAgo = LocalDate(2020, 4, 5)
-        val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
+        val symptoms = nonEmptySetOf(TEMPERATURE)
         val state = UserState.symptomatic(lessThan7daysAgo, symptoms, today)
 
         val sevenDaysAfterSymptomsStart = DateTime(2020, 4, 12, 7, 0).toDateTime(DateTimeZone.UTC)
@@ -74,7 +75,7 @@ class UserStateTest {
     @Test
     fun `positive state factory method - when tested more than 7 days ago`() {
         val over7daysAgo = DateTime.parse("2020-04-02T11:11:11.000Z")
-        val symptoms = nonEmptySetOf(COUGH, Symptom.TEMPERATURE)
+        val symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
         val state = UserState.positive(over7daysAgo, symptoms, today)
 
         val tomorrowAt7 = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
@@ -85,11 +86,19 @@ class UserStateTest {
     @Test
     fun `positive state factory method - when tested less than 7 days ago`() {
         val lessThan7daysAgo = DateTime.parse("2020-04-05T10:10:00.000Z")
-        val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
+        val symptoms = nonEmptySetOf(TEMPERATURE)
         val state = UserState.positive(lessThan7daysAgo, symptoms, today)
 
         val sevenDaysAfterTestDate = DateTime(2020, 4, 12, 7, 0).toDateTime(DateTimeZone.UTC)
         assertThat(state.until).isEqualTo(sevenDaysAfterTestDate)
+    }
+
+    @Test
+    fun `positive state factory method - with no symptom`() {
+        val aDate = DateTime.parse("2020-04-02T11:11:11.000Z")
+        val state = UserState.positive(aDate, emptySet(), today)
+
+        assertThat(state.symptoms).isEmpty()
     }
 
     @Test

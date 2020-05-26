@@ -60,7 +60,7 @@ sealed class UserState {
 
         fun positive(
             testDate: DateTime,
-            symptoms: NonEmptySet<Symptom>,
+            symptoms: Set<Symptom> = emptySet(),
             today: LocalDate = LocalDate.now()
         ): PositiveState {
             val testLocalDate = testDate.toLocalDate()
@@ -151,7 +151,7 @@ data class CheckinState(
 data class PositiveState(
     val since: DateTime,
     val until: DateTime,
-    val symptoms: NonEmptySet<Symptom>
+    val symptoms: Set<Symptom> = emptySet()
 ) : UserState()
 
 enum class DisplayState {

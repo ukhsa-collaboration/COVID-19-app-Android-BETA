@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
 package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
@@ -11,7 +15,6 @@ import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_SYMPT
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.positive
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.isEarlierThan
-import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 object UserStateTransitions {
 
@@ -89,9 +92,9 @@ object UserStateTransitions {
             is CheckinState ->
                 positive(testDate, state.symptoms)
             is ExposedState ->
-                if (state.since.isAfter(testDate)) state else positive(testDate, nonEmptySetOf(TEMPERATURE))
+                if (state.since.isAfter(testDate)) state else positive(testDate)
             is DefaultState ->
-                positive(testDate, nonEmptySetOf(TEMPERATURE))
+                positive(testDate)
         }
 
     private fun hasTemperature(symptoms: Set<Symptom>): Boolean =

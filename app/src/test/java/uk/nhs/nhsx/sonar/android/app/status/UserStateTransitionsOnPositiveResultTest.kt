@@ -15,13 +15,12 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
-import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTransitionsOnPositiveResultTest {
 
     @Test
-    fun `default becomes positive`() {
+    fun `default becomes positive, with no symptoms`() {
         val testInfo = TestInfo(TestResult.POSITIVE, DateTime.now().toUtc())
 
         val state = transitionOnTestResult(DefaultState, testInfo)
@@ -29,11 +28,11 @@ class UserStateTransitionsOnPositiveResultTest {
         val since = testInfo.date.toLocalDate().atSevenAm().toUtc()
         val until = testInfo.date.toLocalDate().plusDays(7).atSevenAm().toUtc()
 
-        assertThat(state).isEqualTo(PositiveState(since, until, nonEmptySetOf(TEMPERATURE)))
+        assertThat(state).isEqualTo(PositiveState(since, until, emptySet()))
     }
 
     @Test
-    fun `symptomatic becomes positive`() {
+    fun `symptomatic becomes positive and the symptoms are retained`() {
         val symptomDate = LocalDate.now().minusDays(6)
         val symptomatic = UserState.symptomatic(symptomDate, NonEmptySet.create(COUGH))
         val testInfo = TestInfo(TestResult.POSITIVE, symptomatic.since.plusDays(1))
@@ -58,7 +57,7 @@ class UserStateTransitionsOnPositiveResultTest {
     }
 
     @Test
-    fun `checkin becomes positive`() {
+    fun `checkin becomes positive and the symptoms are retained`() {
         val checkinSince = LocalDate.now().minusDays(6).atSevenAm().toUtc()
         val checkin = UserState.checkin(checkinSince, NonEmptySet.create(TEMPERATURE))
         val testInfo = TestInfo(TestResult.POSITIVE, checkin.since.plusDays(1))
@@ -72,7 +71,7 @@ class UserStateTransitionsOnPositiveResultTest {
     }
 
     @Test
-    fun `exposed, if exposed prior test, becomes positive`() {
+    fun `exposed, if exposed prior test, becomes positive with no symptoms`() {
         val date = LocalDate.now().minusDays(6)
         val currentState = UserState.exposed(date)
         val testInfo = TestInfo(TestResult.POSITIVE, currentState.since.plusDays(1))
@@ -82,7 +81,7 @@ class UserStateTransitionsOnPositiveResultTest {
         val since = testInfo.date.toLocalDate().atSevenAm().toUtc()
         val until = testInfo.date.toLocalDate().plusDays(7).atSevenAm().toUtc()
 
-        assertThat(state).isEqualTo(PositiveState(since, until, nonEmptySetOf(TEMPERATURE)))
+        assertThat(state).isEqualTo(PositiveState(since, until, emptySet()))
     }
 
     @Test
