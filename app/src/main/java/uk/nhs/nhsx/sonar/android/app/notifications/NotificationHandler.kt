@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.notifications
 
 import org.joda.time.DateTime
+import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
@@ -70,6 +71,7 @@ class NotificationHandler @Inject constructor(
                         .let {
                             userStateStorage.set(it)
                             userInbox.addTestResult(testInfo)
+                            showTestResultNotification()
                         }
                 }
             }
@@ -82,9 +84,19 @@ class NotificationHandler @Inject constructor(
         sender.send(
             ContactAndCheckin,
             NOTIFICATION_SERVICE_ID,
-            R.string.notification_title,
-            R.string.notification_text,
+            R.string.contact_alert_notification_title,
+            R.string.contact_alert_notification_text,
             AtRiskActivity.Companion::getIntent
+        )
+    }
+
+    private fun showTestResultNotification() {
+        sender.send(
+            ContactAndCheckin,
+            NOTIFICATION_SERVICE_ID,
+            R.string.test_result_notification_title,
+            R.string.test_result_notification_text,
+            MainActivity.Companion::getIntent
         )
     }
 

@@ -108,7 +108,13 @@ class NotificationHandlerTest {
         verifyAll {
             userStateStorage.get()
             userStateStorage.set(any<ExposedState>())
-            sender.send(ContactAndCheckin, 10001, R.string.notification_title, R.string.notification_text, any())
+            sender.send(
+                ContactAndCheckin,
+                10001,
+                R.string.contact_alert_notification_title,
+                R.string.contact_alert_notification_text,
+                any()
+            )
         }
     }
 
@@ -134,6 +140,14 @@ class NotificationHandlerTest {
 
             userStateStorage.set(any<DefaultState>())
             userInbox.addTestResult(testInfo)
+
+            sender.send(
+                ContactAndCheckin,
+                10001,
+                R.string.test_result_notification_title,
+                R.string.test_result_notification_text,
+                any()
+            )
         }
     }
 
@@ -155,12 +169,16 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun `test handleNewMessage - status update in red state`() {
+    fun `test handleNewMessage - status update in symptomatic state`() {
         val messageData = mapOf(
             "type" to "Status Update",
             "status" to "Potential"
         )
-        every { userStateStorage.get() } returns SymptomaticState(DateTime.now(), DateTime.now(), nonEmptySetOf(TEMPERATURE))
+        every { userStateStorage.get() } returns SymptomaticState(
+            DateTime.now(),
+            DateTime.now(),
+            nonEmptySetOf(TEMPERATURE)
+        )
 
         handler.handleNewMessage(messageData)
 
@@ -188,7 +206,13 @@ class NotificationHandlerTest {
         verifyAll {
             userStateStorage.get()
             userStateStorage.set(any<ExposedState>())
-            sender.send(ContactAndCheckin, 10001, R.string.notification_title, R.string.notification_text, any())
+            sender.send(
+                ContactAndCheckin,
+                10001,
+                R.string.contact_alert_notification_title,
+                R.string.contact_alert_notification_text,
+                any()
+            )
             ackApi.send("https://api.example.com/ack/100")
             ackDao.tryFind("https://api.example.com/ack/100")
             ackDao.insert(Acknowledgment("https://api.example.com/ack/100"))

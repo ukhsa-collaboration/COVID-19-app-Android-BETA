@@ -16,7 +16,7 @@ class AtRiskActivityTest(private val testAppContext: TestApplicationContext) {
     }
 
     fun testHideStatusUpdateNotificationWhenNotClicked() {
-        val notificationTitle = R.string.notification_title
+        val notificationTitle = R.string.contact_alert_notification_title
 
         testAppContext.simulateStatusUpdateReceived()
         testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = true)

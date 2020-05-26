@@ -106,7 +106,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
 
         testAppContext.apply {
             simulateStatusUpdateReceived()
-            clickOnNotification(R.string.notification_title, R.string.notification_text)
+            clickOnNotification(R.string.contact_alert_notification_title, R.string.contact_alert_notification_text)
         }
 
         atRiskRobot.checkActivityIsDisplayed()
