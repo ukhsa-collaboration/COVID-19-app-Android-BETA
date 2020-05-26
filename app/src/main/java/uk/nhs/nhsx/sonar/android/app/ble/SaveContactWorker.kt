@@ -33,7 +33,6 @@ class SaveContactWorker @Inject constructor(
         scope.launch {
             withContext(dispatcher) {
                 try {
-                    Timber.e("saving ${id.size} rssi=$rssi timestamp=${timestamp.toUtcIsoFormat()}")
                     if (id.size != BluetoothIdentifier.SIZE) {
                         throw IllegalArgumentException("Identifier has wrong size, must be ${BluetoothIdentifier.SIZE}, was ${id.size}")
                     }

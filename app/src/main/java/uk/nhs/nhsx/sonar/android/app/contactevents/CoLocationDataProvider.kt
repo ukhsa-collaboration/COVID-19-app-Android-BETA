@@ -34,7 +34,6 @@ class CoLocationDataProvider(
         }
 
         val rssiValues = contactEvent.rssiValues.map { it.toByte() }.toByteArray()
-        Timber.e("Signature is ${base64encode(contactEvent.hmacSignature)}")
         return CoLocationEvent(
             encryptedRemoteContactId = base64encode(contactEvent.sonarId),
             rssiValues = base64encode(rssiValues),
