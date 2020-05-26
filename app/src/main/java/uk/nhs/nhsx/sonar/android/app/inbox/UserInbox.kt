@@ -18,6 +18,8 @@ class UserInbox @Inject constructor(
 
     fun hasTestResult(): Boolean = testInfoProvider.has()
 
+    fun getTestResult(): TestInfo = testInfoProvider.get()
+
     fun dismissTestResult(): Unit = testInfoProvider.clear()
 
     fun addRecovery(): Unit = recoveryProvider.set("Recovery")

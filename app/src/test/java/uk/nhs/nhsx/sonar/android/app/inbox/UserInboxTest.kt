@@ -45,6 +45,15 @@ class UserInboxTest {
     }
 
     @Test
+    fun `gets existing test result`() {
+        val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
+
+        every { testInfoProvider.get() } returns testInfo
+
+        assertThat(userInbox.getTestResult()).isEqualTo(testInfo)
+    }
+
+    @Test
     fun `dismisses a test result`() {
         every { testInfoProvider.clear() } returns Unit
 

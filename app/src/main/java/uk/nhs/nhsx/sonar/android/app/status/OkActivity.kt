@@ -191,6 +191,7 @@ class OkActivity : BaseActivity() {
         navigateTo(state)
 
         if (userInbox.hasTestResult()) {
+            // TODO: update dialog texts based on test result :: userInbox.getTestResult()
             testResultDialog.showExpanded()
         } else {
             testResultDialog.dismiss()
