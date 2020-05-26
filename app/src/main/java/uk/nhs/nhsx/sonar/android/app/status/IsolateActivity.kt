@@ -11,9 +11,9 @@ import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_isolate.book_test_card
-import kotlinx.android.synthetic.main.activity_isolate.follow_until
 import kotlinx.android.synthetic.main.activity_isolate.latest_advice_symptomatic
 import kotlinx.android.synthetic.main.activity_isolate.registrationPanel
+import kotlinx.android.synthetic.main.activity_isolate.statusView
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import kotlinx.android.synthetic.main.status_footer_view.nhs_service
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
@@ -25,6 +25,9 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
+import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusView
+import uk.nhs.nhsx.sonar.android.app.tests.ApplyForTestActivity
+import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
@@ -56,12 +59,8 @@ class IsolateActivity : BaseActivity() {
         val state = userStateStorage.get()
 
         registrationPanel.setState(RegistrationState.Complete)
-        follow_until.text = buildSpannedString {
-            bold {
-                append(getString(R.string.follow_until_symptomatic_pre, state.until().toUiFormat()))
-            }
-            append(" ${getString(R.string.follow_until_symptomatic)}")
-        }
+
+        setStatusView(state)
 
         latest_advice_symptomatic.setOnClickListener {
             CurrentAdviceActivity.start(this)
@@ -90,6 +89,22 @@ class IsolateActivity : BaseActivity() {
         }
     }
 
+    private fun setStatusView(state: UserState) {
+        val statusDescription = buildSpannedString {
+            bold {
+                append(getString(R.string.follow_until_symptomatic_pre, state.until().toUiFormat()))
+            }
+            append(" ${getString(R.string.follow_until_symptomatic)}")
+        }
+        statusView.setup(
+            StatusView.Configuration(
+                title = getString(R.string.status_symptomatic_title),
+                description = statusDescription,
+                statusColor = StatusView.Color.ORANGE
+            )
+        )
+    }
+
     private fun setUpdateSymptomsDialog() {
         val configuration = BottomDialogConfiguration(
             isHideable = false,
@@ -98,7 +113,8 @@ class IsolateActivity : BaseActivity() {
             firstCtaResId = R.string.update_my_symptoms,
             secondCtaResId = R.string.no_symptoms
         )
-        updateSymptomsDialog = BottomDialog(this, configuration,
+        updateSymptomsDialog = BottomDialog(
+            this, configuration,
             onCancel = {
                 finish()
             },

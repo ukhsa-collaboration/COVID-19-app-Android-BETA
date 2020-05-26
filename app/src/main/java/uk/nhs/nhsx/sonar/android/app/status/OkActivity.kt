@@ -12,6 +12,7 @@ import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
+import kotlinx.android.synthetic.main.activity_isolate.statusView
 import kotlinx.android.synthetic.main.activity_ok.notificationPanel
 import kotlinx.android.synthetic.main.activity_ok.read_current_advice
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
@@ -34,6 +35,8 @@ import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
+import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusView
+import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
@@ -74,6 +77,8 @@ class OkActivity : BaseActivity() {
         }
 
         setContentView(R.layout.activity_ok)
+
+        setStatusView()
 
         status_not_feeling_well.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
@@ -117,6 +122,15 @@ class OkActivity : BaseActivity() {
 
         setRecoveryDialog()
         setTestResultDialog()
+    }
+
+    private fun setStatusView() {
+        statusView.setup(
+            StatusView.Configuration(
+                title = getString(R.string.status_initial_title),
+                statusColor = StatusView.Color.BLUE
+            )
+        )
     }
 
     private fun toggleNotFeelingCard(enabled: Boolean) {

@@ -2,7 +2,6 @@
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -35,41 +34,11 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp" />
 
-                <LinearLayout
+                <uk.nhs.nhsx.sonar.android.app.status.widgets.StatusView
+                    android:id="@+id/statusView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp">
-
-                    <View
-                        android:layout_width="12dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/symptomatic_card_background" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="16dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/status_symptomatic_title"
-                            style="@style/TextViewStatus"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:accessibilityHeading="true"
-                            android:text="@string/status_symptomatic_title" />
-
-                        <TextView
-                            android:id="@+id/follow_until"
-                            style="@style/TextViewCardSubTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-
-                            tools:text="@string/follow_until_symptomatic" />
-                    </LinearLayout>
-                </LinearLayout>
+                    android:paddingHorizontal="16dp" />
 
                 <TextView
                     android:id="@+id/status_today_feeling"
@@ -121,6 +90,7 @@
                             android:text="@string/apply_for_test_now" />
 
                 </com.google.android.material.card.MaterialCardView>
+
                 <include layout="@layout/status_footer_view" />
 
             </LinearLayout>

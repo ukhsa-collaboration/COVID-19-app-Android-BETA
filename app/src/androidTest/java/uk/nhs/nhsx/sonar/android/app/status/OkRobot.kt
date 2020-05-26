@@ -7,6 +7,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
 import uk.nhs.nhsx.sonar.android.app.R
@@ -17,7 +18,9 @@ class OkRobot {
 
     fun checkActivityIsDisplayed() {
         waitForText(R.string.status_initial_title, 6_000)
-        onView(withId(R.id.status_initial_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.statusTitle))
+            .check(matches(withText(R.string.status_initial_title)))
+            .check(matches(isDisplayed()))
     }
 
     fun checkFinalisingSetup() {

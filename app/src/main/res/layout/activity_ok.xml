@@ -44,28 +44,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <LinearLayout
+                <uk.nhs.nhsx.sonar.android.app.status.widgets.StatusView
+                    android:id="@+id/statusView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp">
-
-                    <View
-                        android:layout_width="12dp"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/initial_card_background" />
-
-                    <TextView
-                        android:id="@+id/status_initial_title"
-                        style="@style/TextViewStatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
-                        android:text="@string/status_initial_title" />
-
-                </LinearLayout>
+                    android:paddingHorizontal="16dp" />
 
                 <TextView
                     android:id="@+id/status_today_feeling"
