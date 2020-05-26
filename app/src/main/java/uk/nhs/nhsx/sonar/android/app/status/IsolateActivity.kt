@@ -23,8 +23,6 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusScreenFactory
-import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
-import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO

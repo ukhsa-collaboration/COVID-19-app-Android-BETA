@@ -8,13 +8,13 @@ import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.status.CheckinState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.UserState
-import uk.nhs.nhsx.sonar.android.app.tests.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 
 interface StatusScreen {
