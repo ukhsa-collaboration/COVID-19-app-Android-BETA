@@ -64,7 +64,6 @@ object UserStateTransitions {
             TestResult.NEGATIVE -> handleNegativeTestResult(currentState, testInfo.date)
             TestResult.POSITIVE -> handlePositiveTestResult(currentState, testInfo.date)
             TestResult.INVALID -> currentState
-            TestResult.PRESUMED_POSITIVE -> currentState
         }
 
     private fun handleNegativeTestResult(state: UserState, testDate: DateTime): UserState =

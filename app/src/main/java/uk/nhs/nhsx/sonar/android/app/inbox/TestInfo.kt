@@ -11,6 +11,5 @@ data class TestInfo(
 enum class TestResult {
     NEGATIVE,
     POSITIVE,
-    INVALID,
-    PRESUMED_POSITIVE
+    INVALID
 }

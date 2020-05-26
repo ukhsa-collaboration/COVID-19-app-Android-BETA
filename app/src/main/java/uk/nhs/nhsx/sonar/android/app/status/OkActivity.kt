@@ -202,7 +202,7 @@ class OkActivity : BaseActivity() {
                     testResultDialog.setTitleResId(R.string.negative_test_result_title)
                     testResultDialog.setTextResId(R.string.negative_test_result_description)
                 }
-                else -> {
+                TestResult.INVALID -> {
                     testResultDialog.setTitleResId(R.string.invalid_test_result_title)
                     testResultDialog.setTextResId(R.string.invalid_test_result_description)
                 }
