@@ -13,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.apache.http.HttpStatus.SC_BAD_REQUEST
 import org.apache.http.HttpStatus.SC_NO_CONTENT
-import org.apache.http.HttpStatus.SC_UNAUTHORIZED
 import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.LocalDateTime
 import org.joda.time.format.ISODateTimeFormat
