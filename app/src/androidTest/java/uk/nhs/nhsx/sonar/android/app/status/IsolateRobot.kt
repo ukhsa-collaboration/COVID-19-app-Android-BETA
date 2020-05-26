@@ -7,6 +7,7 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import org.hamcrest.CoreMatchers.not
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.testhelpers.stringFromResId
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
@@ -37,5 +38,15 @@ class IsolateRobot {
         onView(withId(R.id.statusDescription))
             .check(matches(withText(expected)))
             .check(matches(isDisplayed()))
+    }
+
+    fun checkBookVirusTestCardIsDisplayed() {
+        onView(withId(R.id.book_test_card))
+            .check(matches(isDisplayed()))
+    }
+
+    fun checkBookVirusTestCardIsNotDisplayed() {
+        onView(withId(R.id.book_test_card))
+            .check(matches(not(isDisplayed())))
     }
 }

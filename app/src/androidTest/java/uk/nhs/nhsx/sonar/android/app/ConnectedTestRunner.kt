@@ -105,6 +105,8 @@ class ConnectedTestRunner {
             { IsolateActivityTest(testAppContext).testClickOnCurrentAdviceShowsCurrentAdvice() },
             { IsolateActivityTest(testAppContext).testStartsViewAndSetsUpCorrectStatusForSymptomaticState() },
             { IsolateActivityTest(testAppContext).testStartsViewAndSetsUpCorrectStatusForPositiveTestState() },
+            { IsolateActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInSymptomaticTestState() },
+            { IsolateActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInPositiveTestState() },
 
             { FlowTest(testAppContext).testRegistration() },
             { FlowTest(testAppContext).testProximityDataUploadOnSymptomaticState() },

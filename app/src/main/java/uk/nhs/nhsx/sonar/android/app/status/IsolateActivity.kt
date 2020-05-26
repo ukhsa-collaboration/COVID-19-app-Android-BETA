@@ -23,7 +23,6 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusScreenFactory
-import uk.nhs.nhsx.sonar.android.app.tests.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
@@ -67,10 +66,6 @@ class IsolateActivity : BaseActivity() {
 
         toolbar_info.setOnClickListener {
             openUrl(URL_INFO)
-        }
-
-        book_test_card.setOnClickListener {
-            ApplyForTestActivity.start(this)
         }
 
         workplace_guidance_card.setOnClickListener {

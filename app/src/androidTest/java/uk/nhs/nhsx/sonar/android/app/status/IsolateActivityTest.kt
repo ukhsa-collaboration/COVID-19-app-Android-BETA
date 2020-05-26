@@ -86,4 +86,22 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
         isolateRobot.checkStatusTitle(R.string.status_positive_test_title)
         isolateRobot.checkStatusDescription(state)
     }
+
+    fun testBookVirusTestIsNotDisplayedWhenInSymptomaticTestState() {
+        val since = DateTime.now(UTC).minusDays(1)
+        val until = DateTime.now(UTC).plusDays(1)
+        val state = SymptomaticState(since, until, nonEmptySetOf(TEMPERATURE))
+        startActivity(state)
+
+        isolateRobot.checkBookVirusTestCardIsDisplayed()
+    }
+
+    fun testBookVirusTestIsNotDisplayedWhenInPositiveTestState() {
+        val since = DateTime.now(UTC).minusDays(1)
+        val until = DateTime.now(UTC).plusDays(1)
+        val state = PositiveState(since, until, nonEmptySetOf(TEMPERATURE))
+        startActivity(state)
+
+        isolateRobot.checkBookVirusTestCardIsNotDisplayed()
+    }
 }
