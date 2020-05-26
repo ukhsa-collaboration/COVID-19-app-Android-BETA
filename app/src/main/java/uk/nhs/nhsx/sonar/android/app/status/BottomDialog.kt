@@ -44,6 +44,14 @@ class BottomDialog(
             dismiss()
         }
     }
+
+    fun setTitleResId(@StringRes titleResId: Int) {
+        bottomDialogTitle.setText(titleResId)
+    }
+
+    fun setTextResId(@StringRes textResId: Int) {
+        bottomDialogText.setText(textResId)
+    }
 }
 
 data class BottomDialogConfiguration(

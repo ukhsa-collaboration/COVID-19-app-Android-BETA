@@ -33,6 +33,16 @@ class BottomDialogRobot {
         onView(withId(R.id.bottomDialogSecondCta)).check(matches(withText(R.string.no_symptoms)))
     }
 
+    fun checkPositiveTestResultDialogIsDisplayed() {
+        onView(withId(R.id.bottomDialogTitle)).check(matches(isDisplayed()))
+        onView(withId(R.id.bottomDialogText)).check(matches(isDisplayed()))
+        onView(withId(R.id.bottomDialogFirstCta)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.bottomDialogSecondCta)).check(matches(isDisplayed()))
+        onView(withId(R.id.bottomDialogTitle)).check(matches(withText(R.string.positive_test_result_title)))
+        onView(withId(R.id.bottomDialogText)).check(matches(withText(R.string.positive_test_result_description)))
+        onView(withId(R.id.bottomDialogSecondCta)).check(matches(withText(R.string.close)))
+    }
+
     fun clickFirstCtaButton() {
         onView(withId(R.id.bottomDialogFirstCta)).perform(click())
     }

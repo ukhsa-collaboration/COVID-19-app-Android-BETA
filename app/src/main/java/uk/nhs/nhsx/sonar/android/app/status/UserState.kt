@@ -85,16 +85,16 @@ sealed class UserState {
             is CheckinState -> since
             is ExposedState -> since
             is PositiveState -> since
-            else -> null
+            is DefaultState -> null
         }
 
     fun until(): DateTime? =
         when (this) {
-            is DefaultState -> null
             is ExposedState -> until
             is SymptomaticState -> until
             is CheckinState -> until
             is PositiveState -> until
+            is DefaultState -> null
         }
 
     fun hasExpired(): Boolean =

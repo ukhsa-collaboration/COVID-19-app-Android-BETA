@@ -241,7 +241,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
     private fun testResultMessageData(result: TestResult): Map<String, String> {
         return mapOf(
             "type" to "Test Result",
-            "result" to result.toString(),
+            "result" to result.name,
             "testTimestamp" to DateTime.now().toUtcIsoFormat()
         )
     }

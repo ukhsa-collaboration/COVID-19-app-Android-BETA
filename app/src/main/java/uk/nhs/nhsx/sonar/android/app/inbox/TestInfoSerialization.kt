@@ -13,7 +13,7 @@ object TestInfoSerialization {
 
     fun serialize(info: TestInfo): String =
         jsonOf(
-            "result" to info.result,
+            "result" to info.result.name,
             "date" to info.date.millis
         )
 

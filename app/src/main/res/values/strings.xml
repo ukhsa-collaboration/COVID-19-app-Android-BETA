@@ -241,4 +241,8 @@
     <string name="app_version">App version:</string>
     <string name="negative_test_result_title">Your test result indicates that you don’t have coronavirus</string>
     <string name="negative_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
+    <string name="positive_test_result_title">Your test result indicates that you have coronavirus</string>
+    <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
+    <string name="invalid_test_result_title">Your test result is INVALID</string>
+    <string name="invalid_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
 </resources>

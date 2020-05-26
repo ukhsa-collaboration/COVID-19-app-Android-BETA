@@ -38,6 +38,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
+import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
@@ -165,6 +166,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
 
     fun addRecoveryMessage() {
         component.getUserInbox().addRecovery()
+    }
+
+    fun addTestInfo(info: TestInfo) {
+        component.getUserInbox().addTestResult(info)
     }
 
     fun setFinishedOnboarding() {

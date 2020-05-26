@@ -26,6 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
@@ -191,7 +192,21 @@ class OkActivity : BaseActivity() {
         navigateTo(state)
 
         if (userInbox.hasTestResult()) {
-            // TODO: update dialog texts based on test result :: userInbox.getTestResult()
+            val info = userInbox.getTestResult()
+            when (info.result) {
+                TestResult.POSITIVE -> {
+                    testResultDialog.setTitleResId(R.string.positive_test_result_title)
+                    testResultDialog.setTextResId(R.string.positive_test_result_description)
+                }
+                TestResult.NEGATIVE -> {
+                    testResultDialog.setTitleResId(R.string.negative_test_result_title)
+                    testResultDialog.setTextResId(R.string.negative_test_result_description)
+                }
+                else -> {
+                    testResultDialog.setTitleResId(R.string.invalid_test_result_title)
+                    testResultDialog.setTextResId(R.string.invalid_test_result_description)
+                }
+            }
             testResultDialog.showExpanded()
         } else {
             testResultDialog.dismiss()
