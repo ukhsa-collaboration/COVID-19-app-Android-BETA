@@ -177,11 +177,11 @@ class OkActivity : BaseActivity() {
         )
         testResultDialog = BottomDialog(this, configuration,
             onCancel = {
-                userInbox.dismissTestResult()
+                userInbox.dismissTestInfo()
                 finish()
             },
             onSecondCtaClick = {
-                userInbox.dismissTestResult()
+                userInbox.dismissTestInfo()
             })
     }
 
@@ -191,8 +191,8 @@ class OkActivity : BaseActivity() {
         val state = userStateStorage.get()
         navigateTo(state)
 
-        if (userInbox.hasTestResult()) {
-            val info = userInbox.getTestResult()
+        if (userInbox.hasTestInfo()) {
+            val info = userInbox.getTestInfo()
             when (info.result) {
                 TestResult.POSITIVE -> {
                     testResultDialog.setTitleResId(R.string.positive_test_result_title)

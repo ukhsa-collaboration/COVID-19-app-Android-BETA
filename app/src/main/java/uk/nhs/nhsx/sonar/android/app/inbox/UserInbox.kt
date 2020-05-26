@@ -14,13 +14,13 @@ class UserInbox @Inject constructor(
     private val recoveryProvider: RecoveryProvider
 ) {
 
-    fun addTestResult(testInfo: TestInfo): Unit = testInfoProvider.set(testInfo)
+    fun addTestInfo(testInfo: TestInfo): Unit = testInfoProvider.set(testInfo)
 
-    fun hasTestResult(): Boolean = testInfoProvider.has()
+    fun hasTestInfo(): Boolean = testInfoProvider.has()
 
-    fun getTestResult(): TestInfo = testInfoProvider.get()
+    fun getTestInfo(): TestInfo = testInfoProvider.get()
 
-    fun dismissTestResult(): Unit = testInfoProvider.clear()
+    fun dismissTestInfo(): Unit = testInfoProvider.clear()
 
     fun addRecovery(): Unit = recoveryProvider.set("Recovery")
 

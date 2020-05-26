@@ -205,17 +205,17 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     private fun setTestResults() {
         setTestPositive.setOnClickListener {
-            userInbox.addTestResult(TestInfo(TestResult.POSITIVE, DateTime.now()))
+            userInbox.addTestInfo(TestInfo(TestResult.POSITIVE, DateTime.now()))
             finish()
         }
 
         setTestNegative.setOnClickListener {
-            userInbox.addTestResult(TestInfo(TestResult.NEGATIVE, DateTime.now()))
+            userInbox.addTestInfo(TestInfo(TestResult.NEGATIVE, DateTime.now()))
             finish()
         }
 
         setTestInvalid.setOnClickListener {
-            userInbox.addTestResult(TestInfo(TestResult.INVALID, DateTime.now()))
+            userInbox.addTestInfo(TestInfo(TestResult.INVALID, DateTime.now()))
             finish()
         }
     }

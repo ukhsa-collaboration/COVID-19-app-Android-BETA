@@ -70,7 +70,7 @@ class NotificationHandler @Inject constructor(
                         }
                         .let {
                             userStateStorage.set(it)
-                            userInbox.addTestResult(testInfo)
+                            userInbox.addTestInfo(testInfo)
                             showTestResultNotification()
                         }
                 }

@@ -18,12 +18,12 @@ class UserInboxTest {
     private val userInbox = UserInbox(testInfoProvider, recoveryProvider)
 
     @Test
-    fun `adds new test result`() {
+    fun `adds new test info`() {
         every { testInfoProvider.set(any()) } returns Unit
 
         val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
-        userInbox.addTestResult(testInfo)
+        userInbox.addTestInfo(testInfo)
 
         verify {
             testInfoProvider.set(testInfo)
@@ -31,33 +31,33 @@ class UserInboxTest {
     }
 
     @Test
-    fun `checks for existing test result`() {
+    fun `checks for existing test info`() {
         every { testInfoProvider.has() } returns true
 
-        assertThat(userInbox.hasTestResult()).isTrue()
+        assertThat(userInbox.hasTestInfo()).isTrue()
     }
 
     @Test
-    fun `checks for non-existing test result`() {
+    fun `checks for non-existing test info`() {
         every { testInfoProvider.has() } returns false
 
-        assertThat(userInbox.hasTestResult()).isFalse()
+        assertThat(userInbox.hasTestInfo()).isFalse()
     }
 
     @Test
-    fun `gets existing test result`() {
+    fun `gets existing test info`() {
         val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
         every { testInfoProvider.get() } returns testInfo
 
-        assertThat(userInbox.getTestResult()).isEqualTo(testInfo)
+        assertThat(userInbox.getTestInfo()).isEqualTo(testInfo)
     }
 
     @Test
-    fun `dismisses a test result`() {
+    fun `dismisses a test info`() {
         every { testInfoProvider.clear() } returns Unit
 
-        assertThat(userInbox.dismissTestResult())
+        assertThat(userInbox.dismissTestInfo())
 
         verify {
             testInfoProvider.clear()

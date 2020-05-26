@@ -129,7 +129,7 @@ class NotificationHandlerTest {
         val testInfo = TestInfo(TestResult.NEGATIVE, DateTime("2020-04-23T18:34:00Z"))
 
         every { userStateStorage.get() } returns DefaultState
-        every { userInbox.addTestResult(testInfo) } returns Unit
+        every { userInbox.addTestInfo(testInfo) } returns Unit
 
         handler.handleNewMessage(messageData)
 
@@ -139,7 +139,7 @@ class NotificationHandlerTest {
             UserStateTransitions.transitionOnTestResult(DefaultState, testInfo)
 
             userStateStorage.set(any<DefaultState>())
-            userInbox.addTestResult(testInfo)
+            userInbox.addTestInfo(testInfo)
 
             sender.send(
                 ContactAndCheckin,

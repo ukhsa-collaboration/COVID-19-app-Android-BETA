@@ -169,7 +169,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     }
 
     fun addTestInfo(info: TestInfo) {
-        component.getUserInbox().addTestResult(info)
+        component.getUserInbox().addTestInfo(info)
     }
 
     fun setFinishedOnboarding() {
