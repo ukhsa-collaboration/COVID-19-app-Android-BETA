@@ -155,7 +155,7 @@ class RegistrationRefreshPushNotificationTokenPactTest {
             .body(requestBody)
             // response
             .willRespondWith()
-            .status(SC_UNAUTHORIZED)
+            .status(SC_BAD_REQUEST)
             .toPact()
     }
 
