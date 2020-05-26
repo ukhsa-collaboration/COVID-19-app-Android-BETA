@@ -25,10 +25,10 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
-import uk.nhs.nhsx.sonar.android.app.tests.ApplyForTestActivity
-import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
-import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -64,7 +64,7 @@ class IsolateActivity : BaseActivity() {
         }
 
         latest_advice_symptomatic.setOnClickListener {
-            openUrl(URL_LATEST_ADVICE_SYMPTOMATIC)
+            CurrentAdviceActivity.start(this)
         }
 
         nhs_service.setOnClickListener {

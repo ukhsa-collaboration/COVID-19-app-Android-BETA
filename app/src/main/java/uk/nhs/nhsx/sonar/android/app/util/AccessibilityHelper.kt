@@ -11,6 +11,8 @@ import android.provider.Settings.SettingNotFoundException
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.card.MaterialCardView
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
@@ -67,4 +69,13 @@ fun MaterialCardView.cardColourInversion(isOn: Boolean) {
         }
         false -> strokeWidth = 0
     }
+}
+
+fun AppCompatActivity.setNavigateUpToolbar(toolbar: MaterialToolbar, @StringRes title: Int) {
+    setSupportActionBar(toolbar)
+    supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back_blue)
+    supportActionBar?.setHomeActionContentDescription(R.string.go_back)
+    supportActionBar?.title = getString(title)
+    toolbar.setNavigationOnClickListener { onBackPressed() }
 }

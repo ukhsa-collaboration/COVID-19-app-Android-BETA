@@ -1,4 +1,8 @@
-package uk.nhs.nhsx.sonar.android.app.tests
+/*
+ * Copyright © 2020 NHSX. All rights reserved.
+ */
+
+package uk.nhs.nhsx.sonar.android.app.interstitials
 
 import android.content.Context
 import android.content.Intent
@@ -9,6 +13,7 @@ import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.WORKPLACE_GUIDANCE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
+import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 
 class WorkplaceGuidanceActivity : AppCompatActivity() {
 
@@ -16,12 +21,7 @@ class WorkplaceGuidanceActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workplace_guidance)
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back_blue)
-        supportActionBar?.setHomeActionContentDescription(R.string.go_back)
-        supportActionBar?.title = getString(R.string.guidance_for_workplace)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        setNavigateUpToolbar(toolbar, title = R.string.guidance_for_workplace)
 
         workplace_latest_advice.setOnClickListener {
             openUrl(WORKPLACE_GUIDANCE)

@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app.tests
+package uk.nhs.nhsx.sonar.android.app.interstitials
 
 import android.content.Context
 import android.content.Intent
@@ -21,6 +21,7 @@ import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel.State.Loaded
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
+import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import javax.inject.Inject
 
 class ApplyForTestActivity : BaseActivity() {
@@ -35,13 +36,7 @@ class ApplyForTestActivity : BaseActivity() {
         appComponent.inject(this)
 
         setContentView(R.layout.activity_apply_for_test)
-
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back_blue)
-        supportActionBar?.setHomeActionContentDescription(R.string.go_back)
-        supportActionBar?.title = getString(R.string.apply_for_test)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        setNavigateUpToolbar(toolbar, title = R.string.apply_for_test)
 
         viewModel.state().observe(this, Observer { state ->
             reference_code_panel.setState(state)

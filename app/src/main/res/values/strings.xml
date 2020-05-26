@@ -214,7 +214,8 @@
     <string name="enable_notifications_title">Enable notifications</string>
     <string name="timestamp">Timestamp %1$s</string>
     <string name="txpower">TxPower: \nAdvertised = %1$d \nProtocol = %2$d</string>
-    <string name="apply_for_test">Apply for a coronavirus test now</string>
+    <string name="apply_for_test">Apply for a coronavirus test</string>
+    <string name="apply_for_test_now">Apply for a coronavirus test now</string>
     <string name="apply_for_test_desc">You can now order a coronavirus test for you and other people in your household. This test can tell you whether you currently have coronavirus or not.</string>
     <string name="apply_for_test_need_ref">In order for this app to receive your test result, please write down this 8 digit app reference code as you will be asked for it later.</string>
     <string name="get_tested">Get tested</string>
@@ -236,11 +237,16 @@
     <string name="healt_and_care_workers_description">Turn off your Bluetooth when you put on your personal protective equipment provided for you by your employer. Your interactions at work should not be captured when you are wearing personal protective equipment.</string>
     <string name="next_steps">Next Steps</string>
     <string name="read_current_advice_for_you">Read current advice for you</string>
+    <string name="read_current_advice">Read current advice</string>
     <string name="symptomatic_state_advice_info">If you develop symptoms, please come back to this app.</string>
     <string name="more_options">More Options</string>
     <string name="app_version">App version:</string>
     <string name="negative_test_result_title">Your test result indicates that you don’t have coronavirus</string>
     <string name="negative_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
+    <string name="current_advice_title">Read and follow advice specific to your situation</string>
+    <string name="current_advice_desc_simple">The advice below is up to date and specific to your situation. Please follow this advice.</string>
+    <string name="current_advice_desc_with_date">The advice below is up to date and specific to your situation. Please follow this advice until %1$s </string>
+    <string name="read_specific_advice_for_you"><u>Read specific advice for you</u></string>
     <string name="positive_test_result_title">Your test result indicates that you have coronavirus</string>
     <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
     <string name="invalid_test_result_title">Your test result is INVALID</string>

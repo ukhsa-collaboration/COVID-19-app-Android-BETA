@@ -22,11 +22,11 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.cancelStatusNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
-import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
-import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_EXPOSED
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -58,7 +58,7 @@ class AtRiskActivity : BaseActivity() {
         registrationPanel.setState(RegistrationState.Complete)
 
         latest_advice_exposed.setOnClickListener {
-            openUrl(URL_LATEST_ADVICE_EXPOSED)
+            CurrentAdviceActivity.start(this)
         }
 
         nhs_service.setOnClickListener {

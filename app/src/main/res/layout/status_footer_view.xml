@@ -73,14 +73,11 @@
 
     <TextView
         android:id="@+id/nhs_service"
-        style="@style/TextViewLink02"
+        style="@style/PrimaryTextLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:paddingHorizontal="16dp"
-        android:textStyle="bold"
         android:paddingVertical="8dp"
-        android:drawablePadding="8dp"
-        android:drawableEnd="@drawable/ic_link"
         android:text="@string/nhs_online_service" />
 </merge>

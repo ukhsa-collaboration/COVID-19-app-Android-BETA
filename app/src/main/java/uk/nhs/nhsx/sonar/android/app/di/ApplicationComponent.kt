@@ -41,7 +41,8 @@ import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
-import uk.nhs.nhsx.sonar.android.app.tests.ApplyForTestActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import javax.inject.Singleton
 
@@ -78,6 +79,7 @@ interface ApplicationComponent {
     fun inject(activity: DiagnoseTemperatureActivity)
     fun inject(activity: ReferenceCodeActivity)
     fun inject(activity: ApplyForTestActivity)
+    fun inject(activity: CurrentAdviceActivity)
 
     fun inject(service: BluetoothService)
     fun inject(service: NotificationService)

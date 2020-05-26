@@ -13,6 +13,7 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
     private val app = testAppContext.app
     private val isolateRobot = IsolateRobot()
     private val applyForTestRobot = ApplyForTestRobot()
+    private val currentAdviceRobot = CurrentAdviceRobot()
     private val bottomDialogRobot = BottomDialogRobot()
     private val expiredSymptomaticState =
         SymptomaticState(
@@ -51,5 +52,18 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
 
         isolateRobot.clickBookTestCard()
         applyForTestRobot.checkActivityIsDisplayed()
+    }
+
+    fun testClickOnCurrentAdviceShowsCurrentAdvice() {
+        val date = DateTime.now(UTC).plusDays(1)
+        val symptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
+
+        startActivity(symptomaticState)
+
+        isolateRobot.clickCurrentAdviceCard()
+
+        currentAdviceRobot.checkActivityIsDisplayed()
+
+        currentAdviceRobot.checkCorrectStateIsDisplay(symptomaticState)
     }
 }

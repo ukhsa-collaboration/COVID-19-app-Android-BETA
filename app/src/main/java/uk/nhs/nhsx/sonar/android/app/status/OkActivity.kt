@@ -28,14 +28,14 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
+import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
-import uk.nhs.nhsx.sonar.android.app.tests.WorkplaceGuidanceActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
-import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_DEFAULT
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.observe
@@ -80,7 +80,7 @@ class OkActivity : BaseActivity() {
         }
 
         read_current_advice.setOnClickListener {
-            openUrl(URL_LATEST_ADVICE_DEFAULT)
+            CurrentAdviceActivity.start(this)
         }
 
         toggleNotFeelingCard(false)

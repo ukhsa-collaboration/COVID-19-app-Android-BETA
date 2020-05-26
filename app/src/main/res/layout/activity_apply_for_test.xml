@@ -70,14 +70,11 @@
 
             <TextView
                 android:id="@+id/order_clinical_tests"
-                style="@style/TextViewLink02"
+                style="@style/PrimaryTextLink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:drawableEnd="@drawable/ic_link"
-                android:drawablePadding="8dp"
-                android:textStyle="bold"
-                android:paddingHorizontal="16dp"
+                android:layout_marginHorizontal="16dp"
                 android:text="@string/clinical_test_uk_gov" />
 
         </LinearLayout>

@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import javax.inject.Inject
 
 class ReferenceCodeActivity : AppCompatActivity() {
@@ -23,14 +24,9 @@ class ReferenceCodeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
-
         setContentView(R.layout.activity_reference_code)
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back_blue)
-        supportActionBar?.setHomeActionContentDescription(R.string.go_back)
-        supportActionBar?.title = getString(R.string.reference_code_title)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+
+        setNavigateUpToolbar(toolbar, title = R.string.reference_code_title)
 
         viewModel.state().observe(this, Observer { state ->
             reference_code_panel.setState(state)

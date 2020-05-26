@@ -107,10 +107,12 @@
         <activity android:name=".diagnose.DiagnoseAnosmiaActivity"
                   android:label="@string/anosmia_question"/>
 
-        <activity android:name=".tests.WorkplaceGuidanceActivity"
+        <activity android:name=".interstitials.WorkplaceGuidanceActivity"
                   android:label="@string/guidance_for_workplace"/>
-        <activity android:name=".tests.ApplyForTestActivity"
+        <activity android:name=".interstitials.ApplyForTestActivity"
                   android:label="@string/apply_for_test"/>
+        <activity android:name=".interstitials.CurrentAdviceActivity"
+            android:label="@string/read_current_advice"/>
 
         <service
             android:name=".ble.BluetoothService"

@@ -118,7 +118,7 @@
                             android:drawableStart="@drawable/ic_back_arrow_circle"
                             android:drawablePadding="16dp"
                             android:gravity="center_vertical"
-                            android:text="@string/apply_for_test" />
+                            android:text="@string/apply_for_test_now" />
 
                 </com.google.android.material.card.MaterialCardView>
                 <include layout="@layout/status_footer_view" />
