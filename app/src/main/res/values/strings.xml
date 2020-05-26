@@ -247,6 +247,6 @@
     <string name="read_specific_advice_for_you"><u>Read specific advice for you</u></string>
     <string name="positive_test_result_title">Your test result indicates that you have coronavirus</string>
     <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
-    <string name="invalid_test_result_title">Your test result is INVALID</string>
+    <string name="invalid_test_result_title">Your test result was unclear</string>
     <string name="invalid_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
 </resources>
