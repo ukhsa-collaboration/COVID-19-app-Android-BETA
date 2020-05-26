@@ -16,6 +16,7 @@
         another phone with this app. For this app to work, Bluetooth needs to be kept on at all times.
     </string>
     <string name="status_exposed_title">You have been near someone who has coronavirus symptoms</string>
+    <string name="status_positive_test_title">Your test result indicates  you  have coronavirus. Please isolate yourself and your household.</string>
     <string name="default_notification_channel_id" translatable="false">colocate-locate</string>
     <string name="default_notification_channel_name">General</string>
     <string name="foreground_service_channel_id" translatable="false">colocate-foreground-service</string>

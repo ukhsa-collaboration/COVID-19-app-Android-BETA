@@ -103,6 +103,8 @@ class ConnectedTestRunner {
             { IsolateActivityTest(testAppContext).testBottomDialogWhenStateIsExpiredSelectingNoSymptoms() },
             { IsolateActivityTest(testAppContext).testClickOrderTestCardShowsApplyForTest() },
             { IsolateActivityTest(testAppContext).testClickOnCurrentAdviceShowsCurrentAdvice() },
+            { IsolateActivityTest(testAppContext).testStartsViewAndSetsUpCorrectStatusForSymptomaticState() },
+            { IsolateActivityTest(testAppContext).testStartsViewAndSetsUpCorrectStatusForPositiveTestState() },
 
             { FlowTest(testAppContext).testRegistration() },
             { FlowTest(testAppContext).testProximityDataUploadOnSymptomaticState() },

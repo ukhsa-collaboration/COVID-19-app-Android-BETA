@@ -2,6 +2,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
+import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
@@ -22,9 +23,8 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
             nonEmptySetOf(TEMPERATURE)
         )
 
-    private fun startActivity(state: SymptomaticState) {
+    private fun startActivity(state: UserState) {
         testAppContext.setFullValidUser(state)
-
         app.startTestActivity<IsolateActivity>()
     }
 
@@ -65,5 +65,25 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
         currentAdviceRobot.checkActivityIsDisplayed()
 
         currentAdviceRobot.checkCorrectStateIsDisplay(symptomaticState)
+    }
+
+    fun testStartsViewAndSetsUpCorrectStatusForSymptomaticState() {
+        val since = DateTime.now(UTC).minusDays(1)
+        val until = DateTime.now(UTC).plusDays(1)
+        val state = SymptomaticState(since, until, nonEmptySetOf(TEMPERATURE))
+        startActivity(state)
+
+        isolateRobot.checkStatusTitle(R.string.status_symptomatic_title)
+        isolateRobot.checkStatusDescription(state)
+    }
+
+    fun testStartsViewAndSetsUpCorrectStatusForPositiveTestState() {
+        val since = DateTime.now(UTC).minusDays(1)
+        val until = DateTime.now(UTC).plusDays(1)
+        val state = PositiveState(since, until, nonEmptySetOf(TEMPERATURE))
+        startActivity(state)
+
+        isolateRobot.checkStatusTitle(R.string.status_positive_test_title)
+        isolateRobot.checkStatusDescription(state)
     }
 }

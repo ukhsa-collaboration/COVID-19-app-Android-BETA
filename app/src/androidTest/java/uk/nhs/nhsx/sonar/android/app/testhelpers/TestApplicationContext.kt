@@ -11,6 +11,7 @@ import android.content.Intent
 import android.util.Base64
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.By
@@ -548,3 +549,8 @@ private fun String.countOccurrences(substring: String): Int =
     } else {
         1 + replaceFirst(substring, "").countOccurrences(substring)
     }
+
+fun stringFromResId(@StringRes stringRes: Int): String {
+    val resources = ApplicationProvider.getApplicationContext<SonarApplication>().resources
+    return resources.getString(stringRes)
+}
