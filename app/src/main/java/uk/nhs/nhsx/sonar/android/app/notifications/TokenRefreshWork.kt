@@ -6,6 +6,7 @@ import androidx.work.Data
 import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import uk.nhs.nhsx.sonar.android.app.appComponent
 import javax.inject.Inject
 
 class TokenRefreshWorker(appContext: Context, private val params: WorkerParameters) :
@@ -14,8 +15,10 @@ class TokenRefreshWorker(appContext: Context, private val params: WorkerParamete
     @Inject
     lateinit var work: TokenRefreshWork
 
-    override suspend fun doWork(): Result =
-        work.doWork(params.inputData)
+    override suspend fun doWork(): Result {
+        appComponent.inject(this)
+        return work.doWork(params.inputData)
+    }
 }
 
 class TokenRefreshWork @Inject constructor(private val api: NotificationTokenApi) {

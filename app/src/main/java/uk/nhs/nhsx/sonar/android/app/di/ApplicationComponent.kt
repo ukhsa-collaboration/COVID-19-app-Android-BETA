@@ -32,6 +32,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderBroadcastReceiver
+import uk.nhs.nhsx.sonar.android.app.notifications.TokenRefreshWorker
 import uk.nhs.nhsx.sonar.android.app.onboarding.EnableLocationActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.GrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivity
@@ -87,6 +88,7 @@ interface ApplicationComponent {
     fun inject(worker: DeleteOutdatedEventsWorker)
     fun inject(worker: RegistrationWorker)
     fun inject(worker: SubmitContactEventsWorker)
+    fun inject(worker: TokenRefreshWorker)
 
     fun inject(receiver: PackageReplacedReceiver)
     fun inject(receiver: BootCompletedReceiver)
