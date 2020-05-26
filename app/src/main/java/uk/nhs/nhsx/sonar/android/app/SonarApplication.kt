@@ -41,7 +41,7 @@ class SonarApplication : Application() {
         super.onCreate()
 
         appComponent = buildApplicationComponent()
-        appComponent.provideNotificationChannels().createChannels()
+        appComponent.notificationChannels().createChannels()
 
         configureBouncyCastleProvider()
         configureRxJavaErrorHandler()

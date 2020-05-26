@@ -13,6 +13,8 @@ import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
+import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
+import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWork
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import java.util.concurrent.TimeUnit
@@ -75,6 +77,10 @@ class AppModule(
     @Provides
     fun provideSonarAnalytics(): SonarAnalytics =
         sonarAnalytics
+
+    @Provides
+    fun provideDeleteOutdatedEventsWork(dao: ContactEventDao, analytics: SonarAnalytics): DeleteOutdatedEventsWork =
+        DeleteOutdatedEventsWork(dao, analytics)
 
     companion object {
         const val DISPATCHER_DEFAULT = "DISPATCHER_DEFAULT"

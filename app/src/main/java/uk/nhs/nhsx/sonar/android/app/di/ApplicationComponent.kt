@@ -12,7 +12,7 @@ import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.PackageReplacedReceiver
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWorker
+import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWork
 import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.BluetoothModule
@@ -27,23 +27,23 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSneezeActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseStomachActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
-import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEventsWorker
+import uk.nhs.nhsx.sonar.android.app.diagnose.SubmitContactEventsWork
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.notifications.ReminderBroadcastReceiver
-import uk.nhs.nhsx.sonar.android.app.notifications.TokenRefreshWorker
+import uk.nhs.nhsx.sonar.android.app.notifications.TokenRefreshWork
 import uk.nhs.nhsx.sonar.android.app.onboarding.EnableLocationActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.GrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
-import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWorker
+import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWork
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.status.IsolateActivity
 import uk.nhs.nhsx.sonar.android.app.status.OkActivity
-import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
-import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import javax.inject.Singleton
 
@@ -85,16 +85,16 @@ interface ApplicationComponent {
     fun inject(service: BluetoothService)
     fun inject(service: NotificationService)
 
-    fun inject(worker: DeleteOutdatedEventsWorker)
-    fun inject(worker: RegistrationWorker)
-    fun inject(worker: SubmitContactEventsWorker)
-    fun inject(worker: TokenRefreshWorker)
-
     fun inject(receiver: PackageReplacedReceiver)
     fun inject(receiver: BootCompletedReceiver)
     fun inject(receiver: ReminderBroadcastReceiver)
 
-    fun provideRxBleClient(): RxBleClient
-    fun provideLocationHelper(): LocationHelper
-    fun provideNotificationChannels(): NotificationChannels
+    fun deleteOutdatedEventsWork(): DeleteOutdatedEventsWork
+    fun registrationWork(): RegistrationWork
+    fun submitContactEventsWork(): SubmitContactEventsWork
+    fun tokenRefreshWork(): TokenRefreshWork
+
+    fun rxBleClient(): RxBleClient
+    fun locationHelper(): LocationHelper
+    fun notificationChannels(): NotificationChannels
 }

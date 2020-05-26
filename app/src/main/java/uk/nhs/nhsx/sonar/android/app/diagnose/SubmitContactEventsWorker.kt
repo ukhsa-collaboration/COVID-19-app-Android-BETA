@@ -17,20 +17,14 @@ import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
-class SubmitContactEventsWorker(
-    appContext: Context,
-    private val params: WorkerParameters
-) : CoroutineWorker(appContext, params) {
+class SubmitContactEventsWorker(appContext: Context, private val params: WorkerParameters) :
+    CoroutineWorker(appContext, params) {
 
-    @Inject
-    lateinit var work: SubmitContactEventsWork
+    private val work by lazy { appComponent.submitContactEventsWork() }
 
     override suspend fun doWork(): Result {
-        appComponent.inject(this)
         Timber.d("Started uploading contact events... ")
-
         return work.doWork(params.inputData)
     }
 

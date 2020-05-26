@@ -68,11 +68,11 @@ class BluetoothService : Service(), Delegate {
         super.onCreate()
         startForeground(FOREGROUND_NOTIFICATION_ID, notificationBuilder(ForegroundService).build())
 
-        val bleClient = appComponent.provideRxBleClient()
+        val bleClient = appComponent.rxBleClient()
         val notificationHelper = BluetoothNotificationHelper(this)
         val subscriptionStatusHandler = BluetoothStatusSubscriptionHandler(this, notificationHelper)
 
-        val locationHelper = appComponent.provideLocationHelper()
+        val locationHelper = appComponent.locationHelper()
         locationProviderChangedReceiver = LocationProviderChangedReceiver(locationHelper)
 
         val bleClientStates = bleClient.observeStateChanges().startWith(bleClient.state)

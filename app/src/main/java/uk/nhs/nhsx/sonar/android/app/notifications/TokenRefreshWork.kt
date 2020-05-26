@@ -12,13 +12,10 @@ import javax.inject.Inject
 class TokenRefreshWorker(appContext: Context, private val params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
 
-    @Inject
-    lateinit var work: TokenRefreshWork
+    private val work by lazy { appComponent.tokenRefreshWork() }
 
-    override suspend fun doWork(): Result {
-        appComponent.inject(this)
-        return work.doWork(params.inputData)
-    }
+    override suspend fun doWork(): Result =
+        work.doWork(params.inputData)
 }
 
 class TokenRefreshWork @Inject constructor(private val api: NotificationTokenApi) {
