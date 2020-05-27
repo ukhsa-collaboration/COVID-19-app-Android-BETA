@@ -84,8 +84,9 @@
                   android:label="@string/status_initial_title"/>
         <activity android:name=".status.AtRiskActivity"
                   android:label="@string/status_exposed_title"/>
-        <activity android:name=".status.IsolateActivity"
-                  android:label="@string/status_symptomatic_title"/>
+        <activity
+            android:name=".status.StatusActivity"
+            android:label="@string/status_symptomatic_title" />
 
         <activity android:name=".referencecode.ReferenceCodeActivity"
                   android:label="@string/reference_code_title"/>

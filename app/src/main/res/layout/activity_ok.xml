@@ -83,7 +83,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/status_not_feeling_well"
+                    android:id="@+id/feelUnwell"
                     style="@style/PrimaryCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

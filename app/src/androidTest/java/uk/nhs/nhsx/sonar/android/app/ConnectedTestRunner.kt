@@ -24,8 +24,8 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
-import uk.nhs.nhsx.sonar.android.app.status.IsolateActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.OkActivityTest
+import uk.nhs.nhsx.sonar.android.app.status.StatusActivityTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 
@@ -104,17 +104,22 @@ class ConnectedTestRunner {
 
             { DiagnoseSubmitActivityTest(testAppContext).testConfirmationIsRequired() },
 
-            { IsolateActivityTest(testAppContext).testBottomDialogWhenStateIsExpiredSelectingUpdatingSymptoms() },
-            { IsolateActivityTest(testAppContext).testBottomDialogWhenStateIsExpiredSelectingNoSymptoms() },
-            { IsolateActivityTest(testAppContext).testClickOrderTestCardShowsApplyForTest() },
-            { IsolateActivityTest(testAppContext).testClickOnCurrentAdviceShowsCurrentAdvice() },
-            { IsolateActivityTest(testAppContext).testStartsViewAndSetsUpCorrectStatusForSymptomaticState() },
-            { IsolateActivityTest(testAppContext).testStartsViewAndSetsUpCorrectStatusForPositiveTestState() },
-            { IsolateActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInSymptomaticTestState() },
-            { IsolateActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInPositiveTestState() },
-            { IsolateActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResume() },
-            { IsolateActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResume() },
-            { IsolateActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResume() },
+            { StatusActivityTest(testAppContext).testBottomDialogWhenStateIsExpiredSelectingUpdatingSymptoms() },
+            { StatusActivityTest(testAppContext).testBottomDialogWhenStateIsExpiredSelectingNoSymptoms() },
+            { StatusActivityTest(testAppContext).testClickOrderTestCardShowsApplyForTest() },
+            { StatusActivityTest(testAppContext).testClickOnCurrentAdviceShowsCurrentAdvice() },
+            { StatusActivityTest(testAppContext).testStartsViewAndSetsUpCorrectStatusForSymptomaticState() },
+            { StatusActivityTest(testAppContext).testStartsViewAndSetsUpCorrectStatusForPositiveTestState() },
+            { StatusActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInSymptomaticTestState() },
+            { StatusActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInPositiveTestState() },
+            { StatusActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInExposedState() },
+            { StatusActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResumeForSymptomaticState() },
+            { StatusActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResumeForSymptomaticState() },
+            { StatusActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResumeForSymptomaticState() },
+            { StatusActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResumeForExposedState() },
+            { StatusActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResumeForExposedState() },
+            { StatusActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResumeForExposedState() },
+            { StatusActivityTest(testAppContext).testHideStatusUpdateNotificationWhenNotClicked() },
 
             { FlowTest(testAppContext).testRegistration() },
             { FlowTest(testAppContext).testProximityDataUploadOnSymptomaticState() },

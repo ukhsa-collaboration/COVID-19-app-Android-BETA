@@ -5,14 +5,14 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
-import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.IsolateRobot
+import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.OkRobot
-import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.StatusFooterRobot
+import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
@@ -21,7 +21,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
 
     private val okRobot = OkRobot()
     private val atRiskRobot = AtRiskRobot()
-    private val isolateRobot = IsolateRobot()
+    private val statusRobot = StatusRobot()
     private val statusFooterRobot = StatusFooterRobot()
 
     fun testUnsupportedDevice() {
@@ -74,7 +74,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
         testAppContext.setFullValidUser(symptomaticState)
         startMainActivity()
 
-        isolateRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
         statusFooterRobot.checkFooterIsDisplayed()
     }
 

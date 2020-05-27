@@ -11,13 +11,13 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
+import kotlinx.android.synthetic.main.activity_at_risk.feelUnwell
 import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_exposed
 import kotlinx.android.synthetic.main.activity_at_risk.registrationPanel
-import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
-import kotlinx.android.synthetic.main.activity_isolate.statusView
 import kotlinx.android.synthetic.main.activity_ok.notificationPanel
+import kotlinx.android.synthetic.main.activity_status.statusView
 import kotlinx.android.synthetic.main.banner.toolbar_info
-import kotlinx.android.synthetic.main.status_footer_view.nhs_service
+import kotlinx.android.synthetic.main.status_footer_view.nhsServiceFooter
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
 import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -52,24 +52,25 @@ class AtRiskActivity : BaseActivity() {
     private lateinit var testResultDialog: BottomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         appComponent.inject(this)
-        BluetoothService.start(this)
+
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_at_risk)
-
-        setStatusView()
-
-        status_not_feeling_well.setOnClickListener {
-            DiagnoseTemperatureActivity.start(this)
-        }
+        BluetoothService.start(this)
 
         registrationPanel.setState(RegistrationState.Complete)
+
+        setStatusView()
 
         latest_advice_exposed.setOnClickListener {
             CurrentAdviceActivity.start(this)
         }
 
-        nhs_service.setOnClickListener {
+        feelUnwell.setOnClickListener {
+            DiagnoseTemperatureActivity.start(this)
+        }
+
+        nhsServiceFooter.setOnClickListener {
             openUrl(URL_NHS_LOCAL_SUPPORT)
         }
 
@@ -129,7 +130,7 @@ class AtRiskActivity : BaseActivity() {
         notificationPanel.cardColourInversion(inversionModeEnabled)
 
         latest_advice_exposed.cardColourInversion(inversionModeEnabled)
-        status_not_feeling_well.cardColourInversion(inversionModeEnabled)
+        feelUnwell.cardColourInversion(inversionModeEnabled)
 
         workplace_guidance_card.cardColourInversion(inversionModeEnabled)
         reference_link_card.cardColourInversion(inversionModeEnabled)

@@ -10,12 +10,14 @@ import android.os.Bundle
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import kotlinx.android.synthetic.main.activity_isolate.book_test_card
-import kotlinx.android.synthetic.main.activity_isolate.latest_advice_symptomatic
-import kotlinx.android.synthetic.main.activity_isolate.registrationPanel
 import kotlinx.android.synthetic.main.activity_ok.notificationPanel
+import kotlinx.android.synthetic.main.activity_status.bookTest
+import kotlinx.android.synthetic.main.activity_status.feelUnwell
+import kotlinx.android.synthetic.main.activity_status.feelUnwellSubtitle
+import kotlinx.android.synthetic.main.activity_status.readLatestAdvice
+import kotlinx.android.synthetic.main.activity_status.registrationPanel
 import kotlinx.android.synthetic.main.banner.toolbar_info
-import kotlinx.android.synthetic.main.status_footer_view.nhs_service
+import kotlinx.android.synthetic.main.status_footer_view.nhsServiceFooter
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
 import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -28,6 +30,7 @@ import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
+import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusScreen
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusScreenFactory
 import uk.nhs.nhsx.sonar.android.app.status.widgets.createTestResultDialog
 import uk.nhs.nhsx.sonar.android.app.status.widgets.handleTestResult
@@ -36,40 +39,46 @@ import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.openAppSettings
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
-import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import javax.inject.Inject
 
-class IsolateActivity : BaseActivity() {
+class StatusActivity : BaseActivity() {
+
+    internal lateinit var statusScreen: StatusScreen
 
     @Inject
-    protected lateinit var userStateStorage: UserStateStorage
+    lateinit var userStateStorage: UserStateStorage
 
     @Inject
     protected lateinit var userInbox: UserInbox
 
     @Inject
-    protected lateinit var checkInReminderNotification: CheckInReminderNotification
+    lateinit var checkInReminderNotification: CheckInReminderNotification
 
-    private lateinit var updateSymptomsDialog: BottomSheetDialog
+    internal lateinit var updateSymptomsDialog: BottomSheetDialog
     private lateinit var testResultDialog: BottomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_isolate)
+        setContentView(R.layout.activity_status)
         BluetoothService.start(this)
 
         registrationPanel.setState(RegistrationState.Complete)
 
-        val statusScreen = StatusScreenFactory.from(userStateStorage.get())
+        hideNotSharedWidgets()
+        statusScreen = StatusScreenFactory.from(userStateStorage.get())
         statusScreen.setStatusScreen(this)
 
-        latest_advice_symptomatic.setOnClickListener {
+        readLatestAdvice.setOnClickListener {
             CurrentAdviceActivity.start(this)
         }
 
-        nhs_service.setOnClickListener {
+        feelUnwell.setOnClickListener {
+            DiagnoseTemperatureActivity.start(this)
+        }
+
+        nhsServiceFooter.setOnClickListener {
             openUrl(URL_NHS_LOCAL_SUPPORT)
         }
 
@@ -81,8 +90,6 @@ class IsolateActivity : BaseActivity() {
             WorkplaceGuidanceActivity.start(this)
         }
 
-        setUpdateSymptomsDialog()
-
         reference_link_card.setOnClickListener {
             ReferenceCodeActivity.start(this)
         }
@@ -91,6 +98,7 @@ class IsolateActivity : BaseActivity() {
             openAppSettings()
         }
 
+        setUpdateSymptomsDialog()
         testResultDialog = createTestResultDialog(this, userInbox)
     }
 
@@ -123,24 +131,20 @@ class IsolateActivity : BaseActivity() {
         val state = userStateStorage.get()
         navigateTo(state)
 
-        handleTestResult(userInbox, testResultDialog)
-
-        if (state.hasExpired()) {
-            updateSymptomsDialog.showExpanded()
-            checkInReminderNotification.hide()
-        } else {
-            updateSymptomsDialog.dismiss()
-        }
+        statusScreen.onResume(this)
 
         notificationPanel.isVisible =
             !NotificationManagerCompat.from(this).areNotificationsEnabled()
+
+        handleTestResult(userInbox, testResultDialog)
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
         notificationPanel.cardColourInversion(inversionModeEnabled)
 
-        latest_advice_symptomatic.cardColourInversion(inversionModeEnabled)
-        book_test_card.cardColourInversion(inversionModeEnabled)
+        readLatestAdvice.cardColourInversion(inversionModeEnabled)
+        bookTest.cardColourInversion(inversionModeEnabled)
+        feelUnwell.cardColourInversion(inversionModeEnabled)
 
         workplace_guidance_card.cardColourInversion(inversionModeEnabled)
         reference_link_card.cardColourInversion(inversionModeEnabled)
@@ -151,12 +155,18 @@ class IsolateActivity : BaseActivity() {
         updateSymptomsDialog.dismiss()
     }
 
+    private fun hideNotSharedWidgets() {
+        bookTest.isVisible = false
+        feelUnwell.isVisible = false
+        feelUnwellSubtitle.isVisible = false
+    }
+
     companion object {
         fun start(context: Context) =
             context.startActivity(getIntent(context))
 
         private fun getIntent(context: Context) =
-            Intent(context, IsolateActivity::class.java)
+            Intent(context, StatusActivity::class.java)
                 .apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }

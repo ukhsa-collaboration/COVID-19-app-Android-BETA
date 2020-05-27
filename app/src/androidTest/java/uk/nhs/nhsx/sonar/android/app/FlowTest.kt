@@ -14,10 +14,10 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
 import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
-import uk.nhs.nhsx.sonar.android.app.status.IsolateRobot
 import uk.nhs.nhsx.sonar.android.app.status.OkRobot
-import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
+import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
@@ -33,7 +33,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
     private val diagnoseCloseRobot = DiagnoseCloseRobot()
     private val diagnoseReviewRobot = DiagnoseReviewRobot()
     private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
-    private val isolateRobot = IsolateRobot()
+    private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
 
     fun testRegistration() {
@@ -78,7 +78,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         diagnoseSubmitRobot.selectConfirmation()
         diagnoseSubmitRobot.submit()
 
-        isolateRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
         testAppContext.verifyReceivedProximityRequest()
     }
 
@@ -131,7 +131,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         diagnoseQuestionRobot.checkProgress(R.string.progress_three_third)
         diagnoseQuestionRobot.answerNoTo(R.id.anosmia_question)
 
-        isolateRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
     }
 
     fun testExpiredSymptomaticStateUpdatingWithNoSymptomsNavigatesToOkActivity() {
@@ -163,7 +163,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
     }
 
     private fun clickNotFeelingWellCard() {
-        onView(withId(R.id.status_not_feeling_well)).perform(scrollTo(), click())
+        onView(withId(R.id.feelUnwell)).perform(scrollTo(), click())
     }
 
     private fun startMainActivity() {

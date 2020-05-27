@@ -10,13 +10,13 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.activity_isolate.statusView
+import kotlinx.android.synthetic.main.activity_ok.feelUnwell
 import kotlinx.android.synthetic.main.activity_ok.notificationPanel
 import kotlinx.android.synthetic.main.activity_ok.read_current_advice
 import kotlinx.android.synthetic.main.activity_ok.registrationPanel
-import kotlinx.android.synthetic.main.activity_ok.status_not_feeling_well
-import kotlinx.android.synthetic.main.activity_review_close.nhs_service
+import kotlinx.android.synthetic.main.activity_status.statusView
 import kotlinx.android.synthetic.main.banner.toolbar_info
+import kotlinx.android.synthetic.main.status_footer_view.nhsServiceFooter
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
 import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
@@ -79,7 +79,7 @@ class OkActivity : BaseActivity() {
 
         setStatusView()
 
-        status_not_feeling_well.setOnClickListener {
+        feelUnwell.setOnClickListener {
             DiagnoseTemperatureActivity.start(this)
         }
 
@@ -89,7 +89,7 @@ class OkActivity : BaseActivity() {
 
         toggleNotFeelingCard(false)
 
-        nhs_service.setOnClickListener {
+        nhsServiceFooter.setOnClickListener {
             openUrl(URL_NHS_LOCAL_SUPPORT)
         }
 
@@ -127,7 +127,7 @@ class OkActivity : BaseActivity() {
     }
 
     private fun toggleNotFeelingCard(enabled: Boolean) {
-        with(status_not_feeling_well) {
+        with(feelUnwell) {
             isClickable = enabled
             isEnabled = enabled
         }
@@ -197,7 +197,7 @@ class OkActivity : BaseActivity() {
         notificationPanel.cardColourInversion(inversionModeEnabled)
 
         read_current_advice.cardColourInversion(inversionModeEnabled)
-        status_not_feeling_well.cardColourInversion(inversionModeEnabled)
+        feelUnwell.cardColourInversion(inversionModeEnabled)
 
         workplace_guidance_card.cardColourInversion(inversionModeEnabled)
         reference_link_card.cardColourInversion(inversionModeEnabled)

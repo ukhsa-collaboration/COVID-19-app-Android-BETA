@@ -11,23 +11,36 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
-class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
+class StatusActivityTest(private val testAppContext: TestApplicationContext) {
 
     private val app = testAppContext.app
-    private val isolateRobot = IsolateRobot()
+    private val statusRobot = StatusRobot()
     private val applyForTestRobot = ApplyForTestRobot()
     private val currentAdviceRobot = CurrentAdviceRobot()
     private val bottomDialogRobot = BottomDialogRobot()
-    private val expiredSymptomaticState =
-        SymptomaticState(
-            DateTime.now(UTC).minusSeconds(1),
-            DateTime.now(UTC).minusSeconds(1),
-            nonEmptySetOf(TEMPERATURE)
-        )
+    private val expiredSymptomaticState = SymptomaticState(
+        DateTime.now(UTC).minusSeconds(1),
+        DateTime.now(UTC).minusSeconds(1),
+        nonEmptySetOf(TEMPERATURE)
+    )
+
+    private val symptomaticState = SymptomaticState(
+        DateTime.now(UTC).minusDays(1),
+        DateTime.now(UTC).plusDays(1),
+        nonEmptySetOf(TEMPERATURE)
+    )
+
+    private val exposedState = UserState.exposed()
+
+    private val positiveState = PositiveState(
+        DateTime.now(UTC).minusDays(1),
+        DateTime.now(UTC).plusDays(1),
+        nonEmptySetOf(TEMPERATURE)
+    )
 
     private fun startActivity(state: UserState) {
         testAppContext.setFullValidUser(state)
-        app.startTestActivity<IsolateActivity>()
+        app.startTestActivity<StatusActivity>()
     }
 
     fun testBottomDialogWhenStateIsExpiredSelectingUpdatingSymptoms() {
@@ -52,7 +65,7 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
 
         startActivity(symptomaticState)
 
-        isolateRobot.clickBookTestCard()
+        statusRobot.clickBookTestCard()
         applyForTestRobot.checkActivityIsDisplayed()
     }
 
@@ -62,7 +75,7 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
 
         startActivity(symptomaticState)
 
-        isolateRobot.clickCurrentAdviceCard()
+        statusRobot.clickCurrentAdviceCard()
 
         currentAdviceRobot.checkActivityIsDisplayed()
 
@@ -75,8 +88,8 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
         val state = SymptomaticState(since, until, nonEmptySetOf(TEMPERATURE))
         startActivity(state)
 
-        isolateRobot.checkStatusTitle(R.string.status_symptomatic_title)
-        isolateRobot.checkStatusDescription(state)
+        statusRobot.checkStatusTitle(R.string.status_symptomatic_title)
+        statusRobot.checkStatusDescription(state)
     }
 
     fun testStartsViewAndSetsUpCorrectStatusForPositiveTestState() {
@@ -85,50 +98,72 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
         val state = PositiveState(since, until, nonEmptySetOf(TEMPERATURE))
         startActivity(state)
 
-        isolateRobot.checkStatusTitle(R.string.status_positive_test_title)
-        isolateRobot.checkStatusDescription(state)
+        statusRobot.checkStatusTitle(R.string.status_positive_test_title)
+        statusRobot.checkStatusDescription(state)
     }
 
     fun testBookVirusTestIsNotDisplayedWhenInSymptomaticTestState() {
-        val since = DateTime.now(UTC).minusDays(1)
-        val until = DateTime.now(UTC).plusDays(1)
-        val state = SymptomaticState(since, until, nonEmptySetOf(TEMPERATURE))
-        startActivity(state)
+        startActivity(symptomaticState)
 
-        isolateRobot.checkBookVirusTestCardIsDisplayed()
+        statusRobot.checkBookVirusTestCardIsDisplayed()
     }
 
     fun testBookVirusTestIsNotDisplayedWhenInPositiveTestState() {
-        val since = DateTime.now(UTC).minusDays(1)
-        val until = DateTime.now(UTC).plusDays(1)
-        val state = PositiveState(since, until, nonEmptySetOf(TEMPERATURE))
-        startActivity(state)
+        startActivity(positiveState)
 
-        isolateRobot.checkBookVirusTestCardIsNotDisplayed()
+        statusRobot.checkBookVirusTestCardIsNotDisplayed()
     }
 
-    fun testShowsPositiveTestResultDialogOnResume() {
-        showsTestResultDialogOnResume(TestResult.POSITIVE)
+    fun testBookVirusTestIsNotDisplayedWhenInExposedState() {
+        startActivity(exposedState)
+
+        statusRobot.checkBookVirusTestCardIsNotDisplayed()
     }
 
-    fun testShowsNegativeTestResultDialogOnResume() {
-        showsTestResultDialogOnResume(TestResult.NEGATIVE)
+    fun testShowsPositiveTestResultDialogOnResumeForSymptomaticState() {
+        showsTestResultDialogOnResume(TestResult.POSITIVE, symptomaticState)
     }
 
-    fun testShowsInvalidTestResultDialogOnResume() {
-        showsTestResultDialogOnResume(TestResult.INVALID)
+    fun testShowsNegativeTestResultDialogOnResumeForSymptomaticState() {
+        showsTestResultDialogOnResume(TestResult.NEGATIVE, symptomaticState)
     }
 
-    private fun showsTestResultDialogOnResume(testResult: TestResult) {
+    fun testShowsInvalidTestResultDialogOnResumeForSymptomaticState() {
+        showsTestResultDialogOnResume(TestResult.INVALID, symptomaticState)
+    }
+
+    fun testShowsPositiveTestResultDialogOnResumeForExposedState() {
+        showsTestResultDialogOnResume(TestResult.POSITIVE, exposedState)
+    }
+
+    fun testShowsNegativeTestResultDialogOnResumeForExposedState() {
+        showsTestResultDialogOnResume(TestResult.NEGATIVE, exposedState)
+    }
+
+    fun testShowsInvalidTestResultDialogOnResumeForExposedState() {
+        showsTestResultDialogOnResume(TestResult.INVALID, exposedState)
+    }
+
+    private fun showsTestResultDialogOnResume(testResult: TestResult, state: UserState) {
         testAppContext.addTestInfo(TestInfo(testResult, DateTime.now()))
 
-        val since = DateTime.now(UTC).minusDays(1)
-        val until = DateTime.now(UTC).plusDays(1)
-        val state = SymptomaticState(since, until, nonEmptySetOf(TEMPERATURE))
         startActivity(state)
 
         bottomDialogRobot.checkTestResultDialogIsDisplayed(testResult)
         bottomDialogRobot.clickSecondCtaButton()
         bottomDialogRobot.checkBottomDialogIsNotDisplayed()
+    }
+
+    fun testHideStatusUpdateNotificationWhenNotClicked() {
+        val notificationTitle = R.string.contact_alert_notification_title
+
+        testAppContext.simulateStatusUpdateReceived()
+        testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = true)
+
+        startActivity(UserState.exposed())
+
+        testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = false)
+
+        statusRobot.checkActivityIsDisplayed(ExposedState::class)
     }
 }

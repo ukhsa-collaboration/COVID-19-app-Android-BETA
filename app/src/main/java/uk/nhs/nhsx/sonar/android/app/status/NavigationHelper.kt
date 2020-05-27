@@ -8,6 +8,7 @@ import android.app.Activity
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.AT_RISK
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.OK
+import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusScreenFactory
 
 fun Activity.navigateTo(state: UserState) {
     when (state.displayState()) {
@@ -18,17 +19,14 @@ fun Activity.navigateTo(state: UserState) {
             finish()
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }
-        AT_RISK -> {
-            if (this is AtRiskActivity) return
+        ISOLATE, AT_RISK -> {
+            if (this is StatusActivity) {
+                statusScreen = StatusScreenFactory.from(userStateStorage.get())
+                statusScreen.setStatusScreen(this)
+                return
+            }
 
-            AtRiskActivity.start(this)
-            finish()
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        }
-        ISOLATE -> {
-            if (this is IsolateActivity) return
-
-            IsolateActivity.start(this)
+            StatusActivity.start(this)
             finish()
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }

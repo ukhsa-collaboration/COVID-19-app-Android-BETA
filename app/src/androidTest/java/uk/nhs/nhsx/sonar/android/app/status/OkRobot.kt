@@ -35,7 +35,7 @@ class OkRobot {
     }
 
     private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
-        onView(withId(R.id.status_not_feeling_well)).check(matches(matcher))
+        onView(withId(R.id.feelUnwell)).check(matches(matcher))
     }
 
     fun clickReadCurrentAdvice() {
