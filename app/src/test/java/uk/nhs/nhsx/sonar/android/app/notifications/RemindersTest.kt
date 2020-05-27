@@ -37,7 +37,7 @@ class RemindersTest {
 
         every { reminderBroadcastFactory.create(any()) } returns broadcast
         every { alarmManager.setExactAndAllowWhileIdle(any(), any(), any()) } returns Unit
-        every { checkInReminder.scheduled() } returns Unit
+        every { checkInReminder.setPendingReminder(any()) } returns Unit
 
         val time = DateTime.parse("2020-04-28T15:20:00Z")
 
@@ -46,38 +46,33 @@ class RemindersTest {
         verifyAll {
             reminderBroadcastFactory.create(REQUEST_CODE_CHECK_IN_REMINDER)
             alarmManager.setExactAndAllowWhileIdle(RTC_WAKEUP, time.millis, broadcast)
-            checkInReminder.scheduled()
+            checkInReminder.setPendingReminder(time.millis)
         }
     }
 
     @Test
-    fun `rescheduleCheckInReminder - when a reminder was scheduled before`() {
+    fun `rescheduleCheckInReminder - when there is a pending reminder`() {
         val broadcast = mockk<PendingIntent>()
-
-        every { reminderBroadcastFactory.create(any()) } returns broadcast
-        every { alarmManager.setExactAndAllowWhileIdle(any(), any(), any()) } returns Unit
-        every { checkInReminder.shouldReschedule() } returns true
-        every { checkInReminder.scheduled() } returns Unit
 
         val time = DateTime.parse("2020-04-28T15:20:00Z")
 
-        reminders.rescheduleCheckInReminder(time)
+        every { reminderBroadcastFactory.create(any()) } returns broadcast
+        every { alarmManager.setExactAndAllowWhileIdle(any(), any(), any()) } returns Unit
+        every { checkInReminder.getPendingReminder() } returns time.millis
+
+        reminders.reschedulePendingCheckInReminder()
 
         verifyAll {
             reminderBroadcastFactory.create(REQUEST_CODE_CHECK_IN_REMINDER)
             alarmManager.setExactAndAllowWhileIdle(RTC_WAKEUP, time.millis, broadcast)
-            checkInReminder.shouldReschedule()
-            checkInReminder.scheduled()
         }
     }
 
     @Test
-    fun `rescheduleCheckInReminder - when there was no reminder scheduled before`() {
-        every { checkInReminder.shouldReschedule() } returns false
+    fun `rescheduleCheckInReminder - when there is no pending reminder`() {
+        every { checkInReminder.getPendingReminder() } returns null
 
-        val time = DateTime.parse("2020-04-28T15:20:00Z")
-
-        reminders.rescheduleCheckInReminder(time)
+        reminders.reschedulePendingCheckInReminder()
 
         verifyAll {
             alarmManager wasNot Called
@@ -88,13 +83,13 @@ class RemindersTest {
     @Test
     fun `handleReminderBroadcast - with check in reminder intent`() {
         every { checkInReminderNotification.show() } returns Unit
-        every { checkInReminder.clean() } returns Unit
+        every { checkInReminder.clear() } returns Unit
 
         reminders.handleReminderBroadcast(TestIntent(REQUEST_CODE_CHECK_IN_REMINDER))
 
         verify {
             checkInReminderNotification.show()
-            checkInReminder.clean()
+            checkInReminder.clear()
         }
     }
 

@@ -184,34 +184,6 @@ class UserStateTest {
     }
 
     @Test
-    fun `test rescheduleCheckInReminder`() {
-        val reminders = mockk<Reminders>(relaxUnitFun = true)
-
-        DefaultState.rescheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.rescheduleCheckInReminder(any()) }
-
-        exposedState.rescheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.rescheduleCheckInReminder(any()) }
-
-        symptomaticState.rescheduleCheckInReminder(reminders)
-        verify(exactly = 1) { reminders.rescheduleCheckInReminder(symptomaticState.until) }
-        clearMocks(reminders)
-
-        positiveState.rescheduleCheckInReminder(reminders)
-        verify(exactly = 1) { reminders.rescheduleCheckInReminder(positiveState.until) }
-        clearMocks(reminders)
-
-        expiredExposedState.rescheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.rescheduleCheckInReminder(any()) }
-
-        expiredSymptomaticState.rescheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.rescheduleCheckInReminder(any()) }
-
-        expiredPositiveState.rescheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.rescheduleCheckInReminder(any()) }
-    }
-
-    @Test
     fun `test symptoms`() {
         assertThat(DefaultState.symptoms()).isEmpty()
         assertThat(exposedState.symptoms()).isEmpty()

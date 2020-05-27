@@ -119,13 +119,6 @@ sealed class UserState {
             else -> Unit
         }
 
-    fun rescheduleCheckInReminder(reminders: Reminders) =
-        when {
-            (this is SymptomaticState && !hasExpired()) -> reminders.rescheduleCheckInReminder(until)
-            (this is PositiveState && !hasExpired()) -> reminders.rescheduleCheckInReminder(until)
-            else -> Unit
-        }
-
     fun symptoms(): Set<Symptom> =
         when (this) {
             is SymptomaticState -> symptoms

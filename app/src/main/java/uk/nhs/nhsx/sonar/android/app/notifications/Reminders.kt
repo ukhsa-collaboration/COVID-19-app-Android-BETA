@@ -22,14 +22,13 @@ class Reminders @Inject constructor(
 ) {
 
     fun scheduleCheckInReminder(time: DateTime) {
-        val broadcast = reminderBroadcastFactory.create(REQUEST_CODE_CHECK_IN_REMINDER)
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.millis, broadcast)
-        checkInReminder.scheduled()
+        newCheckInReminder(time.millis)
+        checkInReminder.setPendingReminder(time.millis)
     }
 
-    fun rescheduleCheckInReminder(time: DateTime) {
-        if (checkInReminder.shouldReschedule()) {
-            scheduleCheckInReminder(time)
+    fun reschedulePendingCheckInReminder() {
+        checkInReminder.getPendingReminder()?.let { triggerAtMillis ->
+            newCheckInReminder(triggerAtMillis)
         }
     }
 
@@ -37,9 +36,14 @@ class Reminders @Inject constructor(
         when (intent.getIntExtra(REMINDER_TYPE, -1)) {
             REQUEST_CODE_CHECK_IN_REMINDER -> {
                 checkInReminderNotification.show()
-                checkInReminder.clean()
+                checkInReminder.clear()
             }
         }
+    }
+
+    private fun newCheckInReminder(triggerAtMillis: Long) {
+        val broadcast = reminderBroadcastFactory.create(REQUEST_CODE_CHECK_IN_REMINDER)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, broadcast)
     }
 
     companion object {
@@ -60,24 +64,29 @@ class ReminderBroadcastFactory @Inject constructor(private val context: Context)
 }
 
 class CheckInReminder @Inject constructor(context: Context) :
-    SharedPreferenceProvider<Boolean>(
+    SharedPreferenceProvider<Long>(
         context,
         preferenceName = "reminder_notification_storage",
         preferenceKey = "reminder_notification"
     ) {
 
-    fun scheduled() = this.set(true)
+    fun setPendingReminder(triggerAtMillis: Long) = this.set(triggerAtMillis)
 
-    fun shouldReschedule() = this.get()
-
-    fun clean() = this.set(false)
-
-    override fun get(): Boolean =
-        sharedPreferences.getBoolean(preferenceKey, false)
-
-    override fun set(value: Boolean) {
-        sharedPreferences.edit {
-            putBoolean(preferenceKey, value)
+    fun getPendingReminder(): Long? =
+        get().let {
+            if (it != NO_VALUE) it else null
         }
+
+    override fun get(): Long =
+        sharedPreferences.getLong(preferenceKey, NO_VALUE)
+
+    override fun set(value: Long) {
+        sharedPreferences.edit {
+            putLong(preferenceKey, value)
+        }
+    }
+
+    companion object {
+        private const val NO_VALUE = -1L
     }
 }
