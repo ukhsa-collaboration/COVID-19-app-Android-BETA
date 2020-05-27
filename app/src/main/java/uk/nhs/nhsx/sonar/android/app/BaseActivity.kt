@@ -15,6 +15,7 @@ import uk.nhs.nhsx.sonar.android.app.edgecases.ReAllowGrantLocationPermissionAct
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableBluetoothActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableLocationActivity
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
+import uk.nhs.nhsx.sonar.android.app.util.NotificationManagerHelper
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothDisabled
 import javax.inject.Inject
 
@@ -24,6 +25,9 @@ abstract class BaseActivity : ColorInversionAwareActivity() {
 
     @Inject
     lateinit var locationHelper: LocationHelper
+
+    @Inject
+    lateinit var notificationManagerHelper: NotificationManagerHelper
 
     private lateinit var locationProviderChangedReceiver: LocationProviderChangedReceiver
 

@@ -89,6 +89,9 @@ class ConnectedTestRunner {
             { OkActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResume() },
             { OkActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResume() },
             { OkActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResume() },
+            { OkActivityTest(testAppContext).testShowsEnableNotificationOnResume() },
+            { OkActivityTest(testAppContext).testDoesNotEnableAllowNotificationOnResume() },
+            { OkActivityTest(testAppContext).testGrantNotificationPermission() },
 
             { AtRiskActivityTest(testAppContext).testHideStatusUpdateNotificationWhenNotClicked() },
             { AtRiskActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResume() },

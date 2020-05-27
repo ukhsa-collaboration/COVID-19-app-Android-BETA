@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_isolate.statusView
 import kotlinx.android.synthetic.main.activity_ok.notificationPanel
@@ -190,7 +189,7 @@ class OkActivity : BaseActivity() {
         }
 
         notificationPanel.isVisible =
-            !NotificationManagerCompat.from(this).areNotificationsEnabled()
+            !notificationManagerHelper.areNotificationsEnabled()
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {

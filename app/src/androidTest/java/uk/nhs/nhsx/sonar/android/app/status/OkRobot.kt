@@ -41,4 +41,16 @@ class OkRobot {
     fun clickReadCurrentAdvice() {
         onView(withId(R.id.read_current_advice)).perform(click())
     }
+
+    fun checkEnableNotificationsIsDisplayed() {
+        onView(withId(R.id.notificationPanel)).check(matches(isDisplayed()))
+    }
+
+    fun checkEnableNotificationsIsNotDisplayed() {
+        onView(withId(R.id.notificationPanel)).check(matches(not(isDisplayed())))
+    }
+
+    fun clickEnableNotifications() {
+        onView(withId(R.id.notificationPanel)).perform(click())
+    }
 }

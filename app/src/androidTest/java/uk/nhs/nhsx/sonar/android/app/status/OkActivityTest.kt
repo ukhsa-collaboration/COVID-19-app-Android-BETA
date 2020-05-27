@@ -1,6 +1,7 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
+import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
@@ -71,5 +72,38 @@ class OkActivityTest(private val testAppContext: TestApplicationContext) {
         bottomDialogRobot.checkTestResultDialogIsDisplayed(testResult)
         bottomDialogRobot.clickSecondCtaButton()
         bottomDialogRobot.checkBottomDialogIsNotDisplayed()
+    }
+
+    fun testShowsEnableNotificationOnResume() {
+        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.revokeNotificationsPermission()
+
+        app.startTestActivity<OkActivity>()
+
+        okRobot.checkEnableNotificationsIsDisplayed()
+    }
+
+    fun testDoesNotEnableAllowNotificationOnResume() {
+        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.grantNotificationsPermission()
+
+        app.startTestActivity<OkActivity>()
+
+        okRobot.checkEnableNotificationsIsNotDisplayed()
+    }
+
+    fun testGrantNotificationPermission() {
+        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.revokeNotificationsPermission()
+
+        app.startTestActivity<OkActivity>()
+
+        okRobot.clickEnableNotifications()
+        testAppContext.waitUntilCannotFindText(R.string.enable_notifications_title)
+
+        testAppContext.grantNotificationsPermission()
+        testAppContext.device.pressBack()
+
+        okRobot.checkEnableNotificationsIsNotDisplayed()
     }
 }

@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
@@ -120,7 +119,7 @@ class AtRiskActivity : BaseActivity() {
         navigateTo(newState)
 
         notificationPanel.isVisible =
-            !NotificationManagerCompat.from(this).areNotificationsEnabled()
+            !notificationManagerHelper.areNotificationsEnabled()
 
         handleTestResult(userInbox, testResultDialog)
     }

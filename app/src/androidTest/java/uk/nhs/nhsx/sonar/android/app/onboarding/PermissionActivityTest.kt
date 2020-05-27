@@ -1,7 +1,6 @@
 package uk.nhs.nhsx.sonar.android.app.onboarding
 
 import android.os.Build
-import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
@@ -78,8 +77,8 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
         onView(withId(R.id.takeActionButton)).perform(click())
 
         // ensure we leave the screen before moving on
-        waitUntilCannotFindText(R.string.grant_location_permission_title)
-        waitUntilCannotFindText(R.string.grant_location_permission_title_pre_10)
+        testAppContext.waitUntilCannotFindText(R.string.grant_location_permission_title)
+        testAppContext.waitUntilCannotFindText(R.string.grant_location_permission_title_pre_10)
 
         // moving on...
         testAppContext.grantLocationPermission()
@@ -106,10 +105,6 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
         permissionRobot.checkActivityIsDisplayed()
         permissionRobot.clickContinue()
         okRobot.checkActivityIsDisplayed()
-    }
-
-    private fun waitUntilCannotFindText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
-        testAppContext.device.wait(Until.gone(By.text(app.getString(stringId))), timeoutInMs)
     }
 
     private fun findButton(text: String): UiObject2? =

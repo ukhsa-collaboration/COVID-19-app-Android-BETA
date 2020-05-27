@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_isolate.book_test_card
@@ -133,7 +132,7 @@ class IsolateActivity : BaseActivity() {
         }
 
         notificationPanel.isVisible =
-            !NotificationManagerCompat.from(this).areNotificationsEnabled()
+            !notificationManagerHelper.areNotificationsEnabled()
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
