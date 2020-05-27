@@ -65,27 +65,27 @@ object UserStateSerialization {
     }
 
     private fun JSONObject.getSymptomaticState(): SymptomaticState? {
-        return getSymptoms()?.let { symptoms ->
-            val until = getUntil()
-            val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
-            SymptomaticState(since, getUntil(), symptoms)
-        }
+        val symptoms = getSymptoms()
+        if (symptoms.isEmpty()) return null
+
+        val until = getUntil()
+        val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
+        return SymptomaticState(since, getUntil(), NonEmptySet.create(symptoms)!!)
     }
 
     private fun JSONObject.getPositiveState(): PositiveState? {
-        return getSymptoms()?.let { symptoms ->
-            val until = getUntil()
-            val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
-            PositiveState(since, getUntil(), symptoms)
-        }
+        val until = getUntil()
+        val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
+        return PositiveState(since, getUntil(), getSymptoms())
     }
 
     private fun JSONObject.getCheckinState(): CheckinState? {
-        return getSymptoms()?.let {
-            val until = getUntil()
-            val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
-            CheckinState(since, until, it)
-        }
+        val symptoms = getSymptoms()
+        if (symptoms.isEmpty()) return null
+
+        val until = getUntil()
+        val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
+        return CheckinState(since, until, NonEmptySet.create(symptoms)!!)
     }
 
     private fun UserState.type() = javaClass.simpleName
@@ -101,8 +101,9 @@ object UserStateSerialization {
         }
     }
 
-    private fun JSONObject.getSymptoms(): NonEmptySet<Symptom>? {
-        //  TODO("fix this to handle null symptoms")
+    private fun JSONObject.getSymptoms(): Set<Symptom> {
+        if (!has("symptoms")) return emptySet()
+
         val array = getJSONArray("symptoms")
         val symptoms = mutableSetOf<Symptom>()
 
@@ -112,7 +113,7 @@ object UserStateSerialization {
             symptoms.add(symptom)
         }
 
-        return NonEmptySet.create(symptoms)
+        return symptoms
     }
 
     private fun JSONObject.getLongOrNull(key: String): Long? {

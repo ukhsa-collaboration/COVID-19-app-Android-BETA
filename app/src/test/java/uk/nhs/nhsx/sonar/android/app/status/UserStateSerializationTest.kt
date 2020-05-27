@@ -60,6 +60,17 @@ class UserStateSerializationTest {
     }
 
     @Test
+    fun `serialize positive state with no sympotoms`() {
+        val since = DateTime(1387241302263L, UTC)
+        val until = DateTime(1587241302263L, UTC)
+
+        assertThat(serialize(PositiveState(since, until, emptySet())))
+            .isEqualTo(
+                """{"symptoms":[],"until":1587241302263,"type":"PositiveState","since":1387241302263}"""
+            )
+    }
+
+    @Test
     fun `serialize checkin state`() {
         val since = DateTime(1387241302263L, UTC)
         val until = DateTime(1587241302263L, UTC)
@@ -176,6 +187,45 @@ class UserStateSerializationTest {
             "since":1587241300000,
             "until":1587241302262,
             "symptoms":["COUGH"],
+            "type":"PositiveState"
+            }"""
+            )
+        )
+            .isEqualTo(state)
+    }
+
+    @Test
+    fun `deserialize positive state without symptoms`() {
+        val since = DateTime(1587241300000L, UTC)
+        val until = DateTime(1587241302262L, UTC)
+
+        val state = PositiveState(since, until, emptySet())
+
+        assertThat(
+            deserialize(
+                """{
+            "since":1587241300000,
+            "until":1587241302262,
+            "type":"PositiveState"
+            }"""
+            )
+        )
+            .isEqualTo(state)
+    }
+
+    @Test
+    fun `deserialize positive state with empty symptoms`() {
+        val since = DateTime(1587241300000L, UTC)
+        val until = DateTime(1587241302262L, UTC)
+
+        val state = PositiveState(since, until, emptySet())
+
+        assertThat(
+            deserialize(
+                """{
+            "since":1587241300000,
+            "until":1587241302262,
+            "symptoms":[],
             "type":"PositiveState"
             }"""
             )
