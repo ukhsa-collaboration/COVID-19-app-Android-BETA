@@ -5,7 +5,13 @@
 <resources>
     <string name="app_name">NHS COVID-19</string>
     <string name="app_title">COVID-19</string>
-    <string name="onboarding_title">Help the NHS stop the spread of coronavirus in the UK</string>
+    <string name="onboarding_title">This NHS app does three things for you:</string>
+    <string name="onboarding_first_bullet_text">It lets you know if you have been near someone who now has coronavirus symptoms</string>
+    <string name="onboarding_second_bullet_text">It links you to up-to-date guidance on coronavirus that is relevant to your situation</string>
+    <string name="onboarding_third_bullet_text">It lets you book a test if you have certain symptoms of coronavirus</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
     <string name="location_rationale">You will not be tracked and your personal identity and location history will
         remain protected at all times. On an Android phone, your location permission is needed for Bluetooth to work.
     </string>
