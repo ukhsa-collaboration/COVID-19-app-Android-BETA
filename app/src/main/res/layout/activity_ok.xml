@@ -21,16 +21,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/notificationPanel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:accessibilityHeading="true"
-                android:visibility="gone">
-
-                <include layout="@layout/notification_panel" />
-            </com.google.android.material.card.MaterialCardView>
-
             <uk.nhs.nhsx.sonar.android.app.status.RegistrationProgressPanel
                 android:id="@+id/registrationPanel"
                 android:layout_width="match_parent"
@@ -38,6 +28,17 @@
                 android:minHeight="60dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/notificationPanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:accessibilityHeading="true"
+                android:visibility="gone">
+
+                <include layout="@layout/notification_panel" />
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -58,9 +59,9 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="16dp"
-                    android:textAllCaps="true"
                     android:accessibilityHeading="true"
-                    android:text="@string/next_steps" />
+                    android:text="@string/next_steps"
+                    android:textAllCaps="true" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/read_current_advice"
@@ -69,16 +70,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp">
 
-                        <TextView
-                            style="@style/TextViewActionTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:paddingHorizontal="16dp"
-                            android:paddingVertical="16dp"
-                            android:drawableStart="@drawable/ic_back_arrow_circle"
-                            android:drawablePadding="16dp"
-                            android:text="@string/read_current_advice_for_you" />
+                    <TextView
+                        style="@style/TextViewActionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_back_arrow_circle"
+                        android:drawablePadding="16dp"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="16dp"
+                        android:text="@string/read_current_advice_for_you" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
@@ -101,10 +102,10 @@
                             style="@style/TextViewActionTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
+                            android:layout_marginBottom="16dp"
                             android:drawableStart="@drawable/ic_back_arrow_circle"
                             android:drawablePadding="16dp"
-                            android:layout_marginBottom="16dp"
+                            android:gravity="center_vertical"
                             android:text="@string/status_not_feeling_well" />
 
                         <TextView

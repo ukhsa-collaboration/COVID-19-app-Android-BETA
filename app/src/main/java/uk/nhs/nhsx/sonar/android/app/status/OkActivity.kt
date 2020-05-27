@@ -6,9 +6,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
@@ -30,17 +28,18 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusView
-import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.observe
+import uk.nhs.nhsx.sonar.android.app.util.openAppSettings
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import javax.inject.Inject
@@ -107,13 +106,7 @@ class OkActivity : BaseActivity() {
         }
 
         notificationPanel.setOnClickListener {
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri = Uri.fromParts("package", packageName, null)
-            intent.data = uri
-
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent)
-            }
+            openAppSettings()
         }
 
         addViewModelListener()

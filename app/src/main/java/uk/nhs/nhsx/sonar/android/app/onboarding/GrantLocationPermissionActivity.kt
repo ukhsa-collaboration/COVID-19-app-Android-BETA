@@ -6,10 +6,8 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
@@ -19,6 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
+import uk.nhs.nhsx.sonar.android.app.util.openAppSettings
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
 
@@ -42,13 +41,7 @@ open class GrantLocationPermissionActivity :
         takeActionButton.setText(R.string.go_to_app_settings)
 
         takeActionButton.setOnClickListener {
-            val intent = Intent(ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri = Uri.fromParts("package", packageName, null)
-            intent.data = uri
-
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent)
-            }
+            openAppSettings()
         }
 
         toolbar_info.setOnClickListener {

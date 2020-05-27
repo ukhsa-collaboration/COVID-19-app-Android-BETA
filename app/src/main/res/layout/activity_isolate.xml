@@ -34,6 +34,17 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp" />
 
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/notificationPanel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:accessibilityHeading="true"
+                    android:visibility="gone">
+
+                    <include layout="@layout/notification_panel" />
+                </com.google.android.material.card.MaterialCardView>
+
                 <uk.nhs.nhsx.sonar.android.app.status.widgets.StatusView
                     android:id="@+id/statusView"
                     android:layout_width="match_parent"
@@ -78,16 +89,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp">
 
-                        <TextView
-                            style="@style/TextViewActionTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingHorizontal="16dp"
-                            android:paddingVertical="16dp"
-                            android:drawableStart="@drawable/ic_back_arrow_circle"
-                            android:drawablePadding="16dp"
-                            android:gravity="center_vertical"
-                            android:text="@string/apply_for_test_now" />
+                    <TextView
+                        style="@style/TextViewActionTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_back_arrow_circle"
+                        android:drawablePadding="16dp"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="16dp"
+                        android:text="@string/apply_for_test_now" />
 
                 </com.google.android.material.card.MaterialCardView>
 

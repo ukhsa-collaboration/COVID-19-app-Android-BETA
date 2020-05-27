@@ -7,12 +7,15 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_at_risk.latest_advice_exposed
 import kotlinx.android.synthetic.main.activity_at_risk.registrationPanel
 import kotlinx.android.synthetic.main.activity_at_risk.status_not_feeling_well
 import kotlinx.android.synthetic.main.activity_isolate.statusView
+import kotlinx.android.synthetic.main.activity_ok.notificationPanel
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import kotlinx.android.synthetic.main.status_footer_view.nhs_service
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
@@ -23,13 +26,14 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.cancelStatusNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusView
-import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
+import uk.nhs.nhsx.sonar.android.app.util.openAppSettings
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 import javax.inject.Inject
@@ -72,6 +76,10 @@ class AtRiskActivity : BaseActivity() {
         reference_link_card.setOnClickListener {
             ReferenceCodeActivity.start(this)
         }
+
+        notificationPanel.setOnClickListener {
+            openAppSettings()
+        }
     }
 
     private fun setStatusView() {
@@ -100,9 +108,14 @@ class AtRiskActivity : BaseActivity() {
         val newState = UserStateTransitions.expireExposedState(oldState)
         userStateStorage.set(newState)
         navigateTo(newState)
+
+        notificationPanel.isVisible =
+            !NotificationManagerCompat.from(this).areNotificationsEnabled()
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
+        notificationPanel.cardColourInversion(inversionModeEnabled)
+
         latest_advice_exposed.cardColourInversion(inversionModeEnabled)
         status_not_feeling_well.cardColourInversion(inversionModeEnabled)
 
