@@ -38,7 +38,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
     }
 
     private fun setReminder() {
-        userStateStorage.get().scheduleCheckInReminder(reminders)
+        userStateStorage.get().rescheduleCheckInReminder(reminders)
     }
 
     private fun startBluetoothService(context: Context) {

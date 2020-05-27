@@ -20,10 +20,16 @@ import uk.nhs.nhsx.sonar.android.app.notifications.Reminders.Companion.REQUEST_C
 
 class RemindersTest {
 
+    private val checkInReminder = mockk<CheckInReminder>()
     private val alarmManager = mockk<AlarmManager>()
     private val checkInReminderNotification = mockk<CheckInReminderNotification>()
     private val reminderBroadcastFactory = mockk<ReminderBroadcastFactory>()
-    private val reminders = Reminders(alarmManager, checkInReminderNotification, reminderBroadcastFactory)
+    private val reminders = Reminders(
+        alarmManager,
+        checkInReminder,
+        checkInReminderNotification,
+        reminderBroadcastFactory
+    )
 
     @Test
     fun scheduleCheckInReminder() {
@@ -31,6 +37,7 @@ class RemindersTest {
 
         every { reminderBroadcastFactory.create(any()) } returns broadcast
         every { alarmManager.setExactAndAllowWhileIdle(any(), any(), any()) } returns Unit
+        every { checkInReminder.scheduled() } returns Unit
 
         val time = DateTime.parse("2020-04-28T15:20:00Z")
 
@@ -39,17 +46,55 @@ class RemindersTest {
         verifyAll {
             reminderBroadcastFactory.create(REQUEST_CODE_CHECK_IN_REMINDER)
             alarmManager.setExactAndAllowWhileIdle(RTC_WAKEUP, time.millis, broadcast)
+            checkInReminder.scheduled()
+        }
+    }
+
+    @Test
+    fun `rescheduleCheckInReminder - when a reminder was scheduled before`() {
+        val broadcast = mockk<PendingIntent>()
+
+        every { reminderBroadcastFactory.create(any()) } returns broadcast
+        every { alarmManager.setExactAndAllowWhileIdle(any(), any(), any()) } returns Unit
+        every { checkInReminder.shouldReschedule() } returns true
+        every { checkInReminder.scheduled() } returns Unit
+
+        val time = DateTime.parse("2020-04-28T15:20:00Z")
+
+        reminders.rescheduleCheckInReminder(time)
+
+        verifyAll {
+            reminderBroadcastFactory.create(REQUEST_CODE_CHECK_IN_REMINDER)
+            alarmManager.setExactAndAllowWhileIdle(RTC_WAKEUP, time.millis, broadcast)
+            checkInReminder.shouldReschedule()
+            checkInReminder.scheduled()
+        }
+    }
+
+    @Test
+    fun `rescheduleCheckInReminder - when there was no reminder scheduled before`() {
+        every { checkInReminder.shouldReschedule() } returns false
+
+        val time = DateTime.parse("2020-04-28T15:20:00Z")
+
+        reminders.rescheduleCheckInReminder(time)
+
+        verifyAll {
+            alarmManager wasNot Called
+            reminderBroadcastFactory wasNot Called
         }
     }
 
     @Test
     fun `handleReminderBroadcast - with check in reminder intent`() {
         every { checkInReminderNotification.show() } returns Unit
+        every { checkInReminder.clean() } returns Unit
 
         reminders.handleReminderBroadcast(TestIntent(REQUEST_CODE_CHECK_IN_REMINDER))
 
         verify {
             checkInReminderNotification.show()
+            checkInReminder.clean()
         }
     }
 
@@ -59,6 +104,7 @@ class RemindersTest {
 
         verify {
             checkInReminderNotification wasNot Called
+            checkInReminder wasNot Called
         }
     }
 

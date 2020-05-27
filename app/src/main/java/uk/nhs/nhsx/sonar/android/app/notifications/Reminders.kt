@@ -9,11 +9,14 @@ import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
+import androidx.core.content.edit
 import org.joda.time.DateTime
+import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceProvider
 import javax.inject.Inject
 
 class Reminders @Inject constructor(
     private val alarmManager: AlarmManager,
+    private val checkInReminder: CheckInReminder,
     private val checkInReminderNotification: CheckInReminderNotification,
     private val reminderBroadcastFactory: ReminderBroadcastFactory
 ) {
@@ -21,11 +24,21 @@ class Reminders @Inject constructor(
     fun scheduleCheckInReminder(time: DateTime) {
         val broadcast = reminderBroadcastFactory.create(REQUEST_CODE_CHECK_IN_REMINDER)
         alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time.millis, broadcast)
+        checkInReminder.scheduled()
+    }
+
+    fun rescheduleCheckInReminder(time: DateTime) {
+        if (checkInReminder.shouldReschedule()) {
+            scheduleCheckInReminder(time)
+        }
     }
 
     fun handleReminderBroadcast(intent: Intent) {
         when (intent.getIntExtra(REMINDER_TYPE, -1)) {
-            REQUEST_CODE_CHECK_IN_REMINDER -> checkInReminderNotification.show()
+            REQUEST_CODE_CHECK_IN_REMINDER -> {
+                checkInReminderNotification.show()
+                checkInReminder.clean()
+            }
         }
     }
 
@@ -43,5 +56,28 @@ class ReminderBroadcastFactory @Inject constructor(private val context: Context)
         }
 
         return PendingIntent.getBroadcast(context, reminderType, intent, FLAG_UPDATE_CURRENT)
+    }
+}
+
+class CheckInReminder @Inject constructor(context: Context) :
+    SharedPreferenceProvider<Boolean>(
+        context,
+        preferenceName = "reminder_notification_storage",
+        preferenceKey = "reminder_notification"
+    ) {
+
+    fun scheduled() = this.set(true)
+
+    fun shouldReschedule() = this.get()
+
+    fun clean() = this.set(false)
+
+    override fun get(): Boolean =
+        sharedPreferences.getBoolean(preferenceKey, false)
+
+    override fun set(value: Boolean) {
+        sharedPreferences.edit {
+            putBoolean(preferenceKey, value)
+        }
     }
 }

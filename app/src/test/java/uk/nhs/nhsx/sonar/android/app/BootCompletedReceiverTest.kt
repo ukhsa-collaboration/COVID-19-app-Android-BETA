@@ -19,6 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
+import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
@@ -56,18 +57,37 @@ class BootCompletedReceiverTest {
 
     @Test
     fun `onReceive - with sonarId, with not expired symptomatic state`() {
-        val until = DateTime.now().plusDays(1)
+        val since = DateTime.now().minusDays(1)
+        val until = since.plusDays(2)
 
         every { sonarIdProvider.hasProperSonarId() } returns true
-        every { stateStorage.get() } returns SymptomaticState(until, until, nonEmptySetOf(Symptom.COUGH))
-        every { reminders.scheduleCheckInReminder(any()) } returns Unit
+        every { stateStorage.get() } returns SymptomaticState(since, until, nonEmptySetOf(Symptom.COUGH))
+        every { reminders.rescheduleCheckInReminder(any()) } returns Unit
         every { BluetoothService.start(any()) } returns Unit
 
         receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
 
         verifyAll {
             BluetoothService.start(context)
-            reminders.scheduleCheckInReminder(until)
+            reminders.rescheduleCheckInReminder(until)
+        }
+    }
+
+    @Test
+    fun `onReceive - with sonarId, with not expired positive state`() {
+        val since = DateTime.now().minusDays(1)
+        val until = since.plusDays(2)
+
+        every { sonarIdProvider.hasProperSonarId() } returns true
+        every { stateStorage.get() } returns PositiveState(since, until, nonEmptySetOf(Symptom.COUGH))
+        every { reminders.rescheduleCheckInReminder(any()) } returns Unit
+        every { BluetoothService.start(any()) } returns Unit
+
+        receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
+
+        verifyAll {
+            BluetoothService.start(context)
+            reminders.rescheduleCheckInReminder(until)
         }
     }
 
