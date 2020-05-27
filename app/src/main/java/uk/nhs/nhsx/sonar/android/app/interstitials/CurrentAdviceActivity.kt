@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.activity_current_advice.read_specific_advi
 import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.status.CheckinState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.PositiveState
@@ -44,7 +43,7 @@ class CurrentAdviceActivity : AppCompatActivity(R.layout.activity_current_advice
             when (state) {
                 DefaultState -> openUrl(URL_LATEST_ADVICE_DEFAULT)
                 is ExposedState -> openUrl(URL_LATEST_ADVICE_EXPOSED)
-                is SymptomaticState, is CheckinState, is PositiveState ->
+                is SymptomaticState, is PositiveState ->
                     openUrl(URL_LATEST_ADVICE_SYMPTOMATIC)
             }
         }

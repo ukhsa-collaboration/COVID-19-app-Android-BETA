@@ -33,15 +33,13 @@ object UserStateTransitions {
     }
 
     fun diagnoseForCheckin(
-        symptomsDate: DateTime,
+        currentState: UserState,
         symptoms: Set<Symptom>,
         today: LocalDate = LocalDate.now()
     ): UserState =
         when {
-            hasTemperature(symptoms) ->
-                UserState.checkin(symptomsDate, NonEmptySet.create(symptoms)!!, today)
-            else ->
-                DefaultState
+            hasTemperature(symptoms) -> currentState.extend(symptoms, today)
+            else -> DefaultState
         }
 
     fun expireExposedState(currentState: UserState): UserState =
@@ -75,8 +73,6 @@ object UserStateTransitions {
                 if (state.since.isAfter(testDate)) state else DefaultState
             is PositiveState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
-            is CheckinState ->
-                if (state.since.isAfter(testDate)) state else DefaultState
             is ExposedState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
             else ->
@@ -89,8 +85,6 @@ object UserStateTransitions {
                 positive(testDate, state.symptoms)
             is PositiveState ->
                 state
-            is CheckinState ->
-                positive(testDate, state.symptoms)
             is ExposedState ->
                 if (state.since.isAfter(testDate)) state else positive(testDate)
             is DefaultState ->

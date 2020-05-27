@@ -14,7 +14,6 @@ import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.status.BottomDialog
 import uk.nhs.nhsx.sonar.android.app.status.BottomDialogConfiguration
-import uk.nhs.nhsx.sonar.android.app.status.CheckinState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.PositiveState
@@ -33,7 +32,6 @@ object StatusScreenFactory {
             DefaultState -> DummyScreen(userState)
             is ExposedState -> DummyScreen(userState)
             is SymptomaticState -> SymptomaticStatusScreen(userState)
-            is CheckinState -> CheckInStatusScreen(userState)
             is PositiveState -> PositiveStatusScreen(userState)
         }
 }
@@ -121,15 +119,6 @@ class PositiveStatusScreen(val state: UserState) : StatusScreen {
 }
 
 class SymptomaticStatusScreen(val state: UserState) : StatusScreen {
-
-    override fun setStatusScreen(activity: AppCompatActivity) {
-        createStatusView(activity, state, R.string.status_symptomatic_title)
-        createBookTestCard(activity)
-    }
-}
-
-// TODO: do we need CheckIn State?
-class CheckInStatusScreen(val state: UserState) : StatusScreen {
 
     override fun setStatusScreen(activity: AppCompatActivity) {
         createStatusView(activity, state, R.string.status_symptomatic_title)

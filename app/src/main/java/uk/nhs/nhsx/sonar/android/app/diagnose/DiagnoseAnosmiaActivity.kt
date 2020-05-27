@@ -73,7 +73,7 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
     private fun nextStep(symptoms: Set<Symptom>) {
         val currentState = userStateStorage.get()
         if (currentState.displayState() == DisplayState.ISOLATE) {
-            UserStateTransitions.diagnoseForCheckin(currentState.since()!!, symptoms)
+            UserStateTransitions.diagnoseForCheckin(currentState, symptoms)
                 .also { newState ->
                     if (newState is DefaultState && symptoms.isNotEmpty()) {
                         userInbox.addRecovery()

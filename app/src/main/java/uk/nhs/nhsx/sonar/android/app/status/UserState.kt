@@ -26,17 +26,9 @@ sealed class UserState {
             DefaultState
 
         fun exposed(today: LocalDate = LocalDate.now()): ExposedState =
-            ExposedState(today.atSevenAm().toUtc(), today.after(NO_DAYS_IN_EXPOSED - 1).days().toUtc())
-
-        fun checkin(
-            since: DateTime,
-            symptoms: NonEmptySet<Symptom>,
-            today: LocalDate = LocalDate.now()
-        ): CheckinState =
-            CheckinState(
-                since,
-                today.after(1).day().toUtc(),
-                symptoms
+            ExposedState(
+                today.atSevenAm().toUtc(),
+                today.after(NO_DAYS_IN_EXPOSED - 1).days().toUtc()
             )
 
         fun symptomatic(
@@ -82,7 +74,6 @@ sealed class UserState {
     fun since(): DateTime? =
         when (this) {
             is SymptomaticState -> since
-            is CheckinState -> since
             is ExposedState -> since
             is PositiveState -> since
             is DefaultState -> null
@@ -92,7 +83,6 @@ sealed class UserState {
         when (this) {
             is ExposedState -> until
             is SymptomaticState -> until
-            is CheckinState -> until
             is PositiveState -> until
             is DefaultState -> null
         }
@@ -105,8 +95,21 @@ sealed class UserState {
             is DefaultState -> OK
             is ExposedState -> AT_RISK
             is SymptomaticState -> ISOLATE
-            is CheckinState -> ISOLATE
             is PositiveState -> ISOLATE
+        }
+
+    fun extend(symptoms: Set<Symptom>, today: LocalDate = LocalDate.now()): UserState =
+        when (this) {
+            is PositiveState -> this.copy(
+                symptoms = symptoms,
+                until = today.after(1).day().toUtc()
+            )
+            is SymptomaticState -> this.copy(
+                symptoms = NonEmptySet.create(symptoms)!!,
+                until = today.after(1).day().toUtc()
+            )
+            is ExposedState -> this
+            is DefaultState -> this
         }
 
     fun scheduleCheckInReminder(reminders: Reminders) =
@@ -120,7 +123,6 @@ sealed class UserState {
         when (this) {
             is SymptomaticState -> symptoms
             is PositiveState -> symptoms
-            is CheckinState -> symptoms
             else -> emptySet()
         }
 }
@@ -135,13 +137,6 @@ data class ExposedState(val since: DateTime, val until: DateTime) : UserState()
 
 // State when you initially have symptoms. Prompted after 1 to 7 days to checkin.
 data class SymptomaticState(
-    val since: DateTime,
-    val until: DateTime,
-    val symptoms: NonEmptySet<Symptom>
-) : UserState()
-
-// State after first checkin from SymptomaticState, does not get prompted again.
-data class CheckinState(
     val since: DateTime,
     val until: DateTime,
     val symptoms: NonEmptySet<Symptom>

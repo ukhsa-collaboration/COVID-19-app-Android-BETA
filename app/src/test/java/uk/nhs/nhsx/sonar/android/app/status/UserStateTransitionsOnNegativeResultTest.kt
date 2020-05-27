@@ -11,10 +11,8 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
-import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTransitionsOnNegativeResultTest {
@@ -70,28 +68,6 @@ class UserStateTransitionsOnNegativeResultTest {
         val state = transitionOnTestResult(positive, testInfo)
 
         assertThat(state).isEqualTo(positive)
-    }
-
-    @Test
-    fun `checkin, if symptoms onset is prior test, becomes default`() {
-        val since = LocalDate.now().minusDays(6).atSevenAm().toUtc()
-        val checkin = UserState.checkin(since, NonEmptySet.create(TEMPERATURE))
-        val testInfo = TestInfo(TestResult.NEGATIVE, checkin.since.plusDays(1))
-
-        val state = transitionOnTestResult(checkin, testInfo)
-
-        assertThat(state).isEqualTo(DefaultState)
-    }
-
-    @Test
-    fun `checkin, if symptoms onset is after test, remains symptomatic`() {
-        val since = LocalDate.now().minusDays(2).atSevenAm().toUtc()
-        val checkin = UserState.checkin(since, NonEmptySet.create(TEMPERATURE))
-        val testInfo = TestInfo(TestResult.NEGATIVE, checkin.since.minusDays(1))
-
-        val state = transitionOnTestResult(checkin, testInfo)
-
-        assertThat(state).isEqualTo(checkin)
     }
 
     @Test

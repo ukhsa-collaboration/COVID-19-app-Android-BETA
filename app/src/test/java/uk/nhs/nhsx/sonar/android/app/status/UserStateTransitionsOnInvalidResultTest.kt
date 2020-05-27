@@ -11,7 +11,6 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
@@ -45,16 +44,6 @@ class UserStateTransitionsOnInvalidResultTest {
         val state = transitionOnTestResult(positive, testInfo)
 
         assertThat(state).isEqualTo(positive)
-    }
-
-    @Test
-    fun `checkin remains checkin`() {
-        val checkin = UserState.checkin(DateTime.now(), NonEmptySet.create(TEMPERATURE))
-        val testInfo = TestInfo(TestResult.INVALID, DateTime.now().toUtc())
-
-        val state = transitionOnTestResult(checkin, testInfo)
-
-        assertThat(state).isEqualTo(checkin)
     }
 
     @Test

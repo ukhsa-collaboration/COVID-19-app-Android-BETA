@@ -36,12 +36,6 @@ object UserStateSerialization {
                 "until" to state.until.millis,
                 "symptoms" to state.symptoms.map { it.value }
             )
-            is CheckinState -> jsonOf(
-                "type" to state.type(),
-                "since" to state.since.millis,
-                "until" to state.until.millis,
-                "symptoms" to state.symptoms.map { it.value }
-            )
         }
 
     fun deserialize(json: String?): UserState {
@@ -51,9 +45,8 @@ object UserStateSerialization {
 
         return when (jsonObj.getString("type")) {
             "ExposedState", "AmberState", "EmberState" -> jsonObj.getExposedState()
-            "SymptomaticState", "RedState" -> jsonObj.getSymptomaticState()
+            "SymptomaticState", "RedState", "CheckinState" -> jsonObj.getSymptomaticState()
             "PositiveState" -> jsonObj.getPositiveState()
-            "CheckinState" -> jsonObj.getCheckinState()
             else -> DefaultState
         } ?: DefaultState
     }
@@ -77,15 +70,6 @@ object UserStateSerialization {
         val until = getUntil()
         val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
         return PositiveState(since, getUntil(), getSymptoms())
-    }
-
-    private fun JSONObject.getCheckinState(): CheckinState? {
-        val symptoms = getSymptoms()
-        if (symptoms.isEmpty()) return null
-
-        val until = getUntil()
-        val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
-        return CheckinState(since, until, NonEmptySet.create(symptoms)!!)
     }
 
     private fun UserState.type() = javaClass.simpleName

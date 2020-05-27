@@ -13,8 +13,10 @@ import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
@@ -24,12 +26,10 @@ class UserStateTest {
     private val exposedState = buildExposedState()
     private val symptomaticState = buildSymptomaticState()
     private val positiveState = buildPositiveState()
-    private val checkinState = buildCheckinState()
 
     private val expiredExposedState = buildExposedState(until = DateTime.now().minusSeconds(1))
     private val expiredSymptomaticState = buildSymptomaticState(until = DateTime.now().minusSeconds(1))
     private val expiredPositiveState = buildPositiveState(until = DateTime.now().minusSeconds(1))
-    private val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
 
     private val today = LocalDate(2020, 4, 10)
 
@@ -39,16 +39,6 @@ class UserStateTest {
 
         val thirteenDaysFromNowAt7 = DateTime(2020, 4, 23, 7, 0).toDateTime(DateTimeZone.UTC)
         assertThat(state).isEqualTo(ExposedState(today.atSevenAm().toUtc(), thirteenDaysFromNowAt7))
-    }
-
-    @Test
-    fun `checkin state factory method`() {
-        val symptoms = nonEmptySetOf(TEMPERATURE)
-        val symptomsDate = DateTime.now()
-        val state = UserState.checkin(symptomsDate, symptoms, today)
-
-        val tomorrowAt7 = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
-        assertThat(state).isEqualTo(CheckinState(symptomsDate, tomorrowAt7, symptoms))
     }
 
     @Test
@@ -95,10 +85,46 @@ class UserStateTest {
 
     @Test
     fun `positive state factory method - with no symptom`() {
-        val aDate = DateTime.parse("2020-04-02T11:11:11.000Z")
-        val state = UserState.positive(aDate, emptySet(), today)
+        val aDateTime = DateTime.parse("2020-04-02T11:11:11.000Z")
+        val state = UserState.positive(aDateTime, emptySet(), today)
 
         assertThat(state.symptoms).isEmpty()
+    }
+
+    @Test
+    fun `extend positive state`() {
+        val symptoms = setOf(TEMPERATURE, COUGH, ANOSMIA)
+        val tomorrowAt7am = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
+
+        assertThat(positiveState.extend(symptoms, today))
+            .isEqualTo(
+                PositiveState(
+                    positiveState.since,
+                    tomorrowAt7am,
+                    symptoms
+                )
+            )
+    }
+
+    @Test
+    fun `extend symptomatic state`() {
+        val symptoms = setOf(TEMPERATURE, ANOSMIA)
+        val tomorrowAt7am = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
+
+        assertThat(symptomaticState.extend(symptoms, today))
+            .isEqualTo(
+                SymptomaticState(
+                    symptomaticState.since,
+                    tomorrowAt7am,
+                    NonEmptySet.create(symptoms)!!
+                )
+            )
+    }
+
+    @Test
+    fun `extend other state`() {
+        assertThat(exposedState.extend(emptySet())).isEqualTo(exposedState)
+        assertThat(DefaultState.extend(emptySet())).isEqualTo(DefaultState)
     }
 
     @Test
@@ -107,7 +133,6 @@ class UserStateTest {
         assertThat(exposedState.until()).isEqualTo(exposedState.until)
         assertThat(symptomaticState.until()).isEqualTo(symptomaticState.until)
         assertThat(positiveState.until()).isEqualTo(positiveState.until)
-        assertThat(checkinState.until()).isEqualTo(checkinState.until)
     }
 
     @Test
@@ -116,12 +141,10 @@ class UserStateTest {
         assertThat(exposedState.hasExpired()).isFalse()
         assertThat(symptomaticState.hasExpired()).isFalse()
         assertThat(positiveState.hasExpired()).isFalse()
-        assertThat(checkinState.hasExpired()).isFalse()
 
         assertThat(expiredExposedState.hasExpired()).isTrue()
         assertThat(expiredSymptomaticState.hasExpired()).isTrue()
         assertThat(expiredPositiveState.hasExpired()).isTrue()
-        assertThat(expiredCheckinState.hasExpired()).isTrue()
     }
 
     @Test
@@ -130,7 +153,6 @@ class UserStateTest {
         assertThat(exposedState.displayState()).isEqualTo(DisplayState.AT_RISK)
         assertThat(symptomaticState.displayState()).isEqualTo(DisplayState.ISOLATE)
         assertThat(positiveState.displayState()).isEqualTo(DisplayState.ISOLATE)
-        assertThat(checkinState.displayState()).isEqualTo(DisplayState.ISOLATE)
     }
 
     @Test
@@ -151,9 +173,6 @@ class UserStateTest {
         verify(exactly = 1) { reminders.scheduleCheckInReminder(positiveState.until) }
         clearMocks(reminders)
 
-        checkinState.scheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
-
         expiredExposedState.scheduleCheckInReminder(reminders)
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
@@ -161,9 +180,6 @@ class UserStateTest {
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
         expiredPositiveState.scheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
-
-        expiredCheckinState.scheduleCheckInReminder(reminders)
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
     }
 
@@ -173,6 +189,5 @@ class UserStateTest {
         assertThat(exposedState.symptoms()).isEmpty()
         assertThat(symptomaticState.symptoms()).isEqualTo(symptomaticState.symptoms)
         assertThat(positiveState.symptoms()).isEqualTo(positiveState.symptoms)
-        assertThat(checkinState.symptoms()).isEqualTo(checkinState.symptoms)
     }
 }

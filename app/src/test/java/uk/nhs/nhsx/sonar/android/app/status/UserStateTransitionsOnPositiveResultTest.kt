@@ -11,7 +11,6 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
@@ -54,20 +53,6 @@ class UserStateTransitionsOnPositiveResultTest {
         val state = transitionOnTestResult(positive, testInfo)
 
         assertThat(state).isEqualTo(positive)
-    }
-
-    @Test
-    fun `checkin becomes positive and the symptoms are retained`() {
-        val checkinSince = LocalDate.now().minusDays(6).atSevenAm().toUtc()
-        val checkin = UserState.checkin(checkinSince, NonEmptySet.create(TEMPERATURE))
-        val testInfo = TestInfo(TestResult.POSITIVE, checkin.since.plusDays(1))
-
-        val state = transitionOnTestResult(checkin, testInfo)
-
-        val since = testInfo.date.toLocalDate().atSevenAm().toUtc()
-        val until = testInfo.date.toLocalDate().plusDays(7).atSevenAm().toUtc()
-
-        assertThat(state).isEqualTo(PositiveState(since, until, checkin.symptoms))
     }
 
     @Test
