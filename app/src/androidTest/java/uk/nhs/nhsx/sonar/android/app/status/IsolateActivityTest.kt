@@ -3,6 +3,8 @@ package uk.nhs.nhsx.sonar.android.app.status
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
@@ -103,5 +105,30 @@ class IsolateActivityTest(private val testAppContext: TestApplicationContext) {
         startActivity(state)
 
         isolateRobot.checkBookVirusTestCardIsNotDisplayed()
+    }
+
+    fun testShowsPositiveTestResultDialogOnResume() {
+        showsTestResultDialogOnResume(TestResult.POSITIVE)
+    }
+
+    fun testShowsNegativeTestResultDialogOnResume() {
+        showsTestResultDialogOnResume(TestResult.NEGATIVE)
+    }
+
+    fun testShowsInvalidTestResultDialogOnResume() {
+        showsTestResultDialogOnResume(TestResult.INVALID)
+    }
+
+    private fun showsTestResultDialogOnResume(testResult: TestResult) {
+        testAppContext.addTestInfo(TestInfo(testResult, DateTime.now()))
+
+        val since = DateTime.now(UTC).minusDays(1)
+        val until = DateTime.now(UTC).plusDays(1)
+        val state = SymptomaticState(since, until, nonEmptySetOf(TEMPERATURE))
+        startActivity(state)
+
+        bottomDialogRobot.checkTestResultDialogIsDisplayed(testResult)
+        bottomDialogRobot.clickSecondCtaButton()
+        bottomDialogRobot.checkBottomDialogIsNotDisplayed()
     }
 }

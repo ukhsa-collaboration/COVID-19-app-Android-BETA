@@ -86,9 +86,14 @@ class ConnectedTestRunner {
             { OkActivityTest(testAppContext).testRegistrationRetry() },
             { OkActivityTest(testAppContext).testRegistrationPushNotificationNotReceived() },
             { OkActivityTest(testAppContext).testShowsRecoveryDialogOnResume() },
-            { OkActivityTest(testAppContext).testShowsTestResultDialogOnResume() },
+            { OkActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResume() },
+            { OkActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResume() },
+            { OkActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResume() },
 
             { AtRiskActivityTest(testAppContext).testHideStatusUpdateNotificationWhenNotClicked() },
+            { AtRiskActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResume() },
+            { AtRiskActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResume() },
+            { AtRiskActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResume() },
 
             { DiagnoseReviewActivityTest(testAppContext).testDisplayingYesAnswers() },
             { DiagnoseReviewActivityTest(testAppContext).testDisplayingNoAnswers() },
@@ -107,6 +112,9 @@ class ConnectedTestRunner {
             { IsolateActivityTest(testAppContext).testStartsViewAndSetsUpCorrectStatusForPositiveTestState() },
             { IsolateActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInSymptomaticTestState() },
             { IsolateActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInPositiveTestState() },
+            { IsolateActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResume() },
+            { IsolateActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResume() },
+            { IsolateActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResume() },
 
             { FlowTest(testAppContext).testRegistration() },
             { FlowTest(testAppContext).testProximityDataUploadOnSymptomaticState() },

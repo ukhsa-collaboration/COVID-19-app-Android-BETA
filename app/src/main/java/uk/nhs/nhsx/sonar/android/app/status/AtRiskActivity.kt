@@ -25,11 +25,14 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.cancelStatusNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusView
+import uk.nhs.nhsx.sonar.android.app.status.widgets.createTestResultDialog
+import uk.nhs.nhsx.sonar.android.app.status.widgets.handleTestResult
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
@@ -42,6 +45,11 @@ class AtRiskActivity : BaseActivity() {
 
     @Inject
     protected lateinit var userStateStorage: UserStateStorage
+
+    @Inject
+    protected lateinit var userInbox: UserInbox
+
+    private lateinit var testResultDialog: BottomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +88,8 @@ class AtRiskActivity : BaseActivity() {
         notificationPanel.setOnClickListener {
             openAppSettings()
         }
+
+        testResultDialog = createTestResultDialog(this, userInbox)
     }
 
     private fun setStatusView() {
@@ -111,6 +121,8 @@ class AtRiskActivity : BaseActivity() {
 
         notificationPanel.isVisible =
             !NotificationManagerCompat.from(this).areNotificationsEnabled()
+
+        handleTestResult(userInbox, testResultDialog)
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {

@@ -50,13 +50,25 @@ class OkActivityTest(private val testAppContext: TestApplicationContext) {
         bottomDialogRobot.checkBottomDialogIsNotDisplayed()
     }
 
-    fun testShowsTestResultDialogOnResume() {
-        testAppContext.setFullValidUser(DefaultState)
-        testAppContext.addTestInfo(TestInfo(TestResult.POSITIVE, DateTime.now()))
+    fun testShowsPositiveTestResultDialogOnResume() {
+        showsTestResultDialogOnResume(TestResult.POSITIVE)
+    }
 
+    fun testShowsNegativeTestResultDialogOnResume() {
+        showsTestResultDialogOnResume(TestResult.NEGATIVE)
+    }
+
+    fun testShowsInvalidTestResultDialogOnResume() {
+        showsTestResultDialogOnResume(TestResult.INVALID)
+    }
+
+    private fun showsTestResultDialogOnResume(testResult: TestResult) {
+        testAppContext.addTestInfo(TestInfo(testResult, DateTime.now()))
+
+        testAppContext.setFullValidUser(DefaultState)
         app.startTestActivity<OkActivity>()
 
-        bottomDialogRobot.checkPositiveTestResultDialogIsDisplayed()
+        bottomDialogRobot.checkTestResultDialogIsDisplayed(testResult)
         bottomDialogRobot.clickSecondCtaButton()
         bottomDialogRobot.checkBottomDialogIsNotDisplayed()
     }

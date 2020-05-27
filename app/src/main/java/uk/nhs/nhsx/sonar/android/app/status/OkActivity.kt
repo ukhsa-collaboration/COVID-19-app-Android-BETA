@@ -25,7 +25,6 @@ import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
-import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
@@ -35,6 +34,8 @@ import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.Complete
 import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusView
+import uk.nhs.nhsx.sonar.android.app.status.widgets.createTestResultDialog
+import uk.nhs.nhsx.sonar.android.app.status.widgets.handleTestResult
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
@@ -113,7 +114,7 @@ class OkActivity : BaseActivity() {
         viewModel.onStart()
 
         setRecoveryDialog()
-        setTestResultDialog()
+        testResultDialog = createTestResultDialog(this, userInbox)
     }
 
     private fun setStatusView() {
@@ -174,49 +175,13 @@ class OkActivity : BaseActivity() {
             })
     }
 
-    private fun setTestResultDialog() {
-        val configuration = BottomDialogConfiguration(
-            titleResId = R.string.negative_test_result_title,
-            textResId = R.string.negative_test_result_description,
-            secondCtaResId = R.string.close,
-            isHideable = false
-        )
-        testResultDialog = BottomDialog(this, configuration,
-            onCancel = {
-                userInbox.dismissTestInfo()
-                finish()
-            },
-            onSecondCtaClick = {
-                userInbox.dismissTestInfo()
-            })
-    }
-
     override fun onResume() {
         super.onResume()
 
         val state = userStateStorage.get()
         navigateTo(state)
 
-        if (userInbox.hasTestInfo()) {
-            val info = userInbox.getTestInfo()
-            when (info.result) {
-                TestResult.POSITIVE -> {
-                    testResultDialog.setTitleResId(R.string.positive_test_result_title)
-                    testResultDialog.setTextResId(R.string.positive_test_result_description)
-                }
-                TestResult.NEGATIVE -> {
-                    testResultDialog.setTitleResId(R.string.negative_test_result_title)
-                    testResultDialog.setTextResId(R.string.negative_test_result_description)
-                }
-                TestResult.INVALID -> {
-                    testResultDialog.setTitleResId(R.string.invalid_test_result_title)
-                    testResultDialog.setTextResId(R.string.invalid_test_result_description)
-                }
-            }
-            testResultDialog.showExpanded()
-        } else {
-            testResultDialog.dismiss()
-        }
+        handleTestResult(userInbox, testResultDialog)
 
         if (userInbox.hasRecovery()) {
             recoveryDialog.showExpanded()

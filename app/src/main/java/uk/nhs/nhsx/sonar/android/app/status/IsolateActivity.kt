@@ -23,11 +23,16 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
+import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
+import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusScreenFactory
+import uk.nhs.nhsx.sonar.android.app.status.widgets.createTestResultDialog
+import uk.nhs.nhsx.sonar.android.app.status.widgets.handleTestResult
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_LOCAL_SUPPORT
 import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
@@ -42,9 +47,13 @@ class IsolateActivity : BaseActivity() {
     protected lateinit var userStateStorage: UserStateStorage
 
     @Inject
+    protected lateinit var userInbox: UserInbox
+
+    @Inject
     protected lateinit var checkInReminderNotification: CheckInReminderNotification
 
     private lateinit var updateSymptomsDialog: BottomSheetDialog
+    private lateinit var testResultDialog: BottomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -83,6 +92,8 @@ class IsolateActivity : BaseActivity() {
         notificationPanel.setOnClickListener {
             openAppSettings()
         }
+
+        testResultDialog = createTestResultDialog(this, userInbox)
     }
 
     private fun setUpdateSymptomsDialog() {
@@ -113,6 +124,8 @@ class IsolateActivity : BaseActivity() {
 
         val state = userStateStorage.get()
         navigateTo(state)
+
+        handleTestResult(userInbox, testResultDialog)
 
         if (state.hasExpired()) {
             updateSymptomsDialog.showExpanded()

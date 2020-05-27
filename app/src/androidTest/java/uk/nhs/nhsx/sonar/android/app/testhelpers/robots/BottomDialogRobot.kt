@@ -9,6 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.Matchers.not
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 
 class BottomDialogRobot {
 
@@ -33,14 +34,30 @@ class BottomDialogRobot {
         onView(withId(R.id.bottomDialogSecondCta)).check(matches(withText(R.string.no_symptoms)))
     }
 
-    fun checkPositiveTestResultDialogIsDisplayed() {
+    fun checkTestResultDialogIsDisplayed(testResult: TestResult) {
         onView(withId(R.id.bottomDialogTitle)).check(matches(isDisplayed()))
         onView(withId(R.id.bottomDialogText)).check(matches(isDisplayed()))
         onView(withId(R.id.bottomDialogFirstCta)).check(matches(not(isDisplayed())))
         onView(withId(R.id.bottomDialogSecondCta)).check(matches(isDisplayed()))
-        onView(withId(R.id.bottomDialogTitle)).check(matches(withText(R.string.positive_test_result_title)))
-        onView(withId(R.id.bottomDialogText)).check(matches(withText(R.string.positive_test_result_description)))
         onView(withId(R.id.bottomDialogSecondCta)).check(matches(withText(R.string.close)))
+
+        val (title, description) = when (testResult) {
+            TestResult.NEGATIVE -> Pair(
+                R.string.negative_test_result_title,
+                R.string.negative_test_result_description
+            )
+            TestResult.POSITIVE -> Pair(
+                R.string.positive_test_result_title,
+                R.string.positive_test_result_description
+            )
+            TestResult.INVALID -> Pair(
+                R.string.invalid_test_result_title,
+                R.string.invalid_test_result_description
+            )
+        }
+
+        onView(withId(R.id.bottomDialogTitle)).check(matches(withText(title)))
+        onView(withId(R.id.bottomDialogText)).check(matches(withText(description)))
     }
 
     fun clickFirstCtaButton() {
