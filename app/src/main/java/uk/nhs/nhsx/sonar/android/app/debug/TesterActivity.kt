@@ -13,11 +13,13 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_test.app_version
 import kotlinx.android.synthetic.main.activity_test.continueButton
 import kotlinx.android.synthetic.main.activity_test.encrypted_broadcast_id
 import kotlinx.android.synthetic.main.activity_test.events
 import kotlinx.android.synthetic.main.activity_test.exportButton
+import kotlinx.android.synthetic.main.activity_test.firebase_token
 import kotlinx.android.synthetic.main.activity_test.no_events
 import kotlinx.android.synthetic.main.activity_test.resetButton
 import kotlinx.android.synthetic.main.activity_test.setCheckinState
@@ -158,6 +160,19 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         viewModel.observeConnectionEvents()
+
+        populateFirebaseId()
+    }
+
+    private fun populateFirebaseId() {
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener { task ->
+                try {
+                    val token = task.result?.token
+                    firebase_token.text = token
+                } catch (_: Exception) {
+                }
+            }
     }
 
     private fun setStates() {
