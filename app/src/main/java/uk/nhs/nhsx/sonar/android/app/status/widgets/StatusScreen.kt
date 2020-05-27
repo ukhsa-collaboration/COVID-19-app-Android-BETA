@@ -49,7 +49,7 @@ private fun createStatusView(activity: AppCompatActivity, userState: UserState, 
     )
 }
 
-private fun createBootTestCard(activity: AppCompatActivity) {
+private fun createBookTestCard(activity: AppCompatActivity) {
     val view = activity.findViewById<View>(R.id.book_test_card)
     view.isVisible = true
     view.setOnClickListener {
@@ -69,7 +69,7 @@ class SymptomaticStatusScreen(val state: UserState) : StatusScreen {
 
     override fun setStatusScreen(activity: AppCompatActivity) {
         createStatusView(activity, state, R.string.status_symptomatic_title)
-        createBootTestCard(activity)
+        createBookTestCard(activity)
     }
 }
 
@@ -78,7 +78,7 @@ class CheckInStatusScreen(val state: UserState) : StatusScreen {
 
     override fun setStatusScreen(activity: AppCompatActivity) {
         createStatusView(activity, state, R.string.status_symptomatic_title)
-        createBootTestCard(activity)
+        createBookTestCard(activity)
     }
 }
 
