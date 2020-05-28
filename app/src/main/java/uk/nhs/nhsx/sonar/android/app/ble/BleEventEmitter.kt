@@ -10,15 +10,21 @@ import androidx.lifecycle.MutableLiveData
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
+import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface BleEventEmitter {
-    fun connectedDeviceEvent(
+    fun successfulContactEvent(
         id: ByteArray,
         rssiValues: List<Int>,
         txPowerAdvertised: Int
+    )
+
+    fun errorEvent(
+        macAddress: String,
+        error: Throwable
     )
 }
 
@@ -32,20 +38,27 @@ class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
         Base64.encodeToString(it, Base64.DEFAULT)
     }
 
-    private val eventsList = mutableListOf<ConnectedDevice>()
-    private val connectionEvents = MutableLiveData<List<ConnectedDevice>>()
+    private val contactEventsList = mutableListOf<SuccessfulContactEvent>()
+    private var errorEvents = mutableListOf<BleError>()
+    private val contactEvents = MutableLiveData<List<SuccessfulContactEvent>>()
     private val lock = Object()
 
-    fun observeConnectionEvents(): LiveData<List<ConnectedDevice>> =
-        connectionEvents
+    fun observeConnectionEvents(): LiveData<List<SuccessfulContactEvent>> =
+        contactEvents
+
+    fun getErrors(): List<BleError> = errorEvents
 
     fun clear() {
-        safelyUpdateEventList {
-            eventsList.clear()
+        safelyUpdateConnectedDeviceEventList {
+            contactEventsList.clear()
+        }
+
+        synchronized(lock) {
+            errorEvents.clear()
         }
     }
 
-    override fun connectedDeviceEvent(
+    override fun successfulContactEvent(
         id: ByteArray,
         rssiValues: List<Int>,
         txPowerAdvertised: Int
@@ -58,19 +71,19 @@ class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
         val idString = base64Encoder(identifier.cryptogram.asBytes())
             .replace("\n", "")
 
-        safelyUpdateEventList {
-            val lastEvent = eventsList.firstOrNull { it.cryptogram == idString }
+        safelyUpdateConnectedDeviceEventList {
+            val lastEvent = contactEventsList.firstOrNull { it.cryptogram == idString }
             if (lastEvent != null) {
-                eventsList.remove(lastEvent)
-                eventsList.add(
+                contactEventsList.remove(lastEvent)
+                contactEventsList.add(
                     lastEvent.copy(
                         rssiTimestamps = listOf(getCurrentTimeStamp()) + lastEvent.rssiTimestamps,
                         rssiValues = rssiValues + lastEvent.rssiValues
                     )
                 )
             } else {
-                eventsList.add(
-                    ConnectedDevice(
+                contactEventsList.add(
+                    SuccessfulContactEvent(
                         cryptogram = idString,
                         firstSeen = getCurrentTimeStamp(),
                         rssiTimestamps = listOf(getCurrentTimeStamp()),
@@ -80,32 +93,41 @@ class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
                     )
                 )
             }
-            eventsList.sortByDescending { it.firstSeen }
+            contactEventsList.sortByDescending { it.firstSeen }
         }
     }
 
-    private fun safelyUpdateEventList(codeBlock: () -> Unit) {
+    override fun errorEvent(macAddress: String, error: Throwable) {
+        synchronized(lock) {
+            errorEvents.plusAssign(BleError(getCurrentTimeStamp().toUtcIsoFormat(), macAddress, error))
+        }
+    }
+
+    private fun safelyUpdateConnectedDeviceEventList(codeBlock: () -> Unit) {
         val eventListCopy = synchronized(lock) {
             codeBlock()
-            mutableListOf<ConnectedDevice>().apply { addAll(eventsList) }
+            mutableListOf<SuccessfulContactEvent>().apply { addAll(contactEventsList) }
         }
-        connectionEvents.postValue(eventListCopy)
+        contactEvents.postValue(eventListCopy)
     }
 }
 
 @Singleton
 class NoOpBleEventEmitter @Inject constructor() : BleEventEmitter {
-    override fun connectedDeviceEvent(
+    override fun successfulContactEvent(
         id: ByteArray,
         rssiValues: List<Int>,
         txPowerAdvertised: Int
     ) {
     }
+
+    override fun errorEvent(macAddress: String, error: Throwable) {
+    }
 }
 
 private fun getCurrentTimeStamp() = DateTime.now(DateTimeZone.UTC)
 
-data class ConnectedDevice(
+data class SuccessfulContactEvent(
     val cryptogram: String? = null,
     val firstSeen: DateTime = DateTime.now(),
     val rssiTimestamps: List<DateTime> = listOf(DateTime.now()),
@@ -113,4 +135,10 @@ data class ConnectedDevice(
     val txPowerProtocol: Int = 0,
     val txPowerAdvertised: Int = 0,
     var expanded: Boolean = false
+)
+
+data class BleError(
+    val timestamp: String,
+    val macAddress: String,
+    val error: Throwable
 )

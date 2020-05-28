@@ -69,12 +69,17 @@ class TestViewModel @Inject constructor(
                     )},$rssiIntervals"
                 }
 
-            val zipFile = "contact-events-exports.zip"
+            val errors = eventTracker.getErrors().joinToString("\n") {
+                "${it.timestamp},${it.macAddress},${it.error}"
+            }
 
+            val zipFile = "contact-events-exports.zip"
             activityContext.openFileOutput(zipFile, Context.MODE_PRIVATE).use {
                 ZipOutputStream(it).use { zip ->
                     zip.putNextEntry(ZipEntry("contact-events.csv"))
                     zip.write(contactEvents.toByteArray())
+                    zip.putNextEntry(ZipEntry("errors.csv"))
+                    zip.write(errors.toByteArray())
                 }
             }
 

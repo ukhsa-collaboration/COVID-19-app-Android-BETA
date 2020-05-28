@@ -108,7 +108,6 @@ class Scanner @Inject constructor(
                 delay(1_000)
 
                 devices.distinctBy { it.first.bleDevice }.map {
-                    Timber.d("scan - Connecting to $it")
                     connectToDevice(it.first, it.second, coroutineScope)
                 }
 
@@ -179,6 +178,7 @@ class Scanner @Inject constructor(
                 { e ->
                     compositeDisposable.dispose()
                     Timber.e("failed reading from $macAddress - $e")
+                    eventEmitter.errorEvent(macAddress, e)
                 }
             )
     }
@@ -215,7 +215,7 @@ class Scanner @Inject constructor(
 
     private fun storeEvent(event: Event) {
         Timber.d("Event $event")
-        eventEmitter.connectedDeviceEvent(
+        eventEmitter.successfulContactEvent(
             event.identifier,
             listOf(event.rssi),
             event.txPower
