@@ -237,7 +237,7 @@
     <string name="copied">Copied</string>
     <string name="latest_guidance"><u>Latest guidance for your workplace</u></string>
     <string name="latest_workplace_guidance">Read the latest guidance for your workplace</string>
-    <string name="workplace_guidance_info">The guidance on GOV.UK is up to date and specific to the industry you work in.</string>
+    <string name="workplace_guidance_info">The guidance on GOV.UK is up-to-date and specific to the industry you work in.</string>
     <string name="healt_and_care_workers_title">If you are a health and care worker:</string>
     <string name="healt_and_care_workers_description">Turn off your Bluetooth when you put on your personal protective equipment provided for you by your employer. Your interactions at work should not be captured when you are wearing personal protective equipment.</string>
     <string name="next_steps">Next Steps</string>
@@ -249,8 +249,8 @@
     <string name="negative_test_result_title">Your test result indicates that you don’t have coronavirus</string>
     <string name="negative_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
     <string name="current_advice_title">Read and follow advice specific to your situation</string>
-    <string name="current_advice_desc_simple">The advice below is up to date and specific to your situation. Please follow this advice.</string>
-    <string name="current_advice_desc_with_date">The advice below is up to date and specific to your situation. Please follow this advice until %1$s </string>
+    <string name="current_advice_desc_simple">The advice below is up-to-date and specific to your situation. Please follow this advice.</string>
+    <string name="current_advice_desc_with_date">The advice below is up-to-date and specific to your situation. Please follow this advice until %1$s </string>
     <string name="read_specific_advice_for_you"><u>Read specific advice for you</u></string>
     <string name="positive_test_result_title">Your test result indicates that you have coronavirus</string>
     <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
