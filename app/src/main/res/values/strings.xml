@@ -98,11 +98,11 @@
     <string name="status_not_feeling_well">I feel unwell</string>
     <string name="status_not_feeling_well_desc">I might have symptoms of coronavirus and want to know what to do next</string>
     <string name="status_initial_title">Follow the current advice to stop the spread of coronavirus</string>
-    <string name="status_symptomatic_title">Your symptoms indicate you may have coronavirus. Please self-isolate and apply for a test.</string>
+    <string name="status_symptomatic_title">Your symptoms indicate you may have coronavirus. Please self-isolate and book a test.</string>
     <string name="need_medical_advice">NHS services for your part of the country</string>
     <string name="nhs_online_service"><u>NHS Coronavirus</u></string>
     <string name="nhs_111_online_service"><u>NHS 111 online coronavirus service</u></string>
-    <string name="clinical_test_uk_gov"><u>Apply for a coronavirus test</u></string>
+    <string name="clinical_test_uk_gov"><u>Book a coronavirus test</u></string>
     <string name="status_today_feeling">How are you feeling today?</string>
     <string name="registration_finalising_setup">Finalising setup…</string>
     <string name="registration_everything_is_working_ok">The app is working properly</string>
@@ -219,8 +219,8 @@
     <string name="enable_notifications_title">Enable notifications</string>
     <string name="timestamp">Timestamp %1$s</string>
     <string name="txpower">TxPower: \nAdvertised = %1$d \nProtocol = %2$d</string>
-    <string name="apply_for_test">Apply for a coronavirus test</string>
-    <string name="apply_for_test_now">Apply for a coronavirus test now</string>
+    <string name="apply_for_test">Book a coronavirus test</string>
+    <string name="apply_for_test_now">Book a coronavirus test now</string>
     <string name="apply_for_test_desc">You can now order a coronavirus test for you and other people in your household. This test can tell you whether you currently have coronavirus or not.</string>
     <string name="apply_for_test_need_ref">In order for this app to receive your test result, please write down this 8 digit app reference code as you will be asked for it later.</string>
     <string name="get_tested">Get tested</string>
