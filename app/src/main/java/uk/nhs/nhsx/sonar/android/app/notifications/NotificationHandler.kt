@@ -12,9 +12,9 @@ import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivity
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
+import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import javax.inject.Inject
@@ -86,7 +86,7 @@ class NotificationHandler @Inject constructor(
             NOTIFICATION_SERVICE_ID,
             R.string.contact_alert_notification_title,
             R.string.contact_alert_notification_text,
-            AtRiskActivity.Companion::getIntent
+            StatusActivity.Companion::getIntent
         )
     }
 

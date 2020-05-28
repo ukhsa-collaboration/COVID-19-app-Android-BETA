@@ -5,7 +5,6 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
-import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.OkRobot
@@ -20,7 +19,6 @@ import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 class MainActivityTest(private val testAppContext: TestApplicationContext) {
 
     private val okRobot = OkRobot()
-    private val atRiskRobot = AtRiskRobot()
     private val statusRobot = StatusRobot()
     private val statusFooterRobot = StatusFooterRobot()
 
@@ -63,7 +61,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
         testAppContext.setFullValidUser(exposedState)
         startMainActivity()
 
-        atRiskRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(ExposedState::class)
         statusFooterRobot.checkFooterIsDisplayed()
     }
 

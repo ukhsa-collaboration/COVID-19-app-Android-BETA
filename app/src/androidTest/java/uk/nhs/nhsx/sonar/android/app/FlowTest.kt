@@ -13,7 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
-import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
+import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.OkRobot
 import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
@@ -28,7 +28,6 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
     private val postCodeRobot = PostCodeRobot()
     private val permissionRobot = PermissionRobot()
     private val okRobot = OkRobot()
-    private val atRiskRobot = AtRiskRobot()
     private val diagnoseQuestionRobot = DiagnoseQuestionRobot()
     private val diagnoseCloseRobot = DiagnoseCloseRobot()
     private val diagnoseReviewRobot = DiagnoseReviewRobot()
@@ -109,7 +108,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
             clickOnNotification(R.string.contact_alert_notification_title, R.string.contact_alert_notification_text)
         }
 
-        atRiskRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(ExposedState::class)
     }
 
     fun testExpiredSymptomaticStateRevisitsQuestionnaireAndRemainsToSymptomaticState() {

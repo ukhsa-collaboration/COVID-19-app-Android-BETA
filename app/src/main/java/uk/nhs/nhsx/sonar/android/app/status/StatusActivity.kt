@@ -165,7 +165,7 @@ class StatusActivity : BaseActivity() {
         fun start(context: Context) =
             context.startActivity(getIntent(context))
 
-        private fun getIntent(context: Context) =
+        fun getIntent(context: Context) =
             Intent(context, StatusActivity::class.java)
                 .apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

@@ -22,7 +22,6 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivityTest
-import uk.nhs.nhsx.sonar.android.app.status.AtRiskActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.OkActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.StatusActivityTest
@@ -89,11 +88,6 @@ class ConnectedTestRunner {
             { OkActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResume() },
             { OkActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResume() },
             { OkActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResume() },
-
-            { AtRiskActivityTest(testAppContext).testHideStatusUpdateNotificationWhenNotClicked() },
-            { AtRiskActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResume() },
-            { AtRiskActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResume() },
-            { AtRiskActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResume() },
 
             { DiagnoseReviewActivityTest(testAppContext).testDisplayingYesAnswers() },
             { DiagnoseReviewActivityTest(testAppContext).testDisplayingNoAnswers() },

@@ -82,8 +82,6 @@
 
         <activity android:name=".status.OkActivity"
                   android:label="@string/status_initial_title"/>
-        <activity android:name=".status.AtRiskActivity"
-                  android:label="@string/status_exposed_title"/>
         <activity
             android:name=".status.StatusActivity"
             android:label="@string/status_symptomatic_title" />
