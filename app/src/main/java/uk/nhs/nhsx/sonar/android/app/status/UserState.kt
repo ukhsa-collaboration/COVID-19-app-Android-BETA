@@ -59,8 +59,8 @@ sealed class UserState {
             val suggested = testLocalDate.after(NO_DAYS_IN_SYMPTOMATIC).days()
             val tomorrow = today.after(1).day()
 
-            // if symptomsDate > 7 days ago then positive state is until tomorrow
-            // if symptomsDate <= 7 days ago then positive state is until suggested
+            // if testDate > 7 days ago then positive state is until tomorrow
+            // if testDate <= 7 days ago then positive state is until suggested
             val until = latest(suggested, tomorrow)
 
             return PositiveState(
@@ -70,14 +70,6 @@ sealed class UserState {
             )
         }
     }
-
-    fun since(): DateTime? =
-        when (this) {
-            is SymptomaticState -> since
-            is ExposedState -> since
-            is PositiveState -> since
-            is DefaultState -> null
-        }
 
     fun until(): DateTime? =
         when (this) {
