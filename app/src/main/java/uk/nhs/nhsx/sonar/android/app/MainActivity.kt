@@ -13,7 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.OkActivity
+import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
@@ -54,7 +54,7 @@ class MainActivity : ColorInversionAwareActivity() {
             }
             onboardingStatusProvider.get() -> {
                 finish()
-                OkActivity.start(this)
+                StatusActivity.start(this)
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 return
             }

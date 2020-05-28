@@ -10,13 +10,13 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 class BaseActivityTest(private val testAppContext: TestApplicationContext) {
 
     private val app = testAppContext.app
-    private val okRobot = OkRobot()
+    private val statusRobot = StatusRobot()
     private val edgeCaseRobot = EdgeCaseRobot()
 
     private fun startActivity() {
         testAppContext.setFullValidUser(DefaultState)
 
-        app.startTestActivity<OkActivity>()
+        app.startTestActivity<StatusActivity>()
     }
 
     fun testResumeWhenBluetoothIsDisabled() {
@@ -30,7 +30,7 @@ class BaseActivityTest(private val testAppContext: TestApplicationContext) {
         edgeCaseRobot.clickTakeAction()
 
         // TODO: fix flaky check
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     fun testResumeWhenLocationAccessIsDisabled() {
@@ -40,7 +40,7 @@ class BaseActivityTest(private val testAppContext: TestApplicationContext) {
         edgeCaseRobot.checkTitle(R.string.re_enable_location_title)
 
         testAppContext.enableLocationAccess()
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     fun testResumeWhenLocationPermissionIsRevoked() {
@@ -57,11 +57,11 @@ class BaseActivityTest(private val testAppContext: TestApplicationContext) {
         testAppContext.grantLocationPermission()
         testAppContext.device.pressBack()
 
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     private fun triggerResumeAfter(function: () -> Unit) {
-        okRobot.clickReadCurrentAdvice()
+        statusRobot.clickCurrentAdviceCard()
         function()
         testAppContext.device.pressBack()
     }

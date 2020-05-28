@@ -64,7 +64,7 @@
                     android:textAllCaps="true" />
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/latest_advice_symptomatic"
+                    android:id="@+id/readLatestAdvice"
                     style="@style/PrimaryCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/book_test_card"
+                    android:id="@+id/bookTest"
                     style="@style/PrimaryCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -101,6 +101,47 @@
                         android:text="@string/apply_for_test_now" />
 
                 </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/feelUnwell"
+                    style="@style/PrimaryCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="24dp">
+
+                        <TextView
+                            style="@style/TextViewActionTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="16dp"
+                            android:drawableStart="@drawable/ic_back_arrow_circle"
+                            android:drawablePadding="16dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/status_not_feeling_well" />
+
+                        <TextView
+                            style="@style/TextViewActionSubTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/status_not_feeling_well_desc" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/nextStepsAdvice"
+                    style="@style/TextViewStatusSubTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="32dp"
+                    android:paddingHorizontal="16dp"
+                    android:text="@string/symptomatic_state_advice_info" />
 
                 <include layout="@layout/status_footer_view" />
 

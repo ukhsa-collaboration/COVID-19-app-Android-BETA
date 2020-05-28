@@ -13,11 +13,11 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionRobot
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
-import uk.nhs.nhsx.sonar.android.app.status.AtRiskRobot
-import uk.nhs.nhsx.sonar.android.app.status.IsolateRobot
-import uk.nhs.nhsx.sonar.android.app.status.OkRobot
-import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedState
+import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
@@ -27,13 +27,11 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
     private val mainOnboardingRobot = MainOnboardingRobot()
     private val postCodeRobot = PostCodeRobot()
     private val permissionRobot = PermissionRobot()
-    private val okRobot = OkRobot()
-    private val atRiskRobot = AtRiskRobot()
     private val diagnoseQuestionRobot = DiagnoseQuestionRobot()
     private val diagnoseCloseRobot = DiagnoseCloseRobot()
     private val diagnoseReviewRobot = DiagnoseReviewRobot()
     private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
-    private val isolateRobot = IsolateRobot()
+    private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
 
     fun testRegistration() {
@@ -49,12 +47,12 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         permissionRobot.checkActivityIsDisplayed()
         permissionRobot.clickContinue()
 
-        okRobot.checkActivityIsDisplayed()
-        okRobot.checkFinalisingSetup()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
+        statusRobot.checkFinalisingSetup()
 
         testAppContext.verifyRegistrationFlow()
 
-        okRobot.checkEverythingIsWorking()
+        statusRobot.checkFeelUnwellIsDisplayed()
     }
 
     fun testProximityDataUploadOnSymptomaticState() {
@@ -78,7 +76,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         diagnoseSubmitRobot.selectConfirmation()
         diagnoseSubmitRobot.submit()
 
-        isolateRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
         testAppContext.verifyReceivedProximityRequest()
     }
 
@@ -97,7 +95,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         diagnoseCloseRobot.checkActivityIsDisplayed()
         diagnoseCloseRobot.close()
 
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     fun testReceivingStatusUpdateNotification() {
@@ -109,7 +107,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
             clickOnNotification(R.string.contact_alert_notification_title, R.string.contact_alert_notification_text)
         }
 
-        atRiskRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(ExposedState::class)
     }
 
     fun testExpiredSymptomaticStateRevisitsQuestionnaireAndRemainsToSymptomaticState() {
@@ -131,7 +129,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         diagnoseQuestionRobot.checkProgress(R.string.progress_three_third)
         diagnoseQuestionRobot.answerNoTo(R.id.anosmia_question)
 
-        isolateRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
     }
 
     fun testExpiredSymptomaticStateUpdatingWithNoSymptomsNavigatesToOkActivity() {
@@ -144,7 +142,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickSecondCtaButton()
 
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     fun testEnableBluetoothThroughNotification() {
@@ -159,11 +157,11 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         )
 
         testAppContext.verifyBluetoothIsEnabled()
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     private fun clickNotFeelingWellCard() {
-        onView(withId(R.id.status_not_feeling_well)).perform(scrollTo(), click())
+        onView(withId(R.id.feelUnwell)).perform(scrollTo(), click())
     }
 
     private fun startMainActivity() {
