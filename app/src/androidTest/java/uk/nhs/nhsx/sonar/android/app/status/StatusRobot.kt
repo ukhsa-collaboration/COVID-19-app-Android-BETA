@@ -1,15 +1,20 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
+import android.view.View
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.CoreMatchers.not
+import org.hamcrest.Matcher
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import uk.nhs.nhsx.sonar.android.app.testhelpers.stringFromResId
+import uk.nhs.nhsx.sonar.android.app.testhelpers.waitForText
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 import kotlin.reflect.KClass
 
@@ -25,6 +30,7 @@ class StatusRobot {
             else -> throw IllegalArgumentException("Not able to match title: $userState")
         }
 
+        waitForText(title, 6_000)
         onView(withId(R.id.statusTitle))
             .check(matches(isDisplayed()))
             .check(matches(withText(title)))
@@ -54,12 +60,30 @@ class StatusRobot {
     }
 
     fun checkBookVirusTestCardIsDisplayed() {
-        onView(withId(R.id.bookTest))
-            .check(matches(isDisplayed()))
+        onView(withId(R.id.bookTest)).check(matches(isDisplayed()))
     }
 
     fun checkBookVirusTestCardIsNotDisplayed() {
-        onView(withId(R.id.bookTest))
-            .check(matches(not(isDisplayed())))
+        onView(withId(R.id.bookTest)).check(matches(not(isDisplayed())))
+    }
+
+    fun checkFinalisingSetup() {
+        checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
+        verifyCheckMySymptomsButton(not(isEnabled()))
+    }
+
+    fun checkFeelUnwellIsNotDisplayed() {
+        onView(withId(R.id.feelUnwell)).check(matches(not(isDisplayed())))
+    }
+
+    fun checkFeelUnwellIsDisplayed() {
+        // job retries after at least 10 seconds
+        waitForText(R.string.registration_everything_is_working_ok, timeoutInMs = 20000)
+        verifyCheckMySymptomsButton(isDisplayed())
+        verifyCheckMySymptomsButton(isEnabled())
+    }
+
+    private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
+        onView(withId(R.id.feelUnwell)).check(matches(matcher))
     }
 }

@@ -41,7 +41,6 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWork
-import uk.nhs.nhsx.sonar.android.app.status.OkActivity
 import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import javax.inject.Singleton
@@ -63,7 +62,6 @@ interface ApplicationComponent {
     fun inject(activity: EnableLocationActivity)
     fun inject(activity: GrantLocationPermissionActivity)
     fun inject(activity: StatusActivity)
-    fun inject(activity: OkActivity)
     fun inject(activity: DiagnoseReviewActivity)
     fun inject(activity: DiagnoseCloseActivity)
     fun inject(activity: MainActivity)

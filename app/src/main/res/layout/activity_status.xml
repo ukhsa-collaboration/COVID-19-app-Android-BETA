@@ -135,7 +135,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
-                    android:id="@+id/feelUnwellSubtitle"
+                    android:id="@+id/nextStepsAdvice"
                     style="@style/TextViewStatusSubTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

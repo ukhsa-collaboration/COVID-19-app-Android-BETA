@@ -23,7 +23,6 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
-import uk.nhs.nhsx.sonar.android.app.status.OkActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.StatusActivityTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
@@ -82,13 +81,6 @@ class ConnectedTestRunner {
             { BaseActivityTest(testAppContext).testResumeWhenLocationAccessIsDisabled() },
             { BaseActivityTest(testAppContext).testResumeWhenLocationPermissionIsRevoked() },
 
-            { OkActivityTest(testAppContext).testRegistrationRetry() },
-            { OkActivityTest(testAppContext).testRegistrationPushNotificationNotReceived() },
-            { OkActivityTest(testAppContext).testShowsRecoveryDialogOnResume() },
-            { OkActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResume() },
-            { OkActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResume() },
-            { OkActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResume() },
-
             { DiagnoseReviewActivityTest(testAppContext).testDisplayingYesAnswers() },
             { DiagnoseReviewActivityTest(testAppContext).testDisplayingNoAnswers() },
             { DiagnoseReviewActivityTest(testAppContext).testSubmittingWithoutDate() },
@@ -98,6 +90,13 @@ class ConnectedTestRunner {
 
             { DiagnoseSubmitActivityTest(testAppContext).testConfirmationIsRequired() },
 
+            { StatusActivityTest(testAppContext).testFeelUnwellCardIsDisplayedWhenInDefaultState() },
+            { StatusActivityTest(testAppContext).testFeelUnwellCardIsDisplayedWhenInExposedState() },
+            { StatusActivityTest(testAppContext).testFeelUnwellCardIsNotDisplayedWhenInSymptomaticState() },
+            { StatusActivityTest(testAppContext).testFeelUnwellCardIsNotDisplayedWhenInPositiveState() },
+            { StatusActivityTest(testAppContext).testRegistrationRetry() },
+            { StatusActivityTest(testAppContext).testRegistrationPushNotificationNotReceived() },
+            { StatusActivityTest(testAppContext).testShowsRecoveryDialogOnResume() },
             { StatusActivityTest(testAppContext).testBottomDialogWhenStateIsExpiredSelectingUpdatingSymptoms() },
             { StatusActivityTest(testAppContext).testBottomDialogWhenStateIsExpiredSelectingNoSymptoms() },
             { StatusActivityTest(testAppContext).testClickOrderTestCardShowsApplyForTest() },
@@ -107,6 +106,9 @@ class ConnectedTestRunner {
             { StatusActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInSymptomaticTestState() },
             { StatusActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInPositiveTestState() },
             { StatusActivityTest(testAppContext).testBookVirusTestIsNotDisplayedWhenInExposedState() },
+            { StatusActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResumeForDefaultState() },
+            { StatusActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResumeForDefaultState() },
+            { StatusActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResumeForDefaultState() },
             { StatusActivityTest(testAppContext).testShowsPositiveTestResultDialogOnResumeForSymptomaticState() },
             { StatusActivityTest(testAppContext).testShowsNegativeTestResultDialogOnResumeForSymptomaticState() },
             { StatusActivityTest(testAppContext).testShowsInvalidTestResultDialogOnResumeForSymptomaticState() },

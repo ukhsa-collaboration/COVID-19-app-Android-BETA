@@ -80,8 +80,6 @@
         <activity android:name=".edgecases.TabletNotSupportedActivity"
                   android:label="@string/tablet_support_title"/>
 
-        <activity android:name=".status.OkActivity"
-                  android:label="@string/status_initial_title"/>
         <activity
             android:name=".status.StatusActivity"
             android:label="@string/status_symptomatic_title" />

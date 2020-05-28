@@ -14,7 +14,7 @@ import uk.nhs.nhsx.sonar.android.app.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedActivity
-import uk.nhs.nhsx.sonar.android.app.status.OkActivity
+import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
 import javax.inject.Inject
@@ -97,7 +97,7 @@ class PermissionActivity : ColorInversionAwareActivity(R.layout.activity_permiss
     }
 
     private fun startOkActivity() {
-        OkActivity.start(this)
+        StatusActivity.start(this)
         finish()
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
     }

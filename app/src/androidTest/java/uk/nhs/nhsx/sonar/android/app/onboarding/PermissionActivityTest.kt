@@ -13,7 +13,8 @@ import androidx.test.uiautomator.Until
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.edgecases.EdgeCaseRobot
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
-import uk.nhs.nhsx.sonar.android.app.status.OkRobot
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import kotlin.test.fail
@@ -22,7 +23,7 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
 
     private val app = testAppContext.app
     private val permissionRobot = PermissionRobot()
-    private val okRobot = OkRobot()
+    private val statusRobot = StatusRobot()
     private val edgeCaseRobot = EdgeCaseRobot()
 
     private fun startActivity() {
@@ -57,7 +58,7 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
         }
 
         testAppContext.verifyBluetoothIsEnabled()
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     fun testGrantLocationPermission() {
@@ -87,7 +88,7 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
 
         permissionRobot.checkActivityIsDisplayed()
         permissionRobot.clickContinue()
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     fun testEnableLocationAccess() {
@@ -105,7 +106,7 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
 
         permissionRobot.checkActivityIsDisplayed()
         permissionRobot.clickContinue()
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     private fun waitUntilCannotFindText(@StringRes stringId: Int, timeoutInMs: Long = 500) {

@@ -43,6 +43,73 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
         app.startTestActivity<StatusActivity>()
     }
 
+    private fun showsTestResultDialogOnResume(testResult: TestResult, state: UserState) {
+        testAppContext.addTestInfo(TestInfo(testResult, DateTime.now()))
+
+        startActivity(state)
+
+        bottomDialogRobot.checkTestResultDialogIsDisplayed(testResult)
+        bottomDialogRobot.clickSecondCtaButton()
+        bottomDialogRobot.checkBottomDialogIsNotDisplayed()
+    }
+
+    fun testFeelUnwellCardIsDisplayedWhenInDefaultState() {
+        startActivity(DefaultState)
+        statusRobot.checkFeelUnwellIsDisplayed()
+    }
+
+    fun testFeelUnwellCardIsDisplayedWhenInExposedState() {
+        startActivity(exposedState)
+        statusRobot.checkFeelUnwellIsDisplayed()
+    }
+
+    fun testFeelUnwellCardIsNotDisplayedWhenInSymptomaticState() {
+        startActivity(symptomaticState)
+        statusRobot.checkFeelUnwellIsNotDisplayed()
+    }
+
+    fun testFeelUnwellCardIsNotDisplayedWhenInPositiveState() {
+        startActivity(positiveState)
+        statusRobot.checkFeelUnwellIsNotDisplayed()
+    }
+
+    fun testRegistrationRetry() {
+        testAppContext.setFinishedOnboarding()
+        testAppContext.simulateBackendResponse(error = true)
+
+        app.startTestActivity<StatusActivity>()
+        statusRobot.checkFinalisingSetup()
+
+        testAppContext.simulateBackendResponse(error = false)
+        testAppContext.verifyRegistrationRetry()
+
+        statusRobot.checkFeelUnwellIsDisplayed()
+    }
+
+    fun testRegistrationPushNotificationNotReceived() {
+        testAppContext.setFinishedOnboarding()
+        testAppContext.simulateBackendDelay(400)
+
+        app.startTestActivity<StatusActivity>()
+        statusRobot.checkFinalisingSetup()
+
+        testAppContext.verifyReceivedRegistrationRequest()
+        testAppContext.verifyRegistrationFlow()
+
+        statusRobot.checkFeelUnwellIsDisplayed()
+    }
+
+    fun testShowsRecoveryDialogOnResume() {
+        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.addRecoveryMessage()
+
+        app.startTestActivity<StatusActivity>()
+
+        bottomDialogRobot.checkRecoveryDialogIsDisplayed()
+        bottomDialogRobot.clickSecondCtaButton()
+        bottomDialogRobot.checkBottomDialogIsNotDisplayed()
+    }
+
     fun testBottomDialogWhenStateIsExpiredSelectingUpdatingSymptoms() {
         startActivity(expiredSymptomaticState)
 
@@ -120,6 +187,18 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkBookVirusTestCardIsNotDisplayed()
     }
 
+    fun testShowsPositiveTestResultDialogOnResumeForDefaultState() {
+        showsTestResultDialogOnResume(TestResult.POSITIVE, DefaultState)
+    }
+
+    fun testShowsNegativeTestResultDialogOnResumeForDefaultState() {
+        showsTestResultDialogOnResume(TestResult.NEGATIVE, DefaultState)
+    }
+
+    fun testShowsInvalidTestResultDialogOnResumeForDefaultState() {
+        showsTestResultDialogOnResume(TestResult.INVALID, DefaultState)
+    }
+
     fun testShowsPositiveTestResultDialogOnResumeForSymptomaticState() {
         showsTestResultDialogOnResume(TestResult.POSITIVE, symptomaticState)
     }
@@ -142,16 +221,6 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
 
     fun testShowsInvalidTestResultDialogOnResumeForExposedState() {
         showsTestResultDialogOnResume(TestResult.INVALID, exposedState)
-    }
-
-    private fun showsTestResultDialogOnResume(testResult: TestResult, state: UserState) {
-        testAppContext.addTestInfo(TestInfo(testResult, DateTime.now()))
-
-        startActivity(state)
-
-        bottomDialogRobot.checkTestResultDialogIsDisplayed(testResult)
-        bottomDialogRobot.clickSecondCtaButton()
-        bottomDialogRobot.checkBottomDialogIsNotDisplayed()
     }
 
     fun testHideStatusUpdateNotificationWhenNotClicked() {

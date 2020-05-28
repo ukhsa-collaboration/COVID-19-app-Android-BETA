@@ -7,7 +7,6 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
-import uk.nhs.nhsx.sonar.android.app.status.OkRobot
 import uk.nhs.nhsx.sonar.android.app.status.StatusFooterRobot
 import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
@@ -18,7 +17,6 @@ import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class MainActivityTest(private val testAppContext: TestApplicationContext) {
 
-    private val okRobot = OkRobot()
     private val statusRobot = StatusRobot()
     private val statusFooterRobot = StatusFooterRobot()
 
@@ -43,7 +41,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
 
         startMainActivity()
 
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     fun testLaunchWhenStateIsDefault() {
@@ -51,7 +49,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
 
         startMainActivity()
 
-        okRobot.checkActivityIsDisplayed()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
         statusFooterRobot.checkFooterIsDisplayed()
     }
 

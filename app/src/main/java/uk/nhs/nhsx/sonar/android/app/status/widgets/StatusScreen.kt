@@ -1,15 +1,14 @@
 package uk.nhs.nhsx.sonar.android.app.status.widgets
 
 import android.app.Activity
-import android.content.Context
 import android.text.SpannedString
 import android.view.View
+import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
-import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
@@ -38,7 +37,7 @@ interface StatusScreen {
 object StatusScreenFactory {
     fun from(userState: UserState) =
         when (userState) {
-            DefaultState -> DummyScreen(userState)
+            DefaultState -> DefaultStatusScreen(userState)
             is ExposedState -> ExposedStatusScreen(userState)
             is SymptomaticState -> SymptomaticStatusScreen(userState)
             is CheckinState -> CheckInStatusScreen(userState)
@@ -46,27 +45,185 @@ object StatusScreenFactory {
         }
 }
 
+class DefaultStatusScreen(val state: UserState) : StatusScreen {
+
+    override fun setStatusScreen(activity: AppCompatActivity) {
+        createStatusView(
+            activity = activity,
+            titleRes = R.string.status_initial_title,
+            statusColor = StatusView.Color.BLUE
+        )
+        showNextStepsAdvice(activity, R.string.status_description_01)
+        showFeelUnwell(activity)
+    }
+
+    override fun onResume(activity: StatusActivity) {
+        super.onResume(activity)
+
+        if (activity.userInbox.hasRecovery()) {
+            activity.recoveryDialog.showExpanded()
+        } else {
+            activity.recoveryDialog.dismiss()
+        }
+    }
+}
+
+class ExposedStatusScreen(val state: UserState) : StatusScreen {
+
+    override fun setStatusScreen(activity: AppCompatActivity) {
+        createStatusView(
+            activity = activity,
+            titleRes = R.string.status_exposed_title,
+            statusDescription = createStatusDescriptionForExposed(
+                activity = activity,
+                userState = state
+            ),
+            statusColor = StatusView.Color.ORANGE
+        )
+        showNextStepsAdvice(activity, R.string.symptomatic_state_advice_info)
+        showFeelUnwell(activity)
+    }
+
+    override fun onResume(activity: StatusActivity) {
+        activity.cancelStatusNotification()
+
+        // TODO: refactor this
+        val newState = UserStateTransitions.expireExposedState(state)
+        activity.userStateStorage.set(newState)
+
+        activity.navigateTo(newState)
+    }
+}
+
+open class SymptomaticStatusScreen(val state: UserState) : StatusScreen {
+
+    override fun setStatusScreen(activity: AppCompatActivity) {
+        createStatusView(
+            activity = activity,
+            titleRes = R.string.status_symptomatic_title,
+            statusDescription = createStatusDescriptionForSymptomatic(
+                activity = activity,
+                userState = state
+            ),
+            statusColor = StatusView.Color.ORANGE
+        )
+        showBookTestCard(activity)
+    }
+
+    override fun onResume(activity: StatusActivity) {
+        if (state.hasExpired()) {
+            activity.updateSymptomsDialog.showExpanded()
+            activity.checkInReminderNotification.hide()
+        } else {
+            activity.updateSymptomsDialog.dismiss()
+        }
+    }
+}
+
+// TODO: do we need CheckIn State?
+class CheckInStatusScreen(state: UserState) : SymptomaticStatusScreen(state)
+
+class PositiveStatusScreen(val state: UserState) : StatusScreen {
+
+    override fun setStatusScreen(activity: AppCompatActivity) {
+        createStatusView(
+            activity = activity,
+            titleRes = R.string.status_positive_test_title,
+            statusDescription = createStatusDescriptionForSymptomatic(
+                activity = activity,
+                userState = state
+            ),
+            statusColor = StatusView.Color.ORANGE
+        )
+    }
+}
+
 private fun createStatusView(
     activity: AppCompatActivity,
     @StringRes titleRes: Int,
-    statusDescription: SpannedString
+    statusColor: StatusView.Color,
+    statusDescription: SpannedString? = null
 ) {
     val statusView = activity.findViewById<StatusView>(R.id.statusView)
     statusView.setup(
         StatusView.Configuration(
             title = activity.getString(titleRes),
             description = statusDescription,
-            statusColor = StatusView.Color.ORANGE
+            statusColor = statusColor
         )
     )
 }
 
-private fun createBookTestCard(activity: AppCompatActivity) {
+fun createTestResultDialog(activity: Activity, userInbox: UserInbox): BottomDialog {
+    val configuration = BottomDialogConfiguration(
+        titleResId = R.string.negative_test_result_title,
+        textResId = R.string.negative_test_result_description,
+        secondCtaResId = R.string.close,
+        isHideable = false
+    )
+    return BottomDialog(activity, configuration,
+        onCancel = {
+            userInbox.dismissTestInfo()
+            activity.finish()
+        },
+        onSecondCtaClick = {
+            userInbox.dismissTestInfo()
+        }
+    )
+}
+
+fun createStatusDescriptionForSymptomatic(activity: Activity, userState: UserState): SpannedString {
+    return buildSpannedString {
+        bold {
+            append(
+                activity.getString(
+                    R.string.follow_until_symptomatic_pre,
+                    userState.until().toUiFormat()
+                )
+            )
+        }
+        append(" ${activity.getString(R.string.follow_until_symptomatic)}")
+    }
+}
+
+fun createStatusDescriptionForExposed(activity: Activity, userState: UserState): SpannedString {
+    return buildSpannedString {
+        append(activity.getString(R.string.follow_until))
+        bold {
+            append("  ${userState.until().toUiFormat()}")
+        }
+    }
+}
+
+private fun showBookTestCard(activity: AppCompatActivity) {
     val view = activity.findViewById<View>(R.id.bookTest)
     view.isVisible = true
     view.setOnClickListener {
         ApplyForTestActivity.start(activity)
     }
+}
+
+private fun showFeelUnwell(activity: AppCompatActivity) {
+    val view = activity.findViewById<View>(R.id.feelUnwell)
+    view.isVisible = true
+}
+
+private fun showNextStepsAdvice(activity: AppCompatActivity, @StringRes stringRes: Int) {
+    val view = activity.findViewById<TextView>(R.id.nextStepsAdvice)
+    view.text = activity.getString(stringRes)
+    view.isVisible = true
+}
+
+fun toggleNotFeelingCard(activity: AppCompatActivity, enabled: Boolean) {
+    val view = activity.findViewById<View>(R.id.feelUnwell)
+    view.isClickable = enabled
+    view.isEnabled = enabled
+}
+
+fun toggleReferenceCodeCard(activity: AppCompatActivity, enabled: Boolean) {
+    val view = activity.findViewById<View>(R.id.reference_link_card)
+    view.isClickable = enabled
+    view.isEnabled = enabled
 }
 
 fun handleTestResult(userInbox: UserInbox, testResultDialog: BottomDialog) {
@@ -89,98 +246,5 @@ fun handleTestResult(userInbox: UserInbox, testResultDialog: BottomDialog) {
         testResultDialog.showExpanded()
     } else {
         testResultDialog.dismiss()
-    }
-}
-
-fun createTestResultDialog(activity: Activity, userInbox: UserInbox): BottomDialog {
-    val configuration = BottomDialogConfiguration(
-        titleResId = R.string.negative_test_result_title,
-        textResId = R.string.negative_test_result_description,
-        secondCtaResId = R.string.close,
-        isHideable = false
-    )
-    return BottomDialog(activity, configuration,
-        onCancel = {
-            userInbox.dismissTestInfo()
-            activity.finish()
-        },
-        onSecondCtaClick = {
-            userInbox.dismissTestInfo()
-        })
-}
-
-class PositiveStatusScreen(val state: UserState) : StatusScreen {
-
-    override fun setStatusScreen(activity: AppCompatActivity) {
-        val description = createStatusDescriptionForSymptomatic(activity, state)
-        createStatusView(activity, R.string.status_positive_test_title, description)
-        activity.findViewById<View>(R.id.bookTest).isVisible = false
-    }
-}
-
-open class SymptomaticStatusScreen(val state: UserState) : StatusScreen {
-
-    override fun setStatusScreen(activity: AppCompatActivity) {
-        val description = createStatusDescriptionForSymptomatic(activity, state)
-        createStatusView(activity, R.string.status_symptomatic_title, description)
-        createBookTestCard(activity)
-    }
-
-    override fun onResume(activity: StatusActivity) {
-        if (state.hasExpired()) {
-            activity.updateSymptomsDialog.showExpanded()
-            activity.checkInReminderNotification.hide()
-        } else {
-            activity.updateSymptomsDialog.dismiss()
-        }
-    }
-}
-
-// TODO: do we need CheckIn State?
-class CheckInStatusScreen(state: UserState) : SymptomaticStatusScreen(state)
-
-class DummyScreen(val state: UserState) : StatusScreen {
-    override fun setStatusScreen(activity: AppCompatActivity) {
-        Timber.d("DummyScreen: should implement screen for state: ${state::class.java.simpleName}?")
-    }
-}
-
-class ExposedStatusScreen(val state: UserState) : StatusScreen {
-    override fun setStatusScreen(activity: AppCompatActivity) {
-        val description = createStatusDescriptionForExposed(activity, state)
-        createStatusView(activity, R.string.status_exposed_title, description)
-    }
-
-    override fun onResume(activity: StatusActivity) {
-        activity.cancelStatusNotification()
-
-        // TODO: refactor this
-        val newState = UserStateTransitions.expireExposedState(state)
-        activity.userStateStorage.set(newState)
-
-        activity.navigateTo(newState)
-    }
-}
-
-fun createStatusDescriptionForSymptomatic(context: Context, userState: UserState): SpannedString {
-    return buildSpannedString {
-        bold {
-            append(
-                context.getString(
-                    R.string.follow_until_symptomatic_pre,
-                    userState.until().toUiFormat()
-                )
-            )
-        }
-        append(" ${context.getString(R.string.follow_until_symptomatic)}")
-    }
-}
-
-fun createStatusDescriptionForExposed(context: Context, userState: UserState): SpannedString {
-    return buildSpannedString {
-        append(context.getString(R.string.follow_until))
-        bold {
-            append("  ${userState.until().toUiFormat()}")
-        }
     }
 }
