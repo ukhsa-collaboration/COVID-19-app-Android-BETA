@@ -8,14 +8,14 @@ import android.app.Activity
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.AT_RISK
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.OK
-import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusScreenFactory
+import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusLayoutFactory
 
 fun Activity.navigateTo(state: UserState) {
     when (state.displayState()) {
         OK, ISOLATE, AT_RISK -> {
             if (this is StatusActivity) {
-                statusScreen = StatusScreenFactory.from(userStateStorage.get())
-                statusScreen.setStatusScreen(this)
+                statusLayout = StatusLayoutFactory.from(userStateStorage.get())
+                statusLayout.refreshStatusLayout(this)
                 return
             }
 

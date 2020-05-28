@@ -28,26 +28,26 @@ import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 
-interface StatusScreen {
-    fun setStatusScreen(activity: AppCompatActivity)
+interface StatusLayout {
+    fun refreshStatusLayout(activity: AppCompatActivity)
     fun onResume(activity: StatusActivity) {
     }
 }
 
-object StatusScreenFactory {
+object StatusLayoutFactory {
     fun from(userState: UserState) =
         when (userState) {
-            DefaultState -> DefaultStatusScreen(userState)
-            is ExposedState -> ExposedStatusScreen(userState)
-            is SymptomaticState -> SymptomaticStatusScreen(userState)
-            is CheckinState -> CheckInStatusScreen(userState)
-            is PositiveState -> PositiveStatusScreen(userState)
+            DefaultState -> DefaultStatusLayout(userState)
+            is ExposedState -> ExposedStatusLayout(userState)
+            is SymptomaticState -> SymptomaticStatusLayout(userState)
+            is CheckinState -> CheckInStatusLayout(userState)
+            is PositiveState -> PositiveStatusLayout(userState)
         }
 }
 
-class DefaultStatusScreen(val state: UserState) : StatusScreen {
+class DefaultStatusLayout(val state: UserState) : StatusLayout {
 
-    override fun setStatusScreen(activity: AppCompatActivity) {
+    override fun refreshStatusLayout(activity: AppCompatActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_initial_title,
@@ -68,9 +68,9 @@ class DefaultStatusScreen(val state: UserState) : StatusScreen {
     }
 }
 
-class ExposedStatusScreen(val state: UserState) : StatusScreen {
+class ExposedStatusLayout(val state: UserState) : StatusLayout {
 
-    override fun setStatusScreen(activity: AppCompatActivity) {
+    override fun refreshStatusLayout(activity: AppCompatActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_exposed_title,
@@ -95,9 +95,9 @@ class ExposedStatusScreen(val state: UserState) : StatusScreen {
     }
 }
 
-open class SymptomaticStatusScreen(val state: UserState) : StatusScreen {
+open class SymptomaticStatusLayout(val state: UserState) : StatusLayout {
 
-    override fun setStatusScreen(activity: AppCompatActivity) {
+    override fun refreshStatusLayout(activity: AppCompatActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_symptomatic_title,
@@ -121,11 +121,11 @@ open class SymptomaticStatusScreen(val state: UserState) : StatusScreen {
 }
 
 // TODO: do we need CheckIn State?
-class CheckInStatusScreen(state: UserState) : SymptomaticStatusScreen(state)
+class CheckInStatusLayout(state: UserState) : SymptomaticStatusLayout(state)
 
-class PositiveStatusScreen(val state: UserState) : StatusScreen {
+class PositiveStatusLayout(val state: UserState) : StatusLayout {
 
-    override fun setStatusScreen(activity: AppCompatActivity) {
+    override fun refreshStatusLayout(activity: AppCompatActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_positive_test_title,

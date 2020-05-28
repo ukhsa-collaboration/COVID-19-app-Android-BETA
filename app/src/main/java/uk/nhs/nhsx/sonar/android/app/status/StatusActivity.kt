@@ -33,8 +33,8 @@ import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.CheckInReminderNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusScreen
-import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusScreenFactory
+import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusLayout
+import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusLayoutFactory
 import uk.nhs.nhsx.sonar.android.app.status.widgets.createTestResultDialog
 import uk.nhs.nhsx.sonar.android.app.status.widgets.handleTestResult
 import uk.nhs.nhsx.sonar.android.app.status.widgets.toggleNotFeelingCard
@@ -49,7 +49,7 @@ import javax.inject.Inject
 
 class StatusActivity : BaseActivity() {
 
-    internal lateinit var statusScreen: StatusScreen
+    internal lateinit var statusLayout: StatusLayout
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
@@ -85,8 +85,8 @@ class StatusActivity : BaseActivity() {
 
         hideNotSharedWidgets()
         val userState = userStateStorage.get()
-        statusScreen = StatusScreenFactory.from(userState)
-        statusScreen.setStatusScreen(this)
+        statusLayout = StatusLayoutFactory.from(userState)
+        statusLayout.refreshStatusLayout(this)
 
         readLatestAdvice.setOnClickListener {
             CurrentAdviceActivity.start(this)
@@ -196,7 +196,7 @@ class StatusActivity : BaseActivity() {
         val state = userStateStorage.get()
         navigateTo(state)
 
-        statusScreen.onResume(this)
+        statusLayout.onResume(this)
 
         notificationPanel.isVisible =
             !NotificationManagerCompat.from(this).areNotificationsEnabled()
