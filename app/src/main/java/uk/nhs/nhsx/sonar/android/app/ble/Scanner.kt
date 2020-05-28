@@ -10,6 +10,7 @@ import com.polidea.rxandroidble2.LogConstants
 import com.polidea.rxandroidble2.LogOptions
 import com.polidea.rxandroidble2.RxBleClient
 import com.polidea.rxandroidble2.RxBleConnection
+import com.polidea.rxandroidble2.RxBleDevice
 import com.polidea.rxandroidble2.scan.ScanFilter
 import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
@@ -42,6 +43,7 @@ class Scanner @Inject constructor(
     base64Decoder: (String) -> ByteArray = { Base64.decode(it, Base64.DEFAULT) }
 ) {
 
+    private var knownDevices: MutableMap<String, BluetoothIdentifier> = mutableMapOf()
     private var devices: MutableList<Pair<ScanResult, Int>> = mutableListOf()
 
     private val sonarServiceUuidFilter = ScanFilter.Builder()
@@ -107,9 +109,7 @@ class Scanner @Inject constructor(
                 // or just after it finished
                 delay(1_000)
 
-                devices.distinctBy { it.first.bleDevice }.map {
-                    connectToDevice(it.first, it.second, coroutineScope)
-                }
+                connectToEachDiscoveredDevice(coroutineScope)
 
                 devices.clear()
             }
@@ -119,6 +119,90 @@ class Scanner @Inject constructor(
     fun stop() {
         disposeScanDisposable()
         scanJob?.cancel()
+    }
+
+    private fun connectToEachDiscoveredDevice(coroutineScope: CoroutineScope) {
+        devices.distinctBy { it.first.bleDevice }.forEach { (scanResult, txPowerAdvertised) ->
+            val macAddress = scanResult.bleDevice.macAddress
+            val device = scanResult.bleDevice
+            val identifier = knownDevices[macAddress]
+
+            val operation = if (identifier != null) {
+                readOnlyRssi(identifier)
+            } else {
+                readIdAndRssi()
+            }
+
+            Timber.d("Connecting to $macAddress")
+            connectAndPerformOperation(
+                device,
+                macAddress,
+                txPowerAdvertised,
+                coroutineScope,
+                operation
+            )
+        }
+    }
+
+    private fun readIdAndRssi(): (RxBleConnection) -> Single<Event> =
+        { connection ->
+            negotiateMTU(connection)
+                .flatMap {
+                    disableRetry(it)
+                }
+                .flatMap {
+                    Single.zip(
+                        it.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID),
+                        it.readRssi(),
+                        BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
+                            Event(characteristicValue, rssi, currentTimestampProvider())
+                        }
+                    )
+                }
+        }
+
+    private fun readOnlyRssi(identifier: BluetoothIdentifier): (RxBleConnection) -> Single<Event> =
+        { connection: RxBleConnection ->
+            connection.readRssi().flatMap { rssi ->
+                Single.just(
+                    Event(
+                        identifier.asBytes(),
+                        rssi,
+                        currentTimestampProvider()
+                    )
+                )
+            }
+        }
+
+    private fun connectAndPerformOperation(
+        device: RxBleDevice,
+        macAddress: String,
+        txPowerAdvertised: Int,
+        coroutineScope: CoroutineScope,
+        readOperation: (RxBleConnection) -> Single<Event>
+    ) {
+        val compositeDisposable = CompositeDisposable()
+        device
+            .establishConnection(false)
+            .flatMapSingle {
+                readOperation(it)
+            }
+            .doOnSubscribe {
+                compositeDisposable.add(it)
+            }
+            .take(1)
+            .blockingSubscribe(
+                { event ->
+                    onReadSuccess(
+                        event,
+                        compositeDisposable,
+                        macAddress,
+                        txPowerAdvertised,
+                        coroutineScope
+                    )
+                },
+                { e -> onReadError(e, compositeDisposable, macAddress) }
+            )
     }
 
     private fun disposeScanDisposable() {
@@ -138,49 +222,50 @@ class Scanner @Inject constructor(
                     Timber.d("Scan found = ${it.bleDevice}")
                     devices.add(Pair(it, it.scanRecord.txPowerLevel))
                 },
-                ::onConnectionError
+                ::scanError
             )
 
-    private fun connectToDevice(
-        scanResult: ScanResult,
+    private fun disableRetry(connection: RxBleConnection): Single<RxBleConnection> =
+        connection.queue { bluetoothGatt, _, _ ->
+            DisableRetryOnUnauthenticatedRead.bypassAuthenticationRetry(
+                bluetoothGatt
+            )
+            Observable.just(connection)
+        }.firstOrError()
+
+    private fun onReadSuccess(
+        event: Event,
+        connectionDisposable: CompositeDisposable,
+        macAddress: String,
         txPowerAdvertised: Int,
-        coroutineScope: CoroutineScope
+        scope: CoroutineScope
     ) {
-        val macAddress = scanResult.bleDevice.macAddress
+        connectionDisposable.dispose()
+        val identifier = BluetoothIdentifier.fromBytes(event.identifier)
+        updateKnownDevices(identifier, macAddress)
+        storeEvent(event, scope, txPowerAdvertised)
+    }
 
-        val compositeDisposable = CompositeDisposable()
+    private fun onReadError(
+        e: Throwable,
+        connectionDisposable: CompositeDisposable,
+        macAddress: String
+    ) {
+        connectionDisposable.dispose()
+        Timber.e("failed reading from $macAddress - $e")
+        eventEmitter.errorEvent(macAddress, e)
+    }
 
-        Timber.d("Connecting to $macAddress")
-        scanResult
-            .bleDevice
-            .establishConnection(false)
-            .flatMapSingle { connection ->
-                negotiateMTU(connection)
-            }
-            .flatMapSingle { connection ->
-                connection.queue { bluetoothGatt, _, _ ->
-                    DisableRetryOnUnauthenticatedRead.bypassAuthenticationRetry(bluetoothGatt)
-                    Observable.just(connection)
-                }.firstOrError()
-            }
-            .flatMapSingle { connection ->
-                read(connection, txPowerAdvertised, coroutineScope)
-            }
-            .doOnSubscribe {
-                compositeDisposable.add(it)
-            }
-            .take(1)
-            .blockingSubscribe(
-                { event ->
-                    compositeDisposable.dispose()
-                    storeEvent(event)
-                },
-                { e ->
-                    compositeDisposable.dispose()
-                    Timber.e("failed reading from $macAddress - $e")
-                    eventEmitter.errorEvent(macAddress, e)
-                }
-            )
+    private fun updateKnownDevices(identifier: BluetoothIdentifier, macAddress: String) {
+        val previousMac = knownDevices.entries.firstOrNull { (_, v) ->
+            v.cryptogram.asBytes().contentEquals(identifier.cryptogram.asBytes())
+        }
+        knownDevices.remove(previousMac?.key)
+        knownDevices[macAddress] = identifier
+        Timber.d(
+            "Previous MAC was ${previousMac?.key}, new is $macAddress for ${identifier.cryptogram.asBytes()
+                .map { it.toInt() }
+                .joinToString("")}")
     }
 
     private fun negotiateMTU(connection: RxBleConnection): Single<RxBleConnection> {
@@ -196,37 +281,24 @@ class Scanner @Inject constructor(
             .andThen(Single.just(connection))
     }
 
-    private fun read(
-        connection: RxBleConnection,
-        txPower: Int,
-        scope: CoroutineScope
-    ): Single<Event> =
-        Single.zip(
-            connection.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID),
-            connection.readRssi(),
-            BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
-                Event(characteristicValue, rssi, txPower, scope, currentTimestampProvider())
-            }
-        )
-
-    private fun onConnectionError(e: Throwable) {
-        Timber.e("Connection failed with: $e")
+    private fun scanError(e: Throwable) {
+        Timber.e("Scan failed with: $e")
     }
 
-    private fun storeEvent(event: Event) {
+    private fun storeEvent(event: Event, scope: CoroutineScope, txPowerAdvertised: Int) {
         Timber.d("Event $event")
         eventEmitter.successfulContactEvent(
             event.identifier,
             listOf(event.rssi),
-            event.txPower
+            txPowerAdvertised
         )
 
         saveContactWorker.createOrUpdateContactEvent(
-            event.scope,
+            scope,
             event.identifier,
             event.rssi,
             event.timestamp,
-            event.txPower
+            txPowerAdvertised
         )
     }
 
@@ -235,8 +307,6 @@ class Scanner @Inject constructor(
     private data class Event(
         val identifier: ByteArray,
         val rssi: Int,
-        val txPower: Int,
-        val scope: CoroutineScope,
         val timestamp: DateTime
     )
 }

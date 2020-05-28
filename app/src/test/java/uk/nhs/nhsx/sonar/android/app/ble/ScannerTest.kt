@@ -32,6 +32,7 @@ import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import java.util.Base64
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 
 @ExperimentalCoroutinesApi
@@ -112,9 +113,8 @@ class ScannerTest {
     }
 
     @Test
-    fun connectionWithSingularDevice() {
+    fun connectionWithSingularDevice() =
         runBlocking {
-
             val scan = Scanner(
                 bleClient,
                 saveContactWorker,
@@ -143,7 +143,46 @@ class ScannerTest {
                 scan.stop()
             }
         }
-    }
+
+    @Test
+    fun cachesIdentifierAgainstMacAddress() = runBlocking {
+            val scan = Scanner(
+                bleClient,
+                saveContactWorker,
+                eventEmitter = DebugBleEventTracker { Base64.getEncoder().encodeToString(it) },
+                currentTimestampProvider = { timestamp },
+                scanIntervalLength = 1,
+                base64Decoder = { Base64.getDecoder().decode(it) }
+            )
+
+            scan.start(coroutineScope)
+            coroutineScope.advanceTimeBy(30_000)
+
+            try {
+                withContext(Dispatchers.Default) {
+                    verify(timeout = 3_000) {
+                        saveContactWorker.createOrUpdateContactEvent(
+                            coroutineScope,
+                            identifier,
+                            rssi,
+                            timestamp,
+                            txPower
+                        )
+                    }
+
+                    verify(exactly = 1) { connection.readCharacteristic(any<UUID>()) }
+                }
+
+                every { bleDevice.macAddress } returns "new-addr"
+                coroutineScope.advanceTimeBy(30_000)
+
+                withContext(Dispatchers.Default) {
+                    verify(exactly = 2) { connection.readCharacteristic(any<UUID>()) }
+                }
+            } finally {
+                scan.stop()
+            }
+        }
 
     @Test
     fun emitsReadErrors() {

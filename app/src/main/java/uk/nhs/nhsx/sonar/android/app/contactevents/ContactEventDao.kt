@@ -32,7 +32,7 @@ interface ContactEventDao {
             return
         }
         val mergedEvent = merge(newEvent, storedEvent)
-        Timber.d("saving Updated event; $mergedEvent")
+        Timber.d("saving Updated event")
         update(mergedEvent)
     }
 
