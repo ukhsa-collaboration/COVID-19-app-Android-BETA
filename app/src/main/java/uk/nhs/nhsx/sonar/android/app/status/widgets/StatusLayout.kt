@@ -5,7 +5,6 @@ import android.text.SpannedString
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
@@ -29,16 +28,16 @@ import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 
 abstract class StatusLayout {
 
-    fun refreshStatusLayout(activity: AppCompatActivity) {
+    fun refreshStatusLayout(activity: StatusActivity) {
         hideNotSharedWidgets(activity)
         refreshLayout(activity)
     }
 
     abstract fun onResume(activity: StatusActivity)
 
-    protected abstract fun refreshLayout(activity: AppCompatActivity)
+    protected abstract fun refreshLayout(activity: StatusActivity)
 
-    private fun hideNotSharedWidgets(activity: AppCompatActivity) {
+    private fun hideNotSharedWidgets(activity: StatusActivity) {
         activity.findViewById<View>(R.id.bookTest).isVisible = false
         activity.findViewById<View>(R.id.feelUnwell).isVisible = false
         activity.findViewById<View>(R.id.nextStepsAdvice).isVisible = false
@@ -48,16 +47,16 @@ abstract class StatusLayout {
 object StatusLayoutFactory {
     fun from(userState: UserState) =
         when (userState) {
-            DefaultState -> DefaultStatusLayout(userState)
+            is DefaultState -> DefaultStatusLayout(userState)
             is ExposedState -> ExposedStatusLayout(userState)
             is SymptomaticState -> SymptomaticStatusLayout(userState)
             is PositiveState -> PositiveStatusLayout(userState)
         }
 }
 
-class DefaultStatusLayout(val state: UserState) : StatusLayout() {
+class DefaultStatusLayout(val state: DefaultState) : StatusLayout() {
 
-    override fun refreshLayout(activity: AppCompatActivity) {
+    override fun refreshLayout(activity: StatusActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_initial_title,
@@ -76,9 +75,9 @@ class DefaultStatusLayout(val state: UserState) : StatusLayout() {
     }
 }
 
-class ExposedStatusLayout(val state: UserState) : StatusLayout() {
+class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
 
-    override fun refreshLayout(activity: AppCompatActivity) {
+    override fun refreshLayout(activity: StatusActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_exposed_title,
@@ -103,13 +102,13 @@ class ExposedStatusLayout(val state: UserState) : StatusLayout() {
     }
 }
 
-open class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
+class SymptomaticStatusLayout(val state: SymptomaticState) : StatusLayout() {
 
-    override fun refreshLayout(activity: AppCompatActivity) {
+    override fun refreshLayout(activity: StatusActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_symptomatic_title,
-            statusDescription = createStatusDescriptionForSymptomatic(
+            statusDescription = createStatusDescriptionForSymptomaticAndPositive(
                 activity = activity,
                 userState = state
             ),
@@ -123,13 +122,13 @@ open class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
     }
 }
 
-class PositiveStatusLayout(val state: UserState) : StatusLayout() {
+class PositiveStatusLayout(val state: PositiveState) : StatusLayout() {
 
-    override fun refreshLayout(activity: AppCompatActivity) {
+    override fun refreshLayout(activity: StatusActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_positive_test_title,
-            statusDescription = createStatusDescriptionForSymptomatic(
+            statusDescription = createStatusDescriptionForSymptomaticAndPositive(
                 activity = activity,
                 userState = state
             ),
@@ -143,7 +142,7 @@ class PositiveStatusLayout(val state: UserState) : StatusLayout() {
 }
 
 private fun createStatusView(
-    activity: AppCompatActivity,
+    activity: StatusActivity,
     @StringRes titleRes: Int,
     statusColor: StatusView.Color,
     statusDescription: SpannedString? = null
@@ -176,7 +175,7 @@ fun createTestResultDialog(activity: Activity, userInbox: UserInbox): BottomDial
     )
 }
 
-fun createStatusDescriptionForSymptomatic(activity: Activity, userState: UserState): SpannedString {
+fun createStatusDescriptionForSymptomaticAndPositive(activity: StatusActivity, userState: UserState): SpannedString {
     return buildSpannedString {
         bold {
             append(
@@ -190,7 +189,7 @@ fun createStatusDescriptionForSymptomatic(activity: Activity, userState: UserSta
     }
 }
 
-fun createStatusDescriptionForExposed(activity: Activity, userState: UserState): SpannedString {
+fun createStatusDescriptionForExposed(activity: StatusActivity, userState: UserState): SpannedString {
     return buildSpannedString {
         append(activity.getString(R.string.follow_until))
         bold {
@@ -199,7 +198,7 @@ fun createStatusDescriptionForExposed(activity: Activity, userState: UserState):
     }
 }
 
-private fun showBookTestCard(activity: AppCompatActivity) {
+private fun showBookTestCard(activity: StatusActivity) {
     val view = activity.findViewById<View>(R.id.bookTest)
     view.isVisible = true
     view.setOnClickListener {
@@ -207,24 +206,24 @@ private fun showBookTestCard(activity: AppCompatActivity) {
     }
 }
 
-private fun showFeelUnwell(activity: AppCompatActivity) {
+private fun showFeelUnwell(activity: StatusActivity) {
     val view = activity.findViewById<View>(R.id.feelUnwell)
     view.isVisible = true
 }
 
-private fun showNextStepsAdvice(activity: AppCompatActivity, @StringRes stringRes: Int) {
+private fun showNextStepsAdvice(activity: StatusActivity, @StringRes stringRes: Int) {
     val view = activity.findViewById<TextView>(R.id.nextStepsAdvice)
     view.text = activity.getString(stringRes)
     view.isVisible = true
 }
 
-fun toggleNotFeelingCard(activity: AppCompatActivity, enabled: Boolean) {
+fun toggleNotFeelingCard(activity: StatusActivity, enabled: Boolean) {
     val view = activity.findViewById<View>(R.id.feelUnwell)
     view.isClickable = enabled
     view.isEnabled = enabled
 }
 
-fun toggleReferenceCodeCard(activity: AppCompatActivity, enabled: Boolean) {
+fun toggleReferenceCodeCard(activity: StatusActivity, enabled: Boolean) {
     val view = activity.findViewById<View>(R.id.reference_link_card)
     view.isClickable = enabled
     view.isEnabled = enabled
