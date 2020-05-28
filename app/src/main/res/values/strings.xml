@@ -98,7 +98,7 @@
     <string name="status_not_feeling_well">I feel unwell</string>
     <string name="status_not_feeling_well_desc">I might have symptoms of coronavirus and want to know what to do next</string>
     <string name="status_initial_title">Follow the current advice to stop the spread of coronavirus</string>
-    <string name="status_symptomatic_title">Your symptoms indicate you may have coronavirus. Please self-isolate and book a test.</string>
+    <string name="status_symptomatic_title">Your symptoms indicate you may have coronavirus. Please isolate yourself and your household and book a test.</string>
     <string name="need_medical_advice">NHS services for your part of the country</string>
     <string name="nhs_online_service"><u>NHS Coronavirus</u></string>
     <string name="nhs_111_online_service"><u>NHS 111 online coronavirus service</u></string>
@@ -151,7 +151,7 @@
     <string name="follow_until">Please follow the advice below until </string>
     <string name="follow_until_symptomatic_pre">On %1$s </string>
     <string name="follow_until_symptomatic"> this app will notify you to update your symptoms. Please read your full advice below.</string>
-    <string name="status_description_01">If you don’t have any symptoms, there’s no need to do anything right now. If you develop symptoms, please come back to this app. If you need urgent medical advice please go to 111/999.</string>
+    <string name="status_description_01">If you don’t have any symptoms, there’s no need to do anything right now. If you develop symptoms, please come back to this app.</string>
     <string name="status_description_02">Feel free to use other apps as normal and you’ll be notified if your advice changes.</string>
     <string name="status_description_03">If you develop symptoms, please come back to this app.</string>
     <string name="re_enable_bluetooth_title">Please turn your Bluetooth back on</string>
@@ -256,4 +256,5 @@
     <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
     <string name="invalid_test_result_title">Your test result was unclear</string>
     <string name="invalid_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
+    <string name="medical_emergency_call">If you have a medical emergency, please call 999. If you require medical help near you, please go to 111 online.</string>
 </resources>
