@@ -16,11 +16,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
-import org.joda.time.Seconds
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
+import uk.nhs.nhsx.sonar.android.app.contactevents.timestampsToIntervals
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.io.File
@@ -53,30 +53,28 @@ class TestViewModel @Inject constructor(
 
     fun storeEvents(activityContext: Context) {
         viewModelScope.launch {
-            val events = contactEventDao.getAll()
-            val text = events.joinToString("\n") {
-                val eventTime = DateTime(it.timestamp)
-                val rssiIntervals = it.rssiTimestamps.mapIndexed { index, timestamp ->
-                    return@mapIndexed if (index == 0) 0
-                    else
-                        Seconds.secondsBetween(
-                            DateTime(it.rssiTimestamps[index - 1]),
-                            DateTime(timestamp)
-                        ).seconds
-                }.joinToString(":")
+            val contactEvents = contactEventDao.getAll()
+                .joinToString("\n") {
+                    val eventTime = DateTime(it.timestamp)
+                    val rssiIntervals = it.rssiTimestamps
+                        .timestampsToIntervals()
+                        .joinToString(":")
 
-                "${Base64.encodeToString(it.sonarId, Base64.DEFAULT).replace(
-                    "\n",
-                    ""
-                )},${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(":")},$rssiIntervals"
-            }
+                    val remoteContactId = Base64.encodeToString(it.sonarId, Base64.DEFAULT).replace(
+                        "\n",
+                        ""
+                    )
+                    "$remoteContactId,${eventTime.toUtcIsoFormat()},${it.duration},${it.rssiValues.joinToString(
+                        ":"
+                    )},$rssiIntervals"
+                }
 
             val zipFile = "contact-events-exports.zip"
 
             activityContext.openFileOutput(zipFile, Context.MODE_PRIVATE).use {
                 ZipOutputStream(it).use { zip ->
                     zip.putNextEntry(ZipEntry("contact-events.csv"))
-                    zip.write(text.toByteArray())
+                    zip.write(contactEvents.toByteArray())
                 }
             }
 

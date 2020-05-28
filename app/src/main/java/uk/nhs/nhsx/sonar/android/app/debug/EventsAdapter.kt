@@ -20,9 +20,9 @@ import kotlinx.android.synthetic.main.event_view.view.rssi
 import kotlinx.android.synthetic.main.event_view.view.timestamp
 import kotlinx.android.synthetic.main.event_view.view.txPower
 import org.joda.time.DateTime
-import org.joda.time.Seconds
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ble.ConnectedDevice
+import uk.nhs.nhsx.sonar.android.app.contactevents.timestampsToIntervals
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import kotlin.math.abs
 
@@ -45,18 +45,11 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         itemView.rssi.text = if (event.expanded) {
             val rssis = event.rssiValues
-            val rssiTimestamps = event.rssiTimestamps
-            val rssiIntervals = rssiTimestamps.mapIndexed { index, timestamp ->
-                return@mapIndexed if (index == 0) ""
-                else
-                    abs(
-                        Seconds.secondsBetween(
-                            DateTime(rssiTimestamps[index - 1]),
-                            DateTime(timestamp)
-                        ).seconds
-                    ).toString()
-            }
-            rssis.mapIndexed { index, _ -> "${rssis[index]}        ${rssiTimestamps[index].toTime()}        ${rssiIntervals[index]}" }
+            val rssiIntervals = event.rssiTimestamps
+                .map { it.millis }
+                .timestampsToIntervals()
+                .map { abs(it) }
+            rssis.mapIndexed { index, _ -> "${rssis[index]}        ${event.rssiTimestamps[index].toTime()}        ${rssiIntervals[index]}" }
                 .joinToString("\n")
         } else {
             event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
