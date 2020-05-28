@@ -38,6 +38,12 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
         nonEmptySetOf(TEMPERATURE)
     )
 
+    private val expiredPositiveState = PositiveState(
+        DateTime.now(UTC).minusDays(15),
+        DateTime.now(UTC).minusDays(1),
+        nonEmptySetOf(TEMPERATURE)
+    )
+
     private fun startActivity(state: UserState) {
         testAppContext.setFullValidUser(state)
         app.startTestActivity<StatusActivity>()
@@ -267,5 +273,10 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
         testAppContext.device.pressBack()
 
         statusRobot.checkEnableNotificationsIsNotDisplayed()
+    }
+
+    fun testShowsUpdateSymptomsDialogWhenPositiveStateExpired() {
+        startActivity(expiredPositiveState)
+        bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
     }
 }

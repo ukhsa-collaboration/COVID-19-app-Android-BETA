@@ -34,7 +34,7 @@ abstract class StatusLayout {
         refreshLayout(activity)
     }
 
-    open fun onResume(activity: StatusActivity) {}
+    abstract fun onResume(activity: StatusActivity)
 
     protected abstract fun refreshLayout(activity: AppCompatActivity)
 
@@ -43,7 +43,6 @@ abstract class StatusLayout {
         activity.findViewById<View>(R.id.feelUnwell).isVisible = false
         activity.findViewById<View>(R.id.nextStepsAdvice).isVisible = false
     }
-
 }
 
 object StatusLayoutFactory {
@@ -69,8 +68,6 @@ class DefaultStatusLayout(val state: UserState) : StatusLayout() {
     }
 
     override fun onResume(activity: StatusActivity) {
-        super.onResume(activity)
-
         if (activity.userInbox.hasRecovery()) {
             activity.recoveryDialog.showExpanded()
         } else {
@@ -122,12 +119,7 @@ open class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
     }
 
     override fun onResume(activity: StatusActivity) {
-        if (state.hasExpired()) {
-            activity.updateSymptomsDialog.showExpanded()
-            activity.checkInReminderNotification.hide()
-        } else {
-            activity.updateSymptomsDialog.dismiss()
-        }
+        symptomaticAndPositiveStateChecks(activity, state)
     }
 }
 
@@ -143,6 +135,10 @@ class PositiveStatusLayout(val state: UserState) : StatusLayout() {
             ),
             statusColor = StatusView.Color.ORANGE
         )
+    }
+
+    override fun onResume(activity: StatusActivity) {
+        symptomaticAndPositiveStateChecks(activity, state)
     }
 }
 
@@ -254,5 +250,14 @@ fun handleTestResult(userInbox: UserInbox, testResultDialog: BottomDialog) {
         testResultDialog.showExpanded()
     } else {
         testResultDialog.dismiss()
+    }
+}
+
+private fun symptomaticAndPositiveStateChecks(activity: StatusActivity, state: UserState) {
+    if (state.hasExpired()) {
+        activity.updateSymptomsDialog.showExpanded()
+        activity.checkInReminderNotification.hide()
+    } else {
+        activity.updateSymptomsDialog.dismiss()
     }
 }

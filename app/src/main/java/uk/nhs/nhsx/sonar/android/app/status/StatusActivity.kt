@@ -11,7 +11,6 @@ import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_status.bookTest
 import kotlinx.android.synthetic.main.activity_status.feelUnwell
-import kotlinx.android.synthetic.main.activity_status.nextStepsAdvice
 import kotlinx.android.synthetic.main.activity_status.notificationPanel
 import kotlinx.android.synthetic.main.activity_status.readLatestAdvice
 import kotlinx.android.synthetic.main.activity_status.registrationPanel

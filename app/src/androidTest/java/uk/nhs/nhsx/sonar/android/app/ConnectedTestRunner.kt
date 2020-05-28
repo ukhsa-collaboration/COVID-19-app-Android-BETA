@@ -119,6 +119,7 @@ class ConnectedTestRunner {
             { StatusActivityTest(testAppContext).testShowsEnableNotificationOnResume() },
             { StatusActivityTest(testAppContext).testDoesNotEnableAllowNotificationOnResume() },
             { StatusActivityTest(testAppContext).testGrantNotificationPermission() },
+            { StatusActivityTest(testAppContext).testShowsUpdateSymptomsDialogWhenPositiveStateExpired() },
 
             { FlowTest(testAppContext).testRegistration() },
             { FlowTest(testAppContext).testProximityDataUploadOnSymptomaticState() },
