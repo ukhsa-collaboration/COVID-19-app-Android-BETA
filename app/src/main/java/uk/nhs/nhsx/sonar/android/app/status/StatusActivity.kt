@@ -98,11 +98,11 @@ class StatusActivity : BaseActivity() {
             openAppSettings()
         }
 
-        setUpdateSymptomsDialog()
+        updateSymptomsDialog = createUpdateSymptomsDialog()
         testResultDialog = createTestResultDialog(this, userInbox)
     }
 
-    private fun setUpdateSymptomsDialog() {
+    private fun createUpdateSymptomsDialog(): BottomDialog {
         val configuration = BottomDialogConfiguration(
             isHideable = false,
             titleResId = R.string.status_today_feeling,
@@ -110,7 +110,7 @@ class StatusActivity : BaseActivity() {
             firstCtaResId = R.string.update_my_symptoms,
             secondCtaResId = R.string.no_symptoms
         )
-        updateSymptomsDialog = BottomDialog(
+        return BottomDialog(
             this, configuration,
             onCancel = {
                 finish()
