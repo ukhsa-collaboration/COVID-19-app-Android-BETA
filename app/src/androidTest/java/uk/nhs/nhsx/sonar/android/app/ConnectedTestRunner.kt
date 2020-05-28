@@ -65,7 +65,7 @@ class ConnectedTestRunner {
             { MainActivityTest(testAppContext).testLaunchWhenStateIsExposed() },
             { MainActivityTest(testAppContext).testLaunchWhenStateIsSymptomatic() },
 
-            { MainOnboardingActivityTest(testAppContext).testExplanation() },
+            { MainOnboardingActivityTest().testExplanation() },
 
             { PostCodeActivityTest(testAppContext).pristineState() },
             { PostCodeActivityTest(testAppContext).emptyPostCodeShowsInvalidHint() },

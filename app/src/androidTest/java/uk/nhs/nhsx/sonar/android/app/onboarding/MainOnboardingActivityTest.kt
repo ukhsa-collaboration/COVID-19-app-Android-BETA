@@ -4,11 +4,8 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 
-class MainOnboardingActivityTest(testAppContext: TestApplicationContext) {
-
-    private val app = testAppContext.app
+class MainOnboardingActivityTest {
 
     private val mainOnboardingRobot = MainOnboardingRobot()
     private val explanationRobot = ExplanationRobot()

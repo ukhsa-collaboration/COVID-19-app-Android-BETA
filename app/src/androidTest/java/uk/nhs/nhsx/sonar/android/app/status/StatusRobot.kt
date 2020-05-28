@@ -4,6 +4,7 @@ import android.view.View
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
@@ -41,6 +42,14 @@ class StatusRobot {
 
     fun clickCurrentAdviceCard() {
         onView(withId(R.id.readLatestAdvice)).perform(click())
+    }
+
+    fun clickNotFeelingWellCard() {
+        onView(withId(R.id.feelUnwell)).perform(scrollTo(), click())
+    }
+
+    fun clickEnableNotifications() {
+        onView(withId(R.id.notificationPanel)).perform(click())
     }
 
     fun checkStatusTitle(@StringRes stringRes: Int) {
@@ -88,10 +97,6 @@ class StatusRobot {
 
     fun checkEnableNotificationsIsNotDisplayed() {
         onView(withId(R.id.notificationPanel)).check(matches(not(isDisplayed())))
-    }
-
-    fun clickEnableNotifications() {
-        onView(withId(R.id.notificationPanel)).perform(click())
     }
 
     private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {

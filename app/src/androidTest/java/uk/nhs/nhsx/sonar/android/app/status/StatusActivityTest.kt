@@ -132,6 +132,14 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
         bottomDialogRobot.checkBottomDialogIsNotDisplayed()
     }
 
+    fun testShowsUpdateSymptomsDialogWhenPositiveStateExpired() {
+        startActivity(expiredPositiveState)
+
+        bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
+        bottomDialogRobot.clickSecondCtaButton()
+        bottomDialogRobot.checkBottomDialogIsNotDisplayed()
+    }
+
     fun testClickOrderTestCardShowsApplyForTest() {
         val date = DateTime.now(UTC).plusDays(1)
         val symptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
@@ -273,10 +281,5 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
         testAppContext.device.pressBack()
 
         statusRobot.checkEnableNotificationsIsNotDisplayed()
-    }
-
-    fun testShowsUpdateSymptomsDialogWhenPositiveStateExpired() {
-        startActivity(expiredPositiveState)
-        bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
     }
 }

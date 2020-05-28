@@ -2,7 +2,6 @@ package uk.nhs.nhsx.sonar.android.app
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
@@ -60,7 +59,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         startMainActivity()
         testAppContext.simulateDeviceInProximity()
 
-        clickNotFeelingWellCard()
+        statusRobot.clickNotFeelingWellCard()
 
         diagnoseQuestionRobot.answerYesTo(R.id.temperature_question)
         diagnoseQuestionRobot.answerYesTo(R.id.cough_question)
@@ -84,7 +83,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         testAppContext.setFullValidUser()
         startMainActivity()
 
-        clickNotFeelingWellCard()
+        statusRobot.clickNotFeelingWellCard()
 
         diagnoseQuestionRobot.answerNoTo(R.id.temperature_question)
         diagnoseQuestionRobot.answerNoTo(R.id.cough_question)
@@ -158,10 +157,6 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
 
         testAppContext.verifyBluetoothIsEnabled()
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
-    }
-
-    private fun clickNotFeelingWellCard() {
-        onView(withId(R.id.feelUnwell)).perform(scrollTo(), click())
     }
 
     private fun startMainActivity() {
