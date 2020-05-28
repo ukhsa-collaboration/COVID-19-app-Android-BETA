@@ -21,6 +21,7 @@ import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_DEFAULT
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_EXPOSED
+import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_POSITIVE
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
@@ -43,8 +44,8 @@ class CurrentAdviceActivity : AppCompatActivity(R.layout.activity_current_advice
             when (state) {
                 DefaultState -> openUrl(URL_LATEST_ADVICE_DEFAULT)
                 is ExposedState -> openUrl(URL_LATEST_ADVICE_EXPOSED)
-                is SymptomaticState, is PositiveState ->
-                    openUrl(URL_LATEST_ADVICE_SYMPTOMATIC)
+                is SymptomaticState -> openUrl(URL_LATEST_ADVICE_SYMPTOMATIC)
+                is PositiveState -> openUrl(URL_LATEST_ADVICE_POSITIVE)
             }
         }
 
