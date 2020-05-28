@@ -68,7 +68,7 @@ class StatusActivity : BaseActivity() {
     private val viewModel: OkViewModel by viewModels { viewModelFactory }
 
     lateinit var recoveryDialog: BottomDialog
-    internal lateinit var updateSymptomsDialog: BottomSheetDialog
+    internal lateinit var updateSymptomsDialog: BottomDialog
     private lateinit var testResultDialog: BottomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {

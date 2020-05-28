@@ -54,7 +54,7 @@ class PermissionActivity : ColorInversionAwareActivity(R.layout.activity_permiss
             EnableLocationActivity.start(this)
             return
         }
-        startOkActivity()
+        startStatusActivity()
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
@@ -96,7 +96,7 @@ class PermissionActivity : ColorInversionAwareActivity(R.layout.activity_permiss
         requestPermissions(locationHelper.requiredLocationPermissions, REQUEST_LOCATION)
     }
 
-    private fun startOkActivity() {
+    private fun startStatusActivity() {
         StatusActivity.start(this)
         finish()
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
