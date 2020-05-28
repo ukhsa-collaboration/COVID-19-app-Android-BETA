@@ -107,7 +107,7 @@
         <activity android:name=".interstitials.WorkplaceGuidanceActivity"
                   android:label="@string/guidance_for_workplace"/>
         <activity android:name=".interstitials.ApplyForTestActivity"
-                  android:label="@string/apply_for_test"/>
+                  android:label="@string/apply_for_test_now"/>
         <activity android:name=".interstitials.CurrentAdviceActivity"
             android:label="@string/read_current_advice"/>
 

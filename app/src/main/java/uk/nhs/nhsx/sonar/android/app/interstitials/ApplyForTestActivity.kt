@@ -36,7 +36,7 @@ class ApplyForTestActivity : BaseActivity() {
         appComponent.inject(this)
 
         setContentView(R.layout.activity_apply_for_test)
-        setNavigateUpToolbar(toolbar, title = R.string.apply_for_test)
+        setNavigateUpToolbar(toolbar, title = R.string.apply_for_test_now)
 
         viewModel.state().observe(this, Observer { state ->
             reference_code_panel.setState(state)
