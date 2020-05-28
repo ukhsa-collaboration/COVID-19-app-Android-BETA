@@ -81,7 +81,6 @@ class StatusActivity : BaseActivity() {
 
         registrationPanel.setState(RegistrationState.Complete)
 
-        hideNotSharedWidgets()
         val userState = userStateStorage.get()
         statusLayout = StatusLayoutFactory.from(userState)
         statusLayout.refreshStatusLayout(this)
@@ -217,12 +216,6 @@ class StatusActivity : BaseActivity() {
         super.onPause()
         updateSymptomsDialog.dismiss()
         recoveryDialog.dismiss()
-    }
-
-    private fun hideNotSharedWidgets() {
-        bookTest.isVisible = false
-        feelUnwell.isVisible = false
-        nextStepsAdvice.isVisible = false
     }
 
     companion object {

@@ -27,10 +27,23 @@ import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 
-interface StatusLayout {
-    fun refreshStatusLayout(activity: AppCompatActivity)
-    fun onResume(activity: StatusActivity) {
+abstract class StatusLayout {
+
+    fun refreshStatusLayout(activity: AppCompatActivity) {
+        hideNotSharedWidgets(activity)
+        refreshLayout(activity)
     }
+
+    open fun onResume(activity: StatusActivity) {}
+
+    protected abstract fun refreshLayout(activity: AppCompatActivity)
+
+    private fun hideNotSharedWidgets(activity: AppCompatActivity) {
+        activity.findViewById<View>(R.id.bookTest).isVisible = false
+        activity.findViewById<View>(R.id.feelUnwell).isVisible = false
+        activity.findViewById<View>(R.id.nextStepsAdvice).isVisible = false
+    }
+
 }
 
 object StatusLayoutFactory {
@@ -43,9 +56,9 @@ object StatusLayoutFactory {
         }
 }
 
-class DefaultStatusLayout(val state: UserState) : StatusLayout {
+class DefaultStatusLayout(val state: UserState) : StatusLayout() {
 
-    override fun refreshStatusLayout(activity: AppCompatActivity) {
+    override fun refreshLayout(activity: AppCompatActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_initial_title,
@@ -66,9 +79,9 @@ class DefaultStatusLayout(val state: UserState) : StatusLayout {
     }
 }
 
-class ExposedStatusLayout(val state: UserState) : StatusLayout {
+class ExposedStatusLayout(val state: UserState) : StatusLayout() {
 
-    override fun refreshStatusLayout(activity: AppCompatActivity) {
+    override fun refreshLayout(activity: AppCompatActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_exposed_title,
@@ -93,9 +106,9 @@ class ExposedStatusLayout(val state: UserState) : StatusLayout {
     }
 }
 
-open class SymptomaticStatusLayout(val state: UserState) : StatusLayout {
+open class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
 
-    override fun refreshStatusLayout(activity: AppCompatActivity) {
+    override fun refreshLayout(activity: AppCompatActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_symptomatic_title,
@@ -118,9 +131,9 @@ open class SymptomaticStatusLayout(val state: UserState) : StatusLayout {
     }
 }
 
-class PositiveStatusLayout(val state: UserState) : StatusLayout {
+class PositiveStatusLayout(val state: UserState) : StatusLayout() {
 
-    override fun refreshStatusLayout(activity: AppCompatActivity) {
+    override fun refreshLayout(activity: AppCompatActivity) {
         createStatusView(
             activity = activity,
             titleRes = R.string.status_positive_test_title,
