@@ -13,6 +13,16 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.CoLocationEvent
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.nio.ByteBuffer
 
+fun List<Long>.timestampsToIntervals(): List<Int> =
+    this.mapIndexed { index, timestamp ->
+        return@mapIndexed if (index == 0) 0
+        else
+            Seconds.secondsBetween(
+                DateTime(this[index - 1]),
+                DateTime(timestamp)
+            ).seconds
+    }
+
 class CoLocationDataProvider(
     private val contactEventDao: ContactEventDao,
     private val base64encode: (ByteArray) -> String = { Base64.encodeToString(it, DEFAULT) }
@@ -23,14 +33,7 @@ class CoLocationDataProvider(
 
     private fun convert(contactEvent: ContactEvent): CoLocationEvent {
         val startTime = DateTime(contactEvent.timestamp, DateTimeZone.UTC)
-        val rssiIntervals = contactEvent.rssiTimestamps.mapIndexed { index, timestamp ->
-            return@mapIndexed if (index == 0) 0
-            else
-                Seconds.secondsBetween(
-                    DateTime(contactEvent.rssiTimestamps[index - 1]),
-                    DateTime(timestamp)
-                ).seconds
-        }
+        val rssiIntervals = contactEvent.rssiTimestamps.timestampsToIntervals()
 
         val rssiValues = contactEvent.rssiValues.map { it.toByte() }.toByteArray()
         return CoLocationEvent(

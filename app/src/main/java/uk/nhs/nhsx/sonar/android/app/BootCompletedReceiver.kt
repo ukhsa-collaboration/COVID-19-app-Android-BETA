@@ -11,12 +11,9 @@ import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
 
 class BootCompletedReceiver : BroadcastReceiver() {
-    @Inject
-    lateinit var userStateStorage: UserStateStorage
 
     @Inject
     lateinit var reminders: Reminders
@@ -38,7 +35,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
     }
 
     private fun setReminder() {
-        userStateStorage.get().scheduleCheckInReminder(reminders)
+        reminders.reschedulePendingCheckInReminder()
     }
 
     private fun startBluetoothService(context: Context) {

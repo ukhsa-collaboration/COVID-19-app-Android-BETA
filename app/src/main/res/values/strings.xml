@@ -6,7 +6,7 @@
     <string name="app_name">NHS COVID-19</string>
     <string name="app_title">COVID-19</string>
     <string name="onboarding_title">This NHS app does three things for you:</string>
-    <string name="onboarding_first_bullet_text">It lets you know if you have been near someone who now has coronavirus symptoms</string>
+    <string name="onboarding_first_bullet_text">It lets you know if you have been near someone who now has coronavirus</string>
     <string name="onboarding_second_bullet_text">It links you to up-to-date guidance on coronavirus that is relevant to your situation</string>
     <string name="onboarding_third_bullet_text">It lets you book a test if you have certain symptoms of coronavirus</string>
     <string name="one">1</string>
@@ -16,12 +16,12 @@
         remain protected at all times. On an Android phone, your location permission is needed for Bluetooth to work.
     </string>
     <string name="explanation_link">
-        <u>Learn more about how it works</u>
+        <u>Learn more about how the app works</u>
     </string>
     <string name="bluetooth_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near
         another phone with this app. For this app to work, Bluetooth needs to be kept on at all times.
     </string>
-    <string name="status_exposed_title">You have been near someone who has coronavirus symptoms</string>
+    <string name="status_exposed_title">You have been near someone who has tested positive for coronavirus. Please self-isolate.</string>
     <string name="status_positive_test_title">Your test result indicates  you  have coronavirus. Please isolate yourself and your household.</string>
     <string name="default_notification_channel_id" translatable="false">colocate-locate</string>
     <string name="default_notification_channel_name">General</string>
@@ -98,11 +98,11 @@
     <string name="status_not_feeling_well">I feel unwell</string>
     <string name="status_not_feeling_well_desc">I might have symptoms of coronavirus and want to know what to do next</string>
     <string name="status_initial_title">Follow the current advice to stop the spread of coronavirus</string>
-    <string name="status_symptomatic_title">Your symptoms indicate you may have coronavirus. Please self-isolate and apply for a test.</string>
+    <string name="status_symptomatic_title">Your symptoms indicate you may have coronavirus. Please isolate yourself and your household and book a test.</string>
     <string name="need_medical_advice">NHS services for your part of the country</string>
     <string name="nhs_online_service"><u>NHS Coronavirus</u></string>
     <string name="nhs_111_online_service"><u>NHS 111 online coronavirus service</u></string>
-    <string name="clinical_test_uk_gov"><u>Apply for a coronavirus test</u></string>
+    <string name="clinical_test_uk_gov"><u>Book a coronavirus test</u></string>
     <string name="status_today_feeling">How are you feeling today?</string>
     <string name="registration_finalising_setup">Finalising setup…</string>
     <string name="registration_everything_is_working_ok">The app is working properly</string>
@@ -130,7 +130,7 @@
     <string name="i_do_not_sneeze">I don\'t have any of these symptoms: a runny nose, feeling feverish or sneezing</string>
     <string name="i_do_stomach">I have at least one of these symptoms: diarrhoea, nausea, vomiting or loss of appetite</string>
     <string name="i_do_not_stomach">I don\'t have any of these symptoms: diarrhoea, nausea, vomiting or loss of appetite</string>
-    <string name="date_selection_error">Select the date from the dropdown</string>
+    <string name="date_selection_error">Select the date you first started showing any of these symptoms</string>
     <string name="update_symptoms_prompt">Please update your symptoms to view your latest advice.</string>
     <string name="update_my_symptoms">Update my symptoms</string>
     <string name="no_symptoms">I no longer have symptoms</string>
@@ -151,7 +151,7 @@
     <string name="follow_until">Please follow the advice below until </string>
     <string name="follow_until_symptomatic_pre">On %1$s </string>
     <string name="follow_until_symptomatic"> this app will notify you to update your symptoms. Please read your full advice below.</string>
-    <string name="status_description_01">If you don’t have any symptoms, there’s no need to do anything right now. If you develop symptoms, please come back to this app. If you need urgent medical advice please go to 111/999.</string>
+    <string name="status_description_01">If you don’t have any symptoms, there’s no need to do anything right now. If you develop symptoms, please come back to this app.</string>
     <string name="status_description_02">Feel free to use other apps as normal and you’ll be notified if your advice changes.</string>
     <string name="status_description_03">If you develop symptoms, please come back to this app.</string>
     <string name="re_enable_bluetooth_title">Please turn your Bluetooth back on</string>
@@ -219,8 +219,8 @@
     <string name="enable_notifications_title">Enable notifications</string>
     <string name="timestamp">Timestamp %1$s</string>
     <string name="txpower">TxPower: \nAdvertised = %1$d \nProtocol = %2$d</string>
-    <string name="apply_for_test">Apply for a coronavirus test</string>
-    <string name="apply_for_test_now">Apply for a coronavirus test now</string>
+    <string name="apply_for_test">Book a coronavirus test</string>
+    <string name="apply_for_test_now">Book a coronavirus test now</string>
     <string name="apply_for_test_desc">You can now order a coronavirus test for you and other people in your household. This test can tell you whether you currently have coronavirus or not.</string>
     <string name="apply_for_test_need_ref">In order for this app to receive your test result, please write down this 8 digit app reference code as you will be asked for it later.</string>
     <string name="get_tested">Get tested</string>
@@ -237,7 +237,7 @@
     <string name="copied">Copied</string>
     <string name="latest_guidance"><u>Latest guidance for your workplace</u></string>
     <string name="latest_workplace_guidance">Read the latest guidance for your workplace</string>
-    <string name="workplace_guidance_info">The guidance on GOV.UK is up to date and specific to the industry you work in.</string>
+    <string name="workplace_guidance_info">The guidance on GOV.UK is specific to the industry you work in and helps you understand how to work safely during the coronavirus pandemic.</string>
     <string name="healt_and_care_workers_title">If you are a health and care worker:</string>
     <string name="healt_and_care_workers_description">Turn off your Bluetooth when you put on your personal protective equipment provided for you by your employer. Your interactions at work should not be captured when you are wearing personal protective equipment.</string>
     <string name="next_steps">Next Steps</string>
@@ -247,13 +247,14 @@
     <string name="more_options">More Options</string>
     <string name="app_version">App version:</string>
     <string name="negative_test_result_title">Your test result indicates that you don’t have coronavirus</string>
-    <string name="negative_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
+    <string name="negative_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
     <string name="current_advice_title">Read and follow advice specific to your situation</string>
-    <string name="current_advice_desc_simple">The advice below is up to date and specific to your situation. Please follow this advice.</string>
-    <string name="current_advice_desc_with_date">The advice below is up to date and specific to your situation. Please follow this advice until %1$s </string>
+    <string name="current_advice_desc_simple">The advice below is up-to-date and specific to your situation. Please follow this advice.</string>
+    <string name="current_advice_desc_with_date">The advice below is up-to-date and specific to your situation. Please follow this advice until %1$s </string>
     <string name="read_specific_advice_for_you"><u>Read specific advice for you</u></string>
     <string name="positive_test_result_title">Your test result indicates that you have coronavirus</string>
-    <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
+    <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
     <string name="invalid_test_result_title">Your test result was unclear</string>
-    <string name="invalid_test_result_description">Thank you for getting tested. View your current advice based on your results. You have received an email with more information.</string>
+    <string name="invalid_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
+    <string name="medical_emergency_call">If you have a medical emergency, please call 999. If you require medical help near you, please go to 111 online.</string>
 </resources>

@@ -71,18 +71,6 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `serialize checkin state`() {
-        val since = DateTime(1387241302263L, UTC)
-        val until = DateTime(1587241302263L, UTC)
-        val symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-
-        assertThat(serialize(CheckinState(since, until, symptoms)))
-            .isEqualTo(
-                """{"symptoms":["TEMPERATURE"],"until":1587241302263,"type":"CheckinState","since":1387241302263}"""
-            )
-    }
-
-    @Test
     fun `deserialize null`() {
         assertThat(deserialize(null)).isEqualTo(DefaultState)
     }
@@ -234,20 +222,20 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize checkin state without symptom date`() {
+    fun `deserialize legacy checkin state without symptom date`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"CheckinState"}"""))
-            .isEqualTo(CheckinState(until.minusDays(NO_DAYS_IN_SYMPTOMATIC), until, nonEmptySetOf(Symptom.COUGH)))
+            .isEqualTo(SymptomaticState(until.minusDays(NO_DAYS_IN_SYMPTOMATIC), until, nonEmptySetOf(Symptom.COUGH)))
     }
 
     @Test
-    fun `deserialize checkin state with symptom date`() {
+    fun `deserialize legacy checkin state with symptom date`() {
         val since = DateTime(1587241302262L, UTC)
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"since":1587241302262,"until":1587241302262,"symptoms":["COUGH"],"type":"CheckinState"}"""))
-            .isEqualTo(CheckinState(since, until, nonEmptySetOf(Symptom.COUGH)))
+            .isEqualTo(SymptomaticState(since, until, nonEmptySetOf(Symptom.COUGH)))
     }
 
     @Test

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
@@ -12,14 +11,23 @@
     tools:parentTag="LinearLayout">
 
     <TextView
+        style="@style/TextViewActionSubTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:text="@string/medical_emergency_call"
+        android:textSize="16sp" />
+
+    <TextView
         style="@style/TextViewCardSubTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="8dp"
         android:accessibilityHeading="true"
         android:paddingHorizontal="16dp"
-        android:layout_marginBottom="8dp"
-        android:textAllCaps="true"
-        android:text="@string/more_options" />
+        android:text="@string/more_options"
+        android:textAllCaps="true" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/reference_link_card"
@@ -55,9 +63,9 @@
             style="@style/TextViewActionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="24dp"
-            android:paddingHorizontal="16dp"
             android:drawableEnd="@drawable/ic_keyboard_arrow_right_24dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="24dp"
             android:text="@string/guidance_for_workplace" />
     </com.google.android.material.card.MaterialCardView>
 

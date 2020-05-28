@@ -52,6 +52,7 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Comp
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.SECRET_KEY
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.encodedSecretKey
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
+import uk.nhs.nhsx.sonar.android.app.util.TestNotificationManagerHelper
 import java.nio.ByteBuffer
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit
@@ -107,6 +108,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
     )
 
     private val testLocationHelper = TestLocationHelper(AndroidLocationHelper(app))
+    private val testNotificationManagerHelper = TestNotificationManagerHelper(true)
     private var testDispatcher = TestSonarServiceDispatcher()
     private var mockServer = MockWebServer()
 
@@ -126,6 +128,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
                 AppModule(
                     app,
                     testLocationHelper,
+                    testNotificationManagerHelper,
                     TestAnalytics(),
                     ActivationCodeWaitTime(10, TimeUnit.SECONDS)
                 )
@@ -512,6 +515,14 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         testLocationHelper.locationPermissionsGranted = true
     }
 
+    fun revokeNotificationsPermission() {
+        testNotificationManagerHelper.notificationEnabled = false
+    }
+
+    fun grantNotificationsPermission() {
+        testNotificationManagerHelper.notificationEnabled = true
+    }
+
     private fun resetTestMockServer() {
         testDispatcher = TestSonarServiceDispatcher()
         mockServer.shutdown()
@@ -536,6 +547,10 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         resetTestMockServer()
         closeNotificationPanel()
         ensureBluetoothEnabled()
+    }
+
+    fun waitUntilCannotFindText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
+        device.wait(Until.gone(By.text(app.getString(stringId))), timeoutInMs)
     }
 }
 

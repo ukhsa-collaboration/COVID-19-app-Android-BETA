@@ -30,6 +30,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
+import uk.nhs.nhsx.sonar.android.app.util.AndroidNotificationManagerHelper
 import java.security.KeyStore
 import java.security.Security
 
@@ -90,7 +91,14 @@ class SonarApplication : Application() {
 
     private fun buildApplicationComponent(): ApplicationComponent =
         DaggerApplicationComponent.builder()
-            .appModule(AppModule(this, AndroidLocationHelper(this), AppCenterAnalytics()))
+            .appModule(
+                AppModule(
+                    this,
+                    AndroidLocationHelper(this),
+                    AndroidNotificationManagerHelper(this),
+                    AppCenterAnalytics()
+                )
+            )
             .persistenceModule(PersistenceModule(this))
             .bluetoothModule(BluetoothModule(this, scanIntervalLength = 8))
             .cryptoModule(

@@ -122,43 +122,50 @@ class UserStateTransitionsTest {
     fun `diagnoseForCheckin - with temperature`() {
         val tomorrow = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        val state = diagnoseForCheckin(tomorrow, setOf(TEMPERATURE), today)
+        val currentState = UserState.symptomatic(today, nonEmptySetOf(COUGH))
 
-        assertThat(state).isEqualTo(CheckinState(tomorrow, tomorrow, nonEmptySetOf(TEMPERATURE)))
+        val state = diagnoseForCheckin(currentState, setOf(TEMPERATURE), today)
+
+        assertThat(state).isEqualTo(SymptomaticState(currentState.since, tomorrow, nonEmptySetOf(TEMPERATURE)))
     }
 
     @Test
     fun `diagnoseForCheckin - with cough and temperature`() {
+        val aDateTime = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
         val tomorrow = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        val state = diagnoseForCheckin(tomorrow, setOf(COUGH, TEMPERATURE), today)
+        val currentState = UserState.positive(aDateTime, nonEmptySetOf(TEMPERATURE))
 
-        assertThat(state).isEqualTo(CheckinState(tomorrow, tomorrow, nonEmptySetOf(COUGH, TEMPERATURE)))
+        val state = diagnoseForCheckin(currentState, setOf(COUGH, TEMPERATURE), today)
+
+        assertThat(state).isEqualTo(PositiveState(currentState.since, tomorrow, nonEmptySetOf(COUGH, TEMPERATURE)))
     }
 
     @Test
     fun `diagnoseForCheckin - with cough`() {
-        val tomorrow = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
+        val aDateTime = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
+        val currentState = UserState.positive(aDateTime, nonEmptySetOf(TEMPERATURE))
 
-        val state = diagnoseForCheckin(tomorrow, setOf(COUGH), today)
+        val state = diagnoseForCheckin(currentState, setOf(COUGH), today)
 
         assertThat(state).isEqualTo(DefaultState)
     }
 
     @Test
     fun `diagnoseForCheckin - with anosmia`() {
-        val tomorrow = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
+        val currentState = UserState.symptomatic(today, nonEmptySetOf(TEMPERATURE))
 
-        val state = diagnoseForCheckin(tomorrow, setOf(ANOSMIA), today)
+        val state = diagnoseForCheckin(currentState, setOf(ANOSMIA), today)
 
         assertThat(state).isEqualTo(DefaultState)
     }
 
     @Test
     fun `diagnoseForCheckin - with no symptoms`() {
-        val tomorrow = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
+        val aDateTime = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
+        val currentState = UserState.positive(aDateTime, nonEmptySetOf(TEMPERATURE))
 
-        val state = diagnoseForCheckin(tomorrow, emptySet(), today)
+        val state = diagnoseForCheckin(currentState, emptySet(), today)
 
         assertThat(state).isEqualTo(DefaultState)
     }
@@ -168,25 +175,20 @@ class UserStateTransitionsTest {
         assertThat(transitionOnContactAlert(DefaultState)).isInstanceOf(ExposedState::class.java)
         assertThat(transitionOnContactAlert(buildExposedState())).isNull()
         assertThat(transitionOnContactAlert(buildSymptomaticState())).isNull()
-        assertThat(transitionOnContactAlert(buildCheckinState())).isNull()
     }
 
     @Test
     fun `test expireExposedState`() {
         val exposedState = buildExposedState()
         val symptomaticState = buildSymptomaticState()
-        val checkinState = buildCheckinState()
 
         val expiredExposedState = buildExposedState(until = DateTime.now().minusSeconds(1))
         val expiredSymptomaticState = buildSymptomaticState(until = DateTime.now().minusSeconds(1))
-        val expiredCheckinState = buildCheckinState(until = DateTime.now().minusSeconds(1))
 
         assertThat(expireExposedState(DefaultState)).isEqualTo(DefaultState)
         assertThat(expireExposedState(exposedState)).isEqualTo(exposedState)
         assertThat(expireExposedState(symptomaticState)).isEqualTo(symptomaticState)
-        assertThat(expireExposedState(checkinState)).isEqualTo(checkinState)
         assertThat(expireExposedState(expiredSymptomaticState)).isEqualTo(expiredSymptomaticState)
-        assertThat(expireExposedState(expiredCheckinState)).isEqualTo(expiredCheckinState)
 
         assertThat(expireExposedState(expiredExposedState)).isEqualTo(DefaultState)
     }

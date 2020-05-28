@@ -20,8 +20,3 @@ fun buildPositiveState(
     until: DateTime = DateTime.now().plusDays(1),
     symptoms: NonEmptySet<Symptom> = nonEmptySetOf(Symptom.COUGH)
 ) = PositiveState(since, until, symptoms)
-
-fun buildCheckinState(
-    until: DateTime = DateTime.now().plusDays(1),
-    symptoms: NonEmptySet<Symptom> = nonEmptySetOf(Symptom.COUGH)
-) = CheckinState(until, until, symptoms)

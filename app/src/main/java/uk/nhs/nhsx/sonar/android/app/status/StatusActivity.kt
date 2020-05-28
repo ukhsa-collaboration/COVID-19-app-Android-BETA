@@ -8,9 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.isVisible
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_status.bookTest
 import kotlinx.android.synthetic.main.activity_status.feelUnwell
 import kotlinx.android.synthetic.main.activity_status.nextStepsAdvice
@@ -199,7 +197,7 @@ class StatusActivity : BaseActivity() {
         statusLayout.onResume(this)
 
         notificationPanel.isVisible =
-            !NotificationManagerCompat.from(this).areNotificationsEnabled()
+            !notificationManagerHelper.areNotificationsEnabled()
 
         handleTestResult(userInbox, testResultDialog)
     }

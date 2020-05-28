@@ -235,4 +235,37 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
 
         statusRobot.checkActivityIsDisplayed(ExposedState::class)
     }
+
+    fun testShowsEnableNotificationOnResume() {
+        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.revokeNotificationsPermission()
+
+        app.startTestActivity<StatusActivity>()
+
+        statusRobot.checkEnableNotificationsIsDisplayed()
+    }
+
+    fun testDoesNotEnableAllowNotificationOnResume() {
+        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.grantNotificationsPermission()
+
+        app.startTestActivity<StatusActivity>()
+
+        statusRobot.checkEnableNotificationsIsNotDisplayed()
+    }
+
+    fun testGrantNotificationPermission() {
+        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.revokeNotificationsPermission()
+
+        app.startTestActivity<StatusActivity>()
+
+        statusRobot.clickEnableNotifications()
+        testAppContext.waitUntilCannotFindText(R.string.enable_notifications_title)
+
+        testAppContext.grantNotificationsPermission()
+        testAppContext.device.pressBack()
+
+        statusRobot.checkEnableNotificationsIsNotDisplayed()
+    }
 }

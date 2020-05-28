@@ -20,9 +20,9 @@ import kotlinx.android.synthetic.main.event_view.view.rssi
 import kotlinx.android.synthetic.main.event_view.view.timestamp
 import kotlinx.android.synthetic.main.event_view.view.txPower
 import org.joda.time.DateTime
-import org.joda.time.Seconds
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.ble.ConnectedDevice
+import uk.nhs.nhsx.sonar.android.app.ble.SuccessfulContactEvent
+import uk.nhs.nhsx.sonar.android.app.contactevents.timestampsToIntervals
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import kotlin.math.abs
 
@@ -30,7 +30,7 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val context: Context = view.context
 
-    fun bindTo(event: ConnectedDevice) {
+    fun bindTo(event: SuccessfulContactEvent) {
         itemView.detailView.visibility = if (event.expanded) View.VISIBLE else View.GONE
         val cryptogramBytes = Base64.decode(event.cryptogram, Base64.DEFAULT)
         val (cryptogramColour, inverseColour) = cryptogramColourAndInverse(cryptogramBytes)
@@ -45,18 +45,11 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         itemView.rssi.text = if (event.expanded) {
             val rssis = event.rssiValues
-            val rssiTimestamps = event.rssiTimestamps
-            val rssiIntervals = rssiTimestamps.mapIndexed { index, timestamp ->
-                return@mapIndexed if (index == 0) ""
-                else
-                    abs(
-                        Seconds.secondsBetween(
-                            DateTime(rssiTimestamps[index - 1]),
-                            DateTime(timestamp)
-                        ).seconds
-                    ).toString()
-            }
-            rssis.mapIndexed { index, _ -> "${rssis[index]}        ${rssiTimestamps[index].toTime()}        ${rssiIntervals[index]}" }
+            val rssiIntervals = event.rssiTimestamps
+                .map { it.millis }
+                .timestampsToIntervals()
+                .map { abs(it) }
+            rssis.mapIndexed { index, _ -> "${rssis[index]}        ${event.rssiTimestamps[index].toTime()}        ${rssiIntervals[index]}" }
                 .joinToString("\n")
         } else {
             event.rssiValues.joinToString(",", prefix = "[", postfix = "]")
@@ -76,7 +69,7 @@ class EventViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 }
 
 class EventsAdapter :
-    ListAdapter<ConnectedDevice, RecyclerView.ViewHolder>(EventItemDiffCallback()) {
+    ListAdapter<SuccessfulContactEvent, RecyclerView.ViewHolder>(EventItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -95,10 +88,10 @@ class EventsAdapter :
     }
 }
 
-class EventItemDiffCallback : DiffUtil.ItemCallback<ConnectedDevice>() {
-    override fun areItemsTheSame(oldItem: ConnectedDevice, newItem: ConnectedDevice): Boolean =
+class EventItemDiffCallback : DiffUtil.ItemCallback<SuccessfulContactEvent>() {
+    override fun areItemsTheSame(oldItem: SuccessfulContactEvent, newItem: SuccessfulContactEvent): Boolean =
         oldItem == newItem
 
-    override fun areContentsTheSame(oldItem: ConnectedDevice, newItem: ConnectedDevice): Boolean =
+    override fun areContentsTheSame(oldItem: SuccessfulContactEvent, newItem: SuccessfulContactEvent): Boolean =
         oldItem == newItem
 }

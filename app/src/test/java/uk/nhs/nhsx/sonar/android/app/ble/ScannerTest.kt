@@ -13,6 +13,7 @@ import com.polidea.rxandroidble2.scan.ScanResult
 import com.polidea.rxandroidble2.scan.ScanSettings
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.spyk
 import io.mockk.verify
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -93,6 +94,16 @@ class ScannerTest {
         every { connection.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID) } returns Single.just(
             identifier
         )
+
+        every {
+            saveContactWorker.createOrUpdateContactEvent(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns Unit
     }
 
     @After
@@ -127,6 +138,84 @@ class ScannerTest {
                             txPower
                         )
                     }
+                }
+            } finally {
+                scan.stop()
+            }
+        }
+    }
+
+    @Test
+    fun emitsReadErrors() {
+        val exception = Exception("Failed reading remote RSSI")
+        every { connection.readRssi() } throws exception
+        val eventEmitter = spyk<BleEventEmitter>()
+
+        runBlocking {
+            val scan = Scanner(
+                bleClient,
+                saveContactWorker,
+                eventEmitter = eventEmitter,
+                currentTimestampProvider = { timestamp },
+                scanIntervalLength = 1,
+                base64Decoder = { Base64.getDecoder().decode(it) }
+            )
+
+            scan.start(coroutineScope)
+            coroutineScope.advanceTimeBy(1_000)
+
+            try {
+                withContext(Dispatchers.Default) {
+                    verify(exactly = 0, timeout = 3_000) {
+                        saveContactWorker.createOrUpdateContactEvent(
+                            any(),
+                            any(),
+                            any(),
+                            any(),
+                            any()
+                        )
+                    }
+
+                    verify { eventEmitter.errorEvent("00:1B:44:11:3A:B7", exception) }
+                }
+            } finally {
+                scan.stop()
+            }
+        }
+    }
+
+    @Test
+    fun emitsConnectionErrors() {
+        val exception = Exception("Connection failed")
+        every { bleDevice.establishConnection(any()) } returns Observable.error(exception)
+        val eventEmitter = spyk<BleEventEmitter>()
+
+        runBlocking {
+            val scan = Scanner(
+                bleClient,
+                saveContactWorker,
+                eventEmitter = eventEmitter,
+                currentTimestampProvider = { timestamp },
+                scanIntervalLength = 1,
+                base64Decoder = { Base64.getDecoder().decode(it) }
+            )
+
+            scan.start(coroutineScope)
+            coroutineScope.advanceTimeBy(1_000)
+
+            try {
+                withContext(Dispatchers.Default) {
+                    verify(exactly = 0, timeout = 3_000) {
+                        saveContactWorker.createOrUpdateContactEvent(
+                            any(),
+                            any(),
+                            any(),
+                            any(),
+                            any()
+                        )
+                    }
+
+                    verify { eventEmitter.errorEvent("00:1B:44:11:3A:B7", exception) }
                 }
             } finally {
                 scan.stop()

@@ -25,7 +25,6 @@ class StatusRobot {
             DefaultState::class -> R.string.status_initial_title
             ExposedState::class -> R.string.status_exposed_title
             SymptomaticState::class -> R.string.status_symptomatic_title
-            CheckinState::class -> R.string.status_symptomatic_title
             PositiveState::class -> R.string.status_positive_test_title
             else -> throw IllegalArgumentException("Not able to match title: $userState")
         }
@@ -81,6 +80,18 @@ class StatusRobot {
         waitForText(R.string.registration_everything_is_working_ok, timeoutInMs = 20000)
         verifyCheckMySymptomsButton(isDisplayed())
         verifyCheckMySymptomsButton(isEnabled())
+    }
+
+    fun checkEnableNotificationsIsDisplayed() {
+        onView(withId(R.id.notificationPanel)).check(matches(isDisplayed()))
+    }
+
+    fun checkEnableNotificationsIsNotDisplayed() {
+        onView(withId(R.id.notificationPanel)).check(matches(not(isDisplayed())))
+    }
+
+    fun clickEnableNotifications() {
+        onView(withId(R.id.notificationPanel)).perform(click())
     }
 
     private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {

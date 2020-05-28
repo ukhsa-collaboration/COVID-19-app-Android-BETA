@@ -10,7 +10,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verifyAll
-import org.joda.time.DateTime
 import org.junit.Before
 import org.junit.Test
 import testsupport.TestIntent
@@ -18,28 +17,24 @@ import testsupport.mockContextWithMockedAppComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.ExposedState
-import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
-import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class BootCompletedReceiverTest {
 
     private val sonarIdProvider = mockk<SonarIdProvider>()
-    private val stateStorage = mockk<UserStateStorage>()
     private val reminders = mockk<Reminders>()
     private val context = mockContextWithMockedAppComponent()
 
     private val receiver = BootCompletedReceiver().also {
         it.sonarIdProvider = sonarIdProvider
-        it.userStateStorage = stateStorage
         it.reminders = reminders
     }
 
     @Before
     fun setUp() {
         mockkObject(BluetoothService)
+
+        every { reminders.reschedulePendingCheckInReminder() } returns Unit
+        every { BluetoothService.start(any()) } returns Unit
     }
 
     @Test
@@ -51,65 +46,32 @@ class BootCompletedReceiverTest {
         verifyAll {
             sonarIdProvider wasNot Called
             BluetoothService wasNot Called
-        }
-    }
-
-    @Test
-    fun `onReceive - with sonarId, with not expired symptomatic state`() {
-        val until = DateTime.now().plusDays(1)
-
-        every { sonarIdProvider.hasProperSonarId() } returns true
-        every { stateStorage.get() } returns SymptomaticState(until, until, nonEmptySetOf(Symptom.COUGH))
-        every { reminders.scheduleCheckInReminder(any()) } returns Unit
-        every { BluetoothService.start(any()) } returns Unit
-
-        receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
-
-        verifyAll {
-            BluetoothService.start(context)
-            reminders.scheduleCheckInReminder(until)
-        }
-    }
-
-    @Test
-    fun `onReceive - with sonarId, with expired symptomatic state`() {
-        val until = DateTime.now().minusDays(1)
-
-        every { sonarIdProvider.hasProperSonarId() } returns true
-        every { stateStorage.get() } returns SymptomaticState(until, until, nonEmptySetOf(Symptom.COUGH))
-        every { BluetoothService.start(any()) } returns Unit
-
-        receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
-
-        verifyAll {
-            BluetoothService.start(context)
             reminders wasNot Called
+        }
+    }
+
+    @Test
+    fun `onReceive - with sonarId`() {
+
+        every { sonarIdProvider.hasProperSonarId() } returns true
+
+        receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
+
+        verifyAll {
+            BluetoothService.start(context)
+            reminders.reschedulePendingCheckInReminder()
         }
     }
 
     @Test
     fun `onReceive - without sonarId`() {
         every { sonarIdProvider.hasProperSonarId() } returns false
-        every { stateStorage.get() } returns SymptomaticState(DateTime.now(), DateTime.now(), nonEmptySetOf(Symptom.COUGH))
-        every { reminders.scheduleCheckInReminder(any()) } returns Unit
 
         receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
 
         verifyAll {
             BluetoothService wasNot Called
-        }
-    }
-
-    @Test
-    fun `onReceive - without symptomatic state`() {
-        every { stateStorage.get() } returns ExposedState(DateTime.now(), DateTime.now())
-        every { sonarIdProvider.hasProperSonarId() } returns true
-        every { BluetoothService.start(any()) } returns Unit
-
-        receiver.onReceive(context, TestIntent(Intent.ACTION_BOOT_COMPLETED))
-
-        verifyAll {
-            reminders wasNot Called
+            reminders.reschedulePendingCheckInReminder()
         }
     }
 }

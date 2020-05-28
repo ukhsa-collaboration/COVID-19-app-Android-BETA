@@ -16,7 +16,6 @@ import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.cancelStatusNotification
 import uk.nhs.nhsx.sonar.android.app.status.BottomDialog
 import uk.nhs.nhsx.sonar.android.app.status.BottomDialogConfiguration
-import uk.nhs.nhsx.sonar.android.app.status.CheckinState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.PositiveState
@@ -40,7 +39,6 @@ object StatusLayoutFactory {
             DefaultState -> DefaultStatusLayout(userState)
             is ExposedState -> ExposedStatusLayout(userState)
             is SymptomaticState -> SymptomaticStatusLayout(userState)
-            is CheckinState -> CheckInStatusLayout(userState)
             is PositiveState -> PositiveStatusLayout(userState)
         }
 }
@@ -119,9 +117,6 @@ open class SymptomaticStatusLayout(val state: UserState) : StatusLayout {
         }
     }
 }
-
-// TODO: do we need CheckIn State?
-class CheckInStatusLayout(state: UserState) : SymptomaticStatusLayout(state)
 
 class PositiveStatusLayout(val state: UserState) : StatusLayout {
 

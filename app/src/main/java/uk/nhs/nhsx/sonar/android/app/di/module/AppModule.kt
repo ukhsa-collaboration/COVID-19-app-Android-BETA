@@ -17,6 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWork
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
+import uk.nhs.nhsx.sonar.android.app.util.NotificationManagerHelper
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 
@@ -24,6 +25,7 @@ import javax.inject.Named
 class AppModule(
     private val applicationContext: Context,
     private val locationHelper: LocationHelper,
+    private val notificaitonManagerHelper: NotificationManagerHelper,
     private val sonarAnalytics: SonarAnalytics,
     private val activationCodeWaitTime: ActivationCodeWaitTime = ActivationCodeWaitTime(
         1,
@@ -36,6 +38,9 @@ class AppModule(
 
     @Provides
     fun provideLocationHelper() = locationHelper
+
+    @Provides
+    fun provideNotificaitonManagerHelper() = notificaitonManagerHelper
 
     @Provides
     @Named(DISPATCHER_DEFAULT)
