@@ -17,12 +17,14 @@ import uk.nhs.nhsx.sonar.android.app.TurnBluetoothOnReceiver
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.PermissionsAndAccess
+import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import javax.inject.Inject
 
 const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
 const val NOTIFICATION_ID_LOCATION_IS_DISABLED = 1338
 const val NOTIFICATION_CHECK_IN_REMINDER = 1340
-const val NOTIFICATION_SERVICE_ID = 10001
+const val NOTIFICATION_EXPOSED = 10001
+const val NOTIFICATION_TEST_RESULT = 10002
 
 class BluetoothNotificationHelper(val context: Context) {
 
@@ -79,7 +81,7 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
 
     fun show() {
         val actionPendingIntent =
-            PendingIntent.getActivity(context, 0, MainActivity.getIntent(context), FLAG_UPDATE_CURRENT)
+            PendingIntent.getActivity(context, 0, StatusActivity.getIntent(context), FLAG_UPDATE_CURRENT)
 
         showNotification(
             context,
@@ -87,7 +89,7 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
             NOTIFICATION_CHECK_IN_REMINDER,
             context.getString(R.string.checkin_notification_title),
             context.getString(R.string.checkin_notification_text),
-            context.getString(R.string.checkin_notification_action),
+            context.getString(R.string.notification_action_open_app),
             actionPendingIntent,
             autoCancel = true,
             isOngoing = false
@@ -95,10 +97,56 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
     }
 }
 
-fun Context.cancelStatusNotification() {
-    NotificationManagerCompat
-        .from(this)
-        .cancel(NOTIFICATION_SERVICE_ID)
+class ExposedNotification @Inject constructor(private val context: Context) {
+
+    fun hide() {
+        NotificationManagerCompat
+            .from(context)
+            .cancel(NOTIFICATION_EXPOSED)
+    }
+
+    fun show() {
+        val actionPendingIntent =
+            PendingIntent.getActivity(context, 0, StatusActivity.getIntent(context), FLAG_UPDATE_CURRENT)
+
+        showNotification(
+            context,
+            ContactAndCheckin,
+            NOTIFICATION_EXPOSED,
+            context.getString(R.string.contact_alert_notification_title),
+            context.getString(R.string.contact_alert_notification_text),
+            context.getString(R.string.notification_action_open_app),
+            actionPendingIntent,
+            autoCancel = true,
+            isOngoing = false
+        )
+    }
+}
+
+class TestResultNotification @Inject constructor(private val context: Context) {
+
+    fun hide() {
+        NotificationManagerCompat
+            .from(context)
+            .cancel(NOTIFICATION_TEST_RESULT)
+    }
+
+    fun show() {
+        val actionPendingIntent =
+            PendingIntent.getActivity(context, 0, StatusActivity.getIntent(context), FLAG_UPDATE_CURRENT)
+
+        showNotification(
+            context,
+            ContactAndCheckin,
+            NOTIFICATION_TEST_RESULT,
+            context.getString(R.string.test_result_notification_title),
+            context.getString(R.string.test_result_notification_text),
+            context.getString(R.string.notification_action_open_app),
+            actionPendingIntent,
+            autoCancel = true,
+            isOngoing = false
+        )
+    }
 }
 
 fun Context.notificationBuilder(channel: Channel): NotificationCompat.Builder =

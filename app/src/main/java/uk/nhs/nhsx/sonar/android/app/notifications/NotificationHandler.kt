@@ -5,22 +5,17 @@
 package uk.nhs.nhsx.sonar.android.app.notifications
 
 import org.joda.time.DateTime
-import uk.nhs.nhsx.sonar.android.app.MainActivity
-import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
-import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
-import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import javax.inject.Inject
 
 class NotificationHandler @Inject constructor(
-    private val sender: NotificationSender,
     private val userStateStorage: UserStateStorage,
     private val userInbox: UserInbox,
     private val activationCodeProvider: ActivationCodeProvider,
@@ -28,6 +23,8 @@ class NotificationHandler @Inject constructor(
     private val acknowledgmentsDao: AcknowledgmentsDao,
     private val acknowledgmentsApi: AcknowledgmentsApi,
     private val sonarIdProvider: SonarIdProvider,
+    private val exposedNotification: ExposedNotification,
+    private val testResultNotification: TestResultNotification,
     private val tokenRefreshWorkScheduler: TokenRefreshWorkScheduler
 ) {
 
@@ -55,7 +52,7 @@ class NotificationHandler @Inject constructor(
                         .let { UserStateTransitions.transitionOnContactAlert(it) }
                         ?.let {
                             userStateStorage.set(it)
-                            showStatusNotification()
+                            exposedNotification.show()
                         }
                 }
                 isTestResult(messageData) -> {
@@ -71,33 +68,13 @@ class NotificationHandler @Inject constructor(
                         .let {
                             userStateStorage.set(it)
                             userInbox.addTestInfo(testInfo)
-                            showTestResultNotification()
+                            testResultNotification.show()
                         }
                 }
             }
         }
 
         acknowledgeIfNecessary(messageData)
-    }
-
-    private fun showStatusNotification() {
-        sender.send(
-            ContactAndCheckin,
-            NOTIFICATION_SERVICE_ID,
-            R.string.contact_alert_notification_title,
-            R.string.contact_alert_notification_text,
-            StatusActivity.Companion::getIntent
-        )
-    }
-
-    private fun showTestResultNotification() {
-        sender.send(
-            ContactAndCheckin,
-            NOTIFICATION_SERVICE_ID,
-            R.string.test_result_notification_title,
-            R.string.test_result_notification_text,
-            MainActivity.Companion::getIntent
-        )
     }
 
     private fun hasBeenAcknowledged(data: Map<String, String>) =
@@ -135,6 +112,5 @@ class NotificationHandler @Inject constructor(
         private const val TEST_RESULT_DATE_KEY = "testTimestamp"
         private const val ACTIVATION_CODE_KEY = "activationCode"
         private const val ACKNOWLEDGMENT_URL = "acknowledgmentUrl"
-        private const val NOTIFICATION_SERVICE_ID = 10001
     }
 }

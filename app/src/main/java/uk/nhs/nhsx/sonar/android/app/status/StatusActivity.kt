@@ -28,6 +28,8 @@ import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.CheckInReminderNotification
+import uk.nhs.nhsx.sonar.android.app.notifications.ExposedNotification
+import uk.nhs.nhsx.sonar.android.app.notifications.TestResultNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusLayout
@@ -56,6 +58,12 @@ class StatusActivity : BaseActivity() {
 
     @Inject
     lateinit var checkInReminderNotification: CheckInReminderNotification
+
+    @Inject
+    lateinit var exposedNotification: ExposedNotification
+
+    @Inject
+    lateinit var testResultNotification: TestResultNotification
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider
@@ -197,7 +205,7 @@ class StatusActivity : BaseActivity() {
         notificationPanel.isVisible =
             !notificationManagerHelper.areNotificationsEnabled()
 
-        handleTestResult(userInbox, testResultDialog)
+        handleTestResult(this, testResultDialog)
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {

@@ -11,25 +11,25 @@ import io.mockk.verify
 import io.mockk.verifyAll
 import org.joda.time.DateTime
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
-import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
-import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class NotificationHandlerTest {
 
-    private val sender = mockk<NotificationSender>(relaxUnitFun = true)
+    private val testResultNotification = mockk<TestResultNotification>(relaxUnitFun = true)
+    private val exposedNotification = mockk<ExposedNotification>(relaxUnitFun = true)
+
     private val userStateStorage = mockk<UserStateStorage>(relaxUnitFun = true)
     private val userInbox = mockk<UserInbox>(relaxUnitFun = true)
     private val activationCodeProvider = mockk<ActivationCodeProvider>(relaxUnitFun = true)
@@ -39,7 +39,6 @@ class NotificationHandlerTest {
     private val sonarIdProvider = mockk<SonarIdProvider>()
     private val tokenRefreshWorkScheduler = mockk<TokenRefreshWorkScheduler>(relaxUnitFun = true)
     private val handler = NotificationHandler(
-        sender,
         userStateStorage,
         userInbox,
         activationCodeProvider,
@@ -47,6 +46,8 @@ class NotificationHandlerTest {
         ackDao,
         ackApi,
         sonarIdProvider,
+        exposedNotification,
+        testResultNotification,
         tokenRefreshWorkScheduler
     )
 
@@ -76,10 +77,12 @@ class NotificationHandlerTest {
         handler.handleNewMessage(messageData)
 
         verifyAll {
-            sender wasNot Called
             userStateStorage wasNot Called
             activationCodeProvider wasNot Called
             registrationManager wasNot Called
+
+            exposedNotification wasNot Called
+            testResultNotification wasNot Called
         }
     }
 
@@ -92,6 +95,9 @@ class NotificationHandlerTest {
         verify {
             activationCodeProvider.set("code-023")
             registrationManager.register()
+
+            exposedNotification wasNot Called
+            testResultNotification wasNot Called
         }
     }
 
@@ -108,13 +114,9 @@ class NotificationHandlerTest {
         verifyAll {
             userStateStorage.get()
             userStateStorage.set(any<ExposedState>())
-            sender.send(
-                ContactAndCheckin,
-                10001,
-                R.string.contact_alert_notification_title,
-                R.string.contact_alert_notification_text,
-                any()
-            )
+
+            exposedNotification.show()
+            testResultNotification wasNot Called
         }
     }
 
@@ -141,13 +143,8 @@ class NotificationHandlerTest {
             userStateStorage.set(any<DefaultState>())
             userInbox.addTestInfo(testInfo)
 
-            sender.send(
-                ContactAndCheckin,
-                10001,
-                R.string.test_result_notification_title,
-                R.string.test_result_notification_text,
-                any()
-            )
+            testResultNotification.show()
+            exposedNotification wasNot Called
         }
     }
 
@@ -163,7 +160,9 @@ class NotificationHandlerTest {
 
         verifyAll {
             userStateStorage.get()
-            sender wasNot Called
+
+            exposedNotification wasNot Called
+            testResultNotification wasNot Called
         }
         verify(exactly = 0) { userStateStorage.set(any<ExposedState>()) }
     }
@@ -184,7 +183,9 @@ class NotificationHandlerTest {
 
         verifyAll {
             userStateStorage.get()
-            sender wasNot Called
+
+            exposedNotification wasNot Called
+            testResultNotification wasNot Called
         }
         verify(exactly = 0) { userStateStorage.set(any<ExposedState>()) }
     }
@@ -206,16 +207,14 @@ class NotificationHandlerTest {
         verifyAll {
             userStateStorage.get()
             userStateStorage.set(any<ExposedState>())
-            sender.send(
-                ContactAndCheckin,
-                10001,
-                R.string.contact_alert_notification_title,
-                R.string.contact_alert_notification_text,
-                any()
-            )
+
+            exposedNotification.show()
+
             ackApi.send("https://api.example.com/ack/100")
             ackDao.tryFind("https://api.example.com/ack/100")
             ackDao.insert(Acknowledgment("https://api.example.com/ack/100"))
+
+            testResultNotification wasNot Called
         }
     }
 
@@ -230,10 +229,13 @@ class NotificationHandlerTest {
 
         verifyAll {
             userStateStorage wasNot Called
-            sender wasNot Called
+
             ackApi.send("https://api.example.com/ack/101")
             ackDao.tryFind("https://api.example.com/ack/101")
             ackDao.insert(Acknowledgment("https://api.example.com/ack/101"))
+
+            exposedNotification wasNot Called
+            testResultNotification wasNot Called
         }
     }
 }

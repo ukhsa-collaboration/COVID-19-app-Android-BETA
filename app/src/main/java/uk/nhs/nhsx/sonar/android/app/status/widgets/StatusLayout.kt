@@ -12,7 +12,6 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
-import uk.nhs.nhsx.sonar.android.app.notifications.cancelStatusNotification
 import uk.nhs.nhsx.sonar.android.app.status.BottomDialog
 import uk.nhs.nhsx.sonar.android.app.status.BottomDialogConfiguration
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
@@ -92,7 +91,7 @@ class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
     }
 
     override fun onResume(activity: StatusActivity) {
-        activity.cancelStatusNotification()
+        activity.exposedNotification.hide()
 
         // TODO: refactor this
         val newState = UserStateTransitions.expireExposedState(state)
@@ -229,9 +228,11 @@ fun toggleReferenceCodeCard(activity: StatusActivity, enabled: Boolean) {
     view.isEnabled = enabled
 }
 
-fun handleTestResult(userInbox: UserInbox, testResultDialog: BottomDialog) {
-    if (userInbox.hasTestInfo()) {
-        val info = userInbox.getTestInfo()
+fun handleTestResult(activity: StatusActivity, testResultDialog: BottomDialog) {
+    if (activity.userInbox.hasTestInfo()) {
+        activity.testResultNotification.hide()
+
+        val info = activity.userInbox.getTestInfo()
         when (info.result) {
             TestResult.POSITIVE -> {
                 testResultDialog.setTitleResId(R.string.positive_test_result_title)
