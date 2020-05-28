@@ -130,7 +130,7 @@
     <string name="i_do_not_sneeze">I don\'t have any of these symptoms: a runny nose, feeling feverish or sneezing</string>
     <string name="i_do_stomach">I have at least one of these symptoms: diarrhoea, nausea, vomiting or loss of appetite</string>
     <string name="i_do_not_stomach">I don\'t have any of these symptoms: diarrhoea, nausea, vomiting or loss of appetite</string>
-    <string name="date_selection_error">Select the date from the dropdown</string>
+    <string name="date_selection_error">Select the date you first started showing any of these symptoms</string>
     <string name="update_symptoms_prompt">Please update your symptoms to view your latest advice.</string>
     <string name="update_my_symptoms">Update my symptoms</string>
     <string name="no_symptoms">I no longer have symptoms</string>
