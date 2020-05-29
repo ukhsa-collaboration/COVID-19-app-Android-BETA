@@ -115,7 +115,7 @@
     <string name="status_not_feeling_well_desc">I might have symptoms of coronavirus and want to know what to do next</string>
     <string name="status_initial_title">Follow the current advice to stop the spread of coronavirus</string>
     <string name="status_symptomatic_title">Your symptoms indicate you may have coronavirus. Please isolate yourself and your household and book a test.</string>
-    <string name="need_medical_advice">NHS services for your part of the country</string>
+    <string name="need_medical_advice">Find your NHS services for your part of the country</string>
     <string name="nhs_online_service"><u>NHS Coronavirus</u></string>
     <string name="tablet_information_url"><u>Information on the use of tablets</u></string>
     <string name="nhs_111_online_service"><u>NHS 111 online coronavirus service</u></string>
