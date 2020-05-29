@@ -74,7 +74,7 @@ object UserStateTransitions {
             is PositiveState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
             is ExposedState ->
-                if (state.since.isAfter(testDate)) state else DefaultState
+                state
             is DefaultState ->
                 DefaultState
         }

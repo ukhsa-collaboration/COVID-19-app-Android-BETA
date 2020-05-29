@@ -71,21 +71,10 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `exposed, if exposed prior test, becomes default`() {
+    fun `exposed, remains exposed`() {
         val date = LocalDate.now().minusDays(6)
-        val currentState = UserState.exposed(date)
-        val testInfo = TestInfo(TestResult.NEGATIVE, currentState.since.plusDays(1))
-
-        val state = transitionOnTestResult(currentState, testInfo)
-
-        assertThat(state).isEqualTo(DefaultState)
-    }
-
-    @Test
-    fun `exposed, if exposed after test, remains symptomatic`() {
-        val date = LocalDate.now().minusDays(2)
         val exposed = UserState.exposed(date)
-        val testInfo = TestInfo(TestResult.NEGATIVE, exposed.since.minusDays(1))
+        val testInfo = TestInfo(TestResult.NEGATIVE, exposed.since.plusDays(1))
 
         val state = transitionOnTestResult(exposed, testInfo)
 
