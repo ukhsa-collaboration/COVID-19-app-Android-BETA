@@ -7,6 +7,7 @@ package uk.nhs.nhsx.sonar.android.app
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -144,7 +145,7 @@ class ConnectedTestRunner {
 
 inline fun <reified T : Activity> Context.startTestActivity(config: Intent.() -> Unit = {}) {
     val intent = Intent(this, T::class.java)
-        .apply { addFlags(FLAG_ACTIVITY_NEW_TASK) }
+        .apply { addFlags(FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK) }
         .apply(config)
 
     InstrumentationRegistry
