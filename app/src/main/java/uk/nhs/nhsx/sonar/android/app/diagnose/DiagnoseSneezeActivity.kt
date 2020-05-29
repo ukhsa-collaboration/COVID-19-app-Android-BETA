@@ -83,11 +83,9 @@ open class DiagnoseSneezeActivity : BaseActivity() {
         if (isCheckinQuestionnaire()) {
             progress.text = getString(R.string.progress_four_fifth)
             progress.contentDescription = getString(R.string.page_4_of_5)
-            confirm_diagnosis.text = getString(R.string.submit)
             sneeze_question.text = getString(R.string.sneeze_question_simplified)
         } else {
             progress.text = getString(R.string.progress_four_sixth)
-            confirm_diagnosis.text = getString(R.string.continue_button)
             progress.contentDescription = getString(R.string.page_4_of_6)
             sneeze_question.text = getString(R.string.sneeze_question)
         }

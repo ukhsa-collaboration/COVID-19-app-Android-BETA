@@ -11,7 +11,6 @@ import android.view.View
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.confirm_diagnosis
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_question
-import kotlinx.android.synthetic.main.activity_cough_diagnosis.new_cough_description
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.no
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
@@ -81,14 +80,17 @@ class DiagnoseCoughActivity : BaseActivity() {
         if (isCheckinQuestionnaire()) {
             progress.text = getString(R.string.progress_two_fifth)
             progress.contentDescription = getString(R.string.page_2_of_5)
-            new_cough_description.visibility = View.GONE
             cough_question.text = getString(R.string.cough_question_simplified)
+
+            yes.text = getString(R.string.yes_cough)
+            no.text = getString(R.string.no_cough)
         } else {
             progress.text = getString(R.string.progress_two_sixth)
-            confirm_diagnosis.text = getString(R.string.continue_button)
             progress.contentDescription = getString(R.string.page_2_of_6)
-            new_cough_description.visibility = View.VISIBLE
             cough_question.text = getString(R.string.cough_question)
+
+            yes.text = getString(R.string.yes_new_cough)
+            no.text = getString(R.string.no_new_cough)
         }
     }
 

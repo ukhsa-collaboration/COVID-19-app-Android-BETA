@@ -83,11 +83,9 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
         if (isCheckinQuestionnaire()) {
             progress.text = getString(R.string.progress_three_fifth)
             progress.contentDescription = getString(R.string.page_3_of_5)
-            confirm_diagnosis.text = getString(R.string.submit)
             anosmia_question.text = getString(R.string.anosmia_question_simplified)
         } else {
             progress.text = getString(R.string.progress_three_sixth)
-            confirm_diagnosis.text = getString(R.string.continue_button)
             progress.contentDescription = getString(R.string.page_3_of_6)
             anosmia_question.text = getString(R.string.anosmia_question)
         }
