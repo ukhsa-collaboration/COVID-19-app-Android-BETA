@@ -22,10 +22,10 @@ import kotlinx.android.synthetic.main.activity_test.exportButton
 import kotlinx.android.synthetic.main.activity_test.firebase_token
 import kotlinx.android.synthetic.main.activity_test.no_events
 import kotlinx.android.synthetic.main.activity_test.resetButton
-import kotlinx.android.synthetic.main.activity_test.setCheckinState
 import kotlinx.android.synthetic.main.activity_test.setDefaultState
 import kotlinx.android.synthetic.main.activity_test.setExposedNotification
 import kotlinx.android.synthetic.main.activity_test.setExposedState
+import kotlinx.android.synthetic.main.activity_test.setExposedSymptomaticState
 import kotlinx.android.synthetic.main.activity_test.setPositiveState
 import kotlinx.android.synthetic.main.activity_test.setRecovery
 import kotlinx.android.synthetic.main.activity_test.setSymptomaticState
@@ -53,6 +53,7 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedSymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserState
@@ -196,12 +197,13 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             finish()
         }
 
-        setCheckinState.setOnClickListener {
+        setExposedSymptomaticState.setOnClickListener {
+            val exposed = UserState.exposed()
             userStateStorage.set(
-                UserState.symptomatic(
-                    symptomsDate = LocalDate.now().minusDays(10),
-                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE),
-                    today = LocalDate.now().minusDays(1)
+                ExposedSymptomaticState(
+                    since = exposed.since,
+                    until = exposed.until,
+                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
                 )
             )
             finish()

@@ -48,6 +48,18 @@ class UserStateSerializationTest {
     }
 
     @Test
+    fun `serialize exposed symptomatic state`() {
+        val since = DateTime(1387241302263L, UTC)
+        val until = DateTime(1587241302263L, UTC)
+        val symptoms = nonEmptySetOf(Symptom.COUGH, Symptom.TEMPERATURE)
+
+        assertThat(serialize(ExposedSymptomaticState(since, until, symptoms)))
+            .isEqualTo(
+                """{"symptoms":["COUGH","TEMPERATURE"],"until":1587241302263,"type":"ExposedSymptomaticState","since":1387241302263}"""
+            )
+    }
+
+    @Test
     fun `serialize positive state`() {
         val since = DateTime(1387241302263L, UTC)
         val until = DateTime(1587241302263L, UTC)
@@ -60,7 +72,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `serialize positive state with no sympotoms`() {
+    fun `serialize positive state with no symptoms`() {
         val since = DateTime(1387241302263L, UTC)
         val until = DateTime(1587241302263L, UTC)
 
@@ -82,13 +94,13 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize default state - with legacy until timestamp`() {
+    fun `backward compatibility - deserialize default state with legacy until timestamp`() {
         assertThat(deserialize("""{"until":1587241302261,"type":"DefaultState"}"""))
             .isEqualTo(DefaultState)
     }
 
     @Test
-    fun `deserialize legacy ember(typo) state`() {
+    fun `backward compatibility - deserialize legacy ember(typo) state`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"EmberState"}"""))
@@ -96,7 +108,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize legacy amber state`() {
+    fun `backward compatibility - deserialize legacy amber state`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"AmberState"}"""))
@@ -104,7 +116,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize exposed state without symptom date`() {
+    fun `backward compatibility - deserialize legacy exposed state without symptom date`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"ExposedState"}"""))
@@ -112,7 +124,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize exposed state with symptom date`() {
+    fun `deserialize exposed state`() {
         val since = DateTime(1587241300000L, UTC)
         val until = DateTime(1587241302262L, UTC)
 
@@ -121,7 +133,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize legacy red state`() {
+    fun `backward compatibility - deserialize legacy red state`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"RedState"}"""))
@@ -129,7 +141,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize symptomatic state without symptom date`() {
+    fun `backward compatibility - deserialize legacy symptomatic state without symptom date`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"SymptomaticState"}"""))
@@ -137,7 +149,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize symptomatic state with symptoms date`() {
+    fun `deserialize symptomatic state`() {
         val since = DateTime(1587241300000L, UTC)
         val until = DateTime(1587241302262L, UTC)
 
@@ -153,6 +165,29 @@ class UserStateSerializationTest {
             "until":1587241302262,
             "symptoms":["COUGH"],
             "type":"SymptomaticState"
+            }"""
+            )
+        )
+            .isEqualTo(state)
+    }
+
+    @Test
+    fun `deserialize exposed symptomatic state`() {
+        val since = DateTime(1587241300000L, UTC)
+        val until = DateTime(1587241302262L, UTC)
+
+        val state = ExposedSymptomaticState(
+            since,
+            until,
+            nonEmptySetOf(Symptom.COUGH)
+        )
+        assertThat(
+            deserialize(
+                """{
+            "since":1587241300000,
+            "until":1587241302262,
+            "symptoms":["COUGH"],
+            "type":"ExposedSymptomaticState"
             }"""
             )
         )
@@ -222,7 +257,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize legacy checkin state without symptom date`() {
+    fun `backward compatibility - deserialize legacy checkin state without symptom date`() {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"CheckinState"}"""))
@@ -230,7 +265,7 @@ class UserStateSerializationTest {
     }
 
     @Test
-    fun `deserialize legacy checkin state with symptom date`() {
+    fun `backward compatibility - deserialize legacy checkin state with symptom date`() {
         val since = DateTime(1587241302262L, UTC)
         val until = DateTime(1587241302262L, UTC)
 

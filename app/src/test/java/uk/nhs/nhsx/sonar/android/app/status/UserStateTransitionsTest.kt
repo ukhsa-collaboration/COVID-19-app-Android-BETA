@@ -119,6 +119,29 @@ class UserStateTransitionsTest {
     }
 
     @Test
+    fun `diagnose - when current state is exposed`() {
+        val anySymptomDate = today.minusDays(6)
+
+        val exposed = UserState.exposed(today)
+
+        val state = diagnose(
+            exposed,
+            anySymptomDate,
+            symptomsWithTemperature,
+            today
+        )
+
+        assertThat(state)
+            .isEqualTo(
+                ExposedSymptomaticState(
+                    exposed.since,
+                    exposed.until,
+                    symptomsWithTemperature
+                )
+            )
+    }
+
+    @Test
     fun `diagnoseForCheckin - with temperature`() {
         val tomorrow = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 

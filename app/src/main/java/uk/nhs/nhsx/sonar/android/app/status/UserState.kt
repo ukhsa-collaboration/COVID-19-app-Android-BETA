@@ -75,6 +75,7 @@ sealed class UserState {
         when (this) {
             is ExposedState -> until
             is SymptomaticState -> until
+            is ExposedSymptomaticState -> until
             is PositiveState -> until
             is DefaultState -> null
         }
@@ -87,6 +88,7 @@ sealed class UserState {
             is DefaultState -> OK
             is ExposedState -> AT_RISK
             is SymptomaticState -> ISOLATE
+            is ExposedSymptomaticState -> ISOLATE
             is PositiveState -> ISOLATE
         }
 
@@ -100,6 +102,10 @@ sealed class UserState {
                 symptoms = NonEmptySet.create(symptoms)!!,
                 until = today.after(1).day().toUtc()
             )
+            is ExposedSymptomaticState -> this.copy(
+                symptoms = NonEmptySet.create(symptoms)!!,
+                until = today.after(1).day().toUtc()
+            )
             is ExposedState -> this
             is DefaultState -> this
         }
@@ -107,6 +113,7 @@ sealed class UserState {
     fun scheduleCheckInReminder(reminders: Reminders) =
         when {
             (this is SymptomaticState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
+            (this is ExposedSymptomaticState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
             (this is PositiveState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
             else -> Unit
         }
@@ -129,6 +136,13 @@ data class ExposedState(val since: DateTime, val until: DateTime) : UserState()
 
 // State when you initially have symptoms. Prompted after 1 to 7 days to checkin.
 data class SymptomaticState(
+    val since: DateTime,
+    val until: DateTime,
+    val symptoms: NonEmptySet<Symptom>
+) : UserState()
+
+// State when you initially are exposed, then later become symptomatic.
+data class ExposedSymptomaticState(
     val since: DateTime,
     val until: DateTime,
     val symptoms: NonEmptySet<Symptom>

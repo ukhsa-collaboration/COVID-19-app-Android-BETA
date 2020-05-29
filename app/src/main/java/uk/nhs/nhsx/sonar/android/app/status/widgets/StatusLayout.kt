@@ -16,6 +16,7 @@ import uk.nhs.nhsx.sonar.android.app.status.BottomDialog
 import uk.nhs.nhsx.sonar.android.app.status.BottomDialogConfiguration
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedSymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
@@ -49,6 +50,7 @@ object StatusLayoutFactory {
             is DefaultState -> DefaultStatusLayout(userState)
             is ExposedState -> ExposedStatusLayout(userState)
             is SymptomaticState -> SymptomaticStatusLayout(userState)
+            is ExposedSymptomaticState -> SymptomaticStatusLayout(userState)
             is PositiveState -> PositiveStatusLayout(userState)
         }
 }
@@ -101,7 +103,7 @@ class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
     }
 }
 
-class SymptomaticStatusLayout(val state: SymptomaticState) : StatusLayout() {
+class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
 
     override fun refreshLayout(activity: StatusActivity) {
         createStatusView(

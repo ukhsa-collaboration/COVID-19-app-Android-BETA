@@ -15,6 +15,12 @@ fun buildSymptomaticState(
     symptoms: NonEmptySet<Symptom> = nonEmptySetOf(Symptom.COUGH)
 ) = SymptomaticState(since, until, symptoms)
 
+fun buildExposedSymptomaticState(
+    since: DateTime = DateTime.now().plusDays(1),
+    until: DateTime = DateTime.now().plusDays(1),
+    symptoms: NonEmptySet<Symptom> = nonEmptySetOf(Symptom.COUGH)
+) = ExposedSymptomaticState(since, until, symptoms)
+
 fun buildPositiveState(
     since: DateTime = DateTime.now().plusDays(1),
     until: DateTime = DateTime.now().plusDays(1),

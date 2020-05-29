@@ -24,12 +24,14 @@ object UserStateTransitions {
         symptoms: NonEmptySet<Symptom>,
         today: LocalDate = LocalDate.now()
     ): UserState {
-        val isInSevenDayWindow = !symptomsDate.isEarlierThan(NO_DAYS_IN_SYMPTOMATIC, today)
 
-        return when (hasTemperature(symptoms) || isInSevenDayWindow) {
-            true -> UserState.symptomatic(symptomsDate, symptoms, today)
-            else -> currentState
-        }
+        if (!isolationNeeded(symptomsDate, symptoms, today))
+            return currentState
+
+        if (currentState is ExposedState)
+            return ExposedSymptomaticState(currentState.since, currentState.until, symptoms)
+
+        return UserState.symptomatic(symptomsDate, symptoms, today)
     }
 
     fun diagnoseForCheckin(
@@ -71,6 +73,7 @@ object UserStateTransitions {
         when (state) {
             is SymptomaticState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
+            is ExposedSymptomaticState -> TODO()
             is PositiveState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
             is ExposedState ->
@@ -83,6 +86,7 @@ object UserStateTransitions {
         when (state) {
             is SymptomaticState ->
                 PositiveState(testDate, state.until, state.symptoms)
+            is ExposedSymptomaticState -> TODO()
             is PositiveState ->
                 state
             is ExposedState ->
@@ -90,6 +94,16 @@ object UserStateTransitions {
             is DefaultState ->
                 positive(testDate)
         }
+
+    private fun isolationNeeded(
+        symptomsDate: LocalDate,
+        symptoms: NonEmptySet<Symptom>,
+        today: LocalDate
+    ): Boolean {
+        val isInSevenDayWindow = !symptomsDate.isEarlierThan(NO_DAYS_IN_SYMPTOMATIC, today)
+
+        return isInSevenDayWindow || hasTemperature(symptoms)
+    }
 
     private fun hasTemperature(symptoms: Set<Symptom>): Boolean =
         TEMPERATURE in symptoms

@@ -149,35 +149,35 @@
                     android:id="@+id/setDefaultState"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="70dp"
+                    android:minWidth="50dp"
                     android:text="DEF" />
 
                 <Button
                     android:id="@+id/setExposedState"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="70dp"
+                    android:minWidth="50dp"
                     android:text="EXP" />
 
                 <Button
                     android:id="@+id/setSymptomaticState"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="70dp"
+                    android:minWidth="50dp"
                     android:text="SYM" />
 
                 <Button
-                    android:id="@+id/setCheckinState"
+                    android:id="@+id/setExposedSymptomaticState"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:minWidth="70dp"
-                    android:text="CHE" />
+                    android:text="ESP-SYM" />
 
                 <Button
                     android:id="@+id/setPositiveState"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="70dp"
+                    android:minWidth="50dp"
                     android:text="POS" />
 
             </LinearLayout>
