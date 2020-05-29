@@ -126,18 +126,21 @@ class Scanner @Inject constructor(
             val macAddress = scanResult.bleDevice.macAddress
             val device = scanResult.bleDevice
             val identifier = knownDevices[macAddress]
-            if (identifier != null) {
-                storeEvent(Event(identifier.asBytes(), scanResult.rssi, currentTimestampProvider()), coroutineScope, txPowerAdvertised)
+
+            val operation = if (identifier != null) {
+                readOnlyRssi(identifier)
             } else {
-                Timber.d("Connecting to $macAddress")
-                connectAndPerformOperation(
-                    device,
-                    macAddress,
-                    txPowerAdvertised,
-                    coroutineScope,
-                    readIdAndRssi()
-                )
+                readIdAndRssi()
             }
+
+            Timber.d("Connecting to $macAddress")
+            connectAndPerformOperation(
+                device,
+                macAddress,
+                txPowerAdvertised,
+                coroutineScope,
+                operation
+            )
         }
     }
 
