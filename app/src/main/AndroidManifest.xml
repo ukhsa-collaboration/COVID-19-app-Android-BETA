@@ -80,9 +80,7 @@
         <activity android:name=".edgecases.TabletNotSupportedActivity"
                   android:label="@string/tablet_support_title"/>
 
-        <activity
-            android:name=".status.StatusActivity"
-            android:label="@string/status_symptomatic_title" />
+        <activity android:name=".status.StatusActivity" />
 
         <activity android:name=".referencecode.ReferenceCodeActivity"
                   android:label="@string/reference_code_title"/>
