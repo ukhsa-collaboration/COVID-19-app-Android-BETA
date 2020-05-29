@@ -30,7 +30,7 @@
                 android:fontFamily="@font/roboto_medium"
                 android:letterSpacing="0.1"
                 android:paddingTop="24dp"
-                android:text="@string/progress_two_third"
+                android:text="@string/progress_two_fifth"
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
 

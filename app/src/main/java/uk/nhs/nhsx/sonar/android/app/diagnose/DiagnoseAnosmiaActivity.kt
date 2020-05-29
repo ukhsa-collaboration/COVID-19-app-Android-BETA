@@ -19,22 +19,15 @@ import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
-import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import javax.inject.Inject
 
 open class DiagnoseAnosmiaActivity : BaseActivity() {
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
-
-    @Inject
-    lateinit var userInbox: UserInbox
 
     private val symptoms: Set<Symptom> by lazy { intent.getSymptoms() }
 
@@ -70,22 +63,6 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
         toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
-    private fun nextStep(symptoms: Set<Symptom>) {
-        val currentState = userStateStorage.get()
-        if (currentState.displayState() == DisplayState.ISOLATE) {
-            UserStateTransitions.diagnoseForCheckin(currentState, symptoms)
-                .also { newState ->
-                    if (newState is DefaultState && symptoms.isNotEmpty()) {
-                        userInbox.addRecovery()
-                    }
-                    userStateStorage.set(newState)
-                    navigateTo(newState)
-                }
-        } else {
-            DiagnoseSneezeActivity.start(this, symptoms)
-        }
-    }
-
     override fun handleInversion(inversionModeEnabled: Boolean) {
         if (inversionModeEnabled) {
             yes.setBackgroundResource(R.drawable.radio_button_background_selector_inverse)
@@ -98,12 +75,14 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
         }
     }
 
-    private fun setQuestionnaireContent() {
-        val state = userStateStorage.get()
+    private fun nextStep(symptoms: Set<Symptom>) {
+        DiagnoseSneezeActivity.start(this, symptoms)
+    }
 
-        if (state.displayState() == DisplayState.ISOLATE) {
-            progress.text = getString(R.string.progress_three_third)
-            progress.contentDescription = getString(R.string.page_3_of_3)
+    private fun setQuestionnaireContent() {
+        if (isCheckinQuestionnaire()) {
+            progress.text = getString(R.string.progress_three_fifth)
+            progress.contentDescription = getString(R.string.page_3_of_5)
             confirm_diagnosis.text = getString(R.string.submit)
             anosmia_question.text = getString(R.string.anosmia_question_simplified)
         } else {
@@ -113,6 +92,9 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
             anosmia_question.text = getString(R.string.anosmia_question)
         }
     }
+
+    private fun isCheckinQuestionnaire() =
+        userStateStorage.get().displayState() == DisplayState.ISOLATE
 
     companion object {
         fun start(context: Context, symptoms: Set<Symptom>) =

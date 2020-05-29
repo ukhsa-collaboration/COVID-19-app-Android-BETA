@@ -119,14 +119,20 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickFirstCtaButton()
 
-        diagnoseQuestionRobot.checkProgress(R.string.progress_one_third)
+        diagnoseQuestionRobot.checkProgress(R.string.progress_one_fifth)
         diagnoseQuestionRobot.answerYesTo(R.id.temperature_question)
 
-        diagnoseQuestionRobot.checkProgress(R.string.progress_two_third)
+        diagnoseQuestionRobot.checkProgress(R.string.progress_two_fifth)
         diagnoseQuestionRobot.answerNoTo(R.id.cough_question)
 
-        diagnoseQuestionRobot.checkProgress(R.string.progress_three_third)
+        diagnoseQuestionRobot.checkProgress(R.string.progress_three_fifth)
         diagnoseQuestionRobot.answerNoTo(R.id.anosmia_question)
+
+        diagnoseQuestionRobot.checkProgress(R.string.progress_four_fifth)
+        diagnoseQuestionRobot.answerNoTo(R.id.sneeze_question)
+
+        diagnoseQuestionRobot.checkProgress(R.string.progress_five_fifth)
+        diagnoseQuestionRobot.answerNoTo(R.id.stomach_question)
 
         statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
     }

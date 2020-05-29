@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
@@ -61,10 +61,6 @@ class DiagnoseCoughActivity : BaseActivity() {
         }
     }
 
-    private fun nextStep(symptoms: Set<Symptom>) {
-        DiagnoseAnosmiaActivity.start(this, symptoms)
-    }
-
     override fun handleInversion(inversionModeEnabled: Boolean) {
         if (inversionModeEnabled) {
             yes.setBackgroundResource(R.drawable.radio_button_background_selector_inverse)
@@ -77,12 +73,14 @@ class DiagnoseCoughActivity : BaseActivity() {
         }
     }
 
-    private fun setQuestionnaireContent() {
-        val state = userStateStorage.get()
+    private fun nextStep(symptoms: Set<Symptom>) {
+        DiagnoseAnosmiaActivity.start(this, symptoms)
+    }
 
-        if (state.displayState() == ISOLATE) {
-            progress.text = getString(R.string.progress_two_third)
-            progress.contentDescription = getString(R.string.page_2_of_3)
+    private fun setQuestionnaireContent() {
+        if (isCheckinQuestionnaire()) {
+            progress.text = getString(R.string.progress_two_fifth)
+            progress.contentDescription = getString(R.string.page_2_of_5)
             new_cough_description.visibility = View.GONE
             cough_question.text = getString(R.string.cough_question_simplified)
         } else {
@@ -93,6 +91,9 @@ class DiagnoseCoughActivity : BaseActivity() {
             cough_question.text = getString(R.string.cough_question)
         }
     }
+
+    private fun isCheckinQuestionnaire() =
+        userStateStorage.get().displayState() == DisplayState.ISOLATE
 
     companion object {
 

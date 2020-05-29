@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
@@ -73,12 +73,14 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         }
     }
 
-    private fun setQuestionnaireContent() {
-        val state = userStateStorage.get()
+    private fun nextStep(symptoms: Set<Symptom>) {
+        DiagnoseCoughActivity.start(this, symptoms)
+    }
 
-        if (state.displayState() == ISOLATE) {
-            progress.text = getString(R.string.progress_one_third)
-            progress.contentDescription = getString(R.string.page_1_of_3)
+    private fun setQuestionnaireContent() {
+        if (isCheckinQuestionnaire()) {
+            progress.text = getString(R.string.progress_one_fifth)
+            progress.contentDescription = getString(R.string.page_1_of_5)
             temperature_question.text = getString(R.string.temperature_question_simplified)
         } else {
             progress.text = getString(R.string.progress_one_sixth)
@@ -87,9 +89,8 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
         }
     }
 
-    private fun nextStep(symptoms: Set<Symptom>) {
-        DiagnoseCoughActivity.start(this, symptoms)
-    }
+    private fun isCheckinQuestionnaire() =
+        userStateStorage.get().displayState() == DisplayState.ISOLATE
 
     companion object {
         fun start(context: Context) =

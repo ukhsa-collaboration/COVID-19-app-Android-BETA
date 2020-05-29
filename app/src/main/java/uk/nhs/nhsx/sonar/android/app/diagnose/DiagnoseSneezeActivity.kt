@@ -10,13 +10,16 @@ import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.confirm_diagnosis
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.no
+import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.sneeze_diagnosis_answer
+import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.sneeze_question
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.yes
 import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Inject
@@ -32,6 +35,8 @@ open class DiagnoseSneezeActivity : BaseActivity() {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sneeze_diagnosis)
+
+        setQuestionnaireContent()
 
         confirm_diagnosis.setOnClickListener {
             when (sneeze_diagnosis_answer.checkedRadioButtonId) {
@@ -73,6 +78,23 @@ open class DiagnoseSneezeActivity : BaseActivity() {
     protected open fun nextStep(symptoms: Set<Symptom>) {
         DiagnoseStomachActivity.start(this, symptoms)
     }
+
+    private fun setQuestionnaireContent() {
+        if (isCheckinQuestionnaire()) {
+            progress.text = getString(R.string.progress_four_fifth)
+            progress.contentDescription = getString(R.string.page_4_of_5)
+            confirm_diagnosis.text = getString(R.string.submit)
+            sneeze_question.text = getString(R.string.sneeze_question_simplified)
+        } else {
+            progress.text = getString(R.string.progress_four_sixth)
+            confirm_diagnosis.text = getString(R.string.continue_button)
+            progress.contentDescription = getString(R.string.page_4_of_6)
+            sneeze_question.text = getString(R.string.sneeze_question)
+        }
+    }
+
+    private fun isCheckinQuestionnaire() =
+        userStateStorage.get().displayState() == DisplayState.ISOLATE
 
     companion object {
         fun start(context: Context, symptoms: Set<Symptom>) =
