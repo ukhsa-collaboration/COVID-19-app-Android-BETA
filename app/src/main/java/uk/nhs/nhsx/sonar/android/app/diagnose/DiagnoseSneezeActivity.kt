@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.confirm_diagnosi
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.no
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.sneeze_description
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.sneeze_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.sneeze_question
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.yes
@@ -84,10 +85,12 @@ open class DiagnoseSneezeActivity : BaseActivity() {
             progress.text = getString(R.string.progress_four_fifth)
             progress.contentDescription = getString(R.string.page_4_of_5)
             sneeze_question.text = getString(R.string.sneeze_question_simplified)
+            sneeze_description.text = getString(R.string.sneeze_description_simplified)
         } else {
             progress.text = getString(R.string.progress_four_sixth)
             progress.contentDescription = getString(R.string.page_4_of_6)
             sneeze_question.text = getString(R.string.sneeze_question)
+            sneeze_description.text = getString(R.string.sneeze_description)
         }
     }
 

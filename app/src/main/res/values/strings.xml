@@ -59,27 +59,32 @@
     <!-- Questionnaire -->
     <string name="temperature_question">Do you have a high temperature (fever)?</string>
     <string name="temperature_question_simplified">Do you have a high temperature (fever)?</string>
-    <string name="temperature_description">This means that you feel hot to touch on your chest or back (you do not need to measure your temperature).</string>
+    <string name="temperature_description">This means that you feel hot to touch on your chest or back (you do not need to measure your temperature).\n\nYour response to this question helps us decide whether you need to book a coronavirus test.</string>
+    <string name="temperature_description_simplified">This means that you feel hot to touch on your chest or back (you do not need to measure your temperature)</string>
     <string name="yes_temperature">Yes, I have a high temperature</string>
     <string name="no_temperature">No, I don’t have a high temperature</string>
     <string name="cough_question">Do you have a new continuous cough?</string>
     <string name="cough_question_simplified">Do you have a continuous cough?</string>
-    <string name="cough_description">This means coughing a lot for more than an hour, or 3 or more coughing episodes in 24 hours (if you usually have a cough, it may be worse than usual).</string>
+    <string name="cough_description">This means coughing a lot for more than an hour, or 3 or more coughing episodes in 24 hours (if you usually have a cough, it may be worse than usual).\n\nYour response to this question helps us decide whether you need to book a coronavirus test.</string>
+    <string name="cough_description_simplified">This means coughing a lot for more than an hour, or 3 or more coughing episodes in 24 hours (if you usually have a cough, it may be worse than usual).</string>
     <string name="yes_new_cough">Yes, I have a new continuous cough</string>
     <string name="no_new_cough">No, I don’t have a new continuous cough</string>
     <string name="yes_cough">Yes, I have a continuous cough</string>
     <string name="no_cough">No, I don’t have a continuous cough</string>
     <string name="anosmia_question">Have you had a new loss or change to your sense of smell or taste?</string>
     <string name="anosmia_question_simplified">Have you had a loss or change to your sense of smell or taste?</string>
-    <string name="anosmia_description">This means you have noticed you cannot smell or taste anything, or things smell or taste different to normal.</string>
+    <string name="anosmia_description">This means you have noticed you cannot smell or taste anything, or things smell or taste different to normal.\n\nYour response to this question helps us decide whether you need to book a coronavirus test.</string>
+    <string name="anosmia_description_simplified">This means you have noticed you cannot smell or taste anything, or things smell or taste different to normal.</string>
     <string name="yes_anosmia">Yes, I have a new loss or change to my sense of smell or taste</string>
     <string name="no_anosmia">No, I do not have a new loss or change to my sense of smell or taste</string>
     <string name="sneeze_question">Do you have a runny nose, feel feverish or suffer from sneezing?</string>
     <string name="sneeze_question_simplified">Do you have a runny nose, feel feverish or suffer from sneezing?</string>
-    <string name="sneeze_description">Runny nose: this means your nose is more runny than usual.\n\nFeeling feverish: this means you have sore or aching muscles, feel unusually tired, have a headache or are shivering or feeling warm or hot.\n\nSneezing: this means you are sneezing more than normal, not caused by any known allergy.</string>
+    <string name="sneeze_description">Runny nose: this means your nose is more runny than usual.\n\nFeeling feverish: this means you have sore or aching muscles, feel unusually tired, have a headache or are shivering or feeling warm or hot.\n\nSneezing: this means you are sneezing more than normal, not caused by any known allergy.\n\nYour response to this question helps the NHS better understand coronavirus.</string>
+    <string name="sneeze_description_simplified">Runny nose: this means your nose is more runny than usual.\n\nFeeling feverish: this means you have sore or aching muscles, feel unusually tired, have a headache or are shivering or feeling warm or hot.\n\nSneezing: this means you are sneezing more than normal, not caused by any known allergy.</string>
     <string name="stomach_question">Do you have diarrhoea, nausea, vomiting or have a loss of appetite?</string>
     <string name="stomach_question_simplified">Do you have diarrhoea, nausea, vomiting or have a loss of appetite?</string>
-    <string name="stomach_description">Diarrhoea: this means your poo has been more runny or watery than normal.\n\nNausea: this means you are feeling sick.\n\nVomiting: this means you have been sick more than once.\n\nLoss of appetite: this means you are not feeling hungry, or are not eating as much as normal.</string>
+    <string name="stomach_description">Diarrhoea: this means your poo has been more runny or watery than normal.\n\nNausea: this means you are feeling sick.\n\nVomiting: this means you have been sick more than once.\n\nLoss of appetite: this means you are not feeling hungry, or are not eating as much as normal.\n\nYour response to this question helps the NHS better understand coronavirus.</string>
+    <string name="stomach_description_simplified">Diarrhoea: this means your poo has been more runny or watery than normal.\n\nNausea: this means you are feeling sick.\n\nVomiting: this means you have been sick more than once.\n\nLoss of appetite: this means you are not feeling hungry, or are not eating as much as normal.</string>
     <string name="yes_to_symptoms">Yes, I have at least one of these symptoms</string>
     <string name="no_to_symptoms">No, I don\'t have any of these symptoms</string>
     <!-- /Questionnaire -->

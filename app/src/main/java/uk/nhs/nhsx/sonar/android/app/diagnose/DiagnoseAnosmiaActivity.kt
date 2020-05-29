@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.anosmia_description
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.anosmia_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.anosmia_question
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.confirm_diagnosis
@@ -84,10 +85,12 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
             progress.text = getString(R.string.progress_three_fifth)
             progress.contentDescription = getString(R.string.page_3_of_5)
             anosmia_question.text = getString(R.string.anosmia_question_simplified)
+            anosmia_description.text = getString(R.string.anosmia_description_simplified)
         } else {
             progress.text = getString(R.string.progress_three_sixth)
             progress.contentDescription = getString(R.string.page_3_of_6)
             anosmia_question.text = getString(R.string.anosmia_question)
+            anosmia_description.text = getString(R.string.anosmia_description)
         }
     }
 

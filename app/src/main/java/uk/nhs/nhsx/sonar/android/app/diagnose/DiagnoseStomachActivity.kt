@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_stomach_diagnosis.confirm_diagnos
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.no
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_description
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_question
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.yes
@@ -85,11 +86,13 @@ open class DiagnoseStomachActivity : BaseActivity() {
             progress.contentDescription = getString(R.string.page_5_of_5)
             confirm_diagnosis.text = getString(R.string.submit)
             stomach_question.text = getString(R.string.stomach_question_simplified)
+            stomach_description.text = getString(R.string.stomach_description_simplified)
         } else {
             progress.text = getString(R.string.progress_five_sixth)
             confirm_diagnosis.text = getString(R.string.continue_button)
             progress.contentDescription = getString(R.string.page_5_of_6)
             stomach_question.text = getString(R.string.stomach_question)
+            stomach_description.text = getString(R.string.stomach_description)
         }
     }
 

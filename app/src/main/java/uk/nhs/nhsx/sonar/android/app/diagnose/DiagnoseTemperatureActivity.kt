@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_temperature_diagnosis.confirm_dia
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.no
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_description
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_question
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.yes
@@ -82,10 +83,12 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
             progress.text = getString(R.string.progress_one_fifth)
             progress.contentDescription = getString(R.string.page_1_of_5)
             temperature_question.text = getString(R.string.temperature_question_simplified)
+            temperature_description.text = getString(R.string.temperature_description_simplified)
         } else {
             progress.text = getString(R.string.progress_one_sixth)
             progress.contentDescription = getString(R.string.page_1_of_6)
             temperature_question.text = getString(R.string.temperature_question)
+            temperature_description.text = getString(R.string.temperature_description)
         }
     }
 

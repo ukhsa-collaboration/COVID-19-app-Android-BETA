@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.confirm_diagnosis
+import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_description
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.cough_question
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.no
@@ -81,6 +82,7 @@ class DiagnoseCoughActivity : BaseActivity() {
             progress.text = getString(R.string.progress_two_fifth)
             progress.contentDescription = getString(R.string.page_2_of_5)
             cough_question.text = getString(R.string.cough_question_simplified)
+            cough_description.text = getString(R.string.cough_description_simplified)
 
             yes.text = getString(R.string.yes_cough)
             no.text = getString(R.string.no_cough)
@@ -88,6 +90,7 @@ class DiagnoseCoughActivity : BaseActivity() {
             progress.text = getString(R.string.progress_two_sixth)
             progress.contentDescription = getString(R.string.page_2_of_6)
             cough_question.text = getString(R.string.cough_question)
+            cough_description.text = getString(R.string.cough_description)
 
             yes.text = getString(R.string.yes_new_cough)
             no.text = getString(R.string.no_new_cough)
