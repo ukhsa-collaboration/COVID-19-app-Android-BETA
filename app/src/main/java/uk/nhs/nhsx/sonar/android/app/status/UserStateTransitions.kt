@@ -53,9 +53,12 @@ object UserStateTransitions {
     fun isSymptomatic(symptoms: Set<Symptom>): Boolean =
         hasTemperature(symptoms) || hasCough(symptoms) || hasAnosmia(symptoms)
 
-    fun transitionOnContactAlert(currentState: UserState): UserState? =
+    fun transitionOnContactAlert(
+        currentState: UserState,
+        exposureDate: DateTime
+    ): UserState? =
         when (currentState) {
-            is DefaultState -> UserState.exposed()
+            is DefaultState -> UserState.exposed(exposureDate.toLocalDate())
             else -> null
         }
 

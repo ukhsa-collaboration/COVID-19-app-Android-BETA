@@ -2,6 +2,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
+import org.joda.time.LocalDate
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
@@ -30,7 +31,7 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
         nonEmptySetOf(TEMPERATURE)
     )
 
-    private val exposedState = UserState.exposed()
+    private val exposedState = UserState.exposed(LocalDate.now())
 
     private val positiveState = PositiveState(
         DateTime.now(UTC).minusDays(1),
@@ -243,7 +244,7 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
         testAppContext.simulateStatusUpdateReceived()
         testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = true)
 
-        startActivity(UserState.exposed())
+        startActivity(UserState.exposed(LocalDate.now()))
 
         testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = false)
 

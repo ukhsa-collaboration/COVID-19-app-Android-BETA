@@ -7,9 +7,12 @@ package uk.nhs.nhsx.sonar.android.app.notifications
 import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.slot
 import io.mockk.verify
 import io.mockk.verifyAll
+import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
@@ -102,7 +105,8 @@ class NotificationHandlerTest {
     }
 
     @Test
-    fun `test handleNewMessage - status update`() {
+    fun `test handleNewMessage - status update without exposure date (legacy)`() {
+        val slot = slot<ExposedState>()
         val messageData = mapOf(
             "type" to "Status Update",
             "status" to "Potential"
@@ -113,11 +117,35 @@ class NotificationHandlerTest {
 
         verifyAll {
             userStateStorage.get()
-            userStateStorage.set(any<ExposedState>())
+            userStateStorage.set(capture(slot))
 
             exposedNotification.show()
             testResultNotification wasNot Called
         }
+        assertThat(slot.captured.since.toLocalDate()).isEqualTo(LocalDate.now())
+    }
+
+    @Test
+    fun `test handleNewMessage - status update`() {
+        val slot = slot<ExposedState>()
+        val exposureDate = "2020-04-23T18:34:00Z"
+        val messageData = mapOf(
+            "type" to "Status Update",
+            "status" to "Potential",
+            "mostRecentProximityEventDate" to exposureDate
+        )
+        every { userStateStorage.get() } returns DefaultState
+
+        handler.handleNewMessage(messageData)
+
+        verifyAll {
+            userStateStorage.get()
+            userStateStorage.set(capture(slot))
+
+            exposedNotification.show()
+            testResultNotification wasNot Called
+        }
+        assertThat(slot.captured.since.toLocalDate()).isEqualTo(LocalDate.parse("2020-04-23"))
     }
 
     @Test
@@ -152,7 +180,8 @@ class NotificationHandlerTest {
     fun `test handleNewMessage - status update in exposed state`() {
         val messageData = mapOf(
             "type" to "Status Update",
-            "status" to "Potential"
+            "status" to "Potential",
+            "mostRecentProximityEventDate" to "2020-04-23T18:34:00Z"
         )
         every { userStateStorage.get() } returns ExposedState(DateTime.now(), DateTime.now())
 

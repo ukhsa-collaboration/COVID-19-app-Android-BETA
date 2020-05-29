@@ -183,7 +183,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         setExposedState.setOnClickListener {
-            userStateStorage.set(UserState.exposed())
+            userStateStorage.set(UserState.exposed(LocalDate.now()))
             finish()
         }
 
@@ -198,7 +198,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         setExposedSymptomaticState.setOnClickListener {
-            val exposed = UserState.exposed()
+            val exposed = UserState.exposed(LocalDate.now())
             userStateStorage.set(
                 ExposedSymptomaticState(
                     since = exposed.since,

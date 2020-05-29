@@ -48,8 +48,9 @@ class NotificationHandler @Inject constructor(
                     registrationManager.register()
                 }
                 isContactAlert(messageData) -> {
+                    val exposureDate = DateTime(messageData["mostRecentProximityEventDate"])
                     userStateStorage.get()
-                        .let { UserStateTransitions.transitionOnContactAlert(it) }
+                        .let { UserStateTransitions.transitionOnContactAlert(it, exposureDate) }
                         ?.let {
                             userStateStorage.set(it)
                             exposedNotification.show()

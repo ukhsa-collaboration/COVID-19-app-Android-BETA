@@ -25,10 +25,10 @@ sealed class UserState {
         fun default(): DefaultState =
             DefaultState
 
-        fun exposed(today: LocalDate = LocalDate.now()): ExposedState =
+        fun exposed(exposureDate: LocalDate): ExposedState =
             ExposedState(
-                today.atSevenAm().toUtc(),
-                today.after(NO_DAYS_IN_EXPOSED - 1).days().toUtc()
+                exposureDate.atSevenAm().toUtc(),
+                exposureDate.after(NO_DAYS_IN_EXPOSED - 1).days().toUtc()
             )
 
         fun symptomatic(

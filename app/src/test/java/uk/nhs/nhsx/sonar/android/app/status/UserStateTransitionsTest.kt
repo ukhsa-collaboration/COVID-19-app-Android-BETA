@@ -194,10 +194,20 @@ class UserStateTransitionsTest {
     }
 
     @Test
-    fun `test transitionOnContactAlert`() {
-        assertThat(transitionOnContactAlert(DefaultState)).isInstanceOf(ExposedState::class.java)
-        assertThat(transitionOnContactAlert(buildExposedState())).isNull()
-        assertThat(transitionOnContactAlert(buildSymptomaticState())).isNull()
+    fun `test transitionOnContactAlert passes exposure date`() {
+        val exposureDate = DateTime.parse("2020-04-21T16:00Z")
+        val newState = transitionOnContactAlert(DefaultState, exposureDate)
+
+        assertThat(newState).isInstanceOf(ExposedState::class.java)
+        val exposedState = newState as ExposedState
+
+        assertThat(exposedState.since.toLocalDate()).isEqualTo(exposureDate.toLocalDate())
+    }
+
+    @Test
+    fun `test transitionOnContactAlert does not change state for exposed or symptomatic`() {
+        assertThat(transitionOnContactAlert(buildExposedState(), DateTime.now())).isNull()
+        assertThat(transitionOnContactAlert(buildSymptomaticState(), DateTime.now())).isNull()
     }
 
     @Test
