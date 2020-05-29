@@ -27,7 +27,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/nhsLogoName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -37,12 +37,6 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@id/nhsLogo"
         app:layout_constraintStart_toEndOf="@id/nhsLogo" />
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/nhsPanel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="nhsLogo,name" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -67,8 +61,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="24dp"
                 android:text="@string/device_not_supported_title"
-                android:accessibilityHeading="true"
-            />
+                android:accessibilityHeading="true" />
 
             <TextView
                 android:id="@+id/edgeCaseText"
@@ -79,6 +72,17 @@
                 android:text="@string/device_not_supported_rationale"
                 android:textColor="@color/text_primary_color"
                 android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/nhsServicesUrl"
+                style="@style/PrimaryTextLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/nhs_online_service" />
 
         </LinearLayout>
 

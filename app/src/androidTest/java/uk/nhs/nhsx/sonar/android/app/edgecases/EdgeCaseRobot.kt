@@ -9,11 +9,11 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 
 class EdgeCaseRobot {
 
-    fun checkTitle(@StringRes titleId: Int) {
-        checkViewHasText(R.id.edgeCaseTitle, titleId)
-    }
-
     fun clickTakeAction() {
         onView(withId(R.id.takeActionButton)).perform(click())
+    }
+
+    fun checkTitle(@StringRes titleId: Int) {
+        checkViewHasText(R.id.edgeCaseTitle, titleId)
     }
 }
