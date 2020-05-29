@@ -112,6 +112,7 @@
     <string name="status_symptomatic_title">Your symptoms indicate you may have coronavirus. Please isolate yourself and your household and book a test.</string>
     <string name="need_medical_advice">NHS services for your part of the country</string>
     <string name="nhs_online_service"><u>NHS Coronavirus</u></string>
+    <string name="tablet_information_url"><u>Information on the use of tablets</u></string>
     <string name="nhs_111_online_service"><u>NHS 111 online coronavirus service</u></string>
     <string name="apply_for_test_now_url"><u>Book a coronavirus test now</u></string>
     <string name="status_today_feeling">How are you feeling today?</string>
@@ -221,8 +222,8 @@
     <string name="more_information">More information</string>
     <string name="submit_confirmation">I confirm that the information I have entered is accurate</string>
     <string name="please_confirm_the_information">Please confirm that the information you have entered is accurate</string>
-    <string name="tablet_support_title">This app is not made for tablets.</string>
-    <string name="tablet_support_description">This app is only available for smartphones because the app is only effective if you have it on a device that is with you all the time when you go out. Please install the app on your smartphone.</string>
+    <string name="tablet_support_title">This app is made for mobile smartphones</string>
+    <string name="tablet_support_description">Your device seems to be a tablet. This app is only available for smartphones because the app is only effective if you have it on a device that is with you all the time when you go out. Please install the app on your smartphone.</string>
     <string name="enable_notifications_text">You will not receive important notifications regarding changes in your advice unless you allow notifications in your Settings.</string>
     <string name="enable_notifications_title">Enable notifications</string>
     <string name="timestamp">Timestamp %1$s</string>

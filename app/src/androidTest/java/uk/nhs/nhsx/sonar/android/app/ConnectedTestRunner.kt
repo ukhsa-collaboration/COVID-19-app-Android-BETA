@@ -20,6 +20,7 @@ import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivityTest
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivityTest
 import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedActivityTest
+import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivityTest
@@ -60,6 +61,7 @@ class ConnectedTestRunner {
     fun runAllTests() {
         val tests = listOf(
             { DeviceNotSupportedActivityTest(testAppContext).testDisplaysExpectedViews() },
+            { TabletNotSupportedActivityTest(testAppContext).testDisplaysExpectedViews() },
 
             { MainActivityTest(testAppContext).testUnsupportedDevice() },
             { MainActivityTest(testAppContext).testTabletNotSupported() },

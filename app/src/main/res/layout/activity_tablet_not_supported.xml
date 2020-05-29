@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/name"
+        android:id="@+id/nhsLogoName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -39,11 +39,10 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="68dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/nhsLogo">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,7 +54,7 @@
                 style="@style/OnboardingTitle"
                 android:layout_width="400dp"
                 android:layout_height="wrap_content"
-                android:paddingTop="24dp"
+                android:paddingTop="100dp"
                 android:text="@string/tablet_support_title"
                 android:accessibilityHeading="true"
                 android:textSize="48sp" />
@@ -69,6 +68,17 @@
                 android:text="@string/tablet_support_description"
                 android:textColor="@color/text_primary_color"
                 android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tabletInformationUrl"
+                style="@style/PrimaryTextLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
+                android:layout_marginTop="4dp"
+                android:text="@string/tablet_information_url" />
 
         </LinearLayout>
 

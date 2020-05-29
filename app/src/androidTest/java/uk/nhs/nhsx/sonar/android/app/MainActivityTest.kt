@@ -5,6 +5,8 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
+import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedRobot
+import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.StatusFooterRobot
@@ -12,7 +14,6 @@ import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
-import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class MainActivityTest(private val testAppContext: TestApplicationContext) {
@@ -25,7 +26,8 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
 
         startMainActivity()
 
-        checkViewHasText(R.id.edgeCaseTitle, R.string.device_not_supported_title)
+        val robot = DeviceNotSupportedRobot()
+        robot.checkScreenIsDisplayed()
     }
 
     fun testTabletNotSupported() {
@@ -33,7 +35,8 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
 
         startMainActivity()
 
-        checkViewHasText(R.id.edgeCaseTitle, R.string.tablet_support_title)
+        val robot = TabletNotSupportedRobot()
+        robot.checkScreenIsDisplayed()
     }
 
     fun testLaunchWhenOnboardingIsFinishedButNotRegistered() {
