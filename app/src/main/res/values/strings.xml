@@ -206,8 +206,6 @@
     <string name="info">Link to more information about NHS COVID-19 app</string>
     <string name="please_book_test">Please book a coronavirus test immediately. Write down your reference code and phone</string>
     <string name="test_booking_number"><u>0800 540 4900</u></string>
-    <string name="isle_of_white_only_title">This app currently only works on the Isle of Wight</string>
-    <string name="isle_of_white_only_description">If you live elsewhere in the UK, please keep the app installed and we will let you know when it is ready for you to use.</string>
     <string name="page_1_of_6">Page 1 of 6</string>
     <string name="page_2_of_6">Page 2 of 6</string>
     <string name="page_3_of_6">Page 3 of 6</string>

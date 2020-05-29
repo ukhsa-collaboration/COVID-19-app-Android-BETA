@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
@@ -20,69 +19,36 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="16dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/areaNotSupported"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:background="@color/gray"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:visibility="visible">
-
-                <TextView
-                    style="@style/TextViewSubHead"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="6dp"
-                    android:text="@string/isle_of_white_only_title" />
-
-                <TextView
-                    style="@style/TextViewStatusSubTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/isle_of_white_only_description"
-                    android:textColor="@color/text_primary_color" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/submit_events_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="36dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/confirm_diagnosis_text_1"
+                android:textColor="@color/text_sub_title"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="8dp">
-
-                <TextView
-                    android:id="@+id/submit_events_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/confirm_diagnosis_text_1"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/confirm_diagnosis_text_2"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
+                android:text="@string/confirm_diagnosis_text_2"
+                android:textColor="@color/text_sub_title"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/needConfirmationHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="8dp"
+                android:accessibilityHeading="true"
                 android:fontFamily="sans-serif-medium"
                 android:text="@string/please_confirm_the_information"
-                android:accessibilityHeading="true"
                 android:textColor="@color/colorDanger"
                 android:textSize="16sp"
                 android:visibility="invisible"
@@ -92,15 +58,14 @@
                 android:id="@+id/confirmationCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginStart="-8dp"
                 android:gravity="top"
                 android:lineSpacingMultiplier="1.2"
                 android:minHeight="48dp"
                 android:paddingTop="4dp"
                 android:text="@string/submit_confirmation"
                 android:textSize="14sp" />
+
         </LinearLayout>
     </ScrollView>
 
