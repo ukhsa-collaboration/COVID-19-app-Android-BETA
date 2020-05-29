@@ -17,12 +17,6 @@ fun Activity.openUrl(url: String) {
         .launchUrl(this, Uri.parse(url))
 }
 
-private const val UTM_SOURCE = "utm_source=nhscovid19android"
-private const val UTM_MEDIUM = "utm_medium=mobileapp"
-private const val UTM_CAMPAIGN = "utm_campaign=nhscovid19app"
-private const val UTM_CONTENT_GENERAL = "utm_content=general"
-private const val UTM_CONTENT_SYMPTOMS = "utm_content=symptoms"
-private const val UTM_CONTENT_NOTIFIED = "utm_content=notified"
 
 private const val PAGE_ADVICE_DEFAULT = "https://faq.covid19.nhs.uk/article/KA-01062/en-us"
 
@@ -32,17 +26,13 @@ private const val PAGE_ADVICE_POSITIVE = "https://faq.covid19.nhs.uk/article/KA-
 
 private const val PAGE_ADVICE_EXPOSED = "https://faq.covid19.nhs.uk/article/KA-01063/en-us"
 
-const val URL_LATEST_ADVICE_DEFAULT =
-    "$PAGE_ADVICE_DEFAULT?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_GENERAL"
+const val URL_LATEST_ADVICE_DEFAULT = PAGE_ADVICE_DEFAULT
 
-const val URL_LATEST_ADVICE_SYMPTOMATIC =
-    "$PAGE_ADVICE_SYMPTOMATIC?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_SYMPTOMS"
+const val URL_LATEST_ADVICE_SYMPTOMATIC = PAGE_ADVICE_SYMPTOMATIC
 
-const val URL_LATEST_ADVICE_POSITIVE =
-    "$PAGE_ADVICE_POSITIVE?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_NOTIFIED"
+const val URL_LATEST_ADVICE_POSITIVE = PAGE_ADVICE_POSITIVE
 
-const val URL_LATEST_ADVICE_EXPOSED =
-    "$PAGE_ADVICE_EXPOSED?$UTM_SOURCE&$UTM_MEDIUM&$UTM_CAMPAIGN&$UTM_CONTENT_NOTIFIED"
+const val URL_LATEST_ADVICE_EXPOSED = PAGE_ADVICE_EXPOSED
 
 const val URL_SYMPTOM_CHECKER = "https://111.nhs.uk/covid-19/"
 
