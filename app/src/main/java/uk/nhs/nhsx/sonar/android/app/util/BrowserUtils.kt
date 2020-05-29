@@ -17,7 +17,6 @@ fun Activity.openUrl(url: String) {
         .launchUrl(this, Uri.parse(url))
 }
 
-
 private const val PAGE_ADVICE_DEFAULT = "https://faq.covid19.nhs.uk/article/KA-01062/en-us"
 
 private const val PAGE_ADVICE_SYMPTOMATIC = "https://faq.covid19.nhs.uk/article/KA-01078/en-us"
