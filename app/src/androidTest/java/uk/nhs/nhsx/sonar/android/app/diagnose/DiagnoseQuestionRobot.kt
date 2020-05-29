@@ -4,6 +4,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -26,8 +27,8 @@ class DiagnoseQuestionRobot {
     }
 
     private fun answerTo(@IdRes questionId: Int, @IdRes answerId: Int) {
-        onView(withId(questionId)).check(matches(isDisplayed()))
-        onView(withId(answerId)).perform(click())
+        onView(withId(questionId)).perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withId(answerId)).perform(scrollTo()).perform(click())
         onView(withId(answerId)).check(matches(isChecked()))
         onView(withId(R.id.confirm_diagnosis)).perform(click())
     }
