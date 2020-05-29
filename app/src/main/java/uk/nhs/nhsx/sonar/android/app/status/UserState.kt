@@ -132,7 +132,10 @@ object DefaultState : UserState() {
 }
 
 // State when you have been in contact with someone in SymptomaticState
-data class ExposedState(val since: DateTime, val until: DateTime) : UserState()
+data class ExposedState(
+    val since: DateTime,
+    val until: DateTime
+) : UserState()
 
 // State when you initially have symptoms. Prompted after 1 to 7 days to checkin.
 data class SymptomaticState(

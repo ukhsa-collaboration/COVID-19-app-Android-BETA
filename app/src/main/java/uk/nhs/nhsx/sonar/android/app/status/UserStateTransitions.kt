@@ -73,7 +73,8 @@ object UserStateTransitions {
         when (state) {
             is SymptomaticState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
-            is ExposedSymptomaticState -> TODO()
+            is ExposedSymptomaticState ->
+                    ExposedState(state.since, state.until)
             is PositiveState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
             is ExposedState ->
@@ -86,11 +87,12 @@ object UserStateTransitions {
         when (state) {
             is SymptomaticState ->
                 PositiveState(testDate, state.until, state.symptoms)
-            is ExposedSymptomaticState -> TODO()
+            is ExposedSymptomaticState ->
+                PositiveState(testDate, state.until, state.symptoms)
             is PositiveState ->
                 state
             is ExposedState ->
-                if (state.since.isAfter(testDate)) state else positive(testDate)
+                positive(testDate)
             is DefaultState ->
                 positive(testDate)
         }

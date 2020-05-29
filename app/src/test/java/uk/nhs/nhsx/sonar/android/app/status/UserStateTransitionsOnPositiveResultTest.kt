@@ -11,9 +11,10 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
-import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTransitionsOnPositiveResultTest {
@@ -33,7 +34,7 @@ class UserStateTransitionsOnPositiveResultTest {
     @Test
     fun `symptomatic becomes positive and the symptoms and duration are retained`() {
         val symptomDate = LocalDate.now().minusDays(6)
-        val symptomatic = UserState.symptomatic(symptomDate, NonEmptySet.create(COUGH))
+        val symptomatic = UserState.symptomatic(symptomDate, nonEmptySetOf(COUGH))
         val testInfo = TestInfo(TestResult.POSITIVE, symptomatic.since.plusDays(1))
 
         val state = transitionOnTestResult(symptomatic, testInfo)
@@ -42,9 +43,23 @@ class UserStateTransitionsOnPositiveResultTest {
     }
 
     @Test
+    fun `exposed-symptomatic becomes positive and the symptoms and duration are retained`() {
+        val symptomDate = LocalDate.now().minusDays(6)
+        val exposedSymptomatic = UserState.exposed(symptomDate).let {
+            ExposedSymptomaticState(it.since, it.until, nonEmptySetOf(TEMPERATURE))
+        }
+
+        val testInfo = TestInfo(TestResult.POSITIVE, exposedSymptomatic.since.plusDays(1))
+
+        val state = transitionOnTestResult(exposedSymptomatic, testInfo)
+
+        assertThat(state).isEqualTo(PositiveState(testInfo.date, exposedSymptomatic.until, exposedSymptomatic.symptoms))
+    }
+
+    @Test
     fun `positive remains positive`() {
         val testDate = DateTime.now().minusDays(6)
-        val positive = UserState.positive(testDate, NonEmptySet.create(COUGH))
+        val positive = UserState.positive(testDate, nonEmptySetOf(COUGH))
         val testInfo = TestInfo(TestResult.POSITIVE, positive.since.plusDays(1))
 
         val state = transitionOnTestResult(positive, testInfo)
@@ -53,27 +68,16 @@ class UserStateTransitionsOnPositiveResultTest {
     }
 
     @Test
-    fun `exposed, if exposed prior test, becomes positive with no symptoms`() {
+    fun `exposed becomes positive with no symptoms`() {
         val date = LocalDate.now().minusDays(6)
-        val currentState = UserState.exposed(date)
-        val testInfo = TestInfo(TestResult.POSITIVE, currentState.since.plusDays(1))
+        val exposed = UserState.exposed(date)
+        val testInfo = TestInfo(TestResult.POSITIVE, exposed.since.plusDays(1))
 
-        val state = transitionOnTestResult(currentState, testInfo)
+        val state = transitionOnTestResult(exposed, testInfo)
 
         val since = testInfo.date.toLocalDate().atSevenAm().toUtc()
         val until = testInfo.date.toLocalDate().plusDays(7).atSevenAm().toUtc()
 
         assertThat(state).isEqualTo(PositiveState(since, until, emptySet()))
-    }
-
-    @Test
-    fun `exposed, if exposed after test, remains exposed`() {
-        val date = LocalDate.now().minusDays(2)
-        val exposed = UserState.exposed(date)
-        val testInfo = TestInfo(TestResult.POSITIVE, exposed.since.minusDays(1))
-
-        val state = transitionOnTestResult(exposed, testInfo)
-
-        assertThat(state).isEqualTo(exposed)
     }
 }
