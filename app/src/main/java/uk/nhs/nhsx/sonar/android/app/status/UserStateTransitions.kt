@@ -82,7 +82,7 @@ object UserStateTransitions {
     private fun handlePositiveTestResult(state: UserState, testDate: DateTime): UserState =
         when (state) {
             is SymptomaticState ->
-                positive(testDate, state.symptoms)
+                PositiveState(testDate, state.until, state.symptoms)
             is PositiveState ->
                 state
             is ExposedState ->

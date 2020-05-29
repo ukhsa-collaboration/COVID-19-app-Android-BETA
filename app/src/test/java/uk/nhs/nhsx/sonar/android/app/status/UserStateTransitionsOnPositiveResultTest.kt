@@ -31,17 +31,14 @@ class UserStateTransitionsOnPositiveResultTest {
     }
 
     @Test
-    fun `symptomatic becomes positive and the symptoms are retained`() {
+    fun `symptomatic becomes positive and the symptoms and duration are retained`() {
         val symptomDate = LocalDate.now().minusDays(6)
         val symptomatic = UserState.symptomatic(symptomDate, NonEmptySet.create(COUGH))
         val testInfo = TestInfo(TestResult.POSITIVE, symptomatic.since.plusDays(1))
 
         val state = transitionOnTestResult(symptomatic, testInfo)
 
-        val since = testInfo.date.toLocalDate().atSevenAm().toUtc()
-        val until = testInfo.date.toLocalDate().plusDays(7).atSevenAm().toUtc()
-
-        assertThat(state).isEqualTo(PositiveState(since, until, symptomatic.symptoms))
+        assertThat(state).isEqualTo(PositiveState(testInfo.date, symptomatic.until, symptomatic.symptoms))
     }
 
     @Test
