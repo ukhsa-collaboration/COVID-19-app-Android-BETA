@@ -5,16 +5,31 @@
 package uk.nhs.nhsx.sonar.android.app.util
 
 import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
+import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 
-fun Activity.openUrl(url: String) {
+fun Activity.openUrl(url: String, useInternalBrowser: Boolean = true) {
+    try {
+        if (useInternalBrowser) openInInternalBrowser(url)
+        else openInExternalBrowser(url)
+    } catch (t: Throwable) {
+        Timber.e(t, "Error opening url")
+    }
+}
+
+private fun Activity.openInInternalBrowser(url: String) {
     CustomTabsIntent.Builder()
         .addDefaultShareMenuItem()
         .setToolbarColor(getColor(R.color.colorPrimary))
         .build()
         .launchUrl(this, Uri.parse(url))
+}
+
+private fun Activity.openInExternalBrowser(url: String) {
+    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 }
 
 private const val PAGE_ADVICE_DEFAULT = "https://faq.covid19.nhs.uk/article/KA-01062/en-us"

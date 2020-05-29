@@ -42,10 +42,14 @@ class ApplyForTestActivity : BaseActivity() {
             reference_code_panel.setState(state)
 
             order_clinical_tests.setOnClickListener {
-                when (state) {
-                    is Loaded -> openUrl(buildUrlWithCode(state.code))
-                    else -> openUrl(buildUrlWithoutCode())
+                val url = when (state) {
+                    is Loaded -> buildUrlWithCode(state.code)
+                    else -> buildUrlWithoutCode()
                 }
+                openUrl(
+                    url = url,
+                    useInternalBrowser = false
+                )
             }
         })
 

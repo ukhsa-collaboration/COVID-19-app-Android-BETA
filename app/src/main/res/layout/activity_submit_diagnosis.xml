@@ -58,7 +58,7 @@
                 android:id="@+id/confirmationCheckbox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="-8dp"
+                android:layout_marginStart="-6dp"
                 android:gravity="top"
                 android:lineSpacingMultiplier="1.2"
                 android:minHeight="48dp"
