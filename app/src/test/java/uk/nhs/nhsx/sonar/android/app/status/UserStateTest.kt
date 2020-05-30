@@ -37,11 +37,22 @@ class UserStateTest {
     private val today = LocalDate(2020, 4, 10)
 
     @Test
-    fun `exposed state factory method`() {
+    fun `exposed state factory method with exposure date`() {
         val state = UserState.exposed(today)
 
         val thirteenDaysFromNowAt7 = DateTime(2020, 4, 23, 7, 0).toDateTime(DateTimeZone.UTC)
         assertThat(state).isEqualTo(ExposedState(today.atSevenAm().toUtc(), thirteenDaysFromNowAt7))
+    }
+
+    @Test
+    fun `exposed state factory method with exposed symptomatic state`() {
+        val originalState = buildExposedSymptomaticState()
+        val state = UserState.exposed(originalState)
+
+        assertThat(state).isEqualTo(ExposedState(
+            since = originalState.since,
+            until = originalState.until
+        ))
     }
 
     @Test
@@ -92,6 +103,36 @@ class UserStateTest {
         val state = UserState.positive(aDateTime, emptySet(), today)
 
         assertThat(state.symptoms).isEmpty()
+    }
+
+    @Test
+    fun `positive state factory method - with symptomatic state`() {
+        val originalState = buildSymptomaticState()
+        val aDateTime = DateTime.parse("2020-04-02T11:11:11.000Z")
+        val state = UserState.positive(aDateTime, originalState)
+
+        assertThat(state).isEqualTo(
+            PositiveState(
+                since = aDateTime.toLocalDate().toUtcNormalized(),
+                until = originalState.until,
+                symptoms = originalState.symptoms
+            )
+        )
+    }
+
+    @Test
+    fun `positive state factory method - with exposed-symptomatic state`() {
+        val originalState = buildExposedSymptomaticState()
+        val aDateTime = DateTime.parse("2020-04-02T11:11:11.000Z")
+        val state = UserState.positive(aDateTime, originalState)
+
+        assertThat(state).isEqualTo(
+            PositiveState(
+                since = aDateTime.toLocalDate().toUtcNormalized(),
+                until = originalState.until,
+                symptoms = originalState.symptoms
+            )
+        )
     }
 
     @Test

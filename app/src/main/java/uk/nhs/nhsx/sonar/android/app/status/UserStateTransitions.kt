@@ -12,6 +12,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_SYMPTOMATIC
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.exposed
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.positive
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.isEarlierThan
@@ -77,7 +78,7 @@ object UserStateTransitions {
             is SymptomaticState ->
                 if (state.since.isAfter(testDate)) state else state.expire()
             is ExposedSymptomaticState ->
-                    ExposedState(state.since, state.until)
+                    exposed(state)
             is PositiveState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
             is ExposedState ->
@@ -89,9 +90,9 @@ object UserStateTransitions {
     private fun handlePositiveTestResult(state: UserState, testDate: DateTime): UserState =
         when (state) {
             is SymptomaticState ->
-                PositiveState(testDate, state.until, state.symptoms)
+                positive(testDate, state)
             is ExposedSymptomaticState ->
-                PositiveState(testDate, state.until, state.symptoms)
+                positive(testDate, state)
             is PositiveState ->
                 state
             is ExposedState ->

@@ -29,6 +29,9 @@ sealed class UserState {
                 exposureDate.plusDays(NO_DAYS_IN_EXPOSED - 1).toUtcNormalized()
             )
 
+        fun exposed(state: ExposedSymptomaticState): ExposedState =
+            ExposedState(state.since, state.until)
+
         fun symptomatic(
             symptomsDate: LocalDate,
             symptoms: NonEmptySet<Symptom>,
@@ -67,6 +70,24 @@ sealed class UserState {
                 symptoms
             )
         }
+
+        fun positive(
+            testDate: DateTime,
+            state: SymptomaticState
+        ): PositiveState = PositiveState(
+                testDate.toLocalDate().toUtcNormalized(),
+                state.until,
+                state.symptoms
+        )
+
+        fun positive(
+            testDate: DateTime,
+            state: ExposedSymptomaticState
+        ): PositiveState = PositiveState(
+            testDate.toLocalDate().toUtcNormalized(),
+            state.until,
+            state.symptoms
+        )
     }
 
     fun until(): DateTime? =

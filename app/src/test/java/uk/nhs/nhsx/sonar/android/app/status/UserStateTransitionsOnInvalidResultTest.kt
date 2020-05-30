@@ -6,13 +6,10 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
-import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
-import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTransitionsOnInvalidResultTest {
@@ -28,7 +25,7 @@ class UserStateTransitionsOnInvalidResultTest {
 
     @Test
     fun `symptomatic remains symptomatic`() {
-        val symptomatic = UserState.symptomatic(LocalDate.now(), NonEmptySet.create(COUGH))
+        val symptomatic = buildSymptomaticState()
         val testInfo = TestInfo(TestResult.INVALID, DateTime.now().toUtc())
 
         val state = transitionOnTestResult(symptomatic, testInfo)
@@ -38,7 +35,7 @@ class UserStateTransitionsOnInvalidResultTest {
 
     @Test
     fun `positive remains positive`() {
-        val positive = UserState.positive(DateTime.now(), NonEmptySet.create(COUGH))
+        val positive = buildPositiveState()
         val testInfo = TestInfo(TestResult.INVALID, DateTime.now().toUtc())
 
         val state = transitionOnTestResult(positive, testInfo)
@@ -48,7 +45,7 @@ class UserStateTransitionsOnInvalidResultTest {
 
     @Test
     fun `exposed remains exposed`() {
-        val exposed = UserState.exposed(LocalDate.now())
+        val exposed = buildExposedState()
         val testInfo = TestInfo(TestResult.INVALID, DateTime.now().toUtc())
 
         val state = transitionOnTestResult(exposed, testInfo)
