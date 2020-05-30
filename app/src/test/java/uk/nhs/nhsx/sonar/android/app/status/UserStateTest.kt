@@ -232,34 +232,57 @@ class UserStateTest {
     }
 
     @Test
-    fun `test scheduleCheckInReminder`() {
+    fun `scheduleCheckInReminder - when states are not expired`() {
         val reminders = mockk<Reminders>(relaxUnitFun = true)
 
-        DefaultState.scheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
-
-        exposedState.scheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
-
         symptomaticState.scheduleCheckInReminder(reminders)
+        verify { reminders.cancelCheckinReminder() }
         verify(exactly = 1) { reminders.scheduleCheckInReminder(symptomaticState.until) }
         clearMocks(reminders)
 
         exposedSymptomaticState.scheduleCheckInReminder(reminders)
+        verify { reminders.cancelCheckinReminder() }
         verify(exactly = 1) { reminders.scheduleCheckInReminder(exposedSymptomaticState.until) }
         clearMocks(reminders)
 
         positiveState.scheduleCheckInReminder(reminders)
+        verify { reminders.cancelCheckinReminder() }
         verify(exactly = 1) { reminders.scheduleCheckInReminder(positiveState.until) }
         clearMocks(reminders)
+    }
 
-        expiredExposedState.scheduleCheckInReminder(reminders)
-        verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
+    @Test
+    fun `scheduleCheckInReminder - when states are expired`() {
+        val reminders = mockk<Reminders>(relaxUnitFun = true)
 
         expiredSymptomaticState.scheduleCheckInReminder(reminders)
+        verify { reminders.cancelCheckinReminder() }
+        verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
+
+        expiredExposedSymptomaticState.scheduleCheckInReminder(reminders)
+        verify { reminders.cancelCheckinReminder() }
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
         expiredPositiveState.scheduleCheckInReminder(reminders)
+        verify { reminders.cancelCheckinReminder() }
+        verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
+    }
+
+    @Test
+    fun `scheduleCheckInReminder - for exposed state`() {
+        val reminders = mockk<Reminders>(relaxUnitFun = true)
+
+        exposedState.scheduleCheckInReminder(reminders)
+        verify { reminders.cancelCheckinReminder() }
+        verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
+    }
+
+    @Test
+    fun `scheduleCheckInReminder - for default state`() {
+        val reminders = mockk<Reminders>(relaxUnitFun = true)
+
+        DefaultState.scheduleCheckInReminder(reminders)
+        verify { reminders.cancelCheckinReminder() }
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
     }
 

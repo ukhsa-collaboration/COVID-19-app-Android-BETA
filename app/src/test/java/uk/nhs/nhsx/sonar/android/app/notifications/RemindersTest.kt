@@ -81,6 +81,21 @@ class RemindersTest {
     }
 
     @Test
+    fun cancelCheckinReminder() {
+        val pendingIntent = mockk<PendingIntent>()
+        every { pendingIntent.cancel() } returns Unit
+        every { reminderBroadcastFactory.create(any()) } returns pendingIntent
+        every { checkInReminder.clear() } returns Unit
+
+        reminders.cancelCheckinReminder()
+
+        verifyAll {
+            pendingIntent.cancel()
+            checkInReminder.clear()
+        }
+    }
+
+    @Test
     fun `handleReminderBroadcast - with check in reminder intent`() {
         every { checkInReminderNotification.show() } returns Unit
         every { checkInReminder.clear() } returns Unit

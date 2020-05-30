@@ -32,6 +32,11 @@ class Reminders @Inject constructor(
         }
     }
 
+    fun cancelCheckinReminder() {
+        alarmIntent().cancel()
+        checkInReminder.clear()
+    }
+
     fun handleReminderBroadcast(intent: Intent) {
         when (intent.getIntExtra(REMINDER_TYPE, -1)) {
             REQUEST_CODE_CHECK_IN_REMINDER -> {

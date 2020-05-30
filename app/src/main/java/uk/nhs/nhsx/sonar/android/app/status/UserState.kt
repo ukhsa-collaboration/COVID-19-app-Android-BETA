@@ -138,13 +138,18 @@ sealed class UserState {
             is DefaultState -> this
         }
 
-    fun scheduleCheckInReminder(reminders: Reminders) =
-        when {
-            (this is SymptomaticState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
-            (this is ExposedSymptomaticState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
-            (this is PositiveState && !hasExpired()) -> reminders.scheduleCheckInReminder(until)
+    fun scheduleCheckInReminder(reminders: Reminders) {
+        reminders.cancelCheckinReminder()
+
+        if (hasExpired()) return
+
+        return when (this) {
+            is SymptomaticState -> reminders.scheduleCheckInReminder(until)
+            is ExposedSymptomaticState -> reminders.scheduleCheckInReminder(until)
+            is PositiveState -> reminders.scheduleCheckInReminder(until)
             else -> Unit
         }
+    }
 
     fun symptoms(): Set<Symptom> =
         when (this) {

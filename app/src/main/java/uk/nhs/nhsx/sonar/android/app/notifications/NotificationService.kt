@@ -15,13 +15,16 @@ class NotificationService : FirebaseMessagingService() {
     @Inject
     lateinit var notificationHandler: NotificationHandler
 
+    @Inject
+    lateinit var newTokenHandler: NewTokenHandler
+
     override fun onCreate() {
         appComponent.inject(this)
     }
 
     override fun onNewToken(token: String) {
         Timber.d("Received new token: $token")
-        notificationHandler.handleNewToken(token)
+        newTokenHandler.handle(token)
     }
 
     override fun onMessageReceived(message: RemoteMessage) {

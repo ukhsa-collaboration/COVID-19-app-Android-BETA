@@ -5,103 +5,67 @@
 package uk.nhs.nhsx.sonar.android.app.notifications
 
 import org.joda.time.DateTime
-import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
-import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
-import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
-import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import javax.inject.Inject
 
 class NotificationHandler @Inject constructor(
-    private val userStateStorage: UserStateStorage,
-    private val userInbox: UserInbox,
-    private val activationCodeProvider: ActivationCodeProvider,
-    private val registrationManager: RegistrationManager,
-    private val acknowledgmentsDao: AcknowledgmentsDao,
-    private val acknowledgmentsApi: AcknowledgmentsApi,
-    private val sonarIdProvider: SonarIdProvider,
-    private val exposedNotification: ExposedNotification,
-    private val testResultNotification: TestResultNotification,
-    private val tokenRefreshWorkScheduler: TokenRefreshWorkScheduler
+    private val exposureMessageHandler: ExposureMessageHandler,
+    private val activationCodeMessageHandler: ActivationCodeMessageHandler,
+    private val testResultMessageHandler: TestResultMessageHandler,
+    private val messageAcknowledge: MessageAcknowledge
 ) {
 
-    fun handleNewToken(token: String) {
-        if (!sonarIdProvider.hasProperSonarId())
-            return
-
-        tokenRefreshWorkScheduler.schedule(sonarIdProvider.get(), token)
-    }
-
     fun handleNewMessage(messageData: Map<String, String>) {
-        val wasHandled = hasBeenAcknowledged(messageData)
 
-        if (!wasHandled) {
-            when {
-                isActivation(messageData) -> {
-                    val activationCode = messageData.getValue(ACTIVATION_CODE_KEY)
-                    activationCodeProvider.set(activationCode)
-                    registrationManager.register()
-                }
-                isContactAlert(messageData) -> {
-                    val exposureDate = DateTime(messageData[EXPOSURE_DATE_KEY])
-                    userStateStorage.get()
-                        .let { UserStateTransitions.transitionOnContactAlert(it, exposureDate) }
-                        ?.let {
-                            userStateStorage.set(it)
-                            exposedNotification.show()
-                        }
-                }
-                isTestResult(messageData) -> {
-                    val testInfo = TestInfo(
-                        TestResult.valueOf(messageData.getValue(TEST_RESULT_KEY)),
-                        DateTime(messageData.getValue(TEST_RESULT_DATE_KEY))
-                    )
+        val message = buildMessageFrom(messageData)
 
-                    userStateStorage.get()
-                        .let { currentState ->
-                            UserStateTransitions.transitionOnTestResult(currentState, testInfo)
-                        }
-                        .let {
-                            userStateStorage.set(it)
-                            userInbox.addTestInfo(testInfo)
-                            testResultNotification.show()
-                        }
-                }
-            }
+        if (!messageAcknowledge.hasBeenAcknowledged(message)) {
+            message.handle()
         }
 
-        acknowledgeIfNecessary(messageData)
+        messageAcknowledge.acknowledgeIfNecessary(message)
     }
 
-    private fun hasBeenAcknowledged(data: Map<String, String>) =
-        data[ACKNOWLEDGMENT_URL]
-            ?.let { url -> acknowledgmentsDao.tryFind(url) != null }
-            ?: false
+    private fun buildMessageFrom(data: Map<String, String>): NotificationMessage {
+        val acknowledgmentUrl = data[ACKNOWLEDGMENT_URL]
+        return when {
+            isContactAlert(data) ->
+                ExposureMessage(
+                    handler = this.exposureMessageHandler,
+                    acknowledgmentUrl = acknowledgmentUrl,
+                    date = DateTime(data[EXPOSURE_DATE_KEY])
 
-    private fun acknowledgeIfNecessary(data: Map<String, String>) =
-        data[ACKNOWLEDGMENT_URL]
-            ?.let { url ->
-                val acknowledgment = Acknowledgment(url)
-                acknowledgmentsApi.send(acknowledgment.url)
-                // TODO: Check for 200 response before persisting acknowledgement
-                acknowledgmentsDao.insert(acknowledgment)
-            }
-
-    private fun isContactAlert(data: Map<String, String>) =
-        data[TYPE_KEY] == TYPE_STATUS_UPDATE && data[EXPOSURE_KEY] == EXPOSURE_VALUE
-
-    private fun isActivation(data: Map<String, String>) =
-        data.containsKey(ACTIVATION_CODE_KEY)
-
-    private fun isTestResult(data: Map<String, String>) =
-        data[TYPE_KEY] == TYPE_TEST_RESULT &&
-            data.containsKey(TEST_RESULT_KEY) &&
-            data.containsKey(TEST_RESULT_DATE_KEY)
+                )
+            isActivation(data) ->
+                ActivationCodeMessage(
+                    handler = this.activationCodeMessageHandler,
+                    acknowledgmentUrl = acknowledgmentUrl,
+                    code = data.getValue(ACTIVATION_CODE_KEY)
+                )
+            isTestResult(data) ->
+                TestResultMessage(
+                    handler = this.testResultMessageHandler,
+                    acknowledgmentUrl = data[ACKNOWLEDGMENT_URL],
+                    result = TestResult.valueOf(data.getValue(TEST_RESULT_KEY)),
+                    date = DateTime(data.getValue(TEST_RESULT_DATE_KEY))
+                )
+            else -> UnknownMessage(acknowledgmentUrl = acknowledgmentUrl)
+        }
+    }
 
     companion object {
+
+        private fun isContactAlert(data: Map<String, String>) =
+            data[TYPE_KEY] == TYPE_STATUS_UPDATE && data[EXPOSURE_KEY] == EXPOSURE_VALUE
+
+        private fun isActivation(data: Map<String, String>) =
+            data.containsKey(ACTIVATION_CODE_KEY)
+
+        private fun isTestResult(data: Map<String, String>) =
+            data[TYPE_KEY] == TYPE_TEST_RESULT &&
+                data.containsKey(TEST_RESULT_KEY) &&
+                data.containsKey(TEST_RESULT_DATE_KEY)
+
         private const val TYPE_KEY = "type"
         private const val TYPE_STATUS_UPDATE = "Status Update"
         private const val TYPE_TEST_RESULT = "Test Result"
@@ -115,4 +79,42 @@ class NotificationHandler @Inject constructor(
         private const val ACTIVATION_CODE_KEY = "activationCode"
         private const val ACKNOWLEDGMENT_URL = "acknowledgmentUrl"
     }
+}
+
+abstract class NotificationMessage {
+    abstract val acknowledgmentUrl: String?
+
+    abstract fun handle()
+}
+
+data class ExposureMessage(
+    val handler: ExposureMessageHandler,
+    override val acknowledgmentUrl: String?,
+    val date: DateTime
+) : NotificationMessage() {
+    override fun handle() = handler.handle(this)
+}
+
+data class ActivationCodeMessage(
+    val handler: ActivationCodeMessageHandler,
+    override val acknowledgmentUrl: String?,
+    val code: String
+) : NotificationMessage() {
+    override fun handle() = handler.handle(this)
+}
+
+data class TestResultMessage(
+    val handler: TestResultMessageHandler,
+    override val acknowledgmentUrl: String?,
+    val result: TestResult,
+    val date: DateTime
+) : NotificationMessage() {
+    override fun handle() = handler.handle(this)
+}
+
+data class UnknownMessage(
+    override val acknowledgmentUrl: String?
+) : NotificationMessage() {
+
+    override fun handle() = Unit
 }
