@@ -215,8 +215,8 @@
     <string name="checkin_notification_text">Please open the app to update your symptoms and view your latest advice.
         Your help saves lives.
     </string>
-    <string name="device_not_supported_title">Sorry, this app will not work on your phone</string>
-    <string name="device_not_supported_rationale">Your device is not supported. This could be for various reasons. To view NHS services online, go to</string>
+    <string name="device_not_supported_title">Your phone does not support Bluetooth Low Energy sufficiently for this app to work</string>
+    <string name="device_not_supported_rationale">We continue to validate and expand the number of mobile devices capable of using the NHS COVID-19 app. Find more information on Bluetooth Low Energy here:</string>
     <string name="confirm_diagnosis_text_1">The information you have provided will be used to help protect your community and the NHS. The NHS needs accurate data on the number of people with symptoms.</string>
     <string name="confirm_diagnosis_text_2">Together we can help save lives, protect the NHS, and stop the spread of coronavirus in the UK.</string>
     <string name="guidance_for_workplace">Guidance for your workplace</string>
