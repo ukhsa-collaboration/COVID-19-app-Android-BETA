@@ -38,8 +38,6 @@ class NotificationHandler @Inject constructor(
     fun handleNewMessage(messageData: Map<String, String>) {
         val wasHandled = hasBeenAcknowledged(messageData)
 
-        // TODO: Should we persist the push notification before processing it?
-
         if (!wasHandled) {
             when {
                 isActivation(messageData) -> {
@@ -48,7 +46,7 @@ class NotificationHandler @Inject constructor(
                     registrationManager.register()
                 }
                 isContactAlert(messageData) -> {
-                    val exposureDate = DateTime(messageData["mostRecentProximityEventDate"])
+                    val exposureDate = DateTime(messageData[EXPOSURE_DATE_KEY])
                     userStateStorage.get()
                         .let { UserStateTransitions.transitionOnContactAlert(it, exposureDate) }
                         ?.let {
@@ -93,7 +91,7 @@ class NotificationHandler @Inject constructor(
             }
 
     private fun isContactAlert(data: Map<String, String>) =
-        data[TYPE_KEY] == TYPE_STATUS_UPDATE && data[STATUS_KEY] == STATUS_POTENTIAL
+        data[TYPE_KEY] == TYPE_STATUS_UPDATE && data[EXPOSURE_KEY] == EXPOSURE_VALUE
 
     private fun isActivation(data: Map<String, String>) =
         data.containsKey(ACTIVATION_CODE_KEY)
@@ -107,8 +105,11 @@ class NotificationHandler @Inject constructor(
         private const val TYPE_KEY = "type"
         private const val TYPE_STATUS_UPDATE = "Status Update"
         private const val TYPE_TEST_RESULT = "Test Result"
-        private const val STATUS_KEY = "status"
-        private const val STATUS_POTENTIAL = "Potential"
+
+        private const val EXPOSURE_KEY = "status"
+        private const val EXPOSURE_VALUE = "Potential"
+        private const val EXPOSURE_DATE_KEY = "mostRecentProximityEventDate"
+
         private const val TEST_RESULT_KEY = "result"
         private const val TEST_RESULT_DATE_KEY = "testTimestamp"
         private const val ACTIVATION_CODE_KEY = "activationCode"
