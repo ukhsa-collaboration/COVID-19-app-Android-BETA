@@ -80,7 +80,7 @@
 
                     <TextView
                         android:id="@+id/explanationMoreAboutTheApp"
-                        style="@style/TextViewLink02"
+                        style="@style/TextViewLinkWithIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -92,7 +92,7 @@
 
                     <TextView
                         android:id="@+id/explanationPrivacyNotice"
-                        style="@style/TextViewLink02"
+                        style="@style/TextViewLinkWithIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -104,7 +104,7 @@
 
                     <TextView
                         android:id="@+id/explanationTermsOfUse"
-                        style="@style/TextViewLink02"
+                        style="@style/TextViewLinkWithIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"

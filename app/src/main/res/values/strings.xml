@@ -125,7 +125,7 @@
         <u>Read what to do next</u>
     </string>
     <string name="status_not_feeling_well">I feel unwell</string>
-    <string name="status_not_feeling_well_desc">I might have symptoms of coronavirus and want to know what to do next</string>
+    <string name="status_not_feeling_well_desc">I might have symptoms of coronavirus and want to know what to do next.</string>
     <string name="status_initial_title">Follow the current advice to stop the spread of coronavirus</string>
     <string name="status_symptomatic_title">Your symptoms indicate you may have coronavirus. Please isolate yourself and your household and book a test.</string>
     <string name="need_medical_advice">Find your NHS services for your part of the country</string>
@@ -247,7 +247,7 @@
     <string name="txpower">TxPower: \nAdvertised = %1$d \nProtocol = %2$d</string>
     <string name="apply_for_test_now">Book a coronavirus test now</string>
     <string name="apply_for_test_desc">You can now book a coronavirus test for you and other people in your household. This test will tell you whether you currently have coronavirus or not.</string>
-    <string name="apply_for_test_need_ref">In order for this app to receive your test result, please write down this 8 digit app reference code as you will be asked for it later.</string>
+    <string name="apply_for_test_need_ref">In order for this app to receive your test result, please write down or copy into the clipboard this 8-digit app reference code as you will be asked for it later.</string>
     <string name="get_tested">Get tested</string>
     <string name="reference_code_title">Information about testing</string>
     <string name="reference_code_when_1">When you need a test</string>
