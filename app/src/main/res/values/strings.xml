@@ -149,6 +149,7 @@
     <string name="i_do_not_stomach">I don\'t have any of these symptoms: diarrhoea, nausea, vomiting or loss of appetite</string>
     <string name="date_selection_error">Select the date you first started showing any of these symptoms</string>
     <string name="update_symptoms_prompt">Please update your symptoms to view your latest advice.</string>
+    <string name="update_symptoms_prompt_with_negative_test">Thank you for getting tested. You have been sent an email with more information.\n\nIf you are having symptoms, please update your symptoms to see the latest advice for you. If you do not have any symptoms, you can now follow the advice for the general public.</string>
     <string name="update_my_symptoms">Update my symptoms</string>
     <string name="no_symptoms">I no longer have symptoms</string>
     <string name="recovery_dialog_title">Thank you for updating your symptoms</string>

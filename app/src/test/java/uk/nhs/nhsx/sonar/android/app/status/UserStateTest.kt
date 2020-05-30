@@ -20,6 +20,7 @@ import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
+import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTest {
 
@@ -145,6 +146,19 @@ class UserStateTest {
     }
 
     @Test
+    fun `expire states with expiry date`() {
+        assertThat(positiveState.expire()).isEqualTo(positiveState.copy(until = yesterday()))
+        assertThat(symptomaticState.expire()).isEqualTo(symptomaticState.copy(until = yesterday()))
+        assertThat(exposedSymptomaticState.expire()).isEqualTo(exposedSymptomaticState.copy(until = yesterday()))
+        assertThat(exposedState.expire()).isEqualTo(exposedState.copy(until = yesterday()))
+    }
+
+    @Test
+    fun `expire other state`() {
+        assertThat(DefaultState.expire()).isEqualTo(DefaultState)
+    }
+
+    @Test
     fun `test until`() {
         assertThat(DefaultState.until()).isNull()
         assertThat(exposedState.until()).isEqualTo(exposedState.until)
@@ -215,4 +229,6 @@ class UserStateTest {
         assertThat(symptomaticState.symptoms()).isEqualTo(symptomaticState.symptoms)
         assertThat(positiveState.symptoms()).isEqualTo(positiveState.symptoms)
     }
+
+    private fun yesterday() = LocalDate.now().minusDays(1).toUtcNormalized()
 }

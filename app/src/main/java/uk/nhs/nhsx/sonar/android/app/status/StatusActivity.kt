@@ -35,7 +35,6 @@ import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusLayout
 import uk.nhs.nhsx.sonar.android.app.status.widgets.StatusLayoutFactory
 import uk.nhs.nhsx.sonar.android.app.status.widgets.createTestResultDialog
-import uk.nhs.nhsx.sonar.android.app.status.widgets.handleTestResult
 import uk.nhs.nhsx.sonar.android.app.status.widgets.toggleNotFeelingCard
 import uk.nhs.nhsx.sonar.android.app.status.widgets.toggleReferenceCodeCard
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
@@ -73,8 +72,9 @@ class StatusActivity : BaseActivity() {
     private val viewModel: OkViewModel by viewModels { viewModelFactory }
 
     lateinit var recoveryDialog: BottomDialog
-    internal lateinit var updateSymptomsDialog: BottomDialog
-    private lateinit var testResultDialog: BottomDialog
+    internal lateinit var checkinReminderDialog: BottomDialog
+    internal lateinit var negativeResultCheckinReminderDialog: BottomDialog
+    internal lateinit var testResultDialog: BottomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -121,7 +121,9 @@ class StatusActivity : BaseActivity() {
         }
 
         recoveryDialog = createRecoveryDialog()
-        updateSymptomsDialog = createUpdateSymptomsDialog()
+        checkinReminderDialog = createCheckinReminderDialog()
+        negativeResultCheckinReminderDialog = createNegativeResultCheckinReminderDialog()
+
         testResultDialog = createTestResultDialog(this, userInbox)
 
         // TODO: maybe move this check into view model?
@@ -171,7 +173,7 @@ class StatusActivity : BaseActivity() {
             })
     }
 
-    private fun createUpdateSymptomsDialog(): BottomDialog {
+    private fun createCheckinReminderDialog(): BottomDialog {
         val configuration = BottomDialogConfiguration(
             isHideable = false,
             titleResId = R.string.status_today_feeling,
@@ -194,6 +196,31 @@ class StatusActivity : BaseActivity() {
         )
     }
 
+    private fun createNegativeResultCheckinReminderDialog(): BottomDialog {
+        val configuration = BottomDialogConfiguration(
+            isHideable = false,
+            titleResId = R.string.negative_test_result_title,
+            textResId = R.string.update_symptoms_prompt_with_negative_test,
+            firstCtaResId = R.string.update_my_symptoms,
+            secondCtaResId = R.string.no_symptoms
+        )
+        return BottomDialog(
+            this, configuration,
+            onCancel = {
+                finish()
+            },
+            onFirstCtaClick = {
+                userInbox.dismissTestInfo()
+                DiagnoseTemperatureActivity.start(this)
+            },
+            onSecondCtaClick = {
+                userInbox.dismissTestInfo()
+                userStateStorage.set(DefaultState)
+                navigateTo(userStateStorage.get())
+            }
+        )
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -204,8 +231,6 @@ class StatusActivity : BaseActivity() {
 
         notificationPanel.isVisible =
             !notificationManagerHelper.areNotificationsEnabled()
-
-        handleTestResult(this, testResultDialog)
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {
@@ -221,7 +246,8 @@ class StatusActivity : BaseActivity() {
 
     override fun onPause() {
         super.onPause()
-        updateSymptomsDialog.dismiss()
+        checkinReminderDialog.dismiss()
+        negativeResultCheckinReminderDialog.dismiss()
         recoveryDialog.dismiss()
     }
 

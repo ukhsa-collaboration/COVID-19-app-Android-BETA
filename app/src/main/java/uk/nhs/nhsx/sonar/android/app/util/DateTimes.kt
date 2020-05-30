@@ -26,21 +26,14 @@ fun LocalDate.isEarlierThan(days: Int, from: LocalDate): Boolean =
         .plusDays(days)
         .isAfter(from.atSevenAm())
 
-fun latest(a: DateTime, b: DateTime) =
+fun latest(a: LocalDate, b: LocalDate) =
     if (a.isAfter(b)) a else b
 
 fun LocalDate.atSevenAm(): DateTime =
     toDateTime(LocalTime.parse(SEVEN_AM))
 
-fun LocalDate.after(count: Int): After =
-    After(this, count)
+fun LocalDate.toUtcNormalized(): DateTime =
+    this.atSevenAm().toUtc()
 
 fun DateTime.toUtc(): DateTime =
     if (this.zone == DateTimeZone.UTC) this else toDateTime(DateTimeZone.UTC)
-
-class After(val date: LocalDate, private val count: Int) {
-    fun days(): DateTime =
-        date.plusDays(count).atSevenAm()
-
-    fun day() = days()
-}

@@ -73,6 +73,7 @@ class DefaultStatusLayout(val state: DefaultState) : StatusLayout() {
         } else {
             activity.recoveryDialog.dismiss()
         }
+        handleTestResult(activity, activity.testResultDialog)
     }
 }
 
@@ -100,6 +101,8 @@ class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
         activity.userStateStorage.set(newState)
 
         activity.navigateTo(newState)
+
+        handleTestResult(activity, activity.testResultDialog)
     }
 }
 
@@ -119,7 +122,15 @@ class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
     }
 
     override fun onResume(activity: StatusActivity) {
-        symptomaticAndPositiveStateChecks(activity, state)
+        val userTestedNegative =
+            activity.userInbox.hasTestInfo() && activity.userInbox.getTestInfo().result == TestResult.NEGATIVE
+
+        if (userTestedNegative && state.hasExpired()) {
+            displaySpecialCheckinDialog(activity)
+        } else {
+            handleTestResult(activity, activity.testResultDialog)
+            displayNormalCheckinDialogIfExpired(activity, state)
+        }
     }
 }
 
@@ -138,7 +149,8 @@ class PositiveStatusLayout(val state: PositiveState) : StatusLayout() {
     }
 
     override fun onResume(activity: StatusActivity) {
-        symptomaticAndPositiveStateChecks(activity, state)
+        handleTestResult(activity, activity.testResultDialog)
+        displayNormalCheckinDialogIfExpired(activity, state)
     }
 }
 
@@ -255,11 +267,16 @@ fun handleTestResult(activity: StatusActivity, testResultDialog: BottomDialog) {
     }
 }
 
-private fun symptomaticAndPositiveStateChecks(activity: StatusActivity, state: UserState) {
+private fun displaySpecialCheckinDialog(activity: StatusActivity) {
+    activity.checkInReminderNotification.hide()
+    activity.negativeResultCheckinReminderDialog.showExpanded()
+}
+
+private fun displayNormalCheckinDialogIfExpired(activity: StatusActivity, state: UserState) {
     if (state.hasExpired()) {
-        activity.updateSymptomsDialog.showExpanded()
         activity.checkInReminderNotification.hide()
+        activity.checkinReminderDialog.showExpanded()
     } else {
-        activity.updateSymptomsDialog.dismiss()
+        activity.checkinReminderDialog.dismiss()
     }
 }

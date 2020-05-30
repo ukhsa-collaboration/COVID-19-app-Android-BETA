@@ -14,6 +14,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
+import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTransitionsOnNegativeResultTest {
 
@@ -27,14 +28,15 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `symptomatic, if symptoms onset is prior test, becomes default`() {
-        val symptomDate = LocalDate.now().minusDays(6)
+    fun `symptomatic, if symptoms onset is prior test, stays symptomatic but expired`() {
+        val symptomDate = LocalDate.now().minusDays(1)
         val symptomatic = UserState.symptomatic(symptomDate, nonEmptySetOf(COUGH))
         val testInfo = TestInfo(TestResult.NEGATIVE, symptomatic.since.plusDays(1))
 
         val state = transitionOnTestResult(symptomatic, testInfo)
 
-        assertThat(state).isEqualTo(DefaultState)
+        assertThat(state.hasExpired()).isTrue()
+        assertThat(state).isEqualTo(symptomatic.copy(until = yesterday()))
     }
 
     @Test
@@ -95,4 +97,6 @@ class UserStateTransitionsOnNegativeResultTest {
 
         assertThat(state).isEqualTo(exposed)
     }
+
+    private fun yesterday() = LocalDate.now().minusDays(1).toUtcNormalized()
 }

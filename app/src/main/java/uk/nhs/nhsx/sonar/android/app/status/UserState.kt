@@ -11,10 +11,8 @@ import uk.nhs.nhsx.sonar.android.app.status.DisplayState.AT_RISK
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.OK
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
-import uk.nhs.nhsx.sonar.android.app.util.after
-import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.latest
-import uk.nhs.nhsx.sonar.android.app.util.toUtc
+import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 sealed class UserState {
 
@@ -27,8 +25,8 @@ sealed class UserState {
 
         fun exposed(exposureDate: LocalDate): ExposedState =
             ExposedState(
-                exposureDate.atSevenAm().toUtc(),
-                exposureDate.after(NO_DAYS_IN_EXPOSED - 1).days().toUtc()
+                exposureDate.toUtcNormalized(),
+                exposureDate.plusDays(NO_DAYS_IN_EXPOSED - 1).toUtcNormalized()
             )
 
         fun symptomatic(
@@ -36,16 +34,16 @@ sealed class UserState {
             symptoms: NonEmptySet<Symptom>,
             today: LocalDate = LocalDate.now()
         ): SymptomaticState {
-            val suggested = symptomsDate.after(NO_DAYS_IN_SYMPTOMATIC).days()
-            val tomorrow = today.after(1).day()
+            val suggested = symptomsDate.plusDays(NO_DAYS_IN_SYMPTOMATIC)
+            val tomorrow = today.plusDays(1)
 
             // if symptomsDate > 7 days ago then symptomatic state is until tomorrow
             // if symptomsDate <= 7 days ago then symptomatic state is until suggested
             val until = latest(suggested, tomorrow)
 
             return SymptomaticState(
-                symptomsDate.atSevenAm().toUtc(),
-                until.toUtc(),
+                symptomsDate.toUtcNormalized(),
+                until.toUtcNormalized(),
                 symptoms
             )
         }
@@ -56,16 +54,16 @@ sealed class UserState {
             today: LocalDate = LocalDate.now()
         ): PositiveState {
             val testLocalDate = testDate.toLocalDate()
-            val suggested = testLocalDate.after(NO_DAYS_IN_SYMPTOMATIC).days()
-            val tomorrow = today.after(1).day()
+            val suggested = testLocalDate.plusDays(NO_DAYS_IN_SYMPTOMATIC)
+            val tomorrow = today.plusDays(1)
 
             // if testDate > 7 days ago then positive state is until tomorrow
             // if testDate <= 7 days ago then positive state is until suggested
             val until = latest(suggested, tomorrow)
 
             return PositiveState(
-                testLocalDate.atSevenAm().toUtc(),
-                until.toUtc(),
+                testLocalDate.toUtcNormalized(),
+                until.toUtcNormalized(),
                 symptoms
             )
         }
@@ -78,6 +76,15 @@ sealed class UserState {
             is ExposedSymptomaticState -> until
             is PositiveState -> until
             is DefaultState -> null
+        }
+
+    fun expire(today: LocalDate = LocalDate.now()): UserState =
+        when (this) {
+            is ExposedState -> this.copy(until = today.minusDays(1).toUtcNormalized())
+            is SymptomaticState -> this.copy(until = today.minusDays(1).toUtcNormalized())
+            is ExposedSymptomaticState -> this.copy(until = today.minusDays(1).toUtcNormalized())
+            is PositiveState -> this.copy(until = today.minusDays(1).toUtcNormalized())
+            is DefaultState -> DefaultState
         }
 
     fun hasExpired(): Boolean =
@@ -96,15 +103,15 @@ sealed class UserState {
         when (this) {
             is PositiveState -> this.copy(
                 symptoms = symptoms,
-                until = today.after(1).day().toUtc()
+                until = today.plusDays(1).toUtcNormalized()
             )
             is SymptomaticState -> this.copy(
                 symptoms = NonEmptySet.create(symptoms)!!,
-                until = today.after(1).day().toUtc()
+                until = today.plusDays(1).toUtcNormalized()
             )
             is ExposedSymptomaticState -> this.copy(
                 symptoms = NonEmptySet.create(symptoms)!!,
-                until = today.after(1).day().toUtc()
+                until = today.plusDays(1).toUtcNormalized()
             )
             is ExposedState -> this
             is DefaultState -> this

@@ -75,7 +75,7 @@ object UserStateTransitions {
     private fun handleNegativeTestResult(state: UserState, testDate: DateTime): UserState =
         when (state) {
             is SymptomaticState ->
-                if (state.since.isAfter(testDate)) state else DefaultState
+                if (state.since.isAfter(testDate)) state else state.expire()
             is ExposedSymptomaticState ->
                     ExposedState(state.since, state.until)
             is PositiveState ->
