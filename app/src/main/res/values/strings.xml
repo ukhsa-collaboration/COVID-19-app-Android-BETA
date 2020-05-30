@@ -35,7 +35,7 @@
     <string name="contact_alert_notification_title">Your advice has changed</string>
     <string name="contact_alert_notification_text">Please open the app to learn what to do next. Your help saves lives.</string>
     <string name="test_result_notification_title">Your test result has arrived</string>
-    <string name="test_result_notification_text">Your test result has arrived. Please open the app to learn what to do next. You have received an email with more information.</string>
+    <string name="test_result_notification_text">Your test result has arrived. Please open the app to learn what to do next. You have been sent an email or text with more information.</string>
     <string name="permission_title">Set up app permissions</string>
     <string name="bluetooth_rationale_title">Bluetooth</string>
     <string name="permission_rationale_title">Location</string>
@@ -257,7 +257,7 @@
     <string name="reference_code_linking">Linking a test to this app</string>
     <string name="reference_code_app">Your app reference code</string>
     <string name="connect_to_internet">Please connect your phone to the internet to see the app reference code.</string>
-    <string name="reference_code_description_3">In order for this app to receive your test result use your app reference code when registering your test.</string>
+    <string name="reference_code_description_3">In order for this app to receive your test result, you will be asked for this 8-digit app reference code later.</string>
     <string name="copy">Copy</string>
     <string name="copied">Copied</string>
     <string name="latest_guidance"><u>Latest guidance for your workplace</u></string>
@@ -272,7 +272,7 @@
     <string name="more_options">More Options</string>
     <string name="app_version">App version:</string>
     <string name="negative_test_result_title">Your test result indicates that you do not have coronavirus</string>
-    <string name="negative_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
+    <string name="negative_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email or text with more information.</string>
     <string name="current_advice_title">Read and follow advice specific to your situation</string>
     <string name="current_advice_desc_simple">The advice below is up-to-date and specific to your situation. Please follow this advice.</string>
     <string name="current_advice_desc_with_date">The advice below is up-to-date and specific to your situation. Please follow this advice until %1$s </string>
@@ -280,6 +280,6 @@
     <string name="positive_test_result_title">Your test result indicates that you have coronavirus</string>
     <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
     <string name="invalid_test_result_title">Your test result was unclear</string>
-    <string name="invalid_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
+    <string name="invalid_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email or text with more information.</string>
     <string name="medical_emergency_call">If you have a medical emergency, please call 999. If you require medical help near you, please go to 111 online.</string>
 </resources>
