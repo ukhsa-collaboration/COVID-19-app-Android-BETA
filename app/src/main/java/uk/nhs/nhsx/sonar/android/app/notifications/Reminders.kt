@@ -42,8 +42,11 @@ class Reminders @Inject constructor(
     }
 
     private fun newCheckInReminder(triggerAtMillis: Long) {
-        val broadcast = reminderBroadcastFactory.create(REQUEST_CODE_CHECK_IN_REMINDER)
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, broadcast)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerAtMillis, alarmIntent())
+    }
+
+    private fun alarmIntent(): PendingIntent {
+        return reminderBroadcastFactory.create(REQUEST_CODE_CHECK_IN_REMINDER)
     }
 
     companion object {
