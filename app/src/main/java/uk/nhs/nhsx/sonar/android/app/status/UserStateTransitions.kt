@@ -59,7 +59,7 @@ object UserStateTransitions {
         exposureDate: DateTime
     ): UserState? =
         when (currentState) {
-            is DefaultState -> UserState.exposed(exposureDate.toLocalDate())
+            is DefaultState -> exposed(exposureDate.toLocalDate())
             else -> null
         }
 
