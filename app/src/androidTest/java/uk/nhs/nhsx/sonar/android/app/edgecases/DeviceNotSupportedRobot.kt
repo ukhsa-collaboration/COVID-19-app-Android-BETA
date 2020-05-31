@@ -31,7 +31,7 @@ class DeviceNotSupportedRobot {
     }
 
     private fun checkBottomUrlIsDisplayed() {
-        checkViewHasText(R.id.nhsServicesUrl, R.string.nhs_online_service)
-        onView(withId(R.id.nhsServicesUrl)).check(matches(isClickable()))
+        checkViewHasText(R.id.bleInfoUlr, R.string.ble_information_link)
+        onView(withId(R.id.bleInfoUlr)).check(matches(isClickable()))
     }
 }

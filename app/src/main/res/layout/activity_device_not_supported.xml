@@ -73,7 +73,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/nhsServicesUrl"
+                android:id="@+id/bleInfoUlr"
                 style="@style/PrimaryTextLink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

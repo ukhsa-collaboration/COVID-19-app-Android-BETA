@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_device_not_supported.nhsServicesUrl
+import kotlinx.android.synthetic.main.activity_device_not_supported.bleInfoUlr
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.URL_NHS_NOT_SUPPORTED_DEVICE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
@@ -18,7 +18,7 @@ class DeviceNotSupportedActivity : AppCompatActivity(R.layout.activity_device_no
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        nhsServicesUrl.setOnClickListener {
+        bleInfoUlr.setOnClickListener {
             openUrl(URL_NHS_NOT_SUPPORTED_DEVICE)
         }
     }
