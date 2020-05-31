@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="16dp"
                 android:layout_marginTop="4dp"
-                android:text="@string/nhs_online_service" />
+                android:text="@string/ble_information_link" />
 
         </LinearLayout>
 
