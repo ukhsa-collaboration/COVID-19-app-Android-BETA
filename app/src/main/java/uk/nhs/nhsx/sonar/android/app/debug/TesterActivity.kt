@@ -27,13 +27,9 @@ import kotlinx.android.synthetic.main.activity_test.setExposedNotification
 import kotlinx.android.synthetic.main.activity_test.setExposedState
 import kotlinx.android.synthetic.main.activity_test.setExposedSymptomaticState
 import kotlinx.android.synthetic.main.activity_test.setPositiveState
-import kotlinx.android.synthetic.main.activity_test.setRecovery
 import kotlinx.android.synthetic.main.activity_test.setSymptomaticState
-import kotlinx.android.synthetic.main.activity_test.setTestInvalid
 import kotlinx.android.synthetic.main.activity_test.setTestInvalidNotification
-import kotlinx.android.synthetic.main.activity_test.setTestNegative
 import kotlinx.android.synthetic.main.activity_test.setTestNegativeNotification
-import kotlinx.android.synthetic.main.activity_test.setTestPositive
 import kotlinx.android.synthetic.main.activity_test.setTestPositiveNotification
 import kotlinx.android.synthetic.main.activity_test.sonar_id
 import org.joda.time.DateTime
@@ -45,7 +41,6 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.appVersion
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
-import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationHandler
@@ -122,15 +117,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
         setStates()
 
-        setTestResults()
-
         setNotifications()
-
-        setRecovery.setOnClickListener {
-            userStateStorage.set(DefaultState)
-            userInbox.addRecovery()
-            finish()
-        }
 
         continueButton.setOnClickListener {
             finish()
@@ -216,23 +203,6 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
                     symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
                 )
             )
-            finish()
-        }
-    }
-
-    private fun setTestResults() {
-        setTestPositive.setOnClickListener {
-            userInbox.addTestInfo(TestInfo(TestResult.POSITIVE, DateTime.now()))
-            finish()
-        }
-
-        setTestNegative.setOnClickListener {
-            userInbox.addTestInfo(TestInfo(TestResult.NEGATIVE, DateTime.now()))
-            finish()
-        }
-
-        setTestInvalid.setOnClickListener {
-            userInbox.addTestInfo(TestInfo(TestResult.INVALID, DateTime.now()))
             finish()
         }
     }
