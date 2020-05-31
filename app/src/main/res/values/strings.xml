@@ -280,6 +280,6 @@
     <string name="positive_test_result_title">Your test result indicates that you have coronavirus</string>
     <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
     <string name="invalid_test_result_title">Your test result was unclear</string>
-    <string name="invalid_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email or text with more information.</string>
+    <string name="invalid_test_result_description">Thank you for getting tested. However, due to an unclear test result your advice has not been changed. Please book another test. You have been sent an email with more information.</string>
     <string name="medical_emergency_call">If you have a medical emergency, please call 999. If you require medical help near you, please go to 111 online.</string>
 </resources>
