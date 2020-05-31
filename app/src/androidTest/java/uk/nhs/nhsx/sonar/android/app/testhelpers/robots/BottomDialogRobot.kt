@@ -20,7 +20,7 @@ class BottomDialogRobot {
         onView(withId(R.id.bottomDialogSecondCta)).check(matches(isDisplayed()))
         onView(withId(R.id.bottomDialogTitle)).check(matches(withText(R.string.recovery_dialog_title)))
         onView(withId(R.id.bottomDialogText)).check(matches(withText(R.string.recovery_dialog_description)))
-        onView(withId(R.id.bottomDialogSecondCta)).check(matches(withText(R.string.okay)))
+        onView(withId(R.id.bottomDialogSecondCta)).check(matches(withText(R.string.close)))
     }
 
     fun checkUpdateSymptomsDialogIsDisplayed() {

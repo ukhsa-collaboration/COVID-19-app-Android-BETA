@@ -49,7 +49,7 @@
         style="@style/SecondaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="@string/okay" />
+        tools:text="@string/close" />
 
 
 </LinearLayout>

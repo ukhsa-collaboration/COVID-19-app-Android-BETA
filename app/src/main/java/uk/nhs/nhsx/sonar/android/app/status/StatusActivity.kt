@@ -161,7 +161,7 @@ class StatusActivity : BaseActivity() {
             isHideable = false,
             titleResId = R.string.recovery_dialog_title,
             textResId = R.string.recovery_dialog_description,
-            secondCtaResId = R.string.okay
+            secondCtaResId = R.string.close
         )
         return BottomDialog(this, configuration,
             onCancel = {

@@ -35,7 +35,7 @@
     <string name="contact_alert_notification_title">Your advice has changed</string>
     <string name="contact_alert_notification_text">Please open the app to learn what to do next. Your help saves lives.</string>
     <string name="test_result_notification_title">Your test result has arrived</string>
-    <string name="test_result_notification_text">Your test result has arrived. Please open the app to learn what to do next. You have been sent an email or text with more information.</string>
+    <string name="test_result_notification_text">Please open the app to learn what to do next. You have been sent an email or text with more information.</string>
     <string name="permission_title">Set up app permissions</string>
     <string name="bluetooth_rationale_title">Bluetooth</string>
     <string name="permission_rationale_title">Location</string>
@@ -168,7 +168,6 @@
     <string name="no_symptoms">I no longer have symptoms</string>
     <string name="recovery_dialog_title">Thank you for updating your symptoms</string>
     <string name="recovery_dialog_description">Although you still have some symptoms you can now stop self-isolating and follow the current advice for the general public.</string>
-    <string name="okay">Okay</string>
     <string name="enable_bluetooth_title">Your permission is needed to allow the use of Bluetooth</string>
     <string name="enable_bluetooth_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nUsing Bluetooth means that the app cannot track your location and your privacy remains protected.\n\nIf you do not give permission for Bluetooth this app will not work.\n\nTo give permission for this app to access Bluetooth, please go to Settings and allow access</string>
     <string name="enable_bluetooth">Enable Bluetooth</string>

@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_st
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_temperature
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
+import kotlinx.android.synthetic.main.activity_review_diagnosis.scrollView
 import kotlinx.android.synthetic.main.symptom_banner.toolbar
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
@@ -64,6 +65,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                 date_selection_error.visibility = View.VISIBLE
                 symptoms_date_spinner.setError()
                 date_selection_error.announceForAccessibility(getString(R.string.date_selection_error))
+                scrollView.fullScroll(View.FOCUS_DOWN)
             } else {
                 DiagnoseSubmitActivity.start(this, symptoms, selectedSymptomsDate)
             }
