@@ -3,6 +3,7 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -36,41 +37,36 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="16dp"
                 android:text="@string/confirm_diagnosis_text_2"
                 android:textColor="@color/text_sub_title"
                 android:textSize="16sp" />
 
+            <uk.nhs.nhsx.sonar.android.app.common.widgets.ErrorView
+                android:id="@+id/needConfirmationHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:visibility="gone"
+                app:error_description="@string/please_confirm_the_information"
+                tools:visibility="visible" />
+
+            <CheckBox
+                android:id="@+id/confirmationCheckbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginStart="-6dp"
+                android:gravity="top"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingTop="4dp"
+                android:textColor="@color/text_sub_title"
+                android:text="@string/submit_confirmation"
+                android:textSize="16sp" />
         </LinearLayout>
     </ScrollView>
 
-    <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
-        android:id="@+id/needConfirmationHint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/confirmationCheckbox"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginBottom="8dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/please_confirm_the_information"
-        android:textColor="@color/colorDanger"
-        android:textSize="16sp"
-        android:visibility="invisible"
-        tools:visibility="visible" />
-
-    <CheckBox
-        android:id="@+id/confirmationCheckbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/submit_diagnosis"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="top"
-        android:lineSpacingMultiplier="1.2"
-        android:paddingTop="4dp"
-        android:layout_marginBottom="24dp"
-        android:text="@string/submit_confirmation"
-        android:textSize="16sp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/submit_diagnosis"

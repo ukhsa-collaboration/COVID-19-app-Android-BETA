@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View.FOCUS_DOWN
+import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.accessibility.AccessibilityEvent
@@ -71,7 +72,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
             CompoundButtonCompat.setButtonTintList(confirmationCheckbox, checkboxColors)
 
             if (isChecked) {
-                needConfirmationHint.visibility = INVISIBLE
+                needConfirmationHint.visibility = GONE
             }
         }
 

@@ -282,4 +282,5 @@
     <string name="invalid_test_result_title">Your test result was unclear</string>
     <string name="invalid_test_result_description">Thank you for getting tested. However, due to an unclear test result your advice has not been changed. Please book another test. You have been sent an email with more information.</string>
     <string name="medical_emergency_call">If you have a medical emergency, please call 999. If you require medical help near you, please go to 111 online.</string>
+    <string name="error_title">There is a problem</string>
 </resources>

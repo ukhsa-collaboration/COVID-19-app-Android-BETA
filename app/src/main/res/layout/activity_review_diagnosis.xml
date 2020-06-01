@@ -4,7 +4,9 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <include layout="@layout/symptom_banner" />
 
@@ -127,23 +129,24 @@
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:text="@string/symptoms_date_prompt_all" />
 
-            <TextView
+
+            <uk.nhs.nhsx.sonar.android.app.common.widgets.ErrorView
                 android:id="@+id/date_selection_error"
-                style="@style/TextViewError"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:labelFor="@+id/symptoms_date_spinner"
-                android:text="@string/date_selection_error"
-                android:visibility="gone" />
+                android:layout_marginVertical="8dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:error_description="@string/date_selection_error" />
 
             <Spinner
                 android:id="@+id/symptoms_date_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="56dp"
                 android:background="@drawable/spinner_background" />
 
