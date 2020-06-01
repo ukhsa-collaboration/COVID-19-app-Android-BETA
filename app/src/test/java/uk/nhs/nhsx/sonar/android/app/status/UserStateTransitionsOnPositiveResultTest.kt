@@ -35,14 +35,16 @@ class UserStateTransitionsOnPositiveResultTest {
         val testDate = LocalDate.now().plusDays(2).toDateTime(LocalTime.parse("14:00:00"))
         val testInfo = TestInfo(TestResult.POSITIVE, testDate)
 
-        val symptomatic = buildSymptomaticState()
+        val symptomatic = buildSymptomaticState().let {
+            it.copy(until = it.since.plusDays(11))
+        }
 
         val state = transitionOnTestResult(symptomatic, testInfo)
 
         assertThat(state).isEqualTo(
             PositiveState(
-                since = testInfo.date.toLocalDate().toUtcNormalized(),
-                until = symptomatic.until,
+                since = symptomatic.since,
+                until = symptomatic.since.plusDays(7),
                 symptoms = symptomatic.symptoms
             )
         )
@@ -53,14 +55,16 @@ class UserStateTransitionsOnPositiveResultTest {
         val testDate = LocalDate.now().plusDays(2).toDateTime(LocalTime.parse("14:00:00"))
         val testInfo = TestInfo(TestResult.POSITIVE, testDate)
 
-        val exposedSymptomatic = buildExposedSymptomaticState()
+        val exposedSymptomatic = buildExposedSymptomaticState().let {
+            it.copy(until = it.since.plusDays(11))
+        }
 
         val state = transitionOnTestResult(exposedSymptomatic, testInfo)
 
         assertThat(state).isEqualTo(
             PositiveState(
-                since = testInfo.date.toLocalDate().toUtcNormalized(),
-                until = exposedSymptomatic.until,
+                since = exposedSymptomatic.since,
+                until = exposedSymptomatic.since.plusDays(7),
                 symptoms = exposedSymptomatic.symptoms
             )
         )

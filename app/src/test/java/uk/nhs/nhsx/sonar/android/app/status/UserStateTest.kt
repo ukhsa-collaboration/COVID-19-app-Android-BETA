@@ -28,8 +28,10 @@ class UserStateTest {
     private val positiveState = buildPositiveState()
 
     private val expiredExposedState = buildExposedState(until = DateTime.now().minusSeconds(1))
-    private val expiredSymptomaticState = buildSymptomaticState(until = DateTime.now().minusSeconds(1))
-    private val expiredExposedSymptomaticState = buildExposedSymptomaticState(until = DateTime.now().minusSeconds(1))
+    private val expiredSymptomaticState =
+        buildSymptomaticState(until = DateTime.now().minusSeconds(1))
+    private val expiredExposedSymptomaticState =
+        buildExposedSymptomaticState(until = DateTime.now().minusSeconds(1))
     private val expiredPositiveState = buildPositiveState(until = DateTime.now().minusSeconds(1))
 
     private val today = LocalDate(2020, 4, 10)
@@ -47,10 +49,12 @@ class UserStateTest {
         val originalState = buildExposedSymptomaticState()
         val state = UserState.exposed(originalState)
 
-        assertThat(state).isEqualTo(ExposedState(
-            since = originalState.since,
-            until = originalState.until
-        ))
+        assertThat(state).isEqualTo(
+            ExposedState(
+                since = originalState.since,
+                until = originalState.until
+            )
+        )
     }
 
     @Test
@@ -108,30 +112,32 @@ class UserStateTest {
 
     @Test
     fun `positive state factory method - with symptomatic state`() {
-        val originalState = buildSymptomaticState()
-        val aDateTime = DateTime.parse("2020-04-02T11:11:11.000Z")
-        val state = UserState.positive(aDateTime, originalState)
+        val symptomatic = buildSymptomaticState().let {
+            it.copy(until = it.until.plusDays(10))
+        }
+        val state = UserState.positive(symptomatic)
 
         assertThat(state).isEqualTo(
             PositiveState(
-                since = aDateTime.toLocalDate().toUtcNormalized(),
-                until = originalState.until,
-                symptoms = originalState.symptoms
+                since = symptomatic.since,
+                until = symptomatic.since.plusDays(7),
+                symptoms = symptomatic.symptoms
             )
         )
     }
 
     @Test
     fun `positive state factory method - with exposed-symptomatic state`() {
-        val originalState = buildExposedSymptomaticState()
-        val aDateTime = DateTime.parse("2020-04-02T11:11:11.000Z")
-        val state = UserState.positive(aDateTime, originalState)
+        val exposedSymptomatic = buildExposedSymptomaticState().let {
+            it.copy(until = it.since.plusDays(10))
+        }
+        val state = UserState.positive(exposedSymptomatic)
 
         assertThat(state).isEqualTo(
             PositiveState(
-                since = aDateTime.toLocalDate().toUtcNormalized(),
-                until = originalState.until,
-                symptoms = originalState.symptoms
+                since = exposedSymptomatic.since,
+                until = exposedSymptomatic.since.plusDays(7),
+                symptoms = exposedSymptomatic.symptoms
             )
         )
     }

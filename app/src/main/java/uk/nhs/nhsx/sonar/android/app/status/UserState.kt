@@ -78,20 +78,18 @@ sealed class UserState {
         }
 
         fun positive(
-            testDate: DateTime,
             state: SymptomaticState
         ): PositiveState = PositiveState(
-                testDate.toLocalDate().toUtcNormalized(),
-                state.until,
+                state.since,
+                state.since.plusDays(NO_DAYS_IN_SYMPTOMATIC),
                 state.symptoms
         )
 
         fun positive(
-            testDate: DateTime,
             state: ExposedSymptomaticState
         ): PositiveState = PositiveState(
-            testDate.toLocalDate().toUtcNormalized(),
-            state.until,
+            state.since,
+            state.since.plusDays(NO_DAYS_IN_SYMPTOMATIC),
             state.symptoms
         )
     }
