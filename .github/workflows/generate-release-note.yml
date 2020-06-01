@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0 # checkout full repo with all tags
 
       - name: Checkout ci tools
-        id: checkout
+        id: checkout-ci-tools
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.DEPLOYMENT_TOKEN }}
