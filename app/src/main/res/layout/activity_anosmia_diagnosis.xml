@@ -36,7 +36,7 @@
                 android:text="@string/progress_three_sixth"
                 android:contentDescription="@string/page_3_of_6"
                 android:textColor="@color/text_sub_title"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/anosmia_question"

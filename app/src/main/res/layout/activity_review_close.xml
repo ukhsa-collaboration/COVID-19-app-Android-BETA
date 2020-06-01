@@ -33,7 +33,7 @@
                 android:letterSpacing="0.1"
                 android:text="@string/progress_six_sixth"
                 android:textColor="@color/text_sub_title"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 style="@style/TextViewSubHead"

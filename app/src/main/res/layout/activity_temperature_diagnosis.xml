@@ -34,7 +34,7 @@
                 android:paddingTop="24dp"
                 android:text="@string/progress_one_sixth"
                 android:textColor="@color/text_sub_title"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/temperature_question"
