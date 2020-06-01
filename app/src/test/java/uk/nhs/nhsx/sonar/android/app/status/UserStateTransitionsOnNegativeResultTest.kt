@@ -60,17 +60,7 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `positive, if new test is after current one, becomes default`() {
-        val positive = buildPositiveState()
-        val testInfo = TestInfo(TestResult.NEGATIVE, positive.since.plusDays(1))
-
-        val state = transitionOnTestResult(positive, testInfo)
-
-        assertThat(state).isEqualTo(DefaultState)
-    }
-
-    @Test
-    fun `positive, if new test is before current one, remains positive`() {
+    fun `positive remains positive`() {
         val positive = buildPositiveState()
         val testInfo = TestInfo(TestResult.NEGATIVE, positive.since.minusDays(1))
 
