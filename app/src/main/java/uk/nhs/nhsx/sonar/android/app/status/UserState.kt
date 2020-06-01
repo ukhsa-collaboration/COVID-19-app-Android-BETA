@@ -53,7 +53,6 @@ sealed class UserState {
 
         fun positive(
             testDate: DateTime,
-            symptoms: Set<Symptom> = emptySet(),
             today: LocalDate = LocalDate.now()
         ): PositiveState {
             val testLocalDate = testDate.toLocalDate()
@@ -67,7 +66,7 @@ sealed class UserState {
             return PositiveState(
                 testLocalDate.toUtcNormalized(),
                 until.toUtcNormalized(),
-                symptoms
+                emptySet()
             )
         }
 

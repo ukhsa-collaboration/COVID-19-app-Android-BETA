@@ -157,7 +157,7 @@ class UserStateTransitionsTest {
         val aDateTime = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
         val tomorrow = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
 
-        val currentState = UserState.positive(aDateTime, nonEmptySetOf(TEMPERATURE))
+        val currentState = UserState.positive(aDateTime)
 
         val state = diagnoseForCheckin(currentState, setOf(COUGH, TEMPERATURE), today)
 
@@ -167,7 +167,7 @@ class UserStateTransitionsTest {
     @Test
     fun `diagnoseForCheckin - with cough`() {
         val aDateTime = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
-        val currentState = UserState.positive(aDateTime, nonEmptySetOf(TEMPERATURE))
+        val currentState = UserState.positive(aDateTime)
 
         val state = diagnoseForCheckin(currentState, setOf(COUGH), today)
 
@@ -186,7 +186,7 @@ class UserStateTransitionsTest {
     @Test
     fun `diagnoseForCheckin - with no symptoms`() {
         val aDateTime = DateTime(2020, 4, 11, 7, 0).toDateTime(UTC)
-        val currentState = UserState.positive(aDateTime, nonEmptySetOf(TEMPERATURE))
+        val currentState = UserState.positive(aDateTime)
 
         val state = diagnoseForCheckin(currentState, emptySet(), today)
 

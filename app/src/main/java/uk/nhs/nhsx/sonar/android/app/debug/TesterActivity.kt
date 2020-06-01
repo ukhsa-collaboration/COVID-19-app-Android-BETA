@@ -198,11 +198,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
         setPositiveState.setOnClickListener {
             userStateStorage.set(
-                UserState.positive(
-                    testDate = DateTime.now(),
-                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
-                )
-            )
+                UserState.positive(testDate = DateTime.now()))
             finish()
         }
     }
