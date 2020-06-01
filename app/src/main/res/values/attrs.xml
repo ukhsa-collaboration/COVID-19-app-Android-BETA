@@ -2,5 +2,6 @@
 <resources>
 <declare-styleable name="ErrorView">
     <attr name="error_description" format="string" />
+    <attr name="error_title" format="string"/>
 </declare-styleable>
 </resources>

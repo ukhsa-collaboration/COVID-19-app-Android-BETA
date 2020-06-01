@@ -13,11 +13,11 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.postDelayed
 import kotlinx.android.synthetic.main.reference_code_panel.view.copy_content
-import kotlinx.android.synthetic.main.reference_code_panel.view.copy_content_group
 import kotlinx.android.synthetic.main.reference_code_panel.view.copy_content_label
 import kotlinx.android.synthetic.main.reference_code_panel.view.divider
+import kotlinx.android.synthetic.main.reference_code_panel.view.referenceCodeErrorView
+import kotlinx.android.synthetic.main.reference_code_panel.view.referencePanelContainer
 import kotlinx.android.synthetic.main.reference_code_panel.view.reference_code
-import kotlinx.android.synthetic.main.reference_code_panel.view.reference_code_connect
 import uk.nhs.nhsx.sonar.android.app.R
 
 class ReferenceCodePanel @JvmOverloads constructor(
@@ -48,29 +48,20 @@ class ReferenceCodePanel @JvmOverloads constructor(
 
     private fun handleLoaded(code: String) {
         divider.background = context.getDrawable(R.color.colorPrimary)
-
-        reference_code_connect.visibility = View.GONE
-
+        referencePanelContainer.visibility = View.VISIBLE
+        referenceCodeErrorView.visibility = View.GONE
         reference_code.text = code
-        copy_content_group.visibility = View.VISIBLE
     }
 
     private fun handleError() {
-        divider.background = context.getDrawable(R.color.colorDanger)
-
-        reference_code.visibility = View.GONE
-        copy_content_group.visibility = View.GONE
-
-        reference_code_connect.visibility = View.VISIBLE
+        referencePanelContainer.visibility = View.GONE
+        referenceCodeErrorView.visibility = View.VISIBLE
     }
 
     private fun handleLoading() {
-        divider.background = context.getDrawable(R.color.colorPrimary)
-
-        reference_code_connect.visibility = View.GONE
-
+        referencePanelContainer.visibility = View.VISIBLE
+        referenceCodeErrorView.visibility = View.GONE
         reference_code.text = context.getString(R.string.loading)
-        copy_content_group.visibility = View.VISIBLE
     }
 
     private fun setCopyClickListener() {

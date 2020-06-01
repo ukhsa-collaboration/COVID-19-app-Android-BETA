@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.view_error.view.errorDescription
+import kotlinx.android.synthetic.main.view_error.view.errorTitle
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.isInversionModeEnabled
 
@@ -40,13 +41,12 @@ class ErrorView @JvmOverloads constructor(
     private fun applyAttributes(context: Context, attrs: AttributeSet?) {
         context.theme.obtainStyledAttributes(attrs, R.styleable.ErrorView, 0, 0)
             .apply {
-                val description: String? =
-                    try {
-                        getString(R.styleable.ErrorView_error_description)
-                    } finally {
-                        recycle()
-                    }
+                val description: String? = getString(R.styleable.ErrorView_error_description)
+                val title: String? = getString(R.styleable.ErrorView_error_title)
+
                 errorDescription.text = description
+                title?.let { errorTitle.text = it }
+                recycle()
             }
     }
 }
