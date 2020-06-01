@@ -1,0 +1,29 @@
+name: generate-release-note
+
+on:
+  repository_dispatch:
+    types: [generate-release-note]
+
+jobs:
+  generate-release-note:
+    runs-on:
+      - self-hosted
+      - linux
+      - aws
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # checkout full repo with all tags
+
+      - name: Generate release notes
+        id: generate_release_notes
+        uses: nhsx/sonar-ios/.github/actions/generate-release-notes
+        with:
+          github_token: ${{ secrets.DEPLOYMENT_TOKEN }}
+          tracker_token: ${{ secrets.tracker_api_token }}
+          revision_range: ${{ github.event.client_payload.revision_range }}
+
+      - name: Print release notes
+        run: echo "${{ steps.generate_release_notes.outputs.release_notes }}"
