@@ -18,8 +18,8 @@ import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 sealed class UserState {
 
     companion object {
-        const val NO_DAYS_IN_SYMPTOMATIC = 7
-        const val NO_DAYS_IN_EXPOSED = 14
+        const val NUMBER_OF_DAYS_IN_SYMPTOMATIC = 7
+        const val NUMBER_OF_DAYS_IN_EXPOSED = 14
 
         fun default(): DefaultState =
             DefaultState
@@ -27,7 +27,7 @@ sealed class UserState {
         fun exposed(exposureDate: LocalDate): ExposedState =
             ExposedState(
                 exposureDate.toUtcNormalized(),
-                exposureDate.plusDays(NO_DAYS_IN_EXPOSED - 1).toUtcNormalized()
+                exposureDate.plusDays(NUMBER_OF_DAYS_IN_EXPOSED - 1).toUtcNormalized()
             )
 
         fun exposed(state: ExposedSymptomaticState): ExposedState =
@@ -43,7 +43,7 @@ sealed class UserState {
 
             // if symptomsDate > 7 days ago then symptomatic state is until tomorrow
             // if symptomsDate <= 7 days ago then symptomatic state is until suggested
-            val until = since.plusDays(NO_DAYS_IN_SYMPTOMATIC).latest(today.nextDay())
+            val until = since.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).latest(today.nextDay())
 
             return SymptomaticState(
                 since,
@@ -68,7 +68,7 @@ sealed class UserState {
 
             // if testDate > 7 days ago then positive state is until tomorrow
             // if testDate <= 7 days ago then positive state is until suggested
-            val until = since.plusDays(NO_DAYS_IN_SYMPTOMATIC).latest(today.nextDay())
+            val until = since.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).latest(today.nextDay())
 
             return PositiveState(
                 since,
@@ -78,18 +78,20 @@ sealed class UserState {
         }
 
         fun positive(
-            state: SymptomaticState
+            state: SymptomaticState,
+            today: LocalDate = LocalDate.now()
         ): PositiveState = PositiveState(
                 state.since,
-                state.since.plusDays(NO_DAYS_IN_SYMPTOMATIC),
+                state.since.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).latest(today.toUtcNormalized()),
                 state.symptoms
         )
 
         fun positive(
-            state: ExposedSymptomaticState
+            state: ExposedSymptomaticState,
+            today: LocalDate = LocalDate.now()
         ): PositiveState = PositiveState(
             state.since,
-            state.since.plusDays(NO_DAYS_IN_SYMPTOMATIC),
+            state.since.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).latest(today.toUtcNormalized()),
             state.symptoms
         )
     }

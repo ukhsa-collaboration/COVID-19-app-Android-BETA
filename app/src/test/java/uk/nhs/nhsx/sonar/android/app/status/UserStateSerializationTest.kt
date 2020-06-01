@@ -8,8 +8,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_EXPOSED
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_SYMPTOMATIC
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_EXPOSED
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class UserStateSerializationTest {
@@ -104,7 +104,7 @@ class UserStateSerializationTest {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"EmberState"}"""))
-            .isEqualTo(ExposedState(until.minusDays(NO_DAYS_IN_EXPOSED), until))
+            .isEqualTo(ExposedState(until.minusDays(NUMBER_OF_DAYS_IN_EXPOSED), until))
     }
 
     @Test
@@ -112,7 +112,7 @@ class UserStateSerializationTest {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"AmberState"}"""))
-            .isEqualTo(ExposedState(until.minusDays(NO_DAYS_IN_EXPOSED), until))
+            .isEqualTo(ExposedState(until.minusDays(NUMBER_OF_DAYS_IN_EXPOSED), until))
     }
 
     @Test
@@ -120,7 +120,7 @@ class UserStateSerializationTest {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"type":"ExposedState"}"""))
-            .isEqualTo(ExposedState(until.minusDays(NO_DAYS_IN_EXPOSED), until))
+            .isEqualTo(ExposedState(until.minusDays(NUMBER_OF_DAYS_IN_EXPOSED), until))
     }
 
     @Test
@@ -137,7 +137,7 @@ class UserStateSerializationTest {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"RedState"}"""))
-            .isEqualTo(SymptomaticState(until.minusDays(NO_DAYS_IN_SYMPTOMATIC), until, nonEmptySetOf(Symptom.COUGH)))
+            .isEqualTo(SymptomaticState(until.minusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC), until, nonEmptySetOf(Symptom.COUGH)))
     }
 
     @Test
@@ -145,7 +145,7 @@ class UserStateSerializationTest {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"SymptomaticState"}"""))
-            .isEqualTo(SymptomaticState(until.minusDays(NO_DAYS_IN_SYMPTOMATIC), until, nonEmptySetOf(Symptom.COUGH)))
+            .isEqualTo(SymptomaticState(until.minusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC), until, nonEmptySetOf(Symptom.COUGH)))
     }
 
     @Test
@@ -261,7 +261,7 @@ class UserStateSerializationTest {
         val until = DateTime(1587241302262L, UTC)
 
         assertThat(deserialize("""{"until":1587241302262,"symptoms":["COUGH"],"type":"CheckinState"}"""))
-            .isEqualTo(SymptomaticState(until.minusDays(NO_DAYS_IN_SYMPTOMATIC), until, nonEmptySetOf(Symptom.COUGH)))
+            .isEqualTo(SymptomaticState(until.minusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC), until, nonEmptySetOf(Symptom.COUGH)))
     }
 
     @Test

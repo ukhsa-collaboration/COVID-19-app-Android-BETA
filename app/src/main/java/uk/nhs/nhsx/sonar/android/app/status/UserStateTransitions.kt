@@ -11,7 +11,7 @@ import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_SYMPTOMATIC
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.exposed
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.positive
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
@@ -107,7 +107,7 @@ object UserStateTransitions {
         symptoms: NonEmptySet<Symptom>,
         today: LocalDate
     ): Boolean {
-        val isInSevenDayWindow = !symptomsDate.isEarlierThan(NO_DAYS_IN_SYMPTOMATIC, today)
+        val isInSevenDayWindow = !symptomsDate.isEarlierThan(NUMBER_OF_DAYS_IN_SYMPTOMATIC, today)
 
         return isInSevenDayWindow || hasTemperature(symptoms)
     }

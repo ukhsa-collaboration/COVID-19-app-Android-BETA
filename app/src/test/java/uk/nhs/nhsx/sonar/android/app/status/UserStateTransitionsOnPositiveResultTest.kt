@@ -23,7 +23,7 @@ class UserStateTransitionsOnPositiveResultTest {
         val state = transitionOnTestResult(DefaultState, testInfo)
 
         val since = testInfo.date.toLocalDate().toUtcNormalized()
-        val until = since.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC)
+        val until = since.plusDays(UserState.NUMBER_OF_DAYS_IN_SYMPTOMATIC)
 
         assertThat(state).isEqualTo(PositiveState(since, until, emptySet()))
     }
@@ -42,7 +42,7 @@ class UserStateTransitionsOnPositiveResultTest {
         assertThat(state).isEqualTo(
             PositiveState(
                 since = symptomatic.since,
-                until = symptomatic.since.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC),
+                until = symptomatic.since.plusDays(UserState.NUMBER_OF_DAYS_IN_SYMPTOMATIC),
                 symptoms = symptomatic.symptoms
             )
         )
@@ -62,7 +62,7 @@ class UserStateTransitionsOnPositiveResultTest {
         assertThat(state).isEqualTo(
             PositiveState(
                 since = exposedSymptomatic.since,
-                until = exposedSymptomatic.since.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC),
+                until = exposedSymptomatic.since.plusDays(UserState.NUMBER_OF_DAYS_IN_SYMPTOMATIC),
                 symptoms = exposedSymptomatic.symptoms
             )
         )
@@ -86,7 +86,7 @@ class UserStateTransitionsOnPositiveResultTest {
         val state = transitionOnTestResult(exposed, testInfo)
 
         val expectedSince = testInfo.date.toLocalDate().toUtcNormalized()
-        val expectedUntil = expectedSince.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC)
+        val expectedUntil = expectedSince.plusDays(UserState.NUMBER_OF_DAYS_IN_SYMPTOMATIC)
 
         assertThat(state).isEqualTo(PositiveState(
             expectedSince,

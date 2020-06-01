@@ -8,8 +8,8 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONObject
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_EXPOSED
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NO_DAYS_IN_SYMPTOMATIC
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_EXPOSED
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 
 object UserStateSerialization {
@@ -60,7 +60,7 @@ object UserStateSerialization {
 
     private fun JSONObject.getExposedState(): ExposedState {
         val until = getUntil()
-        val since = getSince() ?: until.minusDays(NO_DAYS_IN_EXPOSED)
+        val since = getSince() ?: until.minusDays(NUMBER_OF_DAYS_IN_EXPOSED)
         return ExposedState(since, until)
     }
 
@@ -69,7 +69,7 @@ object UserStateSerialization {
         if (symptoms.isEmpty()) return null
 
         val until = getUntil()
-        val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
+        val since = getSince() ?: until.minusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC)
         return SymptomaticState(since, getUntil(), NonEmptySet.create(symptoms)!!)
     }
 
@@ -78,13 +78,13 @@ object UserStateSerialization {
         if (symptoms.isEmpty()) return null
 
         val until = getUntil()
-        val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
+        val since = getSince() ?: until.minusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC)
         return ExposedSymptomaticState(since, getUntil(), NonEmptySet.create(symptoms)!!)
     }
 
     private fun JSONObject.getPositiveState(): PositiveState? {
         val until = getUntil()
-        val since = getSince() ?: until.minusDays(NO_DAYS_IN_SYMPTOMATIC)
+        val since = getSince() ?: until.minusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC)
         return PositiveState(since, getUntil(), getSymptoms())
     }
 

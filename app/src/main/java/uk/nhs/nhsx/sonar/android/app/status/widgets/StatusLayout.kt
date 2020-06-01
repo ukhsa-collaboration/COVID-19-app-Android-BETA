@@ -128,8 +128,8 @@ class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
         if (userTestedNegative && state.hasExpired()) {
             displaySpecialCheckinDialog(activity)
         } else {
-            handleTestResult(activity, activity.testResultDialog)
             displayNormalCheckinDialogIfExpired(activity, state)
+            handleTestResult(activity, activity.testResultDialog)
         }
     }
 }
@@ -149,8 +149,8 @@ class PositiveStatusLayout(val state: PositiveState) : StatusLayout() {
     }
 
     override fun onResume(activity: StatusActivity) {
-        handleTestResult(activity, activity.testResultDialog)
         displayNormalCheckinDialogIfExpired(activity, state)
+        handleTestResult(activity, activity.testResultDialog)
     }
 }
 
