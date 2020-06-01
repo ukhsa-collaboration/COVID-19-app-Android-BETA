@@ -17,9 +17,18 @@ jobs:
         with:
           fetch-depth: 0 # checkout full repo with all tags
 
+      - name: Checkout ci tools
+        id: checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.DEPLOYMENT_TOKEN }}
+          repository: nhsx/sonar-ios # This will be extracted to separate repo when available
+          path: .ci-tools
+          ref: df8714d
+
       - name: Generate release notes
         id: generate_release_notes
-        uses: nhsx/sonar-ios/.github/actions/generate-release-notes@df8714d
+        uses: ./.ci-tools/.github/actions/generate-release-notes
         with:
           github_token: ${{ secrets.DEPLOYMENT_TOKEN }}
           tracker_token: ${{ secrets.tracker_api_token }}
