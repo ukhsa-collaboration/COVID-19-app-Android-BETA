@@ -88,8 +88,10 @@
     <string name="anosmia_question_simplified">Have you had a loss or change to your sense of smell or taste?</string>
     <string name="anosmia_description">This means you have noticed you cannot smell or taste anything, or things smell or taste different to normal.\n\nYour response to this question helps us decide whether you need to book a coronavirus test.</string>
     <string name="anosmia_description_simplified">This means you have noticed you cannot smell or taste anything, or things smell or taste different to normal.</string>
-    <string name="yes_anosmia">Yes, I have a new loss or change to my sense of smell or taste</string>
-    <string name="no_anosmia">No, I do not have a new loss or change to my sense of smell or taste</string>
+    <string name="yes_new_anosmia">Yes, I have a new loss or change to my sense of smell or taste</string>
+    <string name="yes_anosmia">Yes, I have a loss or change to my sense of smell or taste</string>
+    <string name="no_new_anosmia">No, I do not have a new loss or change to my sense of smell or taste</string>
+    <string name="no_anosmia">No, I do not have a loss or change to my sense of smell or taste</string>
     <string name="sneeze_question">Do you have a runny nose, feel feverish or suffer from sneezing?</string>
     <string name="sneeze_question_simplified">Do you have a runny nose, feel feverish or suffer from sneezing?</string>
     <string name="sneeze_description">Runny nose: this means your nose is more runny than usual.\n\nFeeling feverish: this means you have sore or aching muscles, feel unusually tired, have a headache or are shivering or feeling warm or hot.\n\nSneezing: this means you are sneezing more than normal, not caused by any known allergy.\n\nYour response to this question helps the NHS better understand coronavirus.</string>
