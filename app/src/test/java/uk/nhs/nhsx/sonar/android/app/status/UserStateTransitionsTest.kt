@@ -19,12 +19,10 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.SNEEZE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnose
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnoseForCheckin
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.expireExposedState
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnExpiredExposedState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.isSymptomatic
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnContactAlert
-import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
-import uk.nhs.nhsx.sonar.android.app.util.toUtc
 import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTransitionsTest {
@@ -71,7 +69,7 @@ class UserStateTransitionsTest {
 
         assertThat(state).isEqualTo(
             SymptomaticState(
-                sevenDaysAgoOrMore.atSevenAm().toUtc(),
+                sevenDaysAgoOrMore.toUtcNormalized(),
                 sevenDaysAfterSymptoms,
                 symptomsWithTemperature)
         )
@@ -91,7 +89,7 @@ class UserStateTransitionsTest {
 
         assertThat(state).isEqualTo(
             SymptomaticState(
-                lessThanSevenDaysAgo.atSevenAm().toUtc(),
+                lessThanSevenDaysAgo.toUtcNormalized(),
                 sevenDaysAfterSymptoms,
                 symptomsWithoutTemperature
             )
@@ -219,12 +217,12 @@ class UserStateTransitionsTest {
         val expiredExposedState = buildExposedState(until = DateTime.now().minusSeconds(1))
         val expiredSymptomaticState = buildSymptomaticState(until = DateTime.now().minusSeconds(1))
 
-        assertThat(expireExposedState(DefaultState)).isEqualTo(DefaultState)
-        assertThat(expireExposedState(exposedState)).isEqualTo(exposedState)
-        assertThat(expireExposedState(symptomaticState)).isEqualTo(symptomaticState)
-        assertThat(expireExposedState(expiredSymptomaticState)).isEqualTo(expiredSymptomaticState)
+        assertThat(transitionOnExpiredExposedState(DefaultState)).isEqualTo(DefaultState)
+        assertThat(transitionOnExpiredExposedState(exposedState)).isEqualTo(exposedState)
+        assertThat(transitionOnExpiredExposedState(symptomaticState)).isEqualTo(symptomaticState)
+        assertThat(transitionOnExpiredExposedState(expiredSymptomaticState)).isEqualTo(expiredSymptomaticState)
 
-        assertThat(expireExposedState(expiredExposedState)).isEqualTo(DefaultState)
+        assertThat(transitionOnExpiredExposedState(expiredExposedState)).isEqualTo(DefaultState)
     }
 
     @Test

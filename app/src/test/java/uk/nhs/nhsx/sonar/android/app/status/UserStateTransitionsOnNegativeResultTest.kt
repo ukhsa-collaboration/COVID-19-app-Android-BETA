@@ -11,14 +11,13 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
-import uk.nhs.nhsx.sonar.android.app.util.toUtc
 import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTransitionsOnNegativeResultTest {
 
     @Test
     fun `default remains default`() {
-        val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now().toUtc())
+        val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now())
 
         val state = transitionOnTestResult(DefaultState, testInfo)
 

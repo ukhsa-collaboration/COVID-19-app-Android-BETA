@@ -12,20 +12,18 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
-import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
-import uk.nhs.nhsx.sonar.android.app.util.toUtc
 import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTransitionsOnPositiveResultTest {
 
     @Test
     fun `default becomes positive, with no symptoms`() {
-        val testInfo = TestInfo(TestResult.POSITIVE, DateTime.now().toUtc())
+        val testInfo = TestInfo(TestResult.POSITIVE, DateTime.now())
 
         val state = transitionOnTestResult(DefaultState, testInfo)
 
-        val since = testInfo.date.toLocalDate().atSevenAm().toUtc()
-        val until = testInfo.date.toLocalDate().plusDays(7).atSevenAm().toUtc()
+        val since = testInfo.date.toLocalDate().toUtcNormalized()
+        val until = since.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC)
 
         assertThat(state).isEqualTo(PositiveState(since, until, emptySet()))
     }
@@ -44,7 +42,7 @@ class UserStateTransitionsOnPositiveResultTest {
         assertThat(state).isEqualTo(
             PositiveState(
                 since = symptomatic.since,
-                until = symptomatic.since.plusDays(7),
+                until = symptomatic.since.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC),
                 symptoms = symptomatic.symptoms
             )
         )
@@ -64,7 +62,7 @@ class UserStateTransitionsOnPositiveResultTest {
         assertThat(state).isEqualTo(
             PositiveState(
                 since = exposedSymptomatic.since,
-                until = exposedSymptomatic.since.plusDays(7),
+                until = exposedSymptomatic.since.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC),
                 symptoms = exposedSymptomatic.symptoms
             )
         )
@@ -88,7 +86,7 @@ class UserStateTransitionsOnPositiveResultTest {
         val state = transitionOnTestResult(exposed, testInfo)
 
         val expectedSince = testInfo.date.toLocalDate().toUtcNormalized()
-        val expectedUntil = expectedSince.plusDays(7)
+        val expectedUntil = expectedSince.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC)
 
         assertThat(state).isEqualTo(PositiveState(
             expectedSince,

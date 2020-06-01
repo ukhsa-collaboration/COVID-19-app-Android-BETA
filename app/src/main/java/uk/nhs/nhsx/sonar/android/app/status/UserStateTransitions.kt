@@ -43,17 +43,17 @@ object UserStateTransitions {
     ): UserState =
         when {
             hasTemperature(symptoms) -> currentState.extend(symptoms, today)
-            else -> DefaultState
+                else -> DefaultState
         }
 
-    fun expireExposedState(currentState: UserState): UserState =
+    fun isSymptomatic(symptoms: Set<Symptom>): Boolean =
+        hasTemperature(symptoms) || hasCough(symptoms) || hasAnosmia(symptoms)
+
+    fun transitionOnExpiredExposedState(currentState: UserState): UserState =
         if (currentState is ExposedState && currentState.hasExpired())
             DefaultState
         else
             currentState
-
-    fun isSymptomatic(symptoms: Set<Symptom>): Boolean =
-        hasTemperature(symptoms) || hasCough(symptoms) || hasAnosmia(symptoms)
 
     fun transitionOnContactAlert(
         currentState: UserState,

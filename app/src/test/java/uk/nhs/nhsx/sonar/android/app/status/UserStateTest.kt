@@ -120,7 +120,7 @@ class UserStateTest {
         assertThat(state).isEqualTo(
             PositiveState(
                 since = symptomatic.since,
-                until = symptomatic.since.plusDays(7),
+                until = symptomatic.since.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC),
                 symptoms = symptomatic.symptoms
             )
         )
@@ -136,7 +136,7 @@ class UserStateTest {
         assertThat(state).isEqualTo(
             PositiveState(
                 since = exposedSymptomatic.since,
-                until = exposedSymptomatic.since.plusDays(7),
+                until = exposedSymptomatic.since.plusDays(UserState.NO_DAYS_IN_SYMPTOMATIC),
                 symptoms = exposedSymptomatic.symptoms
             )
         )

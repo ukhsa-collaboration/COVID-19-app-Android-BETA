@@ -12,6 +12,7 @@ import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.OK
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.latest
+import uk.nhs.nhsx.sonar.android.app.util.nextDay
 import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 sealed class UserState {
@@ -37,16 +38,16 @@ sealed class UserState {
             symptoms: NonEmptySet<Symptom>,
             today: LocalDate = LocalDate.now()
         ): SymptomaticState {
-            val suggested = symptomsDate.plusDays(NO_DAYS_IN_SYMPTOMATIC)
-            val tomorrow = today.plusDays(1)
+
+            val since = symptomsDate.toUtcNormalized()
 
             // if symptomsDate > 7 days ago then symptomatic state is until tomorrow
             // if symptomsDate <= 7 days ago then symptomatic state is until suggested
-            val until = latest(suggested, tomorrow)
+            val until = since.plusDays(NO_DAYS_IN_SYMPTOMATIC).latest(today.nextDay())
 
             return SymptomaticState(
-                symptomsDate.toUtcNormalized(),
-                until.toUtcNormalized(),
+                since,
+                until,
                 symptoms
             )
         }
@@ -62,17 +63,16 @@ sealed class UserState {
             testDate: DateTime,
             today: LocalDate = LocalDate.now()
         ): PositiveState {
-            val testLocalDate = testDate.toLocalDate()
-            val suggested = testLocalDate.plusDays(NO_DAYS_IN_SYMPTOMATIC)
-            val tomorrow = today.plusDays(1)
+
+            val since = testDate.toLocalDate().toUtcNormalized()
 
             // if testDate > 7 days ago then positive state is until tomorrow
             // if testDate <= 7 days ago then positive state is until suggested
-            val until = latest(suggested, tomorrow)
+            val until = since.plusDays(NO_DAYS_IN_SYMPTOMATIC).latest(today.nextDay())
 
             return PositiveState(
-                testLocalDate.toUtcNormalized(),
-                until.toUtcNormalized(),
+                since,
+                until,
                 emptySet()
             )
         }

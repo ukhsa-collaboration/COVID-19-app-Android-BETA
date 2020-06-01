@@ -10,13 +10,12 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
-import uk.nhs.nhsx.sonar.android.app.util.toUtc
 
 class UserStateTransitionsOnInvalidResultTest {
 
     @Test
     fun `default remains default`() {
-        val testInfo = TestInfo(TestResult.INVALID, DateTime.now().toUtc())
+        val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
         val state = transitionOnTestResult(DefaultState, testInfo)
 
@@ -26,7 +25,7 @@ class UserStateTransitionsOnInvalidResultTest {
     @Test
     fun `symptomatic remains symptomatic`() {
         val symptomatic = buildSymptomaticState()
-        val testInfo = TestInfo(TestResult.INVALID, DateTime.now().toUtc())
+        val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
         val state = transitionOnTestResult(symptomatic, testInfo)
 
@@ -36,7 +35,7 @@ class UserStateTransitionsOnInvalidResultTest {
     @Test
     fun `positive remains positive`() {
         val positive = buildPositiveState()
-        val testInfo = TestInfo(TestResult.INVALID, DateTime.now().toUtc())
+        val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
         val state = transitionOnTestResult(positive, testInfo)
 
@@ -46,7 +45,7 @@ class UserStateTransitionsOnInvalidResultTest {
     @Test
     fun `exposed remains exposed`() {
         val exposed = buildExposedState()
-        val testInfo = TestInfo(TestResult.INVALID, DateTime.now().toUtc())
+        val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
         val state = transitionOnTestResult(exposed, testInfo)
 

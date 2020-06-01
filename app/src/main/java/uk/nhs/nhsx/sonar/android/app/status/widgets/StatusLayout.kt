@@ -97,7 +97,7 @@ class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
         activity.exposedNotification.hide()
 
         // TODO: refactor this
-        val newState = UserStateTransitions.expireExposedState(state)
+        val newState = UserStateTransitions.transitionOnExpiredExposedState(state)
         activity.userStateStorage.set(newState)
 
         activity.navigateTo(newState)
