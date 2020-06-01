@@ -6,8 +6,9 @@ package uk.nhs.nhsx.sonar.android.app.crypto
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.Days
+import org.joda.time.Interval
 import org.joda.time.Period
-import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import javax.inject.Inject
@@ -18,7 +19,13 @@ class CryptogramProvider @Inject constructor(
     private val sonarIdProvider: SonarIdProvider,
     private val encrypter: Encrypter,
     private val cryptogramStorage: CryptogramStorage,
-    private val currentDateProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) }
+    private val currentDateProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
+    var validityInterval: (DateTime) -> Interval = {
+        Interval(
+            it.withTimeAtStartOfDay(),
+            it.plus(Days.ONE).withTimeAtStartOfDay()
+        )
+    }
 ) {
     private val lock = Object()
     private var cachedDate: DateTime? = null
@@ -31,28 +38,26 @@ class CryptogramProvider @Inject constructor(
         synchronized(lock) {
             val currentDate = currentDateProvider()
             if (cachedDate != null && cachedCryptogram != null) {
-                if (currentCryptogramExpired(cachedDate!!, currentDate)) {
-                    generateAndStoreCryptogram(currentDate)
+                return if (currentCryptogramValid(cachedDate!!, currentDate)) {
+                    cachedCryptogram!!
                 } else {
-                    return cachedCryptogram!!
+                    generateAndStoreCryptogram(currentDate)
                 }
             }
 
             val (storedLatestDate, storedCryptogram) = cryptogramStorage.get()
-            if (storedLatestDate == -1L) {
+            if (storedLatestDate == -1L ||
+                storedCryptogram == null ||
+                !currentCryptogramValid(
+                    DateTime(storedLatestDate),
+                    currentDate
+                )
+            ) {
                 return generateAndStoreCryptogram(currentDate)
             }
 
-            return if (currentCryptogramExpired(DateTime(storedLatestDate), currentDate)) {
-                generateAndStoreCryptogram(currentDate)
-            } else {
-                if (storedCryptogram == null) {
-                    Timber.e("Stored validity date without having stored cryptogram!")
-                    throw java.lang.IllegalStateException("Stored validity date without having stored cryptogram!")
-                }
-                updateCache(currentDate, storedCryptogram)
-                storedCryptogram
-            }
+            updateCache(currentDate, storedCryptogram)
+            return storedCryptogram
         }
     }
 
@@ -77,8 +82,8 @@ class CryptogramProvider @Inject constructor(
         cachedCryptogram = cryptogram
     }
 
-    private fun currentCryptogramExpired(latestDate: DateTime, currentDate: DateTime) =
-        currentDate.isAfter(latestDate.startOfNextDay()) || currentDate.isBefore(latestDate)
+    private fun currentCryptogramValid(latestDate: DateTime, currentDate: DateTime) =
+        validityInterval(latestDate).contains(currentDate)
 
     private fun generateCryptogram(latestDate: DateTime): Cryptogram {
         val encodedStartDate = latestDate.withTimeAtStartOfDay().encodeAsSecondsSinceEpoch()
