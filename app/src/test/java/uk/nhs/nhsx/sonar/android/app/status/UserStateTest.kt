@@ -17,9 +17,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
-import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
-import uk.nhs.nhsx.sonar.android.app.util.toUtc
 import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTest {
@@ -41,7 +39,7 @@ class UserStateTest {
         val state = UserState.exposed(today)
 
         val thirteenDaysFromNowAt7 = DateTime(2020, 4, 23, 7, 0).toDateTime(DateTimeZone.UTC)
-        assertThat(state).isEqualTo(ExposedState(today.atSevenAm().toUtc(), thirteenDaysFromNowAt7))
+        assertThat(state).isEqualTo(ExposedState(today.toUtcNormalized(), thirteenDaysFromNowAt7))
     }
 
     @Test
@@ -74,6 +72,19 @@ class UserStateTest {
 
         val sevenDaysAfterSymptomsStart = DateTime(2020, 4, 12, 7, 0).toDateTime(DateTimeZone.UTC)
         assertThat(state.until).isEqualTo(sevenDaysAfterSymptomsStart)
+    }
+
+    @Test
+    fun `exposedSymptomatic state factory method`() {
+        val aSymptomDate = LocalDate(2020, 4, 5)
+        val symptoms = nonEmptySetOf(TEMPERATURE)
+        val exposed = buildExposedState()
+
+        val state = UserState.exposedSymptomatic(aSymptomDate, exposed, symptoms)
+
+        assertThat(state.since).isEqualTo(aSymptomDate.toUtcNormalized())
+        assertThat(state.until).isEqualTo(exposed.until)
+        assertThat(state.symptoms).isEqualTo(symptoms)
     }
 
     @Test

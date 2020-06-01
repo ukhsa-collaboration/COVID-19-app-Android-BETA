@@ -51,6 +51,13 @@ sealed class UserState {
             )
         }
 
+        fun exposedSymptomatic(
+            symptomsDate: LocalDate,
+            state: ExposedState,
+            symptoms: NonEmptySet<Symptom>
+        ): ExposedSymptomaticState =
+            ExposedSymptomaticState(symptomsDate.toUtcNormalized(), state.until, symptoms)
+
         fun positive(
             testDate: DateTime,
             today: LocalDate = LocalDate.now()

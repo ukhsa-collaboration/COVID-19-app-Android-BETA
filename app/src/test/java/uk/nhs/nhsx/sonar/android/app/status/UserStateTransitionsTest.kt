@@ -25,6 +25,7 @@ import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnCon
 import uk.nhs.nhsx.sonar.android.app.util.atSevenAm
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtc
+import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTransitionsTest {
 
@@ -111,7 +112,7 @@ class UserStateTransitionsTest {
 
         assertThat(state).isEqualTo(
             SymptomaticState(
-                lessThanSevenDaysAgo.atSevenAm().toUtc(),
+                lessThanSevenDaysAgo.toUtcNormalized(),
                 sevenDaysAfterSymptoms,
                 symptomsWithTemperature
             )
@@ -120,13 +121,13 @@ class UserStateTransitionsTest {
 
     @Test
     fun `diagnose - when current state is exposed`() {
-        val anySymptomDate = today.minusDays(6)
+        val symptomDate = today.minusDays(6)
 
         val exposed = UserState.exposed(today)
 
         val state = diagnose(
             exposed,
-            anySymptomDate,
+            symptomDate,
             symptomsWithTemperature,
             today
         )
@@ -134,7 +135,7 @@ class UserStateTransitionsTest {
         assertThat(state)
             .isEqualTo(
                 ExposedSymptomaticState(
-                    exposed.since,
+                    symptomDate.toUtcNormalized(),
                     exposed.until,
                     symptomsWithTemperature
                 )

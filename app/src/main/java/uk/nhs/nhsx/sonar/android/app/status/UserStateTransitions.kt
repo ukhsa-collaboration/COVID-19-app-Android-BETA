@@ -26,13 +26,14 @@ object UserStateTransitions {
         today: LocalDate = LocalDate.now()
     ): UserState {
 
-        if (!isolationNeeded(symptomsDate, symptoms, today))
-            return currentState
-
-        if (currentState is ExposedState)
-            return ExposedSymptomaticState(currentState.since, currentState.until, symptoms)
-
-        return UserState.symptomatic(symptomsDate, symptoms, today)
+        return when {
+            !isolationNeeded(symptomsDate, symptoms, today) ->
+                currentState
+            currentState is ExposedState ->
+                UserState.exposedSymptomatic(symptomsDate, currentState, symptoms)
+            else ->
+                UserState.symptomatic(symptomsDate, symptoms, today)
+        }
     }
 
     fun diagnoseForCheckin(
