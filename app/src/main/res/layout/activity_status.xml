@@ -39,7 +39,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:accessibilityHeading="true"
                     android:visibility="gone">
 
                     <include layout="@layout/notification_panel" />
@@ -51,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="16dp" />
 
-                <TextView
+                <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                     android:id="@+id/status_today_feeling"
                     style="@style/TextViewCardSubTitle"
                     android:layout_width="match_parent"
@@ -59,7 +58,6 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="30dp"
                     android:layout_marginBottom="16dp"
-                    android:accessibilityHeading="true"
                     android:text="@string/next_steps"
                     android:textAllCaps="true" />
 

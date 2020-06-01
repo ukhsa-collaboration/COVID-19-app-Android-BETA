@@ -14,13 +14,12 @@
     android:paddingBottom="24dp"
     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-    <TextView
+    <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
         android:id="@+id/bottomDialogTitle"
         style="@style/BottomSheetTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:accessibilityHeading="true"
         tools:text="@string/recovery_dialog_title" />
 
     <TextView

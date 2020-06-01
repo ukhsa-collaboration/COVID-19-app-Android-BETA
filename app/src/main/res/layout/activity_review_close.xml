@@ -35,13 +35,12 @@
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
-                android:accessibilityHeading="true"
                 android:text="@string/you_do_not_have_symptoms" />
 
             <TextView

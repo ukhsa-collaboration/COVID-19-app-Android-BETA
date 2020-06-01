@@ -28,13 +28,12 @@
                 android:paddingVertical="40dp"
                 android:src="@drawable/ic_current_advice" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/current_advice_title"
                 style="@style/TextViewStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:accessibilityHeading="true"
                 android:paddingHorizontal="16dp"
                 android:text="@string/current_advice_title" />
 

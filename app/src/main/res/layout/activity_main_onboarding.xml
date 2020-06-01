@@ -62,15 +62,13 @@
                 android:contentDescription="@null"
                 android:src="@drawable/ic_onboarding_intro" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/onboarding_title"
                 style="@style/OnboardingTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/onboarding_title"
-                android:accessibilityHeading="true"
-            />
+                android:text="@string/onboarding_title" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

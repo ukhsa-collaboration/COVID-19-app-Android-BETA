@@ -36,13 +36,12 @@
                 android:textColor="@color/text_sub_title"
                 android:textSize="12sp" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/anosmia_question"
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/progress"
-                android:accessibilityHeading="true"
                 android:text="@string/anosmia_question" />
 
             <TextView

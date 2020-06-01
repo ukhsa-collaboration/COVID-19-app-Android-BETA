@@ -44,14 +44,13 @@
         </LinearLayout>
     </ScrollView>
 
-    <TextView
+    <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
         android:id="@+id/needConfirmationHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/confirmationCheckbox"
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="8dp"
-        android:accessibilityHeading="true"
         android:fontFamily="sans-serif-medium"
         android:text="@string/please_confirm_the_information"
         android:textColor="@color/colorDanger"

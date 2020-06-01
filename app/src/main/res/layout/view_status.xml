@@ -19,12 +19,11 @@
         android:orientation="vertical"
         android:paddingHorizontal="16dp">
 
-        <TextView
+        <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
             android:id="@+id/statusTitle"
             style="@style/TextViewStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:accessibilityHeading="true"
             tools:text="Title" />
 
         <TextView

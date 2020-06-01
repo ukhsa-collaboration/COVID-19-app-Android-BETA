@@ -62,14 +62,13 @@
                 android:contentDescription="@null"
                 android:src="@drawable/ic_onboarding_permissions" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/permission_title"
                 style="@style/OnboardingTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="24dp"
-                android:accessibilityHeading="true"
                 android:text="@string/permission_title" />
 
             <LinearLayout
@@ -84,10 +83,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
                         android:lineSpacingMultiplier="1.2"
                         android:paddingStart="12dp"
                         android:paddingEnd="12dp"
@@ -119,10 +117,9 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
                         android:lineSpacingMultiplier="1.2"
                         android:paddingStart="12dp"
                         android:paddingEnd="12dp"

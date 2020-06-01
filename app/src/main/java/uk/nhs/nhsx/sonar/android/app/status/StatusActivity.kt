@@ -43,6 +43,7 @@ import uk.nhs.nhsx.sonar.android.app.util.cardColourInversion
 import uk.nhs.nhsx.sonar.android.app.util.observe
 import uk.nhs.nhsx.sonar.android.app.util.openAppSettings
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
+import uk.nhs.nhsx.sonar.android.app.util.readOutAccessibilityHeading
 import javax.inject.Inject
 
 class StatusActivity : BaseActivity() {
@@ -133,6 +134,8 @@ class StatusActivity : BaseActivity() {
             addViewModelListener()
             viewModel.onStart()
         }
+
+        notificationPanel.readOutAccessibilityHeading()
     }
 
     /**

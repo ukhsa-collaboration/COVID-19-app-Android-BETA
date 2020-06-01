@@ -53,14 +53,13 @@
             android:orientation="vertical"
             android:paddingHorizontal="16dp">
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/edgeCaseTitle"
                 style="@style/OnboardingTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="24dp"
-                android:text="@string/device_not_supported_title"
-                android:accessibilityHeading="true" />
+                android:text="@string/device_not_supported_title" />
 
             <TextView
                 android:id="@+id/edgeCaseText"

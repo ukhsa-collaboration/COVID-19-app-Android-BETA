@@ -25,22 +25,20 @@
                 android:background="@drawable/ic_bg_gradient_top"
                 android:src="@drawable/ic_reference_link" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 style="@style/TextViewStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="24dp"
-                android:accessibilityHeading="true"
                 android:text="@string/reference_code_title" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 style="@style/TextViewStatusSubTitleHeading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="6dp"
-                android:accessibilityHeading="true"
                 android:text="@string/reference_code_when_1"
                 android:textColor="@color/text_primary_color"
                 android:textStyle="bold" />
@@ -54,13 +52,12 @@
                 android:text="@string/reference_code_description_1"
                 android:textColor="@color/text_primary_color" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 style="@style/TextViewStatusSubTitleHeading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="6dp"
-                android:accessibilityHeading="true"
                 android:text="@string/reference_code_when_2"
                 android:textColor="@color/text_primary_color"
                 android:textStyle="bold" />
@@ -74,13 +71,12 @@
                 android:text="@string/reference_code_description_2"
                 android:textColor="@color/text_primary_color" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 style="@style/TextViewStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
-                android:accessibilityHeading="true"
                 android:text="@string/reference_code_linking" />
 
             <uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodePanel

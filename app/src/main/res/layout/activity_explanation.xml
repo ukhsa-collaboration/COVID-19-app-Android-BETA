@@ -34,14 +34,13 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="80dp">
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/explanation_title"
                 style="@style/OnboardingTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="24dp"
-                android:accessibilityHeading="true"
                 android:text="@string/explanation_title" />
 
             <TextView
@@ -67,10 +66,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView
+                    <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+                        android:id="@+id/moreInfoHeading"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:accessibilityHeading="true"
                         android:fontFamily="@font/roboto_medium"
                         android:lineSpacingMultiplier="1.2"
                         android:paddingStart="12dp"

@@ -8,10 +8,14 @@ import android.content.Context
 import android.content.res.Resources
 import android.provider.Settings
 import android.provider.Settings.SettingNotFoundException
+import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.card.MaterialCardView
 import timber.log.Timber
@@ -78,4 +82,22 @@ fun AppCompatActivity.setNavigateUpToolbar(toolbar: MaterialToolbar, @StringRes 
     supportActionBar?.setHomeActionContentDescription(R.string.go_back)
     supportActionBar?.title = getString(title)
     toolbar.setNavigationOnClickListener { onBackPressed() }
+}
+
+/**
+ * Reads headings for devices with api 19+.
+ * This is handling accessibility headings in a better way
+ * than just using the xml attribute => (android:accessibilityHeading="true")
+ * because this attribute only works for api 28+.
+ */
+fun View.readOutAccessibilityHeading() {
+    ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
+        override fun onInitializeAccessibilityNodeInfo(
+            host: View?,
+            info: AccessibilityNodeInfoCompat
+        ) {
+            super.onInitializeAccessibilityNodeInfo(host, info)
+            info.isHeading = true
+        }
+    })
 }

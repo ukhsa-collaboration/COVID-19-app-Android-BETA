@@ -33,13 +33,12 @@
                 android:paddingVertical="40dp"
                 android:src="@drawable/ic_get_tested" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/apply_for_test_title"
                 style="@style/TextViewStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:accessibilityHeading="true"
                 android:paddingHorizontal="16dp"
                 android:text="@string/apply_for_test_now" />
 

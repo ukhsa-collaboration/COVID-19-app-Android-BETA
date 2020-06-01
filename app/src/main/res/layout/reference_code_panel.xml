@@ -32,12 +32,11 @@
                 android:text="Your app reference code"
                 android:textColor="@color/text_primary_color" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
                 android:id="@+id/reference_code_connect"
                 style="@style/TextViewStatusSubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:accessibilityHeading="true"
                 android:lineSpacingMultiplier="1.2"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="20dp"
