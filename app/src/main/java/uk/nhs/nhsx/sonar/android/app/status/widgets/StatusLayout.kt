@@ -1,12 +1,9 @@
 package uk.nhs.nhsx.sonar.android.app.status.widgets
 
 import android.app.Activity
-import android.text.SpannedString
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.core.text.bold
-import androidx.core.text.buildSpannedString
 import androidx.core.view.isVisible
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
@@ -158,7 +155,7 @@ private fun createStatusView(
     activity: StatusActivity,
     @StringRes titleRes: Int,
     statusColor: StatusView.Color,
-    statusDescription: SpannedString? = null
+    statusDescription: String? = null
 ) {
     val statusView = activity.findViewById<StatusView>(R.id.statusView)
     statusView.setup(
@@ -188,27 +185,21 @@ fun createTestResultDialog(activity: Activity, userInbox: UserInbox): BottomDial
     )
 }
 
-fun createStatusDescriptionForSymptomaticAndPositive(activity: StatusActivity, userState: UserState): SpannedString {
-    return buildSpannedString {
-        bold {
-            append(
-                activity.getString(
-                    R.string.follow_until_symptomatic_pre,
-                    userState.until().toUiFormat()
-                )
-            )
-        }
-        append(" ${activity.getString(R.string.follow_until_symptomatic)}")
-    }
+fun createStatusDescriptionForSymptomaticAndPositive(
+    activity: StatusActivity,
+    userState: UserState
+): String {
+    return activity.getString(
+        R.string.follow_until_symptomatic,
+        userState.until().toUiFormat()
+    )
 }
 
-fun createStatusDescriptionForExposed(activity: StatusActivity, userState: UserState): SpannedString {
-    return buildSpannedString {
-        append(activity.getString(R.string.follow_until))
-        bold {
-            append("  ${userState.until().toUiFormat()}")
-        }
-    }
+fun createStatusDescriptionForExposed(activity: StatusActivity, userState: UserState): String {
+    return activity.getString(
+        R.string.follow_until_exposed,
+        userState.until().toUiFormat()
+    )
 }
 
 private fun showBookTestCard(activity: StatusActivity) {

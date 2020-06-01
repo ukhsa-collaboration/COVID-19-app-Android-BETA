@@ -181,9 +181,8 @@
     <string name="go_to_your_settings">Go to your Settings</string>
     <string name="enable_location_service_title">You need to enable location services on your phone</string>
     <string name="enable_location_service_rationale">To make Bluetooth work, we need you to turn on location services on your phone.\n\nThis app is not using Bluetooth or your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nIf you do not enable location services on your phone this app will not work.\n\nTo enable this app to work, please go to Settings and enable location services:</string>
-    <string name="follow_until">Please follow the advice below until </string>
-    <string name="follow_until_symptomatic_pre">On %1$s </string>
-    <string name="follow_until_symptomatic"> this app will notify you to update your symptoms. Please read your full advice below.</string>
+    <string name="follow_until_exposed">Please isolate until %1$s. Please read your full advice below.</string>
+    <string name="follow_until_symptomatic">Please isolate until %1$s when this app will notify you to update your symptoms. Please read your full advice below.</string>
     <string name="status_description_01">If you do not have any symptoms, there’s no need to do anything right now. If you develop symptoms, please come back to this app.</string>
     <string name="status_description_02">Feel free to use other apps as normal and you’ll be notified if your advice changes.</string>
     <string name="status_description_03">If you develop symptoms, please come back to this app.</string>
@@ -265,7 +264,7 @@
     <string name="latest_guidance"><u>Latest guidance for your workplace</u></string>
     <string name="latest_workplace_guidance">Read the latest guidance for your workplace</string>
     <string name="workplace_guidance_info">The guidance on GOV.UK is specific to the industry you work in and helps you understand how to work safely during the coronavirus pandemic.</string>
-    <string name="healt_and_care_workers_title">If you are a health and care worker:</string>
+    <string name="healt_and_care_workers_title">If you are a health and care worker</string>
     <string name="healt_and_care_workers_description">Turn off your Bluetooth when you put on your personal protective equipment provided for you by your employer. Your interactions at work should not be captured when you are wearing personal protective equipment.</string>
     <string name="next_steps">Next Steps</string>
     <string name="read_current_advice_for_you">Read current advice for you</string>

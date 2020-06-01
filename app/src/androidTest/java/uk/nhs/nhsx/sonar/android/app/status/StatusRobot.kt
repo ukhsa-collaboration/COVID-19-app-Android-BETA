@@ -60,8 +60,8 @@ class StatusRobot {
     }
 
     fun checkStatusDescription(state: UserState) {
-        val expected = "On ${state.until()
-            .toUiFormat()} this app will notify you to update your symptoms. Please read your full advice below."
+        val expected = "Please isolate until ${state.until()
+            .toUiFormat()} when this app will notify you to update your symptoms. Please read your full advice below."
         onView(withId(R.id.statusDescription))
             .check(matches(withText(expected)))
             .check(matches(isDisplayed()))
