@@ -34,7 +34,7 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="80dp">
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 android:id="@+id/explanation_title"
                 style="@style/OnboardingTitle"
                 android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+                    <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                         android:id="@+id/moreInfoHeading"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

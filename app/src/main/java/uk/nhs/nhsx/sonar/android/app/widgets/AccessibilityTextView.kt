@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app
+package uk.nhs.nhsx.sonar.android.app.widgets
 
 import android.content.Context
 import android.util.AttributeSet

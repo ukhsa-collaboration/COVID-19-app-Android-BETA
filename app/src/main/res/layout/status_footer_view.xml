@@ -18,7 +18,7 @@
         android:text="@string/medical_emergency_call"
         android:textSize="16sp" />
 
-    <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+    <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
         style="@style/TextViewCardSubTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

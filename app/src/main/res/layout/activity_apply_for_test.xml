@@ -33,7 +33,7 @@
                 android:paddingVertical="40dp"
                 android:src="@drawable/ic_get_tested" />
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 android:id="@+id/apply_for_test_title"
                 style="@style/TextViewStatus"
                 android:layout_width="match_parent"

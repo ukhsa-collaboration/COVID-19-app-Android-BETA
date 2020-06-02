@@ -25,7 +25,7 @@
                 android:background="@drawable/ic_bg_gradient_top"
                 android:src="@drawable/ic_reference_link" />
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 style="@style/TextViewStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -33,7 +33,7 @@
                 android:layout_marginBottom="24dp"
                 android:text="@string/reference_code_title" />
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 style="@style/TextViewStatusSubTitleHeading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
                 android:text="@string/reference_code_description_1"
                 android:textColor="@color/text_primary_color" />
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 style="@style/TextViewStatusSubTitleHeading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                 android:text="@string/reference_code_description_2"
                 android:textColor="@color/text_primary_color" />
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 style="@style/TextViewStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

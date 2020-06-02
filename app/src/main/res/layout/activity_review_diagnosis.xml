@@ -38,7 +38,7 @@
                 android:textColor="@color/text_sub_title"
                 android:textSize="14sp" />
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -124,7 +124,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="48dp" />
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 android:id="@+id/symptoms_date_prompt"
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"

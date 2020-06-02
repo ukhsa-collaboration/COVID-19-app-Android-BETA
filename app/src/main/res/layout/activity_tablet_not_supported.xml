@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 android:id="@+id/edgeCaseTitle"
                 style="@style/OnboardingTitle"
                 android:layout_width="400dp"

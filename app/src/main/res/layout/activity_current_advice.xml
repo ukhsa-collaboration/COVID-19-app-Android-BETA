@@ -28,7 +28,7 @@
                 android:paddingVertical="40dp"
                 android:src="@drawable/ic_current_advice" />
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 android:id="@+id/current_advice_title"
                 style="@style/TextViewStatus"
                 android:layout_width="match_parent"

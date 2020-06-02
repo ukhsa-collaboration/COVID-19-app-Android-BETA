@@ -37,7 +37,7 @@
                 android:textColor="@color/text_sub_title"
                 android:textSize="14sp" />
 
-            <uk.nhs.nhsx.sonar.android.app.AccessibilityTextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 android:id="@+id/stomach_question"
                 style="@style/TextViewSubHead"
                 android:layout_width="match_parent"
