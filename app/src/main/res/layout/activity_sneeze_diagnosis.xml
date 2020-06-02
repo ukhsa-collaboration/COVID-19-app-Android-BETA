@@ -72,26 +72,23 @@
                 <RadioButton
                     android:id="@+id/yes"
                     android:layout_width="match_parent"
-                    android:layout_height="88dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/radio_button_background_selector"
                     android:button="@drawable/radio_button_inset"
                     android:fontFamily="@font/roboto_medium"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
+                    android:minHeight="88dp"
                     android:text="@string/yes_to_symptoms"
                     android:textSize="16sp" />
-
 
                 <RadioButton
                     android:id="@+id/no"
                     android:layout_width="match_parent"
-                    android:layout_height="88dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/radio_button_background_selector"
                     android:button="@drawable/radio_button_inset"
                     android:fontFamily="@font/roboto_medium"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
+                    android:minHeight="88dp"
                     android:text="@string/no_to_symptoms"
                     android:textSize="16sp" />
             </RadioGroup>
