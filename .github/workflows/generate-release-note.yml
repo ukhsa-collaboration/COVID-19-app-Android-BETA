@@ -16,7 +16,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.DEPLOYMENT_TOKEN }}
-          persist-credentials: false
           repository: nhsx/sonar-ios # This will be extracted to separate repo when available
           path: ci-tools
           ref: df8714dd
