@@ -29,7 +29,6 @@ import uk.nhs.nhsx.sonar.android.app.http.KeyStorage
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
@@ -55,7 +54,6 @@ interface TestAppComponent : ApplicationComponent {
     fun getUserInbox(): UserInbox
     fun getOnboardingStatusProvider(): OnboardingStatusProvider
     fun getActivationCodeProvider(): ActivationCodeProvider
-    fun getReferenceCodeProvider(): ReferenceCodeProvider
     fun getPostCodeProvider(): PostCodeProvider
 }
 

@@ -41,13 +41,11 @@ import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.PUBLIC_KEY
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.REFERENCE_CODE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.RESIDENT_ID
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.SECRET_KEY
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.encodedSecretKey
@@ -165,7 +163,6 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         component.getSonarIdProvider().set(RESIDENT_ID)
         component.getKeyStorage().storeSecretKey(encodedSecretKey)
         component.getKeyStorage().storeServerPublicKey(PUBLIC_KEY)
-        component.getReferenceCodeProvider().set(ReferenceCode(REFERENCE_CODE))
     }
 
     fun addRecoveryMessage() {
