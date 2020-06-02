@@ -25,9 +25,6 @@ jobs:
           repository: nhsx/sonar-ios # This will be extracted to separate repo when available
           path: ci-tools
           ref: df8714dd6555a1e2aa9f236c5321ad439d3b27fd # This has to be a full sha, not short.
-        env:
-          GIT_TRACE: 1
-          GIT_CURL_VERBOSE: 1
 
       - name: Generate release notes
         id: generate_release_notes
