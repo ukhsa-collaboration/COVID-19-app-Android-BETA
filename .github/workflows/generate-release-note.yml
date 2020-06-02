@@ -19,7 +19,7 @@ jobs:
           persist-credentials: false
           repository: nhsx/sonar-ios # This will be extracted to separate repo when available
           path: ci-tools
-          ref: df8714d
+          ref: df8714dd
         env:
           GIT_TRACE: 1
           GIT_CURL_VERBOSE: 1
