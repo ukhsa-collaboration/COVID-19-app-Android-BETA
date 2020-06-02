@@ -9,8 +9,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS
 import io.reactivex.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
+import kotlinx.android.synthetic.main.activity_edge_case.paragraphContainer
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
@@ -35,13 +35,19 @@ open class EnableLocationActivity : ColorInversionAwareActivity(R.layout.activit
         appComponent.inject(this)
 
         edgeCaseTitle.setText(R.string.enable_location_service_title)
-        edgeCaseText.setText(R.string.enable_location_service_rationale)
-        takeActionButton.setText(R.string.go_to_your_settings)
+        paragraphContainer.addAllParagraphs(
+            getString(R.string.enable_location_service_rationale_p1),
+            getString(R.string.enable_location_service_rationale_p2),
+            getString(R.string.enable_location_service_rationale_p3),
+            getString(R.string.enable_location_service_rationale_p4),
+            getString(R.string.enable_location_service_rationale_p5)
+        )
 
         toolbar_info.setOnClickListener {
             openUrl(URL_INFO)
         }
 
+        takeActionButton.setText(R.string.go_to_your_settings)
         takeActionButton.setOnClickListener {
             startActivity(Intent(ACTION_LOCATION_SOURCE_SETTINGS))
         }

@@ -172,7 +172,11 @@
     <string name="go_to_app_settings">Go to App Settings</string>
     <string name="go_to_your_settings">Go to your Settings</string>
     <string name="enable_location_service_title">You need to enable location services on your phone</string>
-    <string name="enable_location_service_rationale">To make Bluetooth work, we need you to turn on location services on your phone.\n\nThis app is not using Bluetooth or your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nIf you do not enable location services on your phone this app will not work.\n\nTo enable this app to work, please go to Settings and enable location services:</string>
+    <string name="enable_location_service_rationale_p1">To make Bluetooth work, we need you to turn on location services on your phone.</string>
+    <string name="enable_location_service_rationale_p2">This app is not using Bluetooth or your location to track you. Your personal identity will remain protected at all times.</string>
+    <string name="enable_location_service_rationale_p3">This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times.</string>
+    <string name="enable_location_service_rationale_p4">If you do not enable location services on your phone this app will not work.</string>
+    <string name="enable_location_service_rationale_p5">To enable this app to work, please go to Settings and enable location services:</string>
     <string name="follow_until_exposed">Please isolate until %1$s. Please read your full advice below.</string>
     <string name="follow_until_symptomatic">Please isolate until %1$s when this app will notify you to update your symptoms. Please read your full advice below.</string>
     <string name="status_description_01">If you do not have any symptoms, there is no need to do anything right now. If you develop symptoms, please come back to this app.</string>
