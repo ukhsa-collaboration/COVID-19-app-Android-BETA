@@ -23,19 +23,15 @@ class ReEnableBluetoothActivity : EnableBluetoothActivity() {
         nhsPanel.isVisible = false
 
         edgeCaseTitle.setText(R.string.re_enable_bluetooth_title)
-        setParagraphs()
+        paragraphContainer.addAllParagraphs(
+            getString(R.string.re_enable_bluetooth_rationale_p1),
+            getString(R.string.re_enable_bluetooth_rationale_p2, getString(R.string.app_name))
+        )
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
         moveTaskToBack(true)
-    }
-
-    private fun setParagraphs() {
-        paragraphContainer.addAllParagraphs(
-            getString(R.string.re_enable_bluetooth_rationale_p1),
-            getString(R.string.re_enable_bluetooth_rationale_p2, getString(R.string.app_name))
-        )
     }
 
     companion object {

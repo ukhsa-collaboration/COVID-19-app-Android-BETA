@@ -24,7 +24,12 @@ open class EnableBluetoothActivity : ColorInversionAwareActivity(R.layout.activi
         super.onCreate(savedInstanceState)
 
         edgeCaseTitle.setText(R.string.enable_bluetooth_title)
-        setParagraphs()
+        paragraphContainer.addAllParagraphs(
+            getString(R.string.enable_bluetooth_rationale_p1),
+            getString(R.string.enable_bluetooth_rationale_p2),
+            getString(R.string.enable_bluetooth_rationale_p3),
+            getString(R.string.enable_bluetooth_rationale_p4)
+        )
 
         toolbar_info.setOnClickListener {
             openUrl(URL_INFO)
@@ -43,15 +48,6 @@ open class EnableBluetoothActivity : ColorInversionAwareActivity(R.layout.activi
         }
 
         bluetoothStateBroadcastReceiver.register(this)
-    }
-
-    private fun setParagraphs() {
-        paragraphContainer.addAllParagraphs(
-            getString(R.string.enable_bluetooth_rationale_p1),
-            getString(R.string.enable_bluetooth_rationale_p2),
-            getString(R.string.enable_bluetooth_rationale_p3),
-            getString(R.string.enable_bluetooth_rationale_p4)
-        )
     }
 
     override fun onDestroy() {
