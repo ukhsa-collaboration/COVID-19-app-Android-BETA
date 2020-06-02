@@ -164,8 +164,11 @@
     <string name="enable_bluetooth">Enable Bluetooth</string>
     <string name="grant_location_permission_title">Your permission is needed to allow access to your location all the time</string>
     <string name="grant_location_permission_title_pre_10">Your permission is needed to allow access to your location</string>
-    <string name="grant_location_permission_rationale">This app does not use your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this app to work, Bluetooth needs to be kept on at all times.\n\nOn an Android phone, your location permission needs to be set to “Allow all the time” for Bluetooth Low Energy to work.\n\nTo enable this app to work, please go to App Settings > Permissions and allow access:</string>
-    <string name="grant_location_permission_rationale_pre_10">This app does not use your location to track you. Your personal identity will remain protected at all times.\n\nThis app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this app to work, Bluetooth needs to be kept on at all times.\n\nOn an Android phone, your location permission is needed for Bluetooth Low Energy to work.\n\nTo enable this app to work, please go to App Settings > Permissions and allow access:</string>
+    <string name="grant_location_permission_rationale_p1">This app does not use your location to track you. Your personal identity will remain protected at all times.</string>
+    <string name="grant_location_permission_rationale_p2">This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this app to work, Bluetooth needs to be kept on at all times.</string>
+    <string name="grant_location_permission_rationale_p3">On an Android phone, your location permission needs to be set to “Allow all the time” for Bluetooth Low Energy to work.</string>
+    <string name="grant_location_permission_rationale_pre_10_p3">On an Android phone, your location permission is needed for Bluetooth Low Energy to work.</string>
+    <string name="grant_location_permission_rationale_p4">To enable this app to work, please go to App Settings > Permissions and allow access:</string>
     <string name="go_to_app_settings">Go to App Settings</string>
     <string name="go_to_your_settings">Go to your Settings</string>
     <string name="enable_location_service_title">You need to enable location services on your phone</string>

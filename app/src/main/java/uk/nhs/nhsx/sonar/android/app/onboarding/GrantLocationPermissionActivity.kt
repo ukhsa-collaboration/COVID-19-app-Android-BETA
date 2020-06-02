@@ -8,8 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
+import kotlinx.android.synthetic.main.activity_edge_case.paragraphContainer
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
@@ -33,13 +33,23 @@ open class GrantLocationPermissionActivity :
 
         if (Build.VERSION.SDK_INT >= 29) {
             edgeCaseTitle.setText(R.string.grant_location_permission_title)
-            edgeCaseText.setText(R.string.grant_location_permission_rationale)
+            paragraphContainer.addAllParagraphs(
+                getString(R.string.grant_location_permission_rationale_p1),
+                getString(R.string.grant_location_permission_rationale_p2),
+                getString(R.string.grant_location_permission_rationale_p3),
+                getString(R.string.grant_location_permission_rationale_p4)
+            )
         } else {
             edgeCaseTitle.setText(R.string.grant_location_permission_title_pre_10)
-            edgeCaseText.setText(R.string.grant_location_permission_rationale_pre_10)
+            paragraphContainer.addAllParagraphs(
+                getString(R.string.grant_location_permission_rationale_p1),
+                getString(R.string.grant_location_permission_rationale_p2),
+                getString(R.string.grant_location_permission_rationale_pre_10_p3),
+                getString(R.string.grant_location_permission_rationale_p4)
+            )
         }
-        takeActionButton.setText(R.string.go_to_app_settings)
 
+        takeActionButton.setText(R.string.go_to_app_settings)
         takeActionButton.setOnClickListener {
             openAppSettings()
         }
