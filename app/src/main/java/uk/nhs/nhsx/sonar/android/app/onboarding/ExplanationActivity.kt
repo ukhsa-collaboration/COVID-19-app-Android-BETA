@@ -8,8 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.HtmlCompat
-import kotlinx.android.synthetic.main.activity_explanation.explanationHow
 import kotlinx.android.synthetic.main.activity_explanation.explanationMoreAboutTheApp
 import kotlinx.android.synthetic.main.activity_explanation.explanationPrivacyNotice
 import kotlinx.android.synthetic.main.activity_explanation.explanationTermsOfUse
@@ -23,10 +21,6 @@ import uk.nhs.nhsx.sonar.android.app.util.openUrl
 class ExplanationActivity : AppCompatActivity(R.layout.activity_explanation) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        explanationHow.text = HtmlCompat.fromHtml(
-            getString(R.string.explanation_how),
-            HtmlCompat.FROM_HTML_MODE_LEGACY
-        )
 
         explanationMoreAboutTheApp.setOnClickListener {
             openUrl(URL_INFO)

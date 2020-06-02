@@ -44,12 +44,28 @@
                 android:text="@string/explanation_title" />
 
             <TextView
-                android:id="@+id/explanationHow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.2"
                 android:textSize="16sp"
-                tools:text="@string/explanation_how" />
+                android:text="@string/explanation_how_p1"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.2"
+                android:textSize="16sp"
+                android:text="@string/explanation_how_p2"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingMultiplier="1.2"
+                android:textSize="16sp"
+                android:text="@string/explanation_how_p3"
+                android:layout_marginBottom="16dp"/>
 
             <LinearLayout
                 android:id="@+id/location_rationale"

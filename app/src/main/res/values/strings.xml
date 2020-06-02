@@ -41,21 +41,9 @@
     <string name="permission_rationale_title">Location</string>
     <string name="continue_button">Continue</string>
     <string name="explanation_title">How the app works</string>
-    <string name="explanation_how">
-        <![CDATA[
-        <p>
-        This app gives you advice if you have been near someone who tested positive for coronavirus
-        after reporting symptoms. The app uses your phone to detect other app users nearby.
-        </p>
-        <p>
-        If you think you have coronavirus symptoms you can add them in this app. If you then test
-        positive, the NHS will let others know they have been near someone who has tested positive
-        for coronavirus.
-        </p>
-        <p>
-        Your identity is not shared with other app users. The NHS will protect your identity. All
-        information is stored securely.
-        </p>]]></string>
+    <string name="explanation_how_p1">This app gives you advice if you have been near someone who tested positive for coronavirus after reporting symptoms. The app uses your phone to detect other app users nearby.</string>
+    <string name="explanation_how_p2">If you think you have coronavirus symptoms you can add them in this app. If you then test positive, the NHS will let others know they have been near someone who has tested positive for coronavirus.</string>
+    <string name="explanation_how_p3">Your identity is not shared with other app users. The NHS will protect your identity. All information is stored securely.</string>
     <string name="explanation_more_about_the_app"><u>More about the app</u></string>
     <string name="explanation_privacy_notice"><u>Privacy notice</u></string>
     <string name="explanation_terms_of_use"><u>Terms of use</u></string>
