@@ -303,11 +303,11 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
     ) : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            return DatePickerDialog(activity, this, since.year, since.monthOfYear, since.dayOfMonth)
+            return DatePickerDialog(activity, this, since.year, since.monthOfYear - 1, since.dayOfMonth)
         }
 
         override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-            callback(LocalDate(year, month, day))
+            callback(LocalDate(year, month + 1, day))
         }
     }
 
