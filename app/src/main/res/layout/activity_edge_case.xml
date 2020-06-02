@@ -65,17 +65,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="24dp"
+                android:layout_marginBottom="16dp"
                 android:text="@string/enable_bluetooth_title" />
-
-            <TextView
-                android:id="@+id/edgeCaseText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:lineSpacingMultiplier="1.2"
-                tools:text="paragraph goes in here"
-                android:textColor="@color/text_primary_color"
-                android:textSize="16sp" />
 
             <uk.nhs.nhsx.sonar.android.app.widgets.ParagraphsContainer
                 android:id="@+id/paragraphContainer"
