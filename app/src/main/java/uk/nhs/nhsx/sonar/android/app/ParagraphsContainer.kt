@@ -14,10 +14,11 @@ class ParagraphsContainer @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     fun addAllParagraphs(vararg paragraphs: String) {
+        removeAllViews()
         paragraphs.forEach { addParagraph(it) }
     }
 
-    fun addParagraph(text: String): ParagraphsContainer {
+    private fun addParagraph(text: String): ParagraphsContainer {
         val view = inflateTextView()
         view.text = text
         addView(view)

@@ -4,13 +4,12 @@
 
 package uk.nhs.nhsx.sonar.android.app.onboarding
 
-import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseContainer
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
+import kotlinx.android.synthetic.main.activity_edge_case.paragraphContainer
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
 import kotlinx.android.synthetic.main.banner.toolbar_info
 import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
@@ -25,7 +24,7 @@ open class EnableBluetoothActivity : ColorInversionAwareActivity(R.layout.activi
         super.onCreate(savedInstanceState)
 
         edgeCaseTitle.setText(R.string.enable_bluetooth_title)
-        inflateBluetoothDescriptionLayout()
+        setParagraphs()
 
         toolbar_info.setOnClickListener {
             openUrl(URL_INFO)
@@ -46,10 +45,13 @@ open class EnableBluetoothActivity : ColorInversionAwareActivity(R.layout.activi
         bluetoothStateBroadcastReceiver.register(this)
     }
 
-    @SuppressLint("InflateParams")
-    protected open fun inflateBluetoothDescriptionLayout() {
-        val layout = layoutInflater.inflate(R.layout.view_enable_bluetooth, null)
-        edgeCaseContainer.addView(layout)
+    private fun setParagraphs() {
+        paragraphContainer.addAllParagraphs(
+            getString(R.string.enable_bluetooth_rationale_p1),
+            getString(R.string.enable_bluetooth_rationale_p2),
+            getString(R.string.enable_bluetooth_rationale_p3),
+            getString(R.string.enable_bluetooth_rationale_p4)
+        )
     }
 
     override fun onDestroy() {
