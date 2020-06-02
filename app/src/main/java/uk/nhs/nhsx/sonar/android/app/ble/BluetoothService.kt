@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import androidx.core.app.NotificationCompat.VISIBILITY_SECRET
 import androidx.core.content.ContextCompat
 import com.polidea.rxandroidble2.RxBleClient
 import io.reactivex.Observable
@@ -66,7 +67,10 @@ class BluetoothService : Service(), Delegate {
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(FOREGROUND_NOTIFICATION_ID, notificationBuilder(ForegroundService).build())
+        startForeground(
+            FOREGROUND_NOTIFICATION_ID, notificationBuilder(ForegroundService)
+                .setVisibility(VISIBILITY_SECRET).build()
+        )
 
         val bleClient = appComponent.rxBleClient()
         val notificationHelper = BluetoothNotificationHelper(this)

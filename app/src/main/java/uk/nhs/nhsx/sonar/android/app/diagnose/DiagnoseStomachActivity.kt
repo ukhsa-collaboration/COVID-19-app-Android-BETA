@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_descrip
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_question
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.yes
-import kotlinx.android.synthetic.main.symptom_banner.toolbar
+import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -28,6 +28,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import javax.inject.Inject
 
 open class DiagnoseStomachActivity : BaseActivity() {
@@ -62,10 +63,7 @@ open class DiagnoseStomachActivity : BaseActivity() {
             radio_selection_error.visibility = View.GONE
         }
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        setNavigateUpToolbar(toolbar, R.string.add_my_symptoms)
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {

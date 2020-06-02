@@ -22,7 +22,7 @@
         style="@style/TextViewCardSubTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:layout_marginBottom="8dp"
         android:paddingHorizontal="16dp"
         android:text="@string/more_options"

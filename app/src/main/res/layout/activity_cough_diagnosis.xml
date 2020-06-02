@@ -9,7 +9,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <include layout="@layout/symptom_banner" />
+    <include layout="@layout/white_banner" />
 
     <ScrollView
         android:layout_width="match_parent"

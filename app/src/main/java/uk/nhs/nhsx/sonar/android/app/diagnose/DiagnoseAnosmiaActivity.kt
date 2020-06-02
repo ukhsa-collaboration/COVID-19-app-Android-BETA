@@ -16,13 +16,14 @@ import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.no
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.yes
-import kotlinx.android.synthetic.main.symptom_banner.toolbar
+import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import javax.inject.Inject
 
 open class DiagnoseAnosmiaActivity : BaseActivity() {
@@ -58,10 +59,7 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
             radio_selection_error.visibility = View.GONE
         }
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        setNavigateUpToolbar(toolbar, R.string.add_my_symptoms)
     }
 
     override fun handleInversion(inversionModeEnabled: Boolean) {

@@ -16,13 +16,14 @@ import kotlinx.android.synthetic.main.activity_cough_diagnosis.no
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.radio_selection_error
 import kotlinx.android.synthetic.main.activity_cough_diagnosis.yes
-import kotlinx.android.synthetic.main.symptom_banner.toolbar
+import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import javax.inject.Inject
 
 class DiagnoseCoughActivity : BaseActivity() {
@@ -40,10 +41,7 @@ class DiagnoseCoughActivity : BaseActivity() {
 
         setQuestionnaireContent()
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        setNavigateUpToolbar(toolbar, R.string.add_my_symptoms)
 
         confirm_diagnosis.setOnClickListener {
             when (cough_diagnosis_answer.checkedRadioButtonId) {

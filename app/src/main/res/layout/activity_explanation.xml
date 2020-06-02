@@ -54,8 +54,7 @@
             <LinearLayout
                 android:id="@+id/location_rationale"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp">
+                android:layout_height="wrap_content">
 
                 <View
                     style="@style/Divider.Vertical"
@@ -79,7 +78,7 @@
 
                     <TextView
                         android:id="@+id/explanationMoreAboutTheApp"
-                        style="@style/TextViewLinkWithIcon"
+                        style="@style/PrimaryTextLink"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -91,7 +90,7 @@
 
                     <TextView
                         android:id="@+id/explanationPrivacyNotice"
-                        style="@style/TextViewLinkWithIcon"
+                        style="@style/PrimaryTextLink"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -103,7 +102,7 @@
 
                     <TextView
                         android:id="@+id/explanationTermsOfUse"
-                        style="@style/TextViewLinkWithIcon"
+                        style="@style/PrimaryTextLink"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"

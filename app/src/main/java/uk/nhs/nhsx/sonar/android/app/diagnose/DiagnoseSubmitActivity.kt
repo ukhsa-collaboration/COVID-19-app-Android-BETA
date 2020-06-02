@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import kotlinx.android.synthetic.main.activity_submit_diagnosis.confirmationCheckbox
 import kotlinx.android.synthetic.main.activity_submit_diagnosis.needConfirmationHint
 import kotlinx.android.synthetic.main.activity_submit_diagnosis.scrollView
-import kotlinx.android.synthetic.main.symptom_banner.toolbar
+import kotlinx.android.synthetic.main.white_banner.toolbar
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
@@ -35,6 +35,7 @@ import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
+import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import javax.inject.Inject
 
 class DiagnoseSubmitActivity : BaseActivity() {
@@ -59,10 +60,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
 
         setContentView(R.layout.activity_submit_diagnosis)
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        setNavigateUpToolbar(toolbar, R.string.add_my_symptoms)
 
         val checkboxColors = ContextCompat.getColorStateList(this, R.color.checkbox_colors)
         val checkboxErrorColors = ContextCompat.getColorStateList(this, R.color.colorDanger)

@@ -18,10 +18,10 @@ import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_co
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_sneeze
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_stomach
 import kotlinx.android.synthetic.main.activity_review_diagnosis.review_answer_temperature
+import kotlinx.android.synthetic.main.activity_review_diagnosis.scrollView
 import kotlinx.android.synthetic.main.activity_review_diagnosis.submit_diagnosis
 import kotlinx.android.synthetic.main.activity_review_diagnosis.symptoms_date_spinner
-import kotlinx.android.synthetic.main.activity_review_diagnosis.scrollView
-import kotlinx.android.synthetic.main.symptom_banner.toolbar
+import kotlinx.android.synthetic.main.white_banner.toolbar
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
@@ -36,6 +36,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setError
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setFocused
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setInitial
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 
 class DiagnoseReviewActivity : BaseActivity() {
@@ -50,10 +51,7 @@ class DiagnoseReviewActivity : BaseActivity() {
 
         setContentView(R.layout.activity_review_diagnosis)
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        setNavigateUpToolbar(toolbar, R.string.add_my_symptoms)
 
         setSymptomsReviewAnswers()
         setDateSpinner()
