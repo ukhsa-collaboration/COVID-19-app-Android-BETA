@@ -24,6 +24,7 @@ import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
+import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
 import javax.inject.Inject
 
 open class DiagnoseSneezeActivity : BaseActivity() {
@@ -83,12 +84,12 @@ open class DiagnoseSneezeActivity : BaseActivity() {
             progress.text = getString(R.string.progress_four_fifth)
             progress.contentDescription = getString(R.string.page_4_of_5)
             sneeze_question.text = getString(R.string.sneeze_question_simplified)
-            sneeze_description.text = getString(R.string.sneeze_description_simplified)
+            sneeze_description.setRawText(getString(R.string.sneeze_description_simplified))
         } else {
             progress.text = getString(R.string.progress_four_sixth)
             progress.contentDescription = getString(R.string.page_4_of_6)
             sneeze_question.text = getString(R.string.sneeze_question)
-            sneeze_description.text = getString(R.string.sneeze_description)
+            sneeze_description.setRawText(getString(R.string.sneeze_description))
         }
     }
 

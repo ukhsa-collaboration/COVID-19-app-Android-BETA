@@ -14,6 +14,10 @@ class ParagraphsContainer @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
+    init {
+        orientation = VERTICAL
+    }
+
     fun addAllParagraphs(vararg paragraphs: String) {
         removeAllViews()
         paragraphs.forEach { addParagraph(it) }
@@ -30,3 +34,6 @@ class ParagraphsContainer @JvmOverloads constructor(
         (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
             .inflate(R.layout.view_paragraph, this, false) as TextView
 }
+
+fun ParagraphsContainer.setRawText(rawText: String, separator: String = "\n\n") =
+    addAllParagraphs(*rawText.split(separator).toTypedArray())

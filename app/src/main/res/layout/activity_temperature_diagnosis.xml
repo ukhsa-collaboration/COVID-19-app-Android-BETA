@@ -44,17 +44,12 @@
                 android:layout_below="@+id/progress"
                 android:text="@string/temperature_question" />
 
-            <TextView
+            <uk.nhs.nhsx.sonar.android.app.widgets.ParagraphsContainer
                 android:id="@+id/temperature_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/temperature_question"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/temperature_description"
-                android:textColor="@color/text_sub_title"
-                android:textSize="16sp" />
-
+                android:layout_marginTop="8dp" />
 
             <uk.nhs.nhsx.sonar.android.app.common.widgets.ErrorView
                 android:id="@+id/radio_selection_error"

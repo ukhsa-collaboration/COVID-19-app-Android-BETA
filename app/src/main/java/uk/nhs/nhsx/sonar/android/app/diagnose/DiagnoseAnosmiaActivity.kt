@@ -24,6 +24,7 @@ import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
+import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
 import javax.inject.Inject
 
 open class DiagnoseAnosmiaActivity : BaseActivity() {
@@ -83,7 +84,7 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
             progress.text = getString(R.string.progress_three_fifth)
             progress.contentDescription = getString(R.string.page_3_of_5)
             anosmia_question.text = getString(R.string.anosmia_question_simplified)
-            anosmia_description.text = getString(R.string.anosmia_description_simplified)
+            anosmia_description.setRawText(getString(R.string.anosmia_description_simplified))
 
             yes.text = getString(R.string.yes_anosmia)
             no.text = getString(R.string.no_anosmia)
@@ -91,7 +92,7 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
             progress.text = getString(R.string.progress_three_sixth)
             progress.contentDescription = getString(R.string.page_3_of_6)
             anosmia_question.text = getString(R.string.anosmia_question)
-            anosmia_description.text = getString(R.string.anosmia_description)
+            anosmia_description.setRawText(getString(R.string.anosmia_description))
 
             yes.text = getString(R.string.yes_new_anosmia)
             no.text = getString(R.string.no_new_anosmia)

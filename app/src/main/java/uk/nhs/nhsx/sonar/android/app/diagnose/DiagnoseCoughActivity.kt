@@ -24,6 +24,7 @@ import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
+import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
 import javax.inject.Inject
 
 class DiagnoseCoughActivity : BaseActivity() {
@@ -80,7 +81,7 @@ class DiagnoseCoughActivity : BaseActivity() {
             progress.text = getString(R.string.progress_two_fifth)
             progress.contentDescription = getString(R.string.page_2_of_5)
             cough_question.text = getString(R.string.cough_question_simplified)
-            cough_description.text = getString(R.string.cough_description_simplified)
+            cough_description.setRawText(getString(R.string.cough_description_simplified))
 
             yes.text = getString(R.string.yes_cough)
             no.text = getString(R.string.no_cough)
@@ -88,7 +89,7 @@ class DiagnoseCoughActivity : BaseActivity() {
             progress.text = getString(R.string.progress_two_sixth)
             progress.contentDescription = getString(R.string.page_2_of_6)
             cough_question.text = getString(R.string.cough_question)
-            cough_description.text = getString(R.string.cough_description)
+            cough_description.setRawText(getString(R.string.cough_description))
 
             yes.text = getString(R.string.yes_new_cough)
             no.text = getString(R.string.no_new_cough)

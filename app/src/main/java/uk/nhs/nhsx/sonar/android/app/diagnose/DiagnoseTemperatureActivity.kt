@@ -23,6 +23,7 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
 import javax.inject.Inject
 
 open class DiagnoseTemperatureActivity : BaseActivity() {
@@ -84,12 +85,12 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
             progress.text = getString(R.string.progress_one_fifth)
             progress.contentDescription = getString(R.string.page_1_of_5)
             temperature_question.text = getString(R.string.temperature_question_simplified)
-            temperature_description.text = getString(R.string.temperature_description_simplified)
+            temperature_description.setRawText(getString(R.string.temperature_description_simplified))
         } else {
             progress.text = getString(R.string.progress_one_sixth)
             progress.contentDescription = getString(R.string.page_1_of_6)
             temperature_question.text = getString(R.string.temperature_question)
-            temperature_description.text = getString(R.string.temperature_description)
+            temperature_description.setRawText(getString(R.string.temperature_description))
         }
     }
 
