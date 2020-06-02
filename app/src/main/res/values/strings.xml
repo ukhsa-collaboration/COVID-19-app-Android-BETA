@@ -187,12 +187,9 @@
         determine when you have been near someone else with this app who shows symptoms of coronavirus.
     </string>
     <string name="re_allow_location_permission_title">Allow this app to access your location to continue</string>
-    <string name="re_allow_location_permission_rationale">To make Bluetooth work, we also need you to turn on location
-        services and give the app permission to use it. Your location will not be tracked. Your location and personal
-        identity will remain protected.\n\nTo enable your location permissions you need to go to your Settings and allow
-        this app to access location services.\n\n%1$s works using Bluetooth signals, to determine when you have been
-        near someone else with this app who shows symptoms of coronavirus.
-    </string>
+    <string name="re_allow_location_permission_rationale_p1">To make Bluetooth work, we also need you to turn on location services and give the app permission to use it. Your location will not be tracked. Your location and personal identity will remain protected.</string>
+    <string name="re_allow_location_permission_rationale_p2">To enable your location permissions you need to go to your Settings and allow this app to access location services.</string>
+    <string name="re_allow_location_permission_rationale_p3">%1$s works using Bluetooth signals, to determine when you have been near someone else with this app who shows symptoms of coronavirus.</string>
     <string name="testing_information">Testing information</string>
     <string name="reference_code">Reference code</string>
     <string name="loading">Loading…</string>
