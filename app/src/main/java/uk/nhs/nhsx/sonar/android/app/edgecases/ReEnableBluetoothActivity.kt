@@ -33,6 +33,9 @@ class ReEnableBluetoothActivity : EnableBluetoothActivity() {
         moveTaskToBack(true)
     }
 
+    override fun inflateBluetoothDescriptionLayout() {
+    }
+
     companion object {
         fun start(context: Context) =
             context.startActivity(getIntent(context))

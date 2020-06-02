@@ -8,10 +8,12 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseText
+import android.view.LayoutInflater
+import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseContainer
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
 import kotlinx.android.synthetic.main.banner.toolbar_info
+import kotlinx.android.synthetic.main.view_enable_bluetooth.enableBluetoothDescriptionContainer
 import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStateBroadcastReceiver
@@ -19,16 +21,18 @@ import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 
 open class EnableBluetoothActivity : ColorInversionAwareActivity(R.layout.activity_edge_case) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         edgeCaseTitle.setText(R.string.enable_bluetooth_title)
-        edgeCaseText.setText(R.string.enable_bluetooth_rationale)
-        takeActionButton.setText(R.string.enable_bluetooth)
+        inflateBluetoothDescriptionLayout()
 
         toolbar_info.setOnClickListener {
             openUrl(URL_INFO)
         }
+
+        takeActionButton.setText(R.string.enable_bluetooth)
 
         takeActionButton.setOnClickListener {
             val bluetoothAdapter: BluetoothAdapter? = BluetoothAdapter.getDefaultAdapter()
@@ -41,6 +45,13 @@ open class EnableBluetoothActivity : ColorInversionAwareActivity(R.layout.activi
         }
 
         bluetoothStateBroadcastReceiver.register(this)
+    }
+
+    protected open fun inflateBluetoothDescriptionLayout() {
+        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val childLayout =
+            inflater.inflate(R.layout.view_enable_bluetooth, enableBluetoothDescriptionContainer)
+        edgeCaseContainer.addView(childLayout)
     }
 
     override fun onDestroy() {

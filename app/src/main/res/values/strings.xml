@@ -157,7 +157,10 @@
     <string name="recovery_dialog_title">Thank you for updating your symptoms</string>
     <string name="recovery_dialog_description">Although you still have some symptoms you can now stop self-isolating and follow the current advice for the general public.</string>
     <string name="enable_bluetooth_title">Your permission is needed to allow the use of Bluetooth</string>
-    <string name="enable_bluetooth_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times. \n\nUsing Bluetooth means that the app cannot track your location and your privacy remains protected.\n\nIf you do not give permission for Bluetooth this app will not work.\n\nTo give permission for this app to access Bluetooth, please go to Settings and allow access.</string>
+    <string name="enable_bluetooth_rationale_p1">This app uses battery-saving Bluetooth Low Energy to determine when it is near another phone with this app installed. For this to work, Bluetooth needs to be kept on at all times.</string>
+    <string name="enable_bluetooth_rationale_p2">Using Bluetooth means that the app cannot track your location and your privacy remains protected.</string>
+    <string name="enable_bluetooth_rationale_p3">If you do not give permission for Bluetooth this app will not work.</string>
+    <string name="enable_bluetooth_rationale_p4">To give permission for this app to access Bluetooth, please go to Settings and allow access.</string>
     <string name="enable_bluetooth">Enable Bluetooth</string>
     <string name="grant_location_permission_title">Your permission is needed to allow access to your location all the time</string>
     <string name="grant_location_permission_title_pre_10">Your permission is needed to allow access to your location</string>
