@@ -175,10 +175,8 @@
     <string name="status_description_01">If you do not have any symptoms, there is no need to do anything right now. If you develop symptoms, please come back to this app.</string>
     <string name="status_description_03">If you develop symptoms, please come back to this app.</string>
     <string name="re_enable_bluetooth_title">Please turn your Bluetooth back on</string>
-    <string name="re_enable_bluetooth_rationale">This app works only if your Bluetooth is on at all times.\n\n%1$s works
-        using Bluetooth signals, to determine when you have been near someone else with this app who shows symptoms of
-        coronavirus. %1$s can alert you or others that may be at risk.
-    </string>
+    <string name="re_enable_bluetooth_rationale_p1">This app works only if your Bluetooth is on at all times.</string>
+    <string name="re_enable_bluetooth_rationale_p2">%1$s works using Bluetooth signals, to determine when you have been near someone else with this app who shows symptoms of coronavirus. %1$s can alert you or others that may be at risk.</string>
     <string name="re_enable_location_title">Turn on location services on your phone to continue</string>
     <string name="re_enable_location_rationale">To make Bluetooth work, we also need you to turn on location services.
         Your location will not be tracked. Your location and personal identity will remain protected.\n\nTo enable your

@@ -4,16 +4,15 @@
 
 package uk.nhs.nhsx.sonar.android.app.onboarding
 
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseContainer
 import kotlinx.android.synthetic.main.activity_edge_case.edgeCaseTitle
 import kotlinx.android.synthetic.main.activity_edge_case.takeActionButton
 import kotlinx.android.synthetic.main.banner.toolbar_info
-import kotlinx.android.synthetic.main.view_enable_bluetooth.enableBluetoothDescriptionContainer
 import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStateBroadcastReceiver
@@ -47,11 +46,10 @@ open class EnableBluetoothActivity : ColorInversionAwareActivity(R.layout.activi
         bluetoothStateBroadcastReceiver.register(this)
     }
 
+    @SuppressLint("InflateParams")
     protected open fun inflateBluetoothDescriptionLayout() {
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        val childLayout =
-            inflater.inflate(R.layout.view_enable_bluetooth, enableBluetoothDescriptionContainer)
-        edgeCaseContainer.addView(childLayout)
+        val layout = layoutInflater.inflate(R.layout.view_enable_bluetooth, null)
+        edgeCaseContainer.addView(layout)
     }
 
     override fun onDestroy() {
