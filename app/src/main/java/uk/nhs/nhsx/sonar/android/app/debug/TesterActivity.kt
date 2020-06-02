@@ -4,14 +4,20 @@
 
 package uk.nhs.nhsx.sonar.android.app.debug
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Base64
 import android.view.View
+import android.widget.DatePicker
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_test.app_version
@@ -31,9 +37,10 @@ import kotlinx.android.synthetic.main.activity_test.setSymptomaticState
 import kotlinx.android.synthetic.main.activity_test.setTestInvalidNotification
 import kotlinx.android.synthetic.main.activity_test.setTestNegativeNotification
 import kotlinx.android.synthetic.main.activity_test.setTestPositiveNotification
+import kotlinx.android.synthetic.main.activity_test.showCurrentState
 import kotlinx.android.synthetic.main.activity_test.sonar_id
-import org.joda.time.DateTime
 import org.joda.time.LocalDate
+import org.joda.time.LocalTime
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
@@ -48,14 +55,20 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedSymptomaticState
+import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
-import uk.nhs.nhsx.sonar.android.app.status.UserState
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_EXPOSED
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.observe
+import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
+import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 import javax.inject.Inject
 
 fun cryptogramColourAndInverse(cryptogramBytes: ByteArray): Pair<Int, Int> {
@@ -96,6 +109,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     private val viewModel: TestViewModel by viewModels { viewModelFactory }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
         super.onCreate(savedInstanceState)
@@ -148,8 +162,25 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         viewModel.observeConnectionEvents()
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         populateFirebaseId()
+
+        updateCurrentState()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateCurrentState() {
+        showCurrentState.text = when (val state = this.userStateStorage.get()) {
+            is DefaultState -> "In default state"
+            is ExposedState -> "Exposed: ${state.since.toUiFormat()} - ${state.until.toUiFormat()}"
+            is SymptomaticState -> "Symptomatic:  ${state.since.toUiFormat()} - ${state.until.toUiFormat()}"
+            is ExposedSymptomaticState -> "Exp-symptomatic:  ${state.since.toUiFormat()} - ${state.until.toUiFormat()}"
+            is PositiveState -> "Positive: ${state.since.toUiFormat()} - ${state.until.toUiFormat()}"
+        }
     }
 
     private fun populateFirebaseId() {
@@ -163,77 +194,121 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             }
     }
 
+    private fun showStateDatePicker(title: String, callback: (LocalDate) -> Unit) {
+        DatePickerFragment(this, LocalDate.now()) {
+            callback(it)
+            updateCurrentState()
+        }.show(supportFragmentManager, title)
+    }
+
     private fun setStates() {
         setDefaultState.setOnClickListener {
             userStateStorage.set(DefaultState)
-            finish()
+            updateCurrentState()
         }
 
         setExposedState.setOnClickListener {
-            userStateStorage.set(UserState.exposed(LocalDate.now()))
-            finish()
+            showStateDatePicker("Exposure Date") {
+                userStateStorage.set(
+                    ExposedState(
+                        it.toUtcNormalized(),
+                        it.plusDays(NUMBER_OF_DAYS_IN_EXPOSED).toUtcNormalized()
+                    )
+                )
+            }
         }
 
         setSymptomaticState.setOnClickListener {
-            userStateStorage.set(
-                UserState.symptomatic(
-                    symptomsDate = LocalDate.now(),
-                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
+            showStateDatePicker("Symptom Date") {
+                userStateStorage.set(
+                    SymptomaticState(
+                        it.toUtcNormalized(),
+                        it.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).toUtcNormalized(),
+                        nonEmptySetOf(COUGH, TEMPERATURE)
+                    )
                 )
-            )
-            finish()
+            }
         }
 
         setExposedSymptomaticState.setOnClickListener {
-            val exposed = UserState.exposed(LocalDate.now())
-            userStateStorage.set(
-                ExposedSymptomaticState(
-                    since = exposed.since,
-                    until = exposed.until,
-                    symptoms = nonEmptySetOf(COUGH, TEMPERATURE)
+            showStateDatePicker("Exposure Date") {
+                userStateStorage.set(
+                    ExposedSymptomaticState(
+                        it.toUtcNormalized(),
+                        it.plusDays(NUMBER_OF_DAYS_IN_EXPOSED).toUtcNormalized(),
+                        nonEmptySetOf(TEMPERATURE)
+                    )
                 )
-            )
-            finish()
+            }
         }
 
         setPositiveState.setOnClickListener {
-            userStateStorage.set(
-                UserState.positive(testDate = DateTime.now()))
-            finish()
+            showStateDatePicker("Test Date") {
+                userStateStorage.set(
+                    PositiveState(
+                        it.toUtcNormalized(),
+                        it.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).toUtcNormalized()
+                    )
+                )
+            }
         }
     }
 
     private fun setNotifications() {
         setTestPositiveNotification.setOnClickListener {
-            notificationHandler.handleNewMessage(testResultMessageData(TestResult.POSITIVE))
+            showStateDatePicker("Test Date") {
+                notificationHandler.handleNewMessage(testResultMessageData(it, TestResult.POSITIVE))
+            }
         }
 
         setTestNegativeNotification.setOnClickListener {
-            notificationHandler.handleNewMessage(testResultMessageData(TestResult.NEGATIVE))
+            showStateDatePicker("Test Date") {
+                notificationHandler.handleNewMessage(testResultMessageData(it, TestResult.NEGATIVE))
+            }
         }
 
         setTestInvalidNotification.setOnClickListener {
-            notificationHandler.handleNewMessage(testResultMessageData(TestResult.INVALID))
+            showStateDatePicker("Test Date") {
+                notificationHandler.handleNewMessage(testResultMessageData(it, TestResult.INVALID))
+            }
         }
 
         setExposedNotification.setOnClickListener {
-            notificationHandler.handleNewMessage(exposedMessageData())
+            showStateDatePicker("Exposure Date") {
+                notificationHandler.handleNewMessage(exposedMessageData(it))
+            }
         }
     }
 
-    private fun testResultMessageData(result: TestResult): Map<String, String> {
+    private fun testResultMessageData(date: LocalDate, result: TestResult): Map<String, String> {
         return mapOf(
             "type" to "Test Result",
             "result" to result.name,
-            "testTimestamp" to DateTime.now().toUtcIsoFormat()
+            "testTimestamp" to date.toDateTime(LocalTime.now()).toUtcIsoFormat()
         )
     }
 
-    private fun exposedMessageData(): Map<String, String> {
+    private fun exposedMessageData(date: LocalDate): Map<String, String> {
         return mapOf(
             "type" to "Status Update",
-            "status" to "Potential"
+            "status" to "Potential",
+            "mostRecentProximityEventDate" to date.toDateTime(LocalTime.now()).toUtcIsoFormat()
         )
+    }
+
+    class DatePickerFragment(
+        private val activity: Activity,
+        private val since: LocalDate,
+        private val callback: (LocalDate) -> Unit
+    ) : DialogFragment(), DatePickerDialog.OnDateSetListener {
+
+        override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+            return DatePickerDialog(activity, this, since.year, since.monthOfYear, since.dayOfMonth)
+        }
+
+        override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
+            callback(LocalDate(year, month, day))
+        }
     }
 
     companion object {

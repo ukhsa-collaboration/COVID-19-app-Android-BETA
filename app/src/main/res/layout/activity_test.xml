@@ -136,9 +136,23 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/showCurrentState"
+                style="@style/TextViewActionSubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="States" />
+                android:text="Default state" />
+
+            <View
+                style="@style/HorizontalDivider"
+                android:layout_height="1dp"
+                android:layout_marginVertical="8dp"
+                android:background="@color/gray" />
+
+            <TextView
+                style="@style/TextViewStatusSubTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Change State" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -189,6 +203,7 @@
             android:orientation="vertical">
 
             <TextView
+                style="@style/TextViewStatusSubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Notifications" />
@@ -236,6 +251,7 @@
             android:orientation="vertical">
 
             <TextView
+                style="@style/TextViewStatusSubTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Other actions" />
