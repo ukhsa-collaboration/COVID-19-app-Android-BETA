@@ -43,7 +43,7 @@ class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
     private val contactEvents = MutableLiveData<List<SuccessfulContactEvent>>()
     private val lock = Object()
 
-    fun observeConnectionEvents(): LiveData<List<SuccessfulContactEvent>> =
+    fun observeContactEvents(): LiveData<List<SuccessfulContactEvent>> =
         contactEvents
 
     fun getErrors(): List<BleError> = errorEvents

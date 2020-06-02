@@ -41,7 +41,6 @@ import kotlinx.android.synthetic.main.activity_test.showCurrentState
 import kotlinx.android.synthetic.main.activity_test.sonar_id
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
-import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
@@ -115,15 +114,6 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         super.onCreate(savedInstanceState)
         sonar_id.text = sonarIdProvider.get()
         app_version.text = appVersion()
-        if (cryptogramProvider.canProvideCryptogram()) {
-            val cryptogramBytes = cryptogramProvider.provideCryptogram().asBytes()
-            val (cryptogramColour, inverseColour) = cryptogramColourAndInverse(cryptogramBytes)
-            encrypted_broadcast_id.text = Base64.encodeToString(cryptogramBytes, Base64.DEFAULT)
-            encrypted_broadcast_id.setBackgroundColor(cryptogramColour)
-            encrypted_broadcast_id.setTextColor(inverseColour)
-        } else {
-            encrypted_broadcast_id.text = "Cannot generate cryptogram"
-        }
 
         val adapter = EventsAdapter()
         events.adapter = adapter
@@ -150,18 +140,21 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
             viewModel.storeEvents(this)
         }
 
-        viewModel.observeConnectionEvents().observe(this) {
-            Timber.d("Devices are $it")
+        viewModel.observeContactEvents().observe(this) {
             if (it.isEmpty()) no_events.visibility = View.VISIBLE
             else {
                 no_events.visibility = View.GONE
-                val ids = it.map { event -> event.cryptogram }.distinct()
-                val unique = ids.map { id -> it.findLast { event -> event.cryptogram == id } }
-                adapter.submitList(unique)
+                adapter.submitList(it)
             }
         }
 
-        viewModel.observeConnectionEvents()
+        viewModel.observeCryptogram().observe(this) {
+            val cryptogramBytes = it.asBytes()
+            val (cryptogramColour, inverseColour) = cryptogramColourAndInverse(cryptogramBytes)
+            encrypted_broadcast_id.text = Base64.encodeToString(cryptogramBytes, Base64.DEFAULT)
+            encrypted_broadcast_id.setBackgroundColor(cryptogramColour)
+            encrypted_broadcast_id.setTextColor(inverseColour)
+        }
     }
 
     override fun onResume() {

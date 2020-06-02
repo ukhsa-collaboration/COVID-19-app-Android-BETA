@@ -19,17 +19,17 @@ class CryptogramProvider @Inject constructor(
     private val sonarIdProvider: SonarIdProvider,
     private val encrypter: Encrypter,
     private val cryptogramStorage: CryptogramStorage,
-    private val currentDateProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
-    var validityInterval: (DateTime) -> Interval = {
+    private val currentDateProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) }
+) {
+    private val lock = Object()
+    private var cachedDate: DateTime? = null
+    private var cachedCryptogram: Cryptogram? = null
+    private val validityInterval: (DateTime) -> Interval = {
         Interval(
             it.withTimeAtStartOfDay(),
             it.plus(Days.ONE).withTimeAtStartOfDay()
         )
     }
-) {
-    private val lock = Object()
-    private var cachedDate: DateTime? = null
-    private var cachedCryptogram: Cryptogram? = null
 
     fun canProvideCryptogram(): Boolean =
         sonarIdProvider.hasProperSonarId() && encrypter.canEncrypt()

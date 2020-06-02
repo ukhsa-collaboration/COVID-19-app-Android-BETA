@@ -83,7 +83,7 @@ class EventsAdapter :
         val event = currentList[position]
         eventHolder.itemView.setOnClickListener {
             event.expanded = !event.expanded
-            notifyItemChanged(position)
+            notifyDataSetChanged()
         }
     }
 }

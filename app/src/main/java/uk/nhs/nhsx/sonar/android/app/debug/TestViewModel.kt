@@ -8,19 +8,26 @@ import android.content.Context
 import android.content.Intent
 import android.util.Base64
 import androidx.core.content.FileProvider
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
 import uk.nhs.nhsx.sonar.android.app.MainActivity
-import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
+import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.contactevents.timestampsToIntervals
+import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
+import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.io.File
@@ -31,8 +38,11 @@ import javax.inject.Inject
 class TestViewModel @Inject constructor(
     private val context: Context,
     private val contactEventDao: ContactEventDao,
-    private val eventTracker: DebugBleEventTracker
+    private val eventTracker: DebugBleEventTracker,
+    private val cryptogramStorage: CryptogramStorage
 ) : ViewModel() {
+    private val cryptogramLiveData = MutableLiveData<Cryptogram>()
+    private var cryptogramChecker: Job? = null
 
     fun clear() {
         viewModelScope.launch {
@@ -100,5 +110,23 @@ class TestViewModel @Inject constructor(
         }
     }
 
-    fun observeConnectionEvents() = eventTracker.observeConnectionEvents()
+    fun observeContactEvents() = eventTracker.observeContactEvents()
+
+    override fun onCleared() {
+        super.onCleared()
+        cryptogramChecker?.cancel()
+    }
+
+    fun observeCryptogram(): LiveData<Cryptogram> {
+        // Not the cleanest, it'd be nicer if the provider could update a LiveData property,
+        // but somehow this ViewModel gets a different instance than the GattServer.
+        viewModelScope.launch {
+            while (isActive) {
+                val storedCryptogram = cryptogramStorage.get().second
+                if (storedCryptogram != null) cryptogramLiveData.postValue(storedCryptogram)
+                delay(5_000)
+            }
+        }
+        return cryptogramLiveData
+    }
 }
