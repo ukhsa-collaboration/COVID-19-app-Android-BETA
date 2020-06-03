@@ -70,27 +70,39 @@
                   android:label="@string/enable_location_service_title"/>
 
         <activity android:name=".edgecases.ReEnableBluetoothActivity"
-                  android:label="@string/re_enable_bluetooth_title"/>
-        <activity android:name=".edgecases.ReAllowGrantLocationPermissionActivity"
-                  android:label="@string/re_allow_location_permission_title"/>
-        <activity android:name=".edgecases.ReEnableLocationActivity"
-                  android:label="@string/re_enable_location_title"/>
-        <activity android:name=".edgecases.DeviceNotSupportedActivity"
-                  android:label="@string/device_not_supported_title"/>
-        <activity android:name=".edgecases.TabletNotSupportedActivity"
-                  android:label="@string/tablet_support_title"/>
+            android:label="@string/re_enable_bluetooth_title" />
+        <activity
+            android:name=".edgecases.ReAllowGrantLocationPermissionActivity"
+            android:label="@string/re_allow_location_permission_title" />
+        <activity
+            android:name=".edgecases.ReEnableLocationActivity"
+            android:label="@string/re_enable_location_title" />
+        <activity
+            android:name=".edgecases.DeviceNotSupportedActivity"
+            android:label="@string/device_not_supported_title" />
+        <activity
+            android:name=".edgecases.TabletNotSupportedActivity"
+            android:label="@string/tablet_support_title" />
 
-        <activity android:name=".status.StatusActivity" />
+        <!-- Space character is used in the label to prevent accessibility manager from announcing app label
+             We have custom announcer in the activity itself -->
+        <activity
+            android:name=".status.StatusActivity"
+            android:label=" " />
 
-        <activity android:name=".referencecode.ReferenceCodeActivity"
-                  android:label="@string/reference_code_title"/>
+        <activity
+            android:name=".referencecode.ReferenceCodeActivity"
+            android:label="@string/reference_code_title" />
 
-        <activity android:name=".diagnose.DiagnoseTemperatureActivity"
-                  android:label="@string/temperature_question"/>
-        <activity android:name=".diagnose.DiagnoseCoughActivity"
-                  android:label="@string/cough_question"/>
-        <activity android:name=".diagnose.review.DiagnoseReviewActivity"
-                  android:label="@string/check_answers"/>
+        <activity
+            android:name=".diagnose.DiagnoseTemperatureActivity"
+            android:label="@string/temperature_question" />
+        <activity
+            android:name=".diagnose.DiagnoseCoughActivity"
+            android:label="@string/cough_question" />
+        <activity
+            android:name=".diagnose.review.DiagnoseReviewActivity"
+            android:label="@string/check_answers" />
         <activity android:name=".diagnose.DiagnoseCloseActivity"
                   android:label="@string/you_do_not_have_symptoms"/>
         <activity android:name=".diagnose.DiagnoseSubmitActivity"

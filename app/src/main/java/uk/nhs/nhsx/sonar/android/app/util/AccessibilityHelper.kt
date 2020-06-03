@@ -21,10 +21,15 @@ import com.google.android.material.card.MaterialCardView
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.R
 
-fun Context.announce(@StringRes stringRes: Int) {
+fun Context.announce(@StringRes textToAnnounceRes: Int) {
+    val text = getString(textToAnnounceRes)
+    announce(text)
+}
+
+fun Context.announce(textToAnnounce: String) {
     val accessibilityEvent = AccessibilityEvent.obtain().apply {
         eventType = AccessibilityEvent.TYPE_ANNOUNCEMENT
-        text.add(getString(stringRes))
+        text.add(textToAnnounce)
     }
     val accessibilityManager =
         getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager?

@@ -48,7 +48,8 @@ import javax.inject.Inject
 
 class StatusActivity : BaseActivity() {
 
-    internal lateinit var statusLayout: StatusLayout
+    private lateinit var statusLayout: StatusLayout
+    private var previousState: UserState? = null
 
     @Inject
     lateinit var userStateStorage: UserStateStorage
@@ -89,9 +90,7 @@ class StatusActivity : BaseActivity() {
 
         registrationPanel.setState(RegistrationState.Complete)
 
-        val userState = userStateStorage.get()
-        statusLayout = StatusLayoutFactory.from(userState)
-        statusLayout.refreshStatusLayout(this)
+        refreshState()
 
         readLatestAdvice.setOnClickListener {
             CurrentAdviceActivity.start(this)
@@ -128,6 +127,7 @@ class StatusActivity : BaseActivity() {
         testResultDialog = createTestResultDialog(this, userInbox)
 
         // TODO: maybe move this check into view model?
+        val userState = userStateStorage.get()
         if (userState is DefaultState) {
             toggleReferenceCodeCard(this, false)
             toggleNotFeelingCard(this, false)
@@ -252,6 +252,15 @@ class StatusActivity : BaseActivity() {
         checkinReminderDialog.dismiss()
         negativeResultCheckinReminderDialog.dismiss()
         recoveryDialog.dismiss()
+    }
+
+    fun refreshState() {
+        val currentState = userStateStorage.get()
+        if (previousState != currentState) {
+            statusLayout = StatusLayoutFactory.from(currentState)
+            statusLayout.refreshStatusLayout(this)
+            previousState = currentState
+        }
     }
 
     companion object {
