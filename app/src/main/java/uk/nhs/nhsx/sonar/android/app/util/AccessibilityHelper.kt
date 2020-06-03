@@ -11,6 +11,7 @@ import android.provider.Settings.SettingNotFoundException
 import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
+import android.widget.ScrollView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.AccessibilityDelegateCompat
@@ -105,4 +106,8 @@ fun View.readOutAccessibilityHeading() {
             info.isHeading = true
         }
     })
+}
+
+fun ScrollView.scrollToView(view: View) {
+    post { smoothScrollTo(0, view.top) }
 }

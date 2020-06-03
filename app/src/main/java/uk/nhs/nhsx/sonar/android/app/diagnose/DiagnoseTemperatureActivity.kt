@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_temperature_diagnosis.confirm_dia
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.no
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.activity_temperature_diagnosis.scrollView
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_description
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_temperature_diagnosis.temperature_question
@@ -23,6 +24,7 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
 import javax.inject.Inject
 
@@ -49,6 +51,7 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
                     radio_selection_error.announceForAccessibility(getString(R.string.radio_button_temperature_error))
+                    scrollView.scrollToView(radio_selection_error)
                 }
             }
         }

@@ -36,6 +36,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setError
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setFocused
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.spinner.setInitial
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import uk.nhs.nhsx.sonar.android.app.util.toUiSpinnerFormat
 
@@ -63,7 +64,7 @@ class DiagnoseReviewActivity : BaseActivity() {
                 date_selection_error.visibility = View.VISIBLE
                 symptoms_date_spinner.setError()
                 date_selection_error.announceForAccessibility(getString(R.string.date_selection_error))
-                scrollView.fullScroll(View.FOCUS_DOWN)
+                scrollView.scrollToView(date_selection_error)
             } else {
                 DiagnoseSubmitActivity.start(this, symptoms, selectedSymptomsDate)
             }

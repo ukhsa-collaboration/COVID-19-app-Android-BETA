@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.diagnose
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View.FOCUS_DOWN
 import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
@@ -35,6 +34,7 @@ import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
+import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import javax.inject.Inject
 
@@ -77,7 +77,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
         submit_diagnosis.setOnClickListener {
             if (!confirmationCheckbox.isChecked) {
                 needConfirmationHint.visibility = VISIBLE
-                scrollView.fullScroll(FOCUS_DOWN)
+                scrollView.scrollToView(needConfirmationHint)
                 needConfirmationHint.postDelayed(50) {
                     needConfirmationHint.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
                     CompoundButtonCompat.setButtonTintList(

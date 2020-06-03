@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_descrip
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_question
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.yes
+import kotlinx.android.synthetic.main.activity_temperature_diagnosis.scrollView
 import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -28,6 +29,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
 import javax.inject.Inject
@@ -56,6 +58,7 @@ open class DiagnoseStomachActivity : BaseActivity() {
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
                     radio_selection_error.announceForAccessibility(getString(R.string.radio_button_cough_error))
+                    scrollView.scrollToView(radio_selection_error)
                 }
             }
         }
