@@ -15,9 +15,7 @@
     <string name="location_rationale">You will not be tracked and your personal identity and location history will
         remain protected at all times. On an Android phone, your location permission is needed for Bluetooth to work.
     </string>
-    <string name="explanation_link">
-        <u>Learn more about how the app works</u>
-    </string>
+    <string name="explanation_link"><u>Learn more about how the app works</u></string>
     <string name="bluetooth_rationale">This app uses battery-saving Bluetooth Low Energy to determine when it is near
         another phone with this app. For this app to work, Bluetooth needs to be kept on at all times.
     </string>
@@ -106,12 +104,8 @@
     <string name="progress_three_fifth">3/5</string>
     <string name="progress_four_fifth">4/5</string>
     <string name="progress_five_fifth">5/5</string>
-    <string name="status_latest_advice">
-        <u>Read current advice</u>
-    </string>
-    <string name="status_what_to_do">
-        <u>Read what to do next</u>
-    </string>
+    <string name="status_latest_advice"><u>Read current advice</u></string>
+    <string name="status_what_to_do"><u>Read what to do next</u></string>
     <string name="status_not_feeling_well">I feel unwell</string>
     <string name="status_not_feeling_well_desc">I might have symptoms of coronavirus and want to know what to do next.</string>
     <string name="status_initial_title">Follow the current advice to stop the spread of coronavirus</string>
