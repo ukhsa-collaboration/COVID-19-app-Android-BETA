@@ -241,13 +241,13 @@
     <string name="get_tested">Get tested</string>
     <string name="reference_code_title">Information about testing</string>
     <string name="reference_code_when_1">When you need a test</string>
-    <string name="reference_code_description_1">If you have symptoms let this app know and it can help you order a coronavirus test.</string>
+    <string name="reference_code_description_1">If you feel unwell you should let this app know and it can help you book a coronavirus test.</string>
     <string name="reference_code_when_2">When you do not need a test</string>
     <string name="reference_code_description_2">You do not need a test if you have been near someone who has developed symptoms or tested positive for coronavirus, unless you have symptoms yourself.</string>
     <string name="reference_code_linking">Linking a test to this app</string>
     <string name="reference_code_app">Your app reference code</string>
     <string name="connect_to_internet">Please connect your phone to the internet to see the app reference code.</string>
-    <string name="reference_code_description_3">In order for this app to receive your test result, you will be asked for this 8-digit app reference code later.</string>
+    <string name="reference_code_description_3">In order for this app to receive your test result use your app reference code when registering your test.</string>
     <string name="copy">Copy</string>
     <string name="copied">Copied</string>
     <string name="latest_guidance"><u>Latest guidance for your workplace</u></string>
