@@ -60,6 +60,13 @@ jobs:
           name: app-internal-${{ steps.publish.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }}).aab
           path: app/build/outputs/bundle/internal/app-internal.aab
 
+      - name: Tag Commit
+        id: tag-commit
+        run: |
+          tag=internal-${{ steps.publish.outputs.buildVersion }}
+          git tag ${tag}
+          git push origin ${tag}
+
       - name: Notify Slack
         uses: rtCamp/action-slack-notify@96d5e2a64fc78a6b7ac13265f55bee296869967a
         env:
