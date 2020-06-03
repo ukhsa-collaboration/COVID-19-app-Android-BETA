@@ -12,6 +12,7 @@ import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.widget.ScrollView
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.AccessibilityDelegateCompat
@@ -81,10 +82,14 @@ fun MaterialCardView.cardColourInversion(isOn: Boolean) {
     }
 }
 
-fun AppCompatActivity.setNavigateUpToolbar(toolbar: MaterialToolbar, @StringRes title: Int) {
+fun AppCompatActivity.setNavigateUpToolbar(
+    toolbar: MaterialToolbar,
+    @StringRes title: Int,
+    @DrawableRes homeIndicator: Int = R.drawable.ic_arrow_back_blue
+) {
     setSupportActionBar(toolbar)
     supportActionBar?.setDisplayHomeAsUpEnabled(true)
-    supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back_blue)
+    supportActionBar?.setHomeAsUpIndicator(homeIndicator)
     supportActionBar?.setHomeActionContentDescription(R.string.go_back)
     supportActionBar?.title = getString(title)
     toolbar.setNavigationOnClickListener { onBackPressed() }

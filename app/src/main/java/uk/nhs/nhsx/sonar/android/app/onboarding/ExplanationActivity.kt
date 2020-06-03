@@ -11,12 +11,13 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_explanation.explanationMoreAboutTheApp
 import kotlinx.android.synthetic.main.activity_explanation.explanationPrivacyNotice
 import kotlinx.android.synthetic.main.activity_explanation.explanationTermsOfUse
-import kotlinx.android.synthetic.main.activity_explanation.explanation_back
+import kotlinx.android.synthetic.main.activity_explanation.toolbar
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
 import uk.nhs.nhsx.sonar.android.app.util.URL_PRIVACY_NOTICE
 import uk.nhs.nhsx.sonar.android.app.util.URL_TERMS_OF_USE
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
+import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 
 class ExplanationActivity : AppCompatActivity(R.layout.activity_explanation) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +35,11 @@ class ExplanationActivity : AppCompatActivity(R.layout.activity_explanation) {
             openUrl(URL_TERMS_OF_USE)
         }
 
-        explanation_back.setOnClickListener {
-            onBackPressed()
-        }
+        setNavigateUpToolbar(
+            toolbar = toolbar,
+            title = R.string.explanation_title,
+            homeIndicator = R.drawable.ic_close_blue
+        )
     }
 
     companion object {

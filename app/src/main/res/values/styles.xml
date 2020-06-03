@@ -194,6 +194,10 @@
         <item name="android:background">@color/white</item>
     </style>
 
+    <style name="TransparentActionBar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="titleTextColor">@color/colorPrimary</item>
+    </style>
+
 
     <style name="PersistentBottomSheet" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowCloseOnTouchOutside">false</item>
