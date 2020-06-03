@@ -21,6 +21,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
 import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
@@ -65,7 +66,7 @@ class TestViewModel @Inject constructor(
         viewModelScope.launch {
             val contactEvents = contactEventDao.getAll()
                 .joinToString("\n") {
-                    val eventTime = DateTime(it.timestamp)
+                    val eventTime = DateTime(it.timestamp, DateTimeZone.UTC)
                     val rssiIntervals = it.rssiTimestamps
                         .timestampsToIntervals()
                         .joinToString(":")
