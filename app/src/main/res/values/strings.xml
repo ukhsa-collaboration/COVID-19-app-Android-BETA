@@ -145,7 +145,7 @@
     <string name="i_do_not_stomach">I do not have any of these symptoms: diarrhoea, nausea, vomiting or loss of appetite</string>
     <string name="date_selection_error">Select the date you first started showing any of these symptoms</string>
     <string name="update_symptoms_prompt">Please update your symptoms to view your latest advice.</string>
-    <string name="update_symptoms_prompt_with_negative_test">Thank you for getting tested. You have been sent an email with more information.\n\nIf you are having symptoms, please update your symptoms to see the latest advice for you. If you do not have any symptoms, you can now follow the advice for the general public.</string>
+    <string name="update_symptoms_prompt_with_negative_test">Thank you for getting tested. You have been sent an email or text with more information.\n\nIf you are having symptoms, please update your symptoms to see the latest advice for you. If you do not have any symptoms, you can now follow the advice for the general public.</string>
     <string name="update_my_symptoms">Update my symptoms</string>
     <string name="no_symptoms">I no longer have symptoms</string>
     <string name="recovery_dialog_title">Thank you for updating your symptoms</string>
@@ -262,9 +262,9 @@
     <string name="current_advice_desc_with_date">The advice below is up-to-date and specific to your situation. Please follow this advice until %1$s.</string>
     <string name="read_specific_advice_for_you"><u>Read specific advice for you</u></string>
     <string name="positive_test_result_title">Your test result indicates that you have coronavirus</string>
-    <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email with more information.</string>
+    <string name="positive_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email or text with more information.</string>
     <string name="invalid_test_result_title">Your test result was unclear</string>
-    <string name="invalid_test_result_description">Thank you for getting tested. However, due to an unclear test result your advice has not been changed. Please book another test. You have been sent an email with more information.</string>
+    <string name="invalid_test_result_description">Thank you for getting tested. However, due to an unclear test result your advice has not been changed. Please book another test. You have been sent an email or text with more information.</string>
     <string name="medical_emergency_call">If you have a medical emergency, please call 999. If you require medical help near you, please go to 111 online.</string>
     <string name="error_title">There is a problem</string>
 </resources>
