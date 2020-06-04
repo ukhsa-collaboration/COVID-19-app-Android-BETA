@@ -5,10 +5,47 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
+import org.joda.time.LocalDate
+import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
+import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceSerializingProvider
 import javax.inject.Inject
 
-class UserStateStorage @Inject constructor(context: Context) :
+class UserStateStorage @Inject constructor(
+    private val userStatePrefs: UserStatePrefs,
+    private val userInbox: UserInbox,
+    private val reminders: Reminders
+) {
+
+    fun get(): UserState = userStatePrefs.get()
+
+    fun set(state: UserState): Unit = userStatePrefs.set(state)
+
+    fun clear(): Unit = userStatePrefs.clear()
+
+    fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>): UserState {
+        val currentState = this.get()
+        val state = UserStateTransitions.diagnose(
+            currentState,
+            symptomsDate,
+            NonEmptySet.create(symptoms)!!
+        )
+
+        if (state is DefaultState && symptoms.isNotEmpty()) {
+            userInbox.addRecovery()
+        }
+
+        state.scheduleCheckInReminder(reminders)
+        this.set(state)
+
+        Timber.d("Updated the state to: $state")
+        return state
+    }
+}
+
+class UserStatePrefs @Inject constructor(context: Context) :
     SharedPreferenceSerializingProvider<UserState>(
         context,
         preferenceName = "user_state_storage",

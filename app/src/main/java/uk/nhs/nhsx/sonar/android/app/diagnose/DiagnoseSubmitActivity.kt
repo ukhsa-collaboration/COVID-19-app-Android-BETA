@@ -21,16 +21,11 @@ import kotlinx.android.synthetic.main.white_banner.toolbar
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
-import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
-import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
@@ -40,12 +35,6 @@ import javax.inject.Inject
 class DiagnoseSubmitActivity : BaseActivity() {
     @Inject
     protected lateinit var userStateStorage: UserStateStorage
-
-    @Inject
-    lateinit var userInbox: UserInbox
-
-    @Inject
-    protected lateinit var reminders: Reminders
 
     private val symptoms: Set<Symptom> by lazy { intent.getSymptoms() }
 
@@ -102,23 +91,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private fun updateStateAndNavigate() {
-        val currentState = userStateStorage.get()
-        val state = UserStateTransitions.diagnose(
-            currentState,
-            symptomsDate,
-            NonEmptySet.create(symptoms)!!
-        )
-
-        if (state is DefaultState && symptoms.isNotEmpty()) {
-            userInbox.addRecovery()
-        }
-
-        state.scheduleCheckInReminder(reminders)
-        userStateStorage.set(state)
-
-        Timber.d("Updated the state to: $state")
-
-        navigateTo(state)
+        navigateTo(userStateStorage.diagnose(symptomsDate, NonEmptySet.create(symptoms)!!))
     }
 
     companion object {
