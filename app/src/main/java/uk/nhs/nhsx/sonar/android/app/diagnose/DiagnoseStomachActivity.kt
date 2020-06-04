@@ -29,6 +29,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.util.announce
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
@@ -89,12 +90,16 @@ open class DiagnoseStomachActivity : BaseActivity() {
             confirm_diagnosis.text = getString(R.string.submit)
             stomach_question.text = getString(R.string.stomach_question_simplified)
             stomach_description.setRawText(getString(R.string.stomach_description_simplified))
+
+            announce(R.string.stomach_question_simplified)
         } else {
             progress.text = getString(R.string.progress_five_sixth)
             confirm_diagnosis.text = getString(R.string.continue_button)
             progress.contentDescription = getString(R.string.page_5_of_6)
             stomach_question.text = getString(R.string.stomach_question)
             stomach_description.setRawText(getString(R.string.stomach_description))
+
+            announce(R.string.stomach_question)
         }
     }
 
