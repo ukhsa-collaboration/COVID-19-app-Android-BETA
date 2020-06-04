@@ -24,7 +24,6 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.util.announce
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
@@ -90,7 +89,7 @@ class DiagnoseCoughActivity : BaseActivity() {
             yes.text = getString(R.string.yes_cough)
             no.text = getString(R.string.no_cough)
 
-            announce(R.string.cough_question_simplified)
+            setTitle(R.string.cough_question_simplified)
         } else {
             progress.text = getString(R.string.progress_two_sixth)
             progress.contentDescription = getString(R.string.page_2_of_6)
@@ -100,7 +99,7 @@ class DiagnoseCoughActivity : BaseActivity() {
             yes.text = getString(R.string.yes_new_cough)
             no.text = getString(R.string.no_new_cough)
 
-            announce(R.string.cough_question)
+            setTitle(R.string.cough_question)
         }
     }
 

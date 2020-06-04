@@ -165,6 +165,7 @@ private fun createStatusView(
             statusColor = statusColor
         )
     )
+    activity.setTitle(titleRes)
 }
 
 fun createTestResultDialog(activity: Activity, userInbox: UserInbox): BottomDialog {

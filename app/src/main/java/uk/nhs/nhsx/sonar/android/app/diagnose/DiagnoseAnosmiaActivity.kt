@@ -24,7 +24,6 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.util.announce
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
@@ -93,7 +92,7 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
             yes.text = getString(R.string.yes_anosmia)
             no.text = getString(R.string.no_anosmia)
 
-            announce(R.string.anosmia_question_simplified)
+            setTitle(R.string.anosmia_question_simplified)
         } else {
             progress.text = getString(R.string.progress_three_sixth)
             progress.contentDescription = getString(R.string.page_3_of_6)
@@ -103,7 +102,7 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
             yes.text = getString(R.string.yes_new_anosmia)
             no.text = getString(R.string.no_new_anosmia)
 
-            announce(R.string.anosmia_question)
+            setTitle(R.string.anosmia_question)
         }
     }
 

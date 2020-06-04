@@ -17,7 +17,6 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.URL_INFO
-import uk.nhs.nhsx.sonar.android.app.util.announce
 import uk.nhs.nhsx.sonar.android.app.util.openAppSettings
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import javax.inject.Inject
@@ -41,7 +40,7 @@ open class GrantLocationPermissionActivity :
                 getString(R.string.grant_location_permission_rationale_p4)
             )
 
-            announce(R.string.grant_location_permission_title)
+            setTitle(R.string.grant_location_permission_title)
         } else {
             edgeCaseTitle.setText(R.string.grant_location_permission_title_pre_10)
             paragraphContainer.addAllParagraphs(
@@ -51,7 +50,7 @@ open class GrantLocationPermissionActivity :
                 getString(R.string.grant_location_permission_rationale_p4)
             )
 
-            announce(R.string.grant_location_permission_title_pre_10)
+            setTitle(R.string.grant_location_permission_title_pre_10)
         }
 
         takeActionButton.setText(R.string.go_to_app_settings)

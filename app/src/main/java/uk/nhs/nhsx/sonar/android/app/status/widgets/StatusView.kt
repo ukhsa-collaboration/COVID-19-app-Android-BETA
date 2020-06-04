@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.view_status.view.statusColorBar
 import kotlinx.android.synthetic.main.view_status.view.statusDescription
 import kotlinx.android.synthetic.main.view_status.view.statusTitle
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.util.announce
 
 class StatusView @JvmOverloads constructor(
     context: Context,
@@ -42,8 +41,6 @@ class StatusView @JvmOverloads constructor(
         } else {
             statusDescription.isVisible = false
         }
-
-        context.announce(configuration.title)
     }
 
     data class Configuration(
