@@ -23,12 +23,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.DisplayState
-import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
-import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.status.*
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
@@ -114,12 +109,7 @@ open class DiagnoseStomachActivity : BaseActivity() {
     }
 
     private fun diagnoseForCheckin(symptoms: Set<Symptom>) {
-        val newState = UserStateTransitions.diagnoseForCheckin(userStateStorage.get(), symptoms)
-        if (newState is DefaultState && symptoms.isNotEmpty()) {
-            userInbox.addRecovery()
-        }
-        userStateStorage.set(newState)
-        navigateTo(newState)
+        navigateTo(userStateStorage.diagnoseCheckIn(symptoms))
     }
 
     private fun isCheckinQuestionnaire() =

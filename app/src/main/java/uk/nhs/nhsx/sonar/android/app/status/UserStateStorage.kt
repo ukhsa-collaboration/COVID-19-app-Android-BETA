@@ -26,22 +26,38 @@ class UserStateStorage @Inject constructor(
     fun clear(): Unit = userStatePrefs.clear()
 
     fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>): UserState {
-        val currentState = this.get()
-        val state = UserStateTransitions.diagnose(
+        val currentState = get()
+        val newState = UserStateTransitions.diagnose(
             currentState,
             symptomsDate,
             NonEmptySet.create(symptoms)!!
         )
 
-        if (state is DefaultState && symptoms.isNotEmpty()) {
+        if (newState is DefaultState && symptoms.isNotEmpty()) {
             userInbox.addRecovery()
         }
 
-        state.scheduleCheckInReminder(reminders)
-        this.set(state)
+        newState.scheduleCheckInReminder(reminders)
+        set(newState)
 
-        Timber.d("Updated the state to: $state")
-        return state
+        Timber.d("Updated the state to: $newState")
+        return newState
+    }
+
+    fun diagnoseCheckIn(symptoms: Set<Symptom>): UserState {
+        val currentState = get()
+        val newState = UserStateTransitions.diagnoseForCheckin(
+            currentState = currentState,
+            symptoms = symptoms
+        )
+        if (newState is DefaultState && symptoms.isNotEmpty()) {
+            userInbox.addRecovery()
+        }
+        set(newState)
+
+        Timber.d("Updated the state to: $newState")
+
+        return newState
     }
 }
 
