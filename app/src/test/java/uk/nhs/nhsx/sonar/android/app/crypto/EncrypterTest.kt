@@ -170,7 +170,7 @@ class EncrypterTest {
         return c.doFinal(payload + tag)
     }
 
-    private fun deriveKey(sharedSecret: SecretKey, x: ByteArray, y: ByteArray): Pair<ByteArray, ByteArray> {
+    fun deriveKey(sharedSecret: SecretKey, x: ByteArray, y: ByteArray): Pair<ByteArray, ByteArray> {
         val kdfGenerator = KDF2BytesGenerator(SHA256Digest())
         kdfGenerator.init(KDFParameters(sharedSecret.encoded, byteArrayOf(0x04) + x + y))
         val kdfOutput = ByteArray(32)
@@ -182,7 +182,7 @@ class EncrypterTest {
         )
     }
 
-    private fun generateSharedSecret(
+    fun generateSharedSecret(
         serverPrivateKey: PrivateKey,
         localPublicKey: PublicKey
     ): SecretKeySpec {
@@ -192,7 +192,7 @@ class EncrypterTest {
         return SecretKeySpec(keyAgreement.generateSecret(), AES)
     }
 
-    private fun localPublicKeyFromCryptogram(cryptogram: ByteArray): PublicKey {
+    fun localPublicKeyFromCryptogram(cryptogram: ByteArray): PublicKey {
         // leading 0x04 to specify that the points are compressed
         val encodedKeyPoints = byteArrayOf(0x04) + cryptogram.sliceArray((0 until 64))
         val spec = ECNamedCurveTable.getParameterSpec(EC_STANDARD_CURVE_NAME)
@@ -202,27 +202,27 @@ class EncrypterTest {
         return KeyFactory.getInstance("EC", PROVIDER_NAME).generatePublic(pubKeySpec)
     }
 
-    private fun ByteArray.toHexString(): String =
+    fun ByteArray.toHexString(): String =
         this.joinToString("") { String.format("%02X", it) }
 
-    private fun String.hexStringToByteArray() =
+    fun String.hexStringToByteArray() =
         ByteArray(this.length / 2) { this.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
 
-    private fun loadPublicKey(publicPEM: String): PublicKey {
+    fun loadPublicKey(publicPEM: String): PublicKey {
         val ecKeyFactory = KeyFactory.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME)
         val pubKeyDER: ByteArray = PEMtoDER(publicPEM)
         val pubKeySpec = X509EncodedKeySpec(pubKeyDER)
         return ecKeyFactory.generatePublic(pubKeySpec)
     }
 
-    private fun loadPrivateKey(privatePEM: String): PrivateKey {
+    fun loadPrivateKey(privatePEM: String): PrivateKey {
         val ecKeyFactory = KeyFactory.getInstance(ELLIPTIC_CURVE, PROVIDER_NAME)
         val privKeyDER: ByteArray = PEMtoDER(privatePEM)
         val localPrivKeySpec = PKCS8EncodedKeySpec(privKeyDER)
         return ecKeyFactory.generatePrivate(localPrivKeySpec)
     }
 
-    private fun PEMtoDER(pemString: String): ByteArray {
+    fun PEMtoDER(pemString: String): ByteArray {
         // Strip header and footer
         var base64PEM: String = pemString
         // Remove any public key headers and footers

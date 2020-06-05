@@ -6,8 +6,8 @@ package uk.nhs.nhsx.sonar.android.app.crypto
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import org.joda.time.Days
 import org.joda.time.Interval
-import org.joda.time.Minutes
 import org.joda.time.Period
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
@@ -26,8 +26,8 @@ class CryptogramProvider @Inject constructor(
     private var cachedCryptogram: Cryptogram? = null
     private val validityInterval: (DateTime) -> Interval = {
         Interval(
-            it,
-            it.plus(Minutes.minutes(15))
+            it.withTimeAtStartOfDay(),
+            it.plus(Days.ONE).withTimeAtStartOfDay()
         )
     }
 
@@ -86,9 +86,8 @@ class CryptogramProvider @Inject constructor(
         validityInterval(latestDate).contains(currentDate)
 
     private fun generateCryptogram(latestDate: DateTime): Cryptogram {
-        val validityInterval = validityInterval(latestDate)
-        val encodedStartDate = validityInterval.start.encodeAsSecondsSinceEpoch()
-        val encodedEndDate = validityInterval.end.encodeAsSecondsSinceEpoch()
+        val encodedStartDate = latestDate.withTimeAtStartOfDay().encodeAsSecondsSinceEpoch()
+        val encodedEndDate = latestDate.startOfNextDay().encodeAsSecondsSinceEpoch()
         val residentIdBytes = Identifier.fromString(sonarIdProvider.get()).asBytes
         return encrypter.encrypt(encodedStartDate, encodedEndDate, residentIdBytes, COUNTRY_CODE)
     }
