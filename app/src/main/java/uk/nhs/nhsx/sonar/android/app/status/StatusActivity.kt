@@ -194,7 +194,7 @@ class StatusActivity : BaseActivity() {
             },
             onSecondCtaClick = {
                 userStateStorage.set(DefaultState)
-                navigateTo(userStateStorage.get())
+                refreshState()
             }
         )
     }
@@ -219,7 +219,7 @@ class StatusActivity : BaseActivity() {
             onSecondCtaClick = {
                 userInbox.dismissTestInfo()
                 userStateStorage.set(DefaultState)
-                navigateTo(userStateStorage.get())
+                refreshState()
             }
         )
     }
@@ -227,8 +227,7 @@ class StatusActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
 
-        val state = userStateStorage.get()
-        navigateTo(state)
+        refreshState()
 
         statusLayout.onResume(this)
 

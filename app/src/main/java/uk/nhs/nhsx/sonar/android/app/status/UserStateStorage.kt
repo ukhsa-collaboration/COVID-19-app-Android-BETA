@@ -5,6 +5,7 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import android.content.Context
+import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
@@ -21,11 +22,14 @@ class UserStateStorage @Inject constructor(
 
     fun get(): UserState = userStatePrefs.get()
 
-    fun set(state: UserState): Unit = userStatePrefs.set(state)
+    fun set(state: UserState) {
+        userStatePrefs.set(state)
+        Timber.d("Updated the state to: $state")
+    }
 
     fun clear(): Unit = userStatePrefs.clear()
 
-    fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>): UserState {
+    fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>) {
         val currentState = get()
 
         val newState = UserStateTransitions.diagnose(
@@ -40,12 +44,9 @@ class UserStateStorage @Inject constructor(
 
         newState.scheduleCheckInReminder(reminders)
         set(newState)
-
-        Timber.d("Updated the state to: $newState")
-        return newState
     }
 
-    fun diagnoseCheckIn(symptoms: Set<Symptom>): UserState {
+    fun diagnoseCheckIn(symptoms: Set<Symptom>) {
         val currentState = get()
 
         val newState = UserStateTransitions.diagnoseForCheckin(
@@ -56,21 +57,27 @@ class UserStateStorage @Inject constructor(
             userInbox.addRecovery()
         }
         set(newState)
-
-        Timber.d("Updated the state to: $newState")
-
-        return newState
     }
 
-    fun transitionOnExpiredExposedState(): UserState {
+    fun transitionOnExpiredExposedState() {
         val currentState = get()
 
         val newState = UserStateTransitions.transitionOnExpiredExposedState(currentState)
         set(newState)
+    }
 
-        Timber.d("Updated the state to: $newState")
+    fun transitionOnContactAlert(date: DateTime, onStateChanged: () -> Unit) {
+        val currentState = get()
 
-        return newState
+        val newState = UserStateTransitions.transitionOnContactAlert(
+            currentState = currentState,
+            exposureDate = date
+        )
+
+        if (newState != null) {
+            set(newState)
+            onStateChanged()
+        }
     }
 }
 

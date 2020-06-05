@@ -13,16 +13,12 @@ import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.status.startStatusActivity
 import uk.nhs.nhsx.sonar.android.app.util.URL_SYMPTOM_CHECKER
 import uk.nhs.nhsx.sonar.android.app.util.openUrl
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
-import javax.inject.Inject
 
 class DiagnoseCloseActivity : BaseActivity() {
-    @Inject
-    protected lateinit var userStateStorage: UserStateStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +29,7 @@ class DiagnoseCloseActivity : BaseActivity() {
         setNavigateUpToolbar(toolbar, R.string.add_my_symptoms)
 
         close_review_btn.setOnClickListener {
-            navigateTo(userStateStorage.get())
+            startStatusActivity()
         }
 
         nhs_service.setOnClickListener {

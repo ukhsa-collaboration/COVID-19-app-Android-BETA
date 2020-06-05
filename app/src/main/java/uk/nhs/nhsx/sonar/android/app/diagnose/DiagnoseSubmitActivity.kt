@@ -26,7 +26,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.status.startStatusActivity
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
@@ -91,7 +91,8 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private fun updateStateAndNavigate() {
-        navigateTo(userStateStorage.diagnose(symptomsDate, NonEmptySet.create(symptoms)!!))
+        userStateStorage.diagnose(symptomsDate, NonEmptySet.create(symptoms)!!)
+        startStatusActivity()
     }
 
     companion object {

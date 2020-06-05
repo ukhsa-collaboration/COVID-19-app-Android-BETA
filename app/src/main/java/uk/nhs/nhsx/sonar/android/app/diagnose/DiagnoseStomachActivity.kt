@@ -23,7 +23,11 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
-import uk.nhs.nhsx.sonar.android.app.status.*
+import uk.nhs.nhsx.sonar.android.app.status.DisplayState
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
+import uk.nhs.nhsx.sonar.android.app.status.startStatusActivity
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
@@ -109,7 +113,8 @@ open class DiagnoseStomachActivity : BaseActivity() {
     }
 
     private fun diagnoseForCheckin(symptoms: Set<Symptom>) {
-        navigateTo(userStateStorage.diagnoseCheckIn(symptoms))
+        userStateStorage.diagnoseCheckIn(symptoms)
+        startStatusActivity()
     }
 
     private fun isCheckinQuestionnaire() =

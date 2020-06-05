@@ -13,15 +13,10 @@ import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.navigateTo
+import uk.nhs.nhsx.sonar.android.app.status.startStatusActivity
 import javax.inject.Inject
 
 class MainActivity : ColorInversionAwareActivity() {
-
-    @Inject
-    lateinit var userStateStorage: UserStateStorage
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider
@@ -40,28 +35,23 @@ class MainActivity : ColorInversionAwareActivity() {
             deviceDetection.isTablet() -> {
                 finish()
                 TabletNotSupportedActivity.start(this)
-                return
             }
             deviceDetection.isUnsupported() -> {
                 finish()
                 DeviceNotSupportedActivity.start(this)
-                return
             }
             sonarIdProvider.hasProperSonarId() -> {
                 BluetoothService.start(this)
-                navigateTo(userStateStorage.get())
-                return
+                startStatusActivity()
             }
             onboardingStatusProvider.get() -> {
+                startStatusActivity()
+            }
+            else -> {
                 finish()
-                StatusActivity.start(this)
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                return
+                MainOnboardingActivity.start(this)
             }
         }
-
-        finish()
-        MainOnboardingActivity.start(this)
     }
 
     companion object {
