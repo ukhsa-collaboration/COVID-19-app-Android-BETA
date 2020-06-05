@@ -18,7 +18,6 @@ import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.UserState
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.navigateTo
 import uk.nhs.nhsx.sonar.android.app.util.showExpanded
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
@@ -93,11 +92,7 @@ class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
     override fun onResume(activity: StatusActivity) {
         activity.exposedNotification.hide()
 
-        // TODO: refactor this
-        val newState = UserStateTransitions.transitionOnExpiredExposedState(state)
-        activity.userStateStorage.set(newState)
-
-        activity.navigateTo(newState)
+        activity.navigateTo(activity.userStateStorage.transitionOnExpiredExposedState())
 
         handleTestResult(activity, activity.testResultDialog)
     }

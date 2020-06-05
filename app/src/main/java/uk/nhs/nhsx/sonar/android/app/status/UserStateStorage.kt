@@ -27,6 +27,7 @@ class UserStateStorage @Inject constructor(
 
     fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>): UserState {
         val currentState = get()
+
         val newState = UserStateTransitions.diagnose(
             currentState,
             symptomsDate,
@@ -46,6 +47,7 @@ class UserStateStorage @Inject constructor(
 
     fun diagnoseCheckIn(symptoms: Set<Symptom>): UserState {
         val currentState = get()
+
         val newState = UserStateTransitions.diagnoseForCheckin(
             currentState = currentState,
             symptoms = symptoms
@@ -53,6 +55,17 @@ class UserStateStorage @Inject constructor(
         if (newState is DefaultState && symptoms.isNotEmpty()) {
             userInbox.addRecovery()
         }
+        set(newState)
+
+        Timber.d("Updated the state to: $newState")
+
+        return newState
+    }
+
+    fun transitionOnExpiredExposedState(): UserState {
+        val currentState = get()
+
+        val newState = UserStateTransitions.transitionOnExpiredExposedState(currentState)
         set(newState)
 
         Timber.d("Updated the state to: $newState")
