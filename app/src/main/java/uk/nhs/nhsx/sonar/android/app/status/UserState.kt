@@ -27,7 +27,7 @@ sealed class UserState {
         fun exposed(exposureDate: LocalDate): ExposedState =
             ExposedState(
                 exposureDate.toUtcNormalized(),
-                exposureDate.plusDays(NUMBER_OF_DAYS_IN_EXPOSED - 1).toUtcNormalized()
+                exposureDate.plusDays(NUMBER_OF_DAYS_IN_EXPOSED).toUtcNormalized()
             )
 
         fun exposed(state: ExposedSymptomaticState): ExposedState =

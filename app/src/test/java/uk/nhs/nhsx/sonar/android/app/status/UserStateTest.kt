@@ -40,8 +40,8 @@ class UserStateTest {
     fun `exposed state factory method with exposure date`() {
         val state = UserState.exposed(today)
 
-        val thirteenDaysFromNowAt7 = DateTime(2020, 4, 23, 7, 0).toDateTime(DateTimeZone.UTC)
-        assertThat(state).isEqualTo(ExposedState(today.toUtcNormalized(), thirteenDaysFromNowAt7))
+        val fourteenDaysFromNowAt7 = DateTime(2020, 4, 24, 7, 0).toDateTime(DateTimeZone.UTC)
+        assertThat(state).isEqualTo(ExposedState(today.toUtcNormalized(), fourteenDaysFromNowAt7))
     }
 
     @Test
