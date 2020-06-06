@@ -8,6 +8,7 @@ import android.content.Context
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import timber.log.Timber
+import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
@@ -78,6 +79,16 @@ class UserStateStorage @Inject constructor(
             this.userStatePrefs.set(newState)
             onStateChanged()
         }
+    }
+
+    fun transitionOnTestResult(testInfo: TestInfo) {
+        val currentState = this.userStatePrefs.get()
+
+        val newState = UserStateTransitions.transitionOnTestResult(currentState, testInfo)
+
+        this.userStatePrefs.set(newState)
+        newState.scheduleCheckInReminder(reminders)
+        userInbox.addTestInfo(testInfo)
     }
 
     fun hasAnyOfMainSymptoms(symptoms: Set<Symptom>): Boolean =

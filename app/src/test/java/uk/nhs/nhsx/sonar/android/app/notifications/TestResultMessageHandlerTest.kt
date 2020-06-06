@@ -11,23 +11,15 @@ import org.joda.time.DateTime
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
-import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 
 class TestResultMessageHandlerTest {
 
     private val testResultNotification = mockk<TestResultNotification>(relaxUnitFun = true)
     private val userStateStorage = mockk<UserStateStorage>(relaxUnitFun = true)
-    private val userInbox = mockk<UserInbox>()
-    private val reminders = mockk<Reminders>(relaxUnitFun = true)
 
     private val handler = TestResultMessageHandler(
-        reminders,
         userStateStorage,
-        userInbox,
         testResultNotification
     )
 
@@ -42,22 +34,12 @@ class TestResultMessageHandlerTest {
 
         val testInfo = TestInfo(message.result, message.date)
 
-        every { userStateStorage.get() } returns DefaultState
-        every { userInbox.addTestInfo(testInfo) } returns Unit
+        every { userStateStorage.transitionOnTestResult(testInfo) } returns Unit
 
         handler.handle(message)
 
         verify {
-            userStateStorage.get()
-
-            UserStateTransitions.transitionOnTestResult(DefaultState, testInfo)
-
-            userStateStorage.set(any<PositiveState>())
-
-            reminders.cancelCheckinReminder()
-            reminders.scheduleCheckInReminder(any())
-
-            userInbox.addTestInfo(testInfo)
+            userStateStorage.transitionOnTestResult(testInfo)
             testResultNotification.show()
         }
     }

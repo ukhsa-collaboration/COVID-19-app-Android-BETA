@@ -7,6 +7,8 @@ import io.mockk.verify
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
+import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
@@ -161,6 +163,41 @@ class UserStateStorageTest {
 
         verify {
             onStateChanged wasNot Called
+        }
+    }
+
+    @Test
+    fun `transitionOnTestResult - updates the state storage with new state`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        userStateStorage.transitionOnTestResult(TestInfo(TestResult.POSITIVE, DateTime.now()))
+
+        verify {
+            userStatePrefs.set(match { it is PositiveState })
+        }
+    }
+
+    @Test
+    fun `transitionOnTestResult - cancels current reminder and schedules a new one for the new state`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        userStateStorage.transitionOnTestResult(TestInfo(TestResult.POSITIVE, DateTime.now()))
+
+        verify {
+            reminders.cancelCheckinReminder()
+            reminders.scheduleCheckInReminder(any())
+        }
+    }
+
+    @Test
+    fun `transitionOnTestResult - adds test info message in inbox`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        val testInfo = TestInfo(TestResult.POSITIVE, DateTime.now())
+        userStateStorage.transitionOnTestResult(testInfo)
+
+        verify {
+            userInbox.addTestInfo(testInfo)
         }
     }
 }
