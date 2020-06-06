@@ -1,92 +1,166 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
+import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.verify
-import io.mockk.verifyAll
-import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
+import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
+import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class UserStateStorageTest {
 
-    private val userStatePrefs = mockk<UserStatePrefs>(relaxed = true)
+    private val userStatePrefs = mockk<UserStatePrefs>(relaxUnitFun = true)
+    private val reminders = mockk<Reminders>(relaxUnitFun = true)
+    private val userInbox = mockk<UserInbox>(relaxUnitFun = true)
 
     private val userStateStorage = UserStateStorage(
         userStatePrefs = userStatePrefs,
-        userInbox = mockk(),
-        reminders = mockk()
+        userInbox = userInbox,
+        reminders = reminders
     )
 
-    private val date = DateTime("2020-04-23T18:34:00Z")
-
-    private val onStateChanged = mockk<() -> Unit>(relaxed = true)
-
     @Test
-    fun `executes callback when state transition happens for DefaultState`() {
+    fun `diagnose - updates the state storage with new state`() {
         every { userStatePrefs.get() } returns DefaultState
 
-        userStateStorage.transitionOnContactAlert(
-            date = date,
-            onStateChanged = onStateChanged
+        userStateStorage.diagnose(LocalDate.now(), nonEmptySetOf(COUGH))
+
+        verify {
+            userStatePrefs.set(match { it is SymptomaticState })
+        }
+    }
+
+    @Test
+    fun `diagnose - cancels current reminder and schedules a new one for the new state`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        userStateStorage.diagnose(LocalDate.now(), nonEmptySetOf(COUGH))
+
+        verify {
+            reminders.cancelCheckinReminder()
+            reminders.scheduleCheckInReminder(any())
+        }
+    }
+
+    @Test
+    fun `diagnose - adds recovery message to inbox when new state is default`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        userStateStorage.diagnose(LocalDate.now().minusDays(10), nonEmptySetOf(COUGH))
+
+        verify {
+            userInbox.addRecovery()
+        }
+    }
+
+    @Test
+    fun `diagnose - does not add recovery message when state is not default`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        userStateStorage.diagnose(LocalDate.now(), nonEmptySetOf(COUGH))
+
+        verify {
+            userInbox wasNot Called
+        }
+    }
+
+    @Test
+    fun `diagnoseCheckIn - updates the state storage with new state`() {
+        every { userStatePrefs.get() } returns buildSymptomaticState()
+
+        userStateStorage.diagnoseCheckIn(setOf(TEMPERATURE))
+
+        verify {
+            userStatePrefs.set(match { it is SymptomaticState })
+        }
+    }
+
+    @Test
+    fun `diagnoseCheckIn - adds recovery message to inbox when new state is default`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        userStateStorage.diagnoseCheckIn(setOf(COUGH))
+
+        verify {
+            userInbox.addRecovery()
+        }
+    }
+
+    @Test
+    fun `diagnoseCheckIn - does not add recovery message when state is default but user has no symptom`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        userStateStorage.diagnoseCheckIn(emptySet())
+
+        verify {
+            userInbox wasNot Called
+        }
+    }
+
+    @Test
+    fun `diagnoseCheckIn - does not add recovery message when state is not default`() {
+        every { userStatePrefs.get() } returns buildExposedState()
+
+        userStateStorage.diagnoseCheckIn(setOf(TEMPERATURE))
+
+        verify {
+            userInbox wasNot Called
+        }
+    }
+
+    @Test
+    fun `transitionOnExpiredExposedState - updates the state storage with new state`() {
+        every { userStatePrefs.get() } returns buildExposedState(
+            until = DateTime.now().minusDays(1)
         )
 
-        val slot = slot<ExposedState>()
-        verifyAll {
-            userStatePrefs.get()
-            userStatePrefs.set(capture(slot))
+        userStateStorage.transitionOnExpiredExposedState()
+
+        verify {
+            userStatePrefs.set(match { it is DefaultState })
+        }
+    }
+
+    @Test
+    fun `transitionOnContactAlert - updates the state storage with new state`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        userStateStorage.transitionOnContactAlert(DateTime.now()) {}
+
+        verify {
+            userStatePrefs.set(match { it is ExposedState })
+        }
+    }
+
+    @Test
+    fun `transitionOnContactAlert - executes callback the when state is changed`() {
+        every { userStatePrefs.get() } returns DefaultState
+
+        val onStateChanged = mockk<() -> Unit>(relaxed = true)
+
+        userStateStorage.transitionOnContactAlert(DateTime.now(), onStateChanged)
+
+        verify {
             onStateChanged.invoke()
         }
-
-        assertThat(slot.captured).isEqualTo(UserState.exposed(date.toLocalDate()))
     }
 
     @Test
-    fun `does not execute state transitions - in exposed state`() {
-        val userState = UserState.exposed(LocalDate.now())
+    fun `transitionOnContactAlert - does not executes the callback when state is not changed`() {
+        every { userStatePrefs.get() } returns buildSymptomaticState()
 
-        assertNoStateTransitionsHappened(userState)
-    }
+        val onStateChanged = mockk<() -> Unit>()
 
-    @Test
-    fun `does not execute state transitions - in symptomatic state`() {
-        val userState = UserState.symptomatic(
-            symptomsDate = LocalDate.now(),
-            symptoms = nonEmptySetOf(Symptom.COUGH)
-        )
+        userStateStorage.transitionOnContactAlert(DateTime.now(), onStateChanged)
 
-        assertNoStateTransitionsHappened(userState)
-    }
-
-    @Test
-    fun `does not execute state transitions - in exposed symptomatic state`() {
-        val userState = UserState.exposedSymptomatic(
-            symptomsDate = LocalDate.now(),
-            state = UserState.exposed(LocalDate.now()),
-            symptoms = nonEmptySetOf(Symptom.COUGH)
-        )
-
-        assertNoStateTransitionsHappened(userState)
-    }
-
-    private fun assertNoStateTransitionsHappened(userState: UserState) {
-        every { userStatePrefs.get() } returns userState
-
-        userStateStorage.transitionOnContactAlert(
-            date = date,
-            onStateChanged = onStateChanged
-        )
-
-        verify(exactly = 1) {
-            userStateStorage.get()
-        }
-
-        verify(exactly = 0) {
-            userStateStorage.set(any())
-            onStateChanged.invoke()
+        verify {
+            onStateChanged wasNot Called
         }
     }
 }

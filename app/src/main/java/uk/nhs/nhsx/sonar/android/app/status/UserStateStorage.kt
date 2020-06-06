@@ -30,7 +30,7 @@ class UserStateStorage @Inject constructor(
     fun clear(): Unit = userStatePrefs.clear()
 
     fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>) {
-        val currentState = get()
+        val currentState = this.userStatePrefs.get()
 
         val newState = UserStateTransitions.diagnose(
             currentState,
@@ -38,16 +38,16 @@ class UserStateStorage @Inject constructor(
             NonEmptySet.create(symptoms)!!
         )
 
-        if (newState is DefaultState && symptoms.isNotEmpty()) {
+        if (newState is DefaultState) {
             userInbox.addRecovery()
         }
 
         newState.scheduleCheckInReminder(reminders)
-        set(newState)
+        this.userStatePrefs.set(newState)
     }
 
     fun diagnoseCheckIn(symptoms: Set<Symptom>) {
-        val currentState = get()
+        val currentState = this.userStatePrefs.get()
 
         val newState = UserStateTransitions.diagnoseForCheckin(
             currentState = currentState,
@@ -56,29 +56,32 @@ class UserStateStorage @Inject constructor(
         if (newState is DefaultState && symptoms.isNotEmpty()) {
             userInbox.addRecovery()
         }
-        set(newState)
+        this.userStatePrefs.set(newState)
     }
 
     fun transitionOnExpiredExposedState() {
-        val currentState = get()
+        val currentState = this.userStatePrefs.get()
 
         val newState = UserStateTransitions.transitionOnExpiredExposedState(currentState)
-        set(newState)
+        this.userStatePrefs.set(newState)
     }
 
     fun transitionOnContactAlert(date: DateTime, onStateChanged: () -> Unit) {
-        val currentState = get()
+        val currentState = this.userStatePrefs.get()
 
         val newState = UserStateTransitions.transitionOnContactAlert(
             currentState = currentState,
             exposureDate = date
         )
 
-        if (newState != null) {
-            set(newState)
+        if (newState != currentState) {
+            this.userStatePrefs.set(newState)
             onStateChanged()
         }
     }
+
+    fun hasAnyOfMainSymptoms(symptoms: Set<Symptom>): Boolean =
+        UserStateTransitions.hasAnyOfMainSymptoms(symptoms)
 }
 
 class UserStatePrefs @Inject constructor(context: Context) :

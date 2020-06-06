@@ -26,7 +26,6 @@ import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions
 import uk.nhs.nhsx.sonar.android.app.status.startStatusActivity
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
@@ -105,7 +104,7 @@ open class DiagnoseStomachActivity : BaseActivity() {
         if (isCheckinQuestionnaire()) {
             diagnoseForCheckin(symptoms)
         } else {
-            when (UserStateTransitions.isSymptomatic(symptoms)) {
+            when (userStateStorage.hasAnyOfMainSymptoms(symptoms)) {
                 true -> DiagnoseReviewActivity.start(this, symptoms)
                 else -> DiagnoseCloseActivity.start(this)
             }

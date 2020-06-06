@@ -19,9 +19,9 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.SNEEZE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnose
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.diagnoseForCheckin
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnExpiredExposedState
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.isSymptomatic
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.hasAnyOfMainSymptoms
 import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnContactAlert
+import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnExpiredExposedState
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
@@ -71,7 +71,8 @@ class UserStateTransitionsTest {
             SymptomaticState(
                 sevenDaysAgoOrMore.toUtcNormalized(),
                 sevenDaysAfterSymptoms,
-                symptomsWithTemperature)
+                symptomsWithTemperature
+            )
         )
     }
 
@@ -148,7 +149,13 @@ class UserStateTransitionsTest {
 
         val state = diagnoseForCheckin(currentState, setOf(TEMPERATURE), today)
 
-        assertThat(state).isEqualTo(SymptomaticState(currentState.since, tomorrow, nonEmptySetOf(TEMPERATURE)))
+        assertThat(state).isEqualTo(
+            SymptomaticState(
+                currentState.since,
+                tomorrow,
+                nonEmptySetOf(TEMPERATURE)
+            )
+        )
     }
 
     @Test
@@ -160,7 +167,13 @@ class UserStateTransitionsTest {
 
         val state = diagnoseForCheckin(currentState, setOf(COUGH, TEMPERATURE), today)
 
-        assertThat(state).isEqualTo(PositiveState(currentState.since, tomorrow, nonEmptySetOf(COUGH, TEMPERATURE)))
+        assertThat(state).isEqualTo(
+            PositiveState(
+                currentState.since,
+                tomorrow,
+                nonEmptySetOf(COUGH, TEMPERATURE)
+            )
+        )
     }
 
     @Test
@@ -204,9 +217,23 @@ class UserStateTransitionsTest {
     }
 
     @Test
-    fun `test transitionOnContactAlert does not change state for exposed or symptomatic`() {
-        assertThat(transitionOnContactAlert(buildExposedState(), DateTime.now())).isNull()
-        assertThat(transitionOnContactAlert(buildSymptomaticState(), DateTime.now())).isNull()
+    fun `test transitionOnContactAlert does not change any state other than default`() {
+
+        buildExposedState().let {
+            assertThat(transitionOnContactAlert(it, DateTime.now())).isEqualTo(it)
+        }
+
+        buildSymptomaticState().let {
+            assertThat(transitionOnContactAlert(it, DateTime.now())).isEqualTo(it)
+        }
+
+        buildExposedSymptomaticState().let {
+            assertThat(transitionOnContactAlert(it, DateTime.now())).isEqualTo(it)
+        }
+
+        buildPositiveState().let {
+            assertThat(transitionOnContactAlert(it, DateTime.now())).isEqualTo(it)
+        }
     }
 
     @Test
@@ -220,21 +247,23 @@ class UserStateTransitionsTest {
         assertThat(transitionOnExpiredExposedState(DefaultState)).isEqualTo(DefaultState)
         assertThat(transitionOnExpiredExposedState(exposedState)).isEqualTo(exposedState)
         assertThat(transitionOnExpiredExposedState(symptomaticState)).isEqualTo(symptomaticState)
-        assertThat(transitionOnExpiredExposedState(expiredSymptomaticState)).isEqualTo(expiredSymptomaticState)
+        assertThat(transitionOnExpiredExposedState(expiredSymptomaticState)).isEqualTo(
+            expiredSymptomaticState
+        )
 
         assertThat(transitionOnExpiredExposedState(expiredExposedState)).isEqualTo(DefaultState)
     }
 
     @Test
-    fun `isSymptomatic - with cough, temperature or loss of smell`() {
-        assertThat(isSymptomatic(setOf(COUGH))).isTrue()
-        assertThat(isSymptomatic(setOf(TEMPERATURE))).isTrue()
-        assertThat(isSymptomatic(setOf(ANOSMIA))).isTrue()
+    fun `hasAnyOfMainSymptoms - with cough, temperature or loss of smell`() {
+        assertThat(hasAnyOfMainSymptoms(setOf(COUGH))).isTrue()
+        assertThat(hasAnyOfMainSymptoms(setOf(TEMPERATURE))).isTrue()
+        assertThat(hasAnyOfMainSymptoms(setOf(ANOSMIA))).isTrue()
     }
 
     @Test
-    fun `isSymptomatic - with anything other than cough, temperature or loss of smell`() {
-        assertThat(isSymptomatic(setOf(NAUSEA, SNEEZE))).isFalse()
+    fun `hasAnyOfMainSymptoms - with anything other than cough, temperature or loss of smell`() {
+        assertThat(hasAnyOfMainSymptoms(setOf(NAUSEA, SNEEZE))).isFalse()
     }
 
     @After
