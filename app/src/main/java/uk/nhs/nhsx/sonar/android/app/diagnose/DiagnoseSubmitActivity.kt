@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.diagnose
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View.GONE
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.accessibility.AccessibilityEvent
@@ -70,7 +69,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
             CompoundButtonCompat.setButtonTintList(confirmationCheckbox, checkboxColors)
 
             if (isChecked) {
-                needConfirmationHint.visibility = GONE
+                needConfirmationHint.visibility = INVISIBLE
             }
         }
 
