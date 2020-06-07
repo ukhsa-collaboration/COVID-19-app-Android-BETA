@@ -76,6 +76,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
         submit_diagnosis.setOnClickListener {
             if (!confirmationCheckbox.isChecked) {
                 needConfirmationHint.visibility = VISIBLE
+                needConfirmationHint.announceForAccessibility(getString(R.string.please_confirm_the_information))
                 scrollView.scrollToView(needConfirmationHint)
                 needConfirmationHint.postDelayed(50) {
                     needConfirmationHint.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
