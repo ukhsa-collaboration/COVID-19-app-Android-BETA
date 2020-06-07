@@ -47,6 +47,7 @@ import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.appVersion
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
+import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationHandler
@@ -60,8 +61,6 @@ import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_EXPOSED
-import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.observe
@@ -196,52 +195,37 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     private fun setStates() {
         setDefaultState.setOnClickListener {
-            userStateStorage.set(DefaultState)
+            userStateStorage.clear()
             updateCurrentState()
         }
 
         setExposedState.setOnClickListener {
             showStateDatePicker("Exposure Date") {
-                userStateStorage.set(
-                    ExposedState(
-                        it.toUtcNormalized(),
-                        it.plusDays(NUMBER_OF_DAYS_IN_EXPOSED).toUtcNormalized()
-                    )
-                )
+                userStateStorage.clear()
+                userStateStorage.transitionOnContactAlert(it.toUtcNormalized())
             }
         }
 
         setSymptomaticState.setOnClickListener {
             showStateDatePicker("Symptom Date") {
-                userStateStorage.set(
-                    SymptomaticState(
-                        it.toUtcNormalized(),
-                        it.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).toUtcNormalized(),
-                        nonEmptySetOf(COUGH, TEMPERATURE)
-                    )
-                )
+                userStateStorage.clear()
+                userStateStorage.diagnose(it, nonEmptySetOf(COUGH, TEMPERATURE))
             }
         }
 
         setExposedSymptomaticState.setOnClickListener {
             showStateDatePicker("Exposure Date") {
-                userStateStorage.set(
-                    ExposedSymptomaticState(
-                        it.toUtcNormalized(),
-                        it.plusDays(NUMBER_OF_DAYS_IN_EXPOSED).toUtcNormalized(),
-                        nonEmptySetOf(TEMPERATURE)
-                    )
-                )
+                userStateStorage.clear()
+                userStateStorage.transitionOnContactAlert(it.toUtcNormalized())
+                userStateStorage.diagnose(it, nonEmptySetOf(TEMPERATURE))
             }
         }
 
         setPositiveState.setOnClickListener {
             showStateDatePicker("Test Date") {
-                userStateStorage.set(
-                    PositiveState(
-                        it.toUtcNormalized(),
-                        it.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).toUtcNormalized()
-                    )
+                userStateStorage.clear()
+                userStateStorage.transitionOnTestResult(
+                    TestInfo(TestResult.POSITIVE, it.toUtcNormalized())
                 )
             }
         }
@@ -296,7 +280,13 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
     ) : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-            return DatePickerDialog(activity, this, since.year, since.monthOfYear - 1, since.dayOfMonth)
+            return DatePickerDialog(
+                activity,
+                this,
+                since.year,
+                since.monthOfYear - 1,
+                since.dayOfMonth
+            )
         }
 
         override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {

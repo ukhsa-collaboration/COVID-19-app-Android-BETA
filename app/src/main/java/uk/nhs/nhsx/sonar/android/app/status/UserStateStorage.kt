@@ -68,7 +68,7 @@ class UserStateStorage @Inject constructor(
         this.userStatePrefs.set(newState)
     }
 
-    fun transitionOnContactAlert(date: DateTime, onStateChanged: () -> Unit) {
+    fun transitionOnContactAlert(date: DateTime, onStateChanged: () -> Unit = {}) {
         val currentState = this.userStatePrefs.get()
 
         val newState = transitions.transitionOnContactAlert(

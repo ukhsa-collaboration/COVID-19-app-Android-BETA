@@ -193,7 +193,7 @@ class StatusActivity : BaseActivity() {
                 DiagnoseTemperatureActivity.start(this)
             },
             onSecondCtaClick = {
-                userStateStorage.set(DefaultState)
+                userStateStorage.clear()
                 refreshState()
             }
         )
@@ -218,7 +218,7 @@ class StatusActivity : BaseActivity() {
             },
             onSecondCtaClick = {
                 userInbox.dismissTestInfo()
-                userStateStorage.set(DefaultState)
+                userStateStorage.clear()
                 refreshState()
             }
         )

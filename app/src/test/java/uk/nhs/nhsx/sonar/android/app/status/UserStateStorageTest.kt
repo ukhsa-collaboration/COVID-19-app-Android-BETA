@@ -194,7 +194,7 @@ class UserStateStorageTest {
         every { userStatePrefs.get() } returns state
         every { transitions.transitionOnContactAlert(any(), any()) } returns DefaultState
 
-        userStateStorage.transitionOnContactAlert(exposureDate) {}
+        userStateStorage.transitionOnContactAlert(exposureDate)
 
         verify {
             transitions.transitionOnContactAlert(state, exposureDate)
@@ -207,7 +207,7 @@ class UserStateStorageTest {
         val state = buildExposedState()
         every { transitions.transitionOnContactAlert(any(), any()) } returns state
 
-        userStateStorage.transitionOnContactAlert(DateTime.now()) {}
+        userStateStorage.transitionOnContactAlert(DateTime.now())
 
         verify {
             userStatePrefs.set(state)
