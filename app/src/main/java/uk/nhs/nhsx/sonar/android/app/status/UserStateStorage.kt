@@ -24,11 +24,6 @@ class UserStateStorage @Inject constructor(
 
     fun get(): UserState = userStatePrefs.get()
 
-    fun set(state: UserState) {
-        userStatePrefs.set(state)
-        Timber.d("Updated the state to: $state")
-    }
-
     fun clear(): Unit = userStatePrefs.clear()
 
     fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>) {
