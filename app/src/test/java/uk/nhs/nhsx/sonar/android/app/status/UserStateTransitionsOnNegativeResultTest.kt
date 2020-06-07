@@ -10,16 +10,16 @@ import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTransitionsOnNegativeResultTest {
+    private val transitions = UserStateTransitions()
 
     @Test
     fun `default remains default`() {
         val testInfo = TestInfo(TestResult.NEGATIVE, DateTime.now())
 
-        val state = transitionOnTestResult(DefaultState, testInfo)
+        val state = transitions.transitionOnTestResult(DefaultState, testInfo)
 
         assertThat(state).isEqualTo(DefaultState)
     }
@@ -29,7 +29,7 @@ class UserStateTransitionsOnNegativeResultTest {
         val symptomatic = buildSymptomaticState()
         val testInfo = TestInfo(TestResult.NEGATIVE, symptomatic.since.plusDays(1))
 
-        val state = transitionOnTestResult(symptomatic, testInfo)
+        val state = transitions.transitionOnTestResult(symptomatic, testInfo)
 
         assertThat(state.hasExpired()).isTrue()
         assertThat(state).isEqualTo(symptomatic.copy(until = yesterday()))
@@ -40,7 +40,7 @@ class UserStateTransitionsOnNegativeResultTest {
         val symptomatic = buildSymptomaticState()
         val testInfo = TestInfo(TestResult.NEGATIVE, symptomatic.since.minusDays(1))
 
-        val state = transitionOnTestResult(symptomatic, testInfo)
+        val state = transitions.transitionOnTestResult(symptomatic, testInfo)
 
         assertThat(state).isEqualTo(symptomatic)
     }
@@ -50,7 +50,7 @@ class UserStateTransitionsOnNegativeResultTest {
         val exposedSymptomatic = buildExposedSymptomaticState()
         val testInfo = TestInfo(TestResult.NEGATIVE, exposedSymptomatic.since.plusDays(1))
 
-        val state = transitionOnTestResult(exposedSymptomatic, testInfo)
+        val state = transitions.transitionOnTestResult(exposedSymptomatic, testInfo)
 
         assertThat(state).isEqualTo(ExposedState(
             since = exposedSymptomatic.since,
@@ -63,7 +63,7 @@ class UserStateTransitionsOnNegativeResultTest {
         val positive = buildPositiveState()
         val testInfo = TestInfo(TestResult.NEGATIVE, positive.since.minusDays(1))
 
-        val state = transitionOnTestResult(positive, testInfo)
+        val state = transitions.transitionOnTestResult(positive, testInfo)
 
         assertThat(state).isEqualTo(positive)
     }
@@ -73,7 +73,7 @@ class UserStateTransitionsOnNegativeResultTest {
         val exposed = buildExposedState()
         val testInfo = TestInfo(TestResult.NEGATIVE, exposed.since.plusDays(1))
 
-        val state = transitionOnTestResult(exposed, testInfo)
+        val state = transitions.transitionOnTestResult(exposed, testInfo)
 
         assertThat(state).isEqualTo(exposed)
     }

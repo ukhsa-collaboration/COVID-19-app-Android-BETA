@@ -16,8 +16,9 @@ import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.exposed
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.positive
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.isEarlierThan
+import javax.inject.Inject
 
-object UserStateTransitions {
+class UserStateTransitions @Inject constructor() {
 
     fun diagnose(
         currentState: UserState,
@@ -43,7 +44,7 @@ object UserStateTransitions {
     ): UserState =
         when {
             hasTemperature(symptoms) -> currentState.extend(symptoms, today)
-                else -> DefaultState
+            else -> DefaultState
         }
 
     fun hasAnyOfMainSymptoms(symptoms: Set<Symptom>): Boolean =

@@ -16,6 +16,7 @@ import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceSerializingProvider
 import javax.inject.Inject
 
 class UserStateStorage @Inject constructor(
+    private val transitions: UserStateTransitions,
     private val userStatePrefs: UserStatePrefs,
     private val userInbox: UserInbox,
     private val reminders: Reminders
@@ -33,10 +34,10 @@ class UserStateStorage @Inject constructor(
     fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>) {
         val currentState = this.userStatePrefs.get()
 
-        val newState = UserStateTransitions.diagnose(
+        val newState = transitions.diagnose(
             currentState,
             symptomsDate,
-            NonEmptySet.create(symptoms)!!
+            symptoms
         )
 
         if (newState is DefaultState) {
@@ -50,7 +51,7 @@ class UserStateStorage @Inject constructor(
     fun diagnoseCheckIn(symptoms: Set<Symptom>) {
         val currentState = this.userStatePrefs.get()
 
-        val newState = UserStateTransitions.diagnoseForCheckin(
+        val newState = transitions.diagnoseForCheckin(
             currentState = currentState,
             symptoms = symptoms
         )
@@ -63,14 +64,14 @@ class UserStateStorage @Inject constructor(
     fun transitionOnExpiredExposedState() {
         val currentState = this.userStatePrefs.get()
 
-        val newState = UserStateTransitions.transitionOnExpiredExposedState(currentState)
+        val newState = transitions.transitionOnExpiredExposedState(currentState)
         this.userStatePrefs.set(newState)
     }
 
     fun transitionOnContactAlert(date: DateTime, onStateChanged: () -> Unit) {
         val currentState = this.userStatePrefs.get()
 
-        val newState = UserStateTransitions.transitionOnContactAlert(
+        val newState = transitions.transitionOnContactAlert(
             currentState = currentState,
             exposureDate = date
         )
@@ -84,7 +85,7 @@ class UserStateStorage @Inject constructor(
     fun transitionOnTestResult(testInfo: TestInfo) {
         val currentState = this.userStatePrefs.get()
 
-        val newState = UserStateTransitions.transitionOnTestResult(currentState, testInfo)
+        val newState = transitions.transitionOnTestResult(currentState, testInfo)
 
         this.userStatePrefs.set(newState)
         newState.scheduleCheckInReminder(reminders)
@@ -92,7 +93,7 @@ class UserStateStorage @Inject constructor(
     }
 
     fun hasAnyOfMainSymptoms(symptoms: Set<Symptom>): Boolean =
-        UserStateTransitions.hasAnyOfMainSymptoms(symptoms)
+        transitions.hasAnyOfMainSymptoms(symptoms)
 }
 
 class UserStatePrefs @Inject constructor(context: Context) :

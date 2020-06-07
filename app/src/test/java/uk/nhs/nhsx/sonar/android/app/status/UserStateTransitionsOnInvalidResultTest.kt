@@ -9,15 +9,16 @@ import org.joda.time.DateTime
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.status.UserStateTransitions.transitionOnTestResult
 
 class UserStateTransitionsOnInvalidResultTest {
+
+    private val transitions = UserStateTransitions()
 
     @Test
     fun `default remains default`() {
         val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
-        val state = transitionOnTestResult(DefaultState, testInfo)
+        val state = transitions.transitionOnTestResult(DefaultState, testInfo)
 
         assertThat(state).isEqualTo(DefaultState)
     }
@@ -27,7 +28,7 @@ class UserStateTransitionsOnInvalidResultTest {
         val symptomatic = buildSymptomaticState()
         val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
-        val state = transitionOnTestResult(symptomatic, testInfo)
+        val state = transitions.transitionOnTestResult(symptomatic, testInfo)
 
         assertThat(state).isEqualTo(symptomatic)
     }
@@ -37,7 +38,7 @@ class UserStateTransitionsOnInvalidResultTest {
         val positive = buildPositiveState()
         val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
-        val state = transitionOnTestResult(positive, testInfo)
+        val state = transitions.transitionOnTestResult(positive, testInfo)
 
         assertThat(state).isEqualTo(positive)
     }
@@ -47,7 +48,7 @@ class UserStateTransitionsOnInvalidResultTest {
         val exposed = buildExposedState()
         val testInfo = TestInfo(TestResult.INVALID, DateTime.now())
 
-        val state = transitionOnTestResult(exposed, testInfo)
+        val state = transitions.transitionOnTestResult(exposed, testInfo)
 
         assertThat(state).isEqualTo(exposed)
     }
