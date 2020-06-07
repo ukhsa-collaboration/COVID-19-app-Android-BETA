@@ -104,7 +104,7 @@ class DiagnoseCoughActivity : BaseActivity() {
     }
 
     private fun isCheckinQuestionnaire() =
-        userStateStorage.get().displayState() == DisplayState.ISOLATE
+        userStateStorage.state().displayState() == DisplayState.ISOLATE
 
     companion object {
 

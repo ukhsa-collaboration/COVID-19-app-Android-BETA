@@ -101,7 +101,7 @@ open class DiagnoseSneezeActivity : BaseActivity() {
     }
 
     private fun isCheckinQuestionnaire() =
-        userStateStorage.get().displayState() == DisplayState.ISOLATE
+        userStateStorage.state().displayState() == DisplayState.ISOLATE
 
     companion object {
         fun start(context: Context, symptoms: Set<Symptom>) =

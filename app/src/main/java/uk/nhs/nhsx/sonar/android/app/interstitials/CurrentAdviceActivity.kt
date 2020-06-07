@@ -34,7 +34,7 @@ class CurrentAdviceActivity : AppCompatActivity(R.layout.activity_current_advice
     @Inject
     lateinit var userStateStorage: UserStateStorage
 
-    private val state: UserState by lazy { userStateStorage.get() }
+    private val state: UserState by lazy { userStateStorage.state() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)

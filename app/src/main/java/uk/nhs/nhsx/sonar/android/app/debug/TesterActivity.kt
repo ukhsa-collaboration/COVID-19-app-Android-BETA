@@ -127,7 +127,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         resetButton.setOnClickListener {
-            userStateStorage.clear()
+            userStateStorage.reset()
             sonarIdProvider.clear()
             onboardingStatusProvider.clear()
             activationCodeProvider.clear()
@@ -166,7 +166,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     @SuppressLint("SetTextI18n")
     private fun updateCurrentState() {
-        showCurrentState.text = when (val state = this.userStateStorage.get()) {
+        showCurrentState.text = when (val state = this.userStateStorage.state()) {
             is DefaultState -> "In default state"
             is ExposedState -> "Exposed: ${state.since.toUiFormat()} - ${state.until.toUiFormat()}"
             is SymptomaticState -> "Symptomatic:  ${state.since.toUiFormat()} - ${state.until.toUiFormat()}"
@@ -195,27 +195,27 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     private fun setStates() {
         setDefaultState.setOnClickListener {
-            userStateStorage.clear()
+            userStateStorage.reset()
             updateCurrentState()
         }
 
         setExposedState.setOnClickListener {
             showStateDatePicker("Exposure Date") {
-                userStateStorage.clear()
+                userStateStorage.reset()
                 userStateStorage.transitionOnContactAlert(it.toUtcNormalized())
             }
         }
 
         setSymptomaticState.setOnClickListener {
             showStateDatePicker("Symptom Date") {
-                userStateStorage.clear()
+                userStateStorage.reset()
                 userStateStorage.diagnose(it, nonEmptySetOf(COUGH, TEMPERATURE))
             }
         }
 
         setExposedSymptomaticState.setOnClickListener {
             showStateDatePicker("Exposure Date") {
-                userStateStorage.clear()
+                userStateStorage.reset()
                 userStateStorage.transitionOnContactAlert(it.toUtcNormalized())
                 userStateStorage.diagnose(it, nonEmptySetOf(TEMPERATURE))
             }
@@ -223,7 +223,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
         setPositiveState.setOnClickListener {
             showStateDatePicker("Test Date") {
-                userStateStorage.clear()
+                userStateStorage.reset()
                 userStateStorage.transitionOnTestResult(
                     TestInfo(TestResult.POSITIVE, it.toUtcNormalized())
                 )

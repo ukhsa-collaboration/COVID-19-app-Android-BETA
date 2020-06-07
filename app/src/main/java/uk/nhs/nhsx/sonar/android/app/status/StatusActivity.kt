@@ -127,7 +127,7 @@ class StatusActivity : BaseActivity() {
         testResultDialog = createTestResultDialog(this, userInbox)
 
         // TODO: maybe move this check into view model?
-        val userState = userStateStorage.get()
+        val userState = userStateStorage.state()
         if (userState is DefaultState) {
             toggleReferenceCodeCard(this, false)
             toggleNotFeelingCard(this, false)
@@ -193,7 +193,7 @@ class StatusActivity : BaseActivity() {
                 DiagnoseTemperatureActivity.start(this)
             },
             onSecondCtaClick = {
-                userStateStorage.clear()
+                userStateStorage.reset()
                 refreshState()
             }
         )
@@ -218,7 +218,7 @@ class StatusActivity : BaseActivity() {
             },
             onSecondCtaClick = {
                 userInbox.dismissTestInfo()
-                userStateStorage.clear()
+                userStateStorage.reset()
                 refreshState()
             }
         )
@@ -254,7 +254,7 @@ class StatusActivity : BaseActivity() {
     }
 
     fun refreshState() {
-        val currentState = userStateStorage.get()
+        val currentState = userStateStorage.state()
         if (previousState != currentState) {
             statusLayout = StatusLayoutFactory.from(currentState)
             statusLayout.refreshStatusLayout(this)

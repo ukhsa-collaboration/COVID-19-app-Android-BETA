@@ -33,7 +33,6 @@ import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.status.UserStatePrefs
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
 import javax.inject.Singleton
 
 @Singleton

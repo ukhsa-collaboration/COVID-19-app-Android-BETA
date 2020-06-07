@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.status
 import android.content.Context
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
@@ -22,9 +21,9 @@ class UserStateStorage @Inject constructor(
     private val reminders: Reminders
 ) {
 
-    fun get(): UserState = userStatePrefs.get()
+    fun state(): UserState = userStatePrefs.get()
 
-    fun clear(): Unit = userStatePrefs.clear()
+    fun reset(): Unit = userStatePrefs.clear()
 
     fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>) {
         val currentState = this.userStatePrefs.get()
