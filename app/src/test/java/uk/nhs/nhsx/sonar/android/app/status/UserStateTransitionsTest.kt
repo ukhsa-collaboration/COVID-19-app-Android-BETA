@@ -14,8 +14,6 @@ import org.junit.Before
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.NAUSEA
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.SNEEZE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
@@ -248,18 +246,6 @@ class UserStateTransitionsTest {
         )
 
         assertThat(transitions.transitionOnExpiredExposedState(expiredExposedState)).isEqualTo(DefaultState)
-    }
-
-    @Test
-    fun `hasAnyOfMainSymptoms - with cough, temperature or loss of smell`() {
-        assertThat(transitions.hasAnyOfMainSymptoms(setOf(COUGH))).isTrue()
-        assertThat(transitions.hasAnyOfMainSymptoms(setOf(TEMPERATURE))).isTrue()
-        assertThat(transitions.hasAnyOfMainSymptoms(setOf(ANOSMIA))).isTrue()
-    }
-
-    @Test
-    fun `hasAnyOfMainSymptoms - with anything other than cough, temperature or loss of smell`() {
-        assertThat(transitions.hasAnyOfMainSymptoms(setOf(NAUSEA, SNEEZE))).isFalse()
     }
 
     @After

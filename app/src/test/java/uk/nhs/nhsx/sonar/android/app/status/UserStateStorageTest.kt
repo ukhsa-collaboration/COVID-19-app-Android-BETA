@@ -8,6 +8,7 @@ import io.mockk.Called
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.junit.Test
@@ -293,5 +294,17 @@ class UserStateStorageTest {
         verify {
             userInbox.addTestInfo(testInfo)
         }
+    }
+
+    @Test
+    fun `hasAnyOfMainSymptoms - with cough, temperature or loss of smell`() {
+        assertThat(userStateStorage.hasAnyOfMainSymptoms(setOf(COUGH))).isTrue()
+        assertThat(userStateStorage.hasAnyOfMainSymptoms(setOf(TEMPERATURE))).isTrue()
+        assertThat(userStateStorage.hasAnyOfMainSymptoms(setOf(ANOSMIA))).isTrue()
+    }
+
+    @Test
+    fun `hasAnyOfMainSymptoms - with anything other than cough, temperature or loss of smell`() {
+        assertThat(userStateStorage.hasAnyOfMainSymptoms(setOf(Symptom.NAUSEA, Symptom.SNEEZE))).isFalse()
     }
 }

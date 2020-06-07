@@ -8,8 +8,6 @@ import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_SYMPTOMATIC
 import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.exposed
@@ -46,9 +44,6 @@ class UserStateTransitions @Inject constructor() {
             hasTemperature(symptoms) -> currentState.extend(symptoms, today)
             else -> DefaultState
         }
-
-    fun hasAnyOfMainSymptoms(symptoms: Set<Symptom>): Boolean =
-        hasTemperature(symptoms) || hasCough(symptoms) || hasAnosmia(symptoms)
 
     fun transitionOnExpiredExposedState(currentState: UserState): UserState =
         if (currentState is ExposedState && currentState.hasExpired())
@@ -115,10 +110,4 @@ class UserStateTransitions @Inject constructor() {
 
     private fun hasTemperature(symptoms: Set<Symptom>): Boolean =
         TEMPERATURE in symptoms
-
-    private fun hasCough(symptoms: Set<Symptom>): Boolean =
-        COUGH in symptoms
-
-    private fun hasAnosmia(symptoms: Set<Symptom>): Boolean =
-        ANOSMIA in symptoms
 }

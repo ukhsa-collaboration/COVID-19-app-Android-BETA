@@ -93,7 +93,9 @@ class UserStateStorage @Inject constructor(
     }
 
     fun hasAnyOfMainSymptoms(symptoms: Set<Symptom>): Boolean =
-        transitions.hasAnyOfMainSymptoms(symptoms)
+        symptoms.contains(Symptom.TEMPERATURE) ||
+            symptoms.contains(Symptom.COUGH) ||
+            symptoms.contains(Symptom.ANOSMIA)
 }
 
 class UserStatePrefs @Inject constructor(context: Context) :
