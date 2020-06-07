@@ -15,8 +15,8 @@ import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.confirm_diagnos
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.no
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.scrollView
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.yes
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.scrollView
 import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -53,7 +53,7 @@ open class DiagnoseAnosmiaActivity : BaseActivity() {
                 }
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
-                    radio_selection_error.announceForAccessibility(getString(R.string.radio_button_temperature_error))
+                    radio_selection_error.announceForAccessibility(getString(R.string.radio_button_anosmia_error))
                     scrollView.scrollToView(radio_selection_error)
                 }
             }

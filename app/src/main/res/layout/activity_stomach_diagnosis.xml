@@ -59,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/stomach_description"
                 android:layout_marginVertical="8dp"
+                android:labelFor="@+id/stomach_diagnosis_answer"
                 android:visibility="gone"
                 app:error_description="@string/radio_button_symptoms_error"
                 tools:visibility="visible" />

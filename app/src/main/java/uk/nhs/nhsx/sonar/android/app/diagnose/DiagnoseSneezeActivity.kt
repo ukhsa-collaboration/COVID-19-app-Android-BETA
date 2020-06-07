@@ -12,11 +12,11 @@ import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.confirm_diagnosi
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.no
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.scrollView
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.sneeze_description
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.sneeze_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.sneeze_question
 import kotlinx.android.synthetic.main.activity_sneeze_diagnosis.yes
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.scrollView
 import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -53,7 +53,7 @@ open class DiagnoseSneezeActivity : BaseActivity() {
                 }
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
-                    radio_selection_error.announceForAccessibility(getString(R.string.radio_button_temperature_error))
+                    radio_selection_error.announceForAccessibility(getString(R.string.radio_button_symptoms_error))
                     scrollView.scrollToView(radio_selection_error)
                 }
             }

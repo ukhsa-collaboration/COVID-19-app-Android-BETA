@@ -12,11 +12,11 @@ import kotlinx.android.synthetic.main.activity_stomach_diagnosis.confirm_diagnos
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.no
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.progress
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.radio_selection_error
+import kotlinx.android.synthetic.main.activity_stomach_diagnosis.scrollView
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_description
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_diagnosis_answer
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.stomach_question
 import kotlinx.android.synthetic.main.activity_stomach_diagnosis.yes
-import kotlinx.android.synthetic.main.activity_temperature_diagnosis.scrollView
 import kotlinx.android.synthetic.main.white_banner.toolbar
 import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
@@ -57,7 +57,7 @@ open class DiagnoseStomachActivity : BaseActivity() {
                 R.id.no -> nextStep(symptoms)
                 else -> {
                     radio_selection_error.visibility = View.VISIBLE
-                    radio_selection_error.announceForAccessibility(getString(R.string.radio_button_cough_error))
+                    radio_selection_error.announceForAccessibility(getString(R.string.radio_button_symptoms_error))
                     scrollView.scrollToView(radio_selection_error)
                 }
             }
