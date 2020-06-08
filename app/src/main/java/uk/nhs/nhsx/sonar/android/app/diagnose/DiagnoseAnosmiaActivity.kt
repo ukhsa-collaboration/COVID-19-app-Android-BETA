@@ -18,9 +18,9 @@ import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.radio_selection
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.scrollView
 import kotlinx.android.synthetic.main.activity_anosmia_diagnosis.yes
 import kotlinx.android.synthetic.main.white_banner.toolbar
-import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.common.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine

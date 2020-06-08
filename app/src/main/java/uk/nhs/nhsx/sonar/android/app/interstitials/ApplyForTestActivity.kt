@@ -12,11 +12,11 @@ import androidx.lifecycle.Observer
 import kotlinx.android.synthetic.main.activity_apply_for_test.order_clinical_tests
 import kotlinx.android.synthetic.main.activity_reference_code.reference_code_panel
 import kotlinx.android.synthetic.main.white_banner.toolbar
-import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.BuildConfig
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.common.BaseActivity
+import uk.nhs.nhsx.sonar.android.app.common.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCode
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeViewModel.State.Loaded

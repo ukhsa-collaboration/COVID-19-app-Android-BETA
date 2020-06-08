@@ -21,7 +21,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.ServiceRestarterBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStatusSubscriptionHandler.CombinedStatus
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStatusSubscriptionHandler.Delegate
@@ -29,6 +28,8 @@ import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.notifications.BluetoothNotificationHelper
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ForegroundService
 import uk.nhs.nhsx.sonar.android.app.notifications.notificationBuilder
+import uk.nhs.nhsx.sonar.android.app.receivers.LocationProviderChangedReceiver
+import uk.nhs.nhsx.sonar.android.app.receivers.ServiceRestarterBroadcastReceiver
 import javax.inject.Inject
 import javax.inject.Named
 

@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main_onboarding.confirm_onboarding
 import kotlinx.android.synthetic.main.activity_main_onboarding.explanation_link
-import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.common.ColorInversionAwareActivity
 
 class MainOnboardingActivity : ColorInversionAwareActivity() {
 

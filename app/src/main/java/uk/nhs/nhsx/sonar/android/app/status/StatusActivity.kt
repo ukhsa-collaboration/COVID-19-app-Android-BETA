@@ -18,11 +18,11 @@ import kotlinx.android.synthetic.main.banner.toolbar_info
 import kotlinx.android.synthetic.main.status_footer_view.nhsServiceFooter
 import kotlinx.android.synthetic.main.status_footer_view.reference_link_card
 import kotlinx.android.synthetic.main.status_footer_view.workplace_guidance_card
-import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
+import uk.nhs.nhsx.sonar.android.app.common.BaseActivity
+import uk.nhs.nhsx.sonar.android.app.common.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseTemperatureActivity
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity

@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app
+package uk.nhs.nhsx.sonar.android.app.common
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

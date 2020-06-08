@@ -149,20 +149,20 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".BootCompletedReceiver">
+        <receiver android:name=".receivers.BootCompletedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".PackageReplacedReceiver">
+        <receiver android:name=".receivers.PackageReplacedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".TurnBluetoothOnReceiver" />
-        <receiver android:name=".ServiceRestarterBroadcastReceiver" />
+        <receiver android:name=".receivers.TurnBluetoothOnReceiver" />
+        <receiver android:name=".receivers.ServiceRestarterBroadcastReceiver" />
         <receiver android:name=".notifications.ReminderBroadcastReceiver">
 
         </receiver>

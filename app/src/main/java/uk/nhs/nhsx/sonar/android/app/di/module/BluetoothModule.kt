@@ -13,11 +13,11 @@ import com.polidea.rxandroidble2.RxBleClient
 import dagger.Module
 import dagger.Provides
 import uk.nhs.nhsx.sonar.android.app.BuildConfig
-import uk.nhs.nhsx.sonar.android.app.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
 import uk.nhs.nhsx.sonar.android.app.ble.NoOpBleEventEmitter
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
 import uk.nhs.nhsx.sonar.android.app.ble.Scanner
+import uk.nhs.nhsx.sonar.android.app.util.DeviceDetection
 import javax.inject.Named
 
 @Module

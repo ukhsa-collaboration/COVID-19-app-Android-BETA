@@ -8,12 +8,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
+import uk.nhs.nhsx.sonar.android.app.common.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.status.startStatusActivity
+import uk.nhs.nhsx.sonar.android.app.util.DeviceDetection
 import javax.inject.Inject
 
 class MainActivity : ColorInversionAwareActivity() {

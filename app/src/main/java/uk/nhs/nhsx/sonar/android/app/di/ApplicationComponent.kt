@@ -6,12 +6,10 @@ package uk.nhs.nhsx.sonar.android.app.di
 
 import com.polidea.rxandroidble2.RxBleClient
 import dagger.Component
-import uk.nhs.nhsx.sonar.android.app.BaseActivity
-import uk.nhs.nhsx.sonar.android.app.BootCompletedReceiver
 import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.MainActivity
-import uk.nhs.nhsx.sonar.android.app.PackageReplacedReceiver
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
+import uk.nhs.nhsx.sonar.android.app.common.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWork
 import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
@@ -39,6 +37,8 @@ import uk.nhs.nhsx.sonar.android.app.onboarding.EnableLocationActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.GrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
+import uk.nhs.nhsx.sonar.android.app.receivers.BootCompletedReceiver
+import uk.nhs.nhsx.sonar.android.app.receivers.PackageReplacedReceiver
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationWork
 import uk.nhs.nhsx.sonar.android.app.status.StatusActivity

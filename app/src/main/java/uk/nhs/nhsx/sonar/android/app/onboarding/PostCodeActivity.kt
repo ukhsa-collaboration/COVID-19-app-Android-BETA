@@ -9,10 +9,14 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
-import kotlinx.android.synthetic.main.activity_post_code.*
-import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
+import kotlinx.android.synthetic.main.activity_post_code.invalidPostCodeHint
+import kotlinx.android.synthetic.main.activity_post_code.postCodeContinue
+import kotlinx.android.synthetic.main.activity_post_code.postCodeEditText
+import kotlinx.android.synthetic.main.activity_post_code.postCodeRationale
+import kotlinx.android.synthetic.main.activity_post_code.scrollView
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.common.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import javax.inject.Inject
 

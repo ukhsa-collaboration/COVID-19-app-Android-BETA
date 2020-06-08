@@ -25,9 +25,9 @@ import kotlinx.android.synthetic.main.white_banner.toolbar
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
-import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.common.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivity
 import uk.nhs.nhsx.sonar.android.app.diagnose.getSymptoms
 import uk.nhs.nhsx.sonar.android.app.diagnose.putSymptoms

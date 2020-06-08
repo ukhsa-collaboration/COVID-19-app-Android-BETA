@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app
+package uk.nhs.nhsx.sonar.android.app.util
 
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
@@ -14,7 +14,6 @@ import io.mockk.mockkStatic
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.util.smallestScreenWidth
 
 class DeviceDetectionTest {
 

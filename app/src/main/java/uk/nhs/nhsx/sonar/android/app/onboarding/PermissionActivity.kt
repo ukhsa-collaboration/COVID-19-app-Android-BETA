@@ -9,12 +9,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_permission.permission_continue
-import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
-import uk.nhs.nhsx.sonar.android.app.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
+import uk.nhs.nhsx.sonar.android.app.common.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedActivity
 import uk.nhs.nhsx.sonar.android.app.status.startStatusActivity
+import uk.nhs.nhsx.sonar.android.app.util.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothEnabled
 import javax.inject.Inject

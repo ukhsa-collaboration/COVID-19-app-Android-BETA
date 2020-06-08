@@ -11,8 +11,6 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import org.joda.time.DateTime
-import uk.nhs.nhsx.sonar.android.app.AppDatabase
-import uk.nhs.nhsx.sonar.android.app.DeviceDetection
 import uk.nhs.nhsx.sonar.android.app.analytics.AnalyticEvent
 import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
@@ -33,6 +31,8 @@ import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeProvider
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import uk.nhs.nhsx.sonar.android.app.registration.TokenRetriever
 import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.storage.AppDatabase
+import uk.nhs.nhsx.sonar.android.app.util.DeviceDetection
 import javax.inject.Singleton
 
 @Singleton

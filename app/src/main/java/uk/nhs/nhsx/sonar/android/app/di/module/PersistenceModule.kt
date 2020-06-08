@@ -8,10 +8,10 @@ import android.content.Context
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
-import uk.nhs.nhsx.sonar.android.app.AppDatabase
 import uk.nhs.nhsx.sonar.android.app.contactevents.CoLocationDataProvider
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.notifications.AcknowledgmentsDao
+import uk.nhs.nhsx.sonar.android.app.storage.AppDatabase
 
 @Module
 class PersistenceModule(private val appContext: Context) {

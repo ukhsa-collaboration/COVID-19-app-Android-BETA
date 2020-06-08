@@ -2,7 +2,7 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app.ble
+package uk.nhs.nhsx.sonar.android.app.receivers
 
 import android.bluetooth.BluetoothAdapter.ACTION_STATE_CHANGED
 import android.bluetooth.BluetoothAdapter.ERROR

@@ -42,9 +42,8 @@ import kotlinx.android.synthetic.main.activity_test.sonar_id
 import org.joda.time.LocalDate
 import org.joda.time.LocalTime
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.appVersion
+import uk.nhs.nhsx.sonar.android.app.common.ViewModelFactory
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramProvider
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
@@ -62,6 +61,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
+import uk.nhs.nhsx.sonar.android.app.util.appVersion
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.observe
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat

@@ -13,10 +13,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.TurnBluetoothOnReceiver
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.ContactAndCheckin
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels.Channel.PermissionsAndAccess
+import uk.nhs.nhsx.sonar.android.app.receivers.TurnBluetoothOnReceiver
 import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import javax.inject.Inject
 

@@ -2,18 +2,21 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app
+package uk.nhs.nhsx.sonar.android.app.common
 
 import android.bluetooth.BluetoothAdapter.STATE_OFF
 import android.os.Bundle
 import android.view.View
 import io.reactivex.disposables.Disposable
-import uk.nhs.nhsx.sonar.android.app.ble.BluetoothStateBroadcastReceiver
-import uk.nhs.nhsx.sonar.android.app.ble.LocationProviderChangedReceiver
+import uk.nhs.nhsx.sonar.android.app.BuildConfig
+import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.debug.TesterActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReAllowGrantLocationPermissionActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableBluetoothActivity
 import uk.nhs.nhsx.sonar.android.app.edgecases.ReEnableLocationActivity
+import uk.nhs.nhsx.sonar.android.app.receivers.BluetoothStateBroadcastReceiver
+import uk.nhs.nhsx.sonar.android.app.receivers.LocationProviderChangedReceiver
 import uk.nhs.nhsx.sonar.android.app.util.LocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.NotificationManagerHelper
 import uk.nhs.nhsx.sonar.android.app.util.isBluetoothDisabled

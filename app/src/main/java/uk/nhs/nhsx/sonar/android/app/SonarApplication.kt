@@ -31,6 +31,7 @@ import uk.nhs.nhsx.sonar.android.app.di.module.NotificationsModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.AndroidNotificationManagerHelper
+import uk.nhs.nhsx.sonar.android.app.util.appVersion
 import java.security.KeyStore
 import java.security.Security
 

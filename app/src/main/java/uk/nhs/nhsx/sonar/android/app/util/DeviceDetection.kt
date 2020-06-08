@@ -2,12 +2,11 @@
  * Copyright © 2020 NHSX. All rights reserved.
  */
 
-package uk.nhs.nhsx.sonar.android.app
+package uk.nhs.nhsx.sonar.android.app.util
 
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.pm.PackageManager.FEATURE_BLUETOOTH_LE
-import uk.nhs.nhsx.sonar.android.app.util.smallestScreenWidth
 
 class DeviceDetection(
     private val bluetoothAdapter: BluetoothAdapter?,
