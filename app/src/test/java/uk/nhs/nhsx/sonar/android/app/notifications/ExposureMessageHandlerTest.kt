@@ -8,12 +8,12 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.joda.time.DateTime
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
 
 class ExposureMessageHandlerTest {
 
     private val exposedNotification = mockk<ExposedNotification>(relaxUnitFun = true)
-    private val userStateStorage = mockk<UserStateStorage>(relaxUnitFun = true)
+    private val userStateStorage = mockk<UserStateMachine>(relaxUnitFun = true)
     private val handler = ExposureMessageHandler(userStateStorage, exposedNotification)
 
     @Test

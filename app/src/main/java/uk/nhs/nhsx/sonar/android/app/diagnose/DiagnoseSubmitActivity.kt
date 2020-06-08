@@ -25,7 +25,7 @@ import uk.nhs.nhsx.sonar.android.app.BaseActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
 import uk.nhs.nhsx.sonar.android.app.status.startStatusActivity
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
@@ -34,7 +34,7 @@ import javax.inject.Inject
 
 class DiagnoseSubmitActivity : BaseActivity() {
     @Inject
-    protected lateinit var userStateStorage: UserStateStorage
+    protected lateinit var userStateMachine: UserStateMachine
 
     private val symptoms: Set<Symptom> by lazy { intent.getSymptoms() }
 
@@ -91,7 +91,7 @@ class DiagnoseSubmitActivity : BaseActivity() {
     }
 
     private fun updateStateAndNavigate() {
-        userStateStorage.diagnose(symptomsDate, NonEmptySet.create(symptoms)!!)
+        userStateMachine.diagnose(symptomsDate, NonEmptySet.create(symptoms)!!)
         startStatusActivity()
     }
 

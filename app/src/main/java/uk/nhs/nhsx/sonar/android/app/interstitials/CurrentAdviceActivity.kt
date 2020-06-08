@@ -19,7 +19,7 @@ import uk.nhs.nhsx.sonar.android.app.status.ExposedSymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.UserState
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_DEFAULT
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_EXPOSED
 import uk.nhs.nhsx.sonar.android.app.util.URL_LATEST_ADVICE_POSITIVE
@@ -32,9 +32,9 @@ import javax.inject.Inject
 class CurrentAdviceActivity : AppCompatActivity(R.layout.activity_current_advice) {
 
     @Inject
-    lateinit var userStateStorage: UserStateStorage
+    lateinit var userStateMachine: UserStateMachine
 
-    private val state: UserState by lazy { userStateStorage.state() }
+    private val state: UserState by lazy { userStateMachine.state() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)

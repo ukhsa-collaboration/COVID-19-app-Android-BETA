@@ -91,7 +91,7 @@ class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
     override fun onResume(activity: StatusActivity) {
         activity.exposedNotification.hide()
 
-        activity.userStateStorage.transitionOnExpiredExposedState()
+        activity.userStateMachine.transitionOnExpiredExposedState()
         activity.refreshState()
 
         handleTestResult(activity, activity.testResultDialog)

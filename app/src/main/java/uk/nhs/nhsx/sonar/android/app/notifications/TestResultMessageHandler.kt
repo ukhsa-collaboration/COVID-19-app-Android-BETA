@@ -5,11 +5,11 @@
 package uk.nhs.nhsx.sonar.android.app.notifications
 
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
 import javax.inject.Inject
 
 class TestResultMessageHandler @Inject constructor(
-    private val userStateStorage: UserStateStorage,
+    private val userStateMachine: UserStateMachine,
     private val testResultNotification: TestResultNotification
 ) {
 
@@ -17,7 +17,7 @@ class TestResultMessageHandler @Inject constructor(
 
         val testInfo = TestInfo(message.result, message.date)
 
-        userStateStorage.transitionOnTestResult(testInfo)
+        userStateMachine.transitionOnTestResult(testInfo)
         testResultNotification.show()
     }
 }

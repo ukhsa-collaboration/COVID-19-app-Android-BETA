@@ -61,7 +61,7 @@ import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.observe
 import uk.nhs.nhsx.sonar.android.app.util.toUiFormat
@@ -79,7 +79,7 @@ fun cryptogramColourAndInverse(cryptogramBytes: ByteArray): Pair<Int, Int> {
 class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     @Inject
-    lateinit var userStateStorage: UserStateStorage
+    lateinit var userStateMachine: UserStateMachine
 
     @Inject
     lateinit var userInbox: UserInbox
@@ -127,7 +127,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         }
 
         resetButton.setOnClickListener {
-            userStateStorage.reset()
+            userStateMachine.reset()
             sonarIdProvider.clear()
             onboardingStatusProvider.clear()
             activationCodeProvider.clear()
@@ -166,7 +166,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     @SuppressLint("SetTextI18n")
     private fun updateCurrentState() {
-        showCurrentState.text = when (val state = this.userStateStorage.state()) {
+        showCurrentState.text = when (val state = this.userStateMachine.state()) {
             is DefaultState -> "In default state"
             is ExposedState -> "Exposed: ${state.since.toUiFormat()} - ${state.until.toUiFormat()}"
             is SymptomaticState -> "Symptomatic:  ${state.since.toUiFormat()} - ${state.until.toUiFormat()}"
@@ -195,36 +195,36 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
 
     private fun setStates() {
         setDefaultState.setOnClickListener {
-            userStateStorage.reset()
+            userStateMachine.reset()
             updateCurrentState()
         }
 
         setExposedState.setOnClickListener {
             showStateDatePicker("Exposure Date") {
-                userStateStorage.reset()
-                userStateStorage.transitionOnContactAlert(it.toUtcNormalized())
+                userStateMachine.reset()
+                userStateMachine.transitionOnContactAlert(it.toUtcNormalized())
             }
         }
 
         setSymptomaticState.setOnClickListener {
             showStateDatePicker("Symptom Date") {
-                userStateStorage.reset()
-                userStateStorage.diagnose(it, nonEmptySetOf(COUGH, TEMPERATURE))
+                userStateMachine.reset()
+                userStateMachine.diagnose(it, nonEmptySetOf(COUGH, TEMPERATURE))
             }
         }
 
         setExposedSymptomaticState.setOnClickListener {
             showStateDatePicker("Exposure Date") {
-                userStateStorage.reset()
-                userStateStorage.transitionOnContactAlert(it.toUtcNormalized())
-                userStateStorage.diagnose(it, nonEmptySetOf(TEMPERATURE))
+                userStateMachine.reset()
+                userStateMachine.transitionOnContactAlert(it.toUtcNormalized())
+                userStateMachine.diagnose(it, nonEmptySetOf(TEMPERATURE))
             }
         }
 
         setPositiveState.setOnClickListener {
             showStateDatePicker("Test Date") {
-                userStateStorage.reset()
-                userStateStorage.transitionOnTestResult(
+                userStateMachine.reset()
+                userStateMachine.transitionOnTestResult(
                     TestInfo(TestResult.POSITIVE, it.toUtcNormalized())
                 )
             }

@@ -23,7 +23,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
 import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
@@ -34,7 +34,7 @@ class DiagnoseCoughActivity : BaseActivity() {
     private val symptoms: Set<Symptom> by lazy { intent.getSymptoms() }
 
     @Inject
-    lateinit var userStateStorage: UserStateStorage
+    lateinit var userStateMachine: UserStateMachine
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -104,7 +104,7 @@ class DiagnoseCoughActivity : BaseActivity() {
     }
 
     private fun isCheckinQuestionnaire() =
-        userStateStorage.state().displayState() == DisplayState.ISOLATE
+        userStateMachine.state().displayState() == DisplayState.ISOLATE
 
     companion object {
 

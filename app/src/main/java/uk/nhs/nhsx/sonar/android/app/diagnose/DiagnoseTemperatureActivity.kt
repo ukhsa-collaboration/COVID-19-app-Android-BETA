@@ -23,7 +23,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.widgets.setRawText
 import javax.inject.Inject
@@ -31,7 +31,7 @@ import javax.inject.Inject
 open class DiagnoseTemperatureActivity : BaseActivity() {
 
     @Inject
-    lateinit var userStateStorage: UserStateStorage
+    lateinit var userStateMachine: UserStateMachine
 
     override fun onCreate(savedInstanceState: Bundle?) {
         appComponent.inject(this)
@@ -102,7 +102,7 @@ open class DiagnoseTemperatureActivity : BaseActivity() {
     }
 
     private fun isCheckinQuestionnaire() =
-        userStateStorage.state().displayState() == DisplayState.ISOLATE
+        userStateMachine.state().displayState() == DisplayState.ISOLATE
 
     companion object {
         fun start(context: Context) =

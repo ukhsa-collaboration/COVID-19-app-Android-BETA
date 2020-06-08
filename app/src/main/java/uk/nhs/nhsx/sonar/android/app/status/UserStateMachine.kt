@@ -14,19 +14,19 @@ import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceSerializingProvider
 import javax.inject.Inject
 
-class UserStateStorage @Inject constructor(
+class UserStateMachine @Inject constructor(
     private val transitions: UserStateTransitions,
-    private val userStatePrefs: UserStatePrefs,
+    private val userStateStorage: UserStateStorage,
     private val userInbox: UserInbox,
     private val reminders: Reminders
 ) {
 
-    fun state(): UserState = userStatePrefs.get()
+    fun state(): UserState = userStateStorage.get()
 
-    fun reset(): Unit = userStatePrefs.clear()
+    fun reset(): Unit = userStateStorage.set(DefaultState)
 
     fun diagnose(symptomsDate: LocalDate, symptoms: NonEmptySet<Symptom>) {
-        val currentState = this.userStatePrefs.get()
+        val currentState = this.userStateStorage.get()
 
         val newState = transitions.diagnose(
             currentState,
@@ -39,11 +39,11 @@ class UserStateStorage @Inject constructor(
         }
 
         newState.scheduleCheckInReminder(reminders)
-        this.userStatePrefs.set(newState)
+        this.userStateStorage.set(newState)
     }
 
     fun diagnoseCheckIn(symptoms: Set<Symptom>) {
-        val currentState = this.userStatePrefs.get()
+        val currentState = this.userStateStorage.get()
 
         val newState = transitions.diagnoseForCheckin(
             currentState = currentState,
@@ -52,18 +52,18 @@ class UserStateStorage @Inject constructor(
         if (newState is DefaultState && symptoms.isNotEmpty()) {
             userInbox.addRecovery()
         }
-        this.userStatePrefs.set(newState)
+        this.userStateStorage.set(newState)
     }
 
     fun transitionOnExpiredExposedState() {
-        val currentState = this.userStatePrefs.get()
+        val currentState = this.userStateStorage.get()
 
         val newState = transitions.transitionOnExpiredExposedState(currentState)
-        this.userStatePrefs.set(newState)
+        this.userStateStorage.set(newState)
     }
 
     fun transitionOnContactAlert(date: DateTime, onStateChanged: () -> Unit = {}) {
-        val currentState = this.userStatePrefs.get()
+        val currentState = this.userStateStorage.get()
 
         val newState = transitions.transitionOnContactAlert(
             currentState = currentState,
@@ -71,17 +71,17 @@ class UserStateStorage @Inject constructor(
         )
 
         if (newState != currentState) {
-            this.userStatePrefs.set(newState)
+            this.userStateStorage.set(newState)
             onStateChanged()
         }
     }
 
     fun transitionOnTestResult(testInfo: TestInfo) {
-        val currentState = this.userStatePrefs.get()
+        val currentState = this.userStateStorage.get()
 
         val newState = transitions.transitionOnTestResult(currentState, testInfo)
 
-        this.userStatePrefs.set(newState)
+        this.userStateStorage.set(newState)
         newState.scheduleCheckInReminder(reminders)
         userInbox.addTestInfo(testInfo)
     }
@@ -92,7 +92,7 @@ class UserStateStorage @Inject constructor(
             symptoms.contains(Symptom.ANOSMIA)
 }
 
-class UserStatePrefs @Inject constructor(context: Context) :
+class UserStateStorage @Inject constructor(context: Context) :
     SharedPreferenceSerializingProvider<UserState>(
         context,
         preferenceName = "user_state_storage",

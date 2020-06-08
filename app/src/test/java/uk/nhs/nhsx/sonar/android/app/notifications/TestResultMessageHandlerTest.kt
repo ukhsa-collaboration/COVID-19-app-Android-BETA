@@ -11,12 +11,12 @@ import org.joda.time.DateTime
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
 
 class TestResultMessageHandlerTest {
 
     private val testResultNotification = mockk<TestResultNotification>(relaxUnitFun = true)
-    private val userStateStorage = mockk<UserStateStorage>(relaxUnitFun = true)
+    private val userStateStorage = mockk<UserStateMachine>(relaxUnitFun = true)
 
     private val handler = TestResultMessageHandler(
         userStateStorage,

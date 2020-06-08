@@ -25,7 +25,7 @@ import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
+import uk.nhs.nhsx.sonar.android.app.status.UserStateMachine
 import uk.nhs.nhsx.sonar.android.app.status.startStatusActivity
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import uk.nhs.nhsx.sonar.android.app.util.setNavigateUpToolbar
@@ -35,7 +35,7 @@ import javax.inject.Inject
 open class DiagnoseStomachActivity : BaseActivity() {
 
     @Inject
-    lateinit var userStateStorage: UserStateStorage
+    lateinit var userStateMachine: UserStateMachine
 
     @Inject
     lateinit var userInbox: UserInbox
@@ -104,7 +104,7 @@ open class DiagnoseStomachActivity : BaseActivity() {
         if (isCheckinQuestionnaire()) {
             diagnoseForCheckin(symptoms)
         } else {
-            when (userStateStorage.hasAnyOfMainSymptoms(symptoms)) {
+            when (userStateMachine.hasAnyOfMainSymptoms(symptoms)) {
                 true -> DiagnoseReviewActivity.start(this, symptoms)
                 else -> DiagnoseCloseActivity.start(this)
             }
@@ -112,12 +112,12 @@ open class DiagnoseStomachActivity : BaseActivity() {
     }
 
     private fun diagnoseForCheckin(symptoms: Set<Symptom>) {
-        userStateStorage.diagnoseCheckIn(symptoms)
+        userStateMachine.diagnoseCheckIn(symptoms)
         startStatusActivity()
     }
 
     private fun isCheckinQuestionnaire() =
-        userStateStorage.state().displayState() == DisplayState.ISOLATE
+        userStateMachine.state().displayState() == DisplayState.ISOLATE
 
     companion object {
         fun start(context: Context, symptoms: Set<Symptom>) =
