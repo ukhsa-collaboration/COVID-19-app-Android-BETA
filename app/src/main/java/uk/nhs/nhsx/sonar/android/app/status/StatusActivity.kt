@@ -73,8 +73,11 @@ class StatusActivity : BaseActivity() {
     lateinit var viewModelFactory: ViewModelFactory<OkViewModel>
     private val viewModel: OkViewModel by viewModels { viewModelFactory }
 
-    lateinit var recoveryDialog: BottomDialog
+    /** Used in default state */
+    internal lateinit var recoveryDialog: BottomDialog
+    /** Used in SymptomaticState, ExposedSymptomaticState and PositiveState */
     internal lateinit var checkinReminderDialog: BottomDialog
+    /** Used in all states */
     internal lateinit var testResultDialog: BottomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -220,6 +223,7 @@ class StatusActivity : BaseActivity() {
 
     override fun onPause() {
         super.onPause()
+        testResultDialog.dismiss()
         checkinReminderDialog.dismiss()
         recoveryDialog.dismiss()
     }
