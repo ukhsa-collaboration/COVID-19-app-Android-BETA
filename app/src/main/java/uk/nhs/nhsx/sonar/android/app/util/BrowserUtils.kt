@@ -32,21 +32,15 @@ private fun Activity.openInExternalBrowser(url: String) {
     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 }
 
-private const val PAGE_ADVICE_DEFAULT = "https://faq.covid19.nhs.uk/article/KA-01062/en-us"
+const val URL_LATEST_ADVICE_DEFAULT = "https://faq.covid19.nhs.uk/article/KA-01062/en-us"
 
-private const val PAGE_ADVICE_SYMPTOMATIC = "https://faq.covid19.nhs.uk/article/KA-01078/en-us"
+const val URL_LATEST_ADVICE_SYMPTOMATIC = "https://faq.covid19.nhs.uk/article/KA-01078/en-us"
 
-private const val PAGE_ADVICE_POSITIVE = "https://faq.covid19.nhs.uk/article/KA-01064/en-us"
+const val URL_ADVICE_EXPOSED_SYMPTOMATIC = "https://faq.covid19.nhs.uk/article/KA-01088/en-us"
 
-private const val PAGE_ADVICE_EXPOSED = "https://faq.covid19.nhs.uk/article/KA-01063/en-us"
+const val URL_LATEST_ADVICE_EXPOSED = "https://faq.covid19.nhs.uk/article/KA-01063/en-us"
 
-const val URL_LATEST_ADVICE_DEFAULT = PAGE_ADVICE_DEFAULT
-
-const val URL_LATEST_ADVICE_SYMPTOMATIC = PAGE_ADVICE_SYMPTOMATIC
-
-const val URL_LATEST_ADVICE_POSITIVE = PAGE_ADVICE_POSITIVE
-
-const val URL_LATEST_ADVICE_EXPOSED = PAGE_ADVICE_EXPOSED
+const val URL_LATEST_ADVICE_POSITIVE = "https://faq.covid19.nhs.uk/article/KA-01064/en-us"
 
 const val URL_SYMPTOM_CHECKER = "https://111.nhs.uk/covid-19/"
 
