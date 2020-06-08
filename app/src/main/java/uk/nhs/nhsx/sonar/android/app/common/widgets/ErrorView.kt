@@ -26,6 +26,11 @@ class ErrorView @JvmOverloads constructor(
         if (hasWindowFocus) handleInversion(context.isInversionModeEnabled())
     }
 
+    override fun announceForAccessibility(error: CharSequence) {
+        val title = context.getString(R.string.error_title)
+        super.announceForAccessibility("$title\n$error")
+    }
+
     private fun handleInversion(inversionModeEnabled: Boolean) {
         if (inversionModeEnabled)
             setBackgroundColor(context.getColor(R.color.white))

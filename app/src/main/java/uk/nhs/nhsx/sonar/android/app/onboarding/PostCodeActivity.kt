@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.activity_post_code.*
 import uk.nhs.nhsx.sonar.android.app.ColorInversionAwareActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.appComponent
-import uk.nhs.nhsx.sonar.android.app.util.announce
 import uk.nhs.nhsx.sonar.android.app.util.scrollToView
 import javax.inject.Inject
 
@@ -41,7 +40,7 @@ class PostCodeActivity : ColorInversionAwareActivity(R.layout.activity_post_code
                 PermissionActivity.start(this)
             } else {
                 postCodeEditText.setBackgroundResource(R.drawable.edit_text_background_error)
-                announce(R.string.valid_post_code_is_required)
+                invalidPostCodeHint.announceForAccessibility(getString(R.string.valid_post_code_is_required))
                 invalidPostCodeHint.isVisible = true
                 scrollView.scrollToView(invalidPostCodeHint)
             }
