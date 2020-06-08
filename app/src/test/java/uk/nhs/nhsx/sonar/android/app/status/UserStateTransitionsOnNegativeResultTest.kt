@@ -74,5 +74,4 @@ class UserStateTransitionsOnNegativeResultTest {
 
         assertThat(state).isEqualTo(exposed)
     }
-
 }
