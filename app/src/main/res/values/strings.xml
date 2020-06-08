@@ -256,7 +256,7 @@
     <string name="more_options">More Options</string>
     <string name="app_version">App version:</string>
     <string name="negative_test_result_title">Your test result indicates that you do not have coronavirus</string>
-    <string name="negative_test_result_description">Thank you for getting tested. View your current advice based on your results. You have been sent an email or text with more information.</string>
+    <string name="negative_test_result_description">Thank you for getting tested. You have been sent an email or text with more information.</string>
     <string name="current_advice_title">Read and follow advice specific to your situation</string>
     <string name="current_advice_desc_simple">The advice below is up-to-date and specific to your situation. Please follow this advice.</string>
     <string name="current_advice_desc_with_date">The advice below is up-to-date and specific to your situation. Please follow this advice until %1$s.</string>
