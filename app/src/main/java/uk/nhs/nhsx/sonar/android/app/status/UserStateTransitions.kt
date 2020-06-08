@@ -73,7 +73,7 @@ class UserStateTransitions @Inject constructor() {
     private fun handleNegativeTestResult(state: UserState, testDate: DateTime): UserState =
         when (state) {
             is SymptomaticState ->
-                if (state.since.isAfter(testDate)) state else state.expire()
+                if (state.since.isAfter(testDate)) state else DefaultState
             is ExposedSymptomaticState ->
                 exposed(state)
             is PositiveState ->

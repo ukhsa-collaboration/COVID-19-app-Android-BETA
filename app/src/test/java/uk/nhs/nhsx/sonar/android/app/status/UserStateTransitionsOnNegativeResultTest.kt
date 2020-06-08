@@ -6,11 +6,9 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
-import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTransitionsOnNegativeResultTest {
     private val transitions = UserStateTransitions()
@@ -25,14 +23,13 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `symptomatic, if symptoms onset is prior test, stays symptomatic but expired`() {
+    fun `symptomatic, if symptoms onset is prior test, becomes default`() {
         val symptomatic = buildSymptomaticState()
         val testInfo = TestInfo(TestResult.NEGATIVE, symptomatic.since.plusDays(1))
 
         val state = transitions.transitionOnTestResult(symptomatic, testInfo)
 
-        assertThat(state.hasExpired()).isTrue()
-        assertThat(state).isEqualTo(symptomatic.copy(until = yesterday()))
+        assertThat(state).isEqualTo(DefaultState)
     }
 
     @Test
@@ -78,5 +75,4 @@ class UserStateTransitionsOnNegativeResultTest {
         assertThat(state).isEqualTo(exposed)
     }
 
-    private fun yesterday() = LocalDate.now().minusDays(1).toUtcNormalized()
 }

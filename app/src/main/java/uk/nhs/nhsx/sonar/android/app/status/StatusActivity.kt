@@ -75,7 +75,6 @@ class StatusActivity : BaseActivity() {
 
     lateinit var recoveryDialog: BottomDialog
     internal lateinit var checkinReminderDialog: BottomDialog
-    internal lateinit var negativeResultCheckinReminderDialog: BottomDialog
     internal lateinit var testResultDialog: BottomDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,8 +121,6 @@ class StatusActivity : BaseActivity() {
 
         recoveryDialog = createRecoveryDialog()
         checkinReminderDialog = createCheckinReminderDialog()
-        negativeResultCheckinReminderDialog = createNegativeResultCheckinReminderDialog()
-
         testResultDialog = createTestResultDialog(this, userInbox)
 
         // TODO: maybe move this check into view model?
@@ -199,31 +196,6 @@ class StatusActivity : BaseActivity() {
         )
     }
 
-    private fun createNegativeResultCheckinReminderDialog(): BottomDialog {
-        val configuration = BottomDialogConfiguration(
-            isHideable = false,
-            titleResId = R.string.negative_test_result_title,
-            textResId = R.string.update_symptoms_prompt_with_negative_test,
-            firstCtaResId = R.string.update_my_symptoms,
-            secondCtaResId = R.string.no_symptoms
-        )
-        return BottomDialog(
-            this, configuration,
-            onCancel = {
-                finish()
-            },
-            onFirstCtaClick = {
-                userInbox.dismissTestInfo()
-                DiagnoseTemperatureActivity.start(this)
-            },
-            onSecondCtaClick = {
-                userInbox.dismissTestInfo()
-                userStateMachine.reset()
-                refreshState()
-            }
-        )
-    }
-
     override fun onResume() {
         super.onResume()
 
@@ -249,7 +221,6 @@ class StatusActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
         checkinReminderDialog.dismiss()
-        negativeResultCheckinReminderDialog.dismiss()
         recoveryDialog.dismiss()
     }
 

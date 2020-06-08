@@ -114,15 +114,8 @@ class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
     }
 
     override fun onResume(activity: StatusActivity) {
-        val userTestedNegative =
-            activity.userInbox.hasTestInfo() && activity.userInbox.getTestInfo().result == TestResult.NEGATIVE
-
-        if (userTestedNegative && state.hasExpired()) {
-            displaySpecialCheckinDialog(activity)
-        } else {
-            displayNormalCheckinDialogIfExpired(activity, state)
-            handleTestResult(activity, activity.testResultDialog)
-        }
+        displayNormalCheckinDialogIfExpired(activity, state)
+        handleTestResult(activity, activity.testResultDialog)
     }
 }
 
@@ -252,11 +245,6 @@ fun handleTestResult(activity: StatusActivity, testResultDialog: BottomDialog) {
     } else {
         testResultDialog.dismiss()
     }
-}
-
-private fun displaySpecialCheckinDialog(activity: StatusActivity) {
-    activity.checkInReminderNotification.hide()
-    activity.negativeResultCheckinReminderDialog.showExpanded()
 }
 
 private fun displayNormalCheckinDialogIfExpired(activity: StatusActivity, state: UserState) {
