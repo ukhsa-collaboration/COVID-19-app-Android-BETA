@@ -110,7 +110,6 @@ jobs:
       - name: Update Backlog
         uses: ./ci-tools/.github/actions/deliver_tracker_stories_with_build
         with:
-          github_token: ${{ secrets.deployment_token }}
           tracker_token: ${{ secrets.tracker_api_token }}
           revision_range: ${{ needs.publish.outputs.previous-tag }}..${{ needs.publish.outputs.tag }}
           build_version: ${{ needs.publish.outputs.build-number }}
