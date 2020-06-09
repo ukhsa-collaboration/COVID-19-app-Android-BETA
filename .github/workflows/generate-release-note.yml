@@ -17,6 +17,10 @@ jobs:
         with:
           fetch-depth: 0 # checkout full repo with all tags
 
+      - name: Fetch tags
+        run: |
+          git fetch --tags
+
       - name: Checkout ci tools
         id: checkout-ci-tools
         uses: actions/checkout@v2
