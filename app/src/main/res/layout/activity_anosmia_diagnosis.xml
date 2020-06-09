@@ -52,7 +52,7 @@
                 android:layout_below="@id/anosmia_question"
                 android:layout_marginTop="8dp" />
 
-            <uk.nhs.nhsx.sonar.android.app.common.widgets.ErrorView
+            <uk.nhs.nhsx.sonar.android.app.widgets.ErrorView
                 android:id="@+id/radio_selection_error"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

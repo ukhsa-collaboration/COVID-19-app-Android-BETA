@@ -42,7 +42,7 @@
                 android:textColor="@color/text_sub_title"
                 android:textSize="16sp" />
 
-            <uk.nhs.nhsx.sonar.android.app.common.widgets.ErrorView
+            <uk.nhs.nhsx.sonar.android.app.widgets.ErrorView
                 android:id="@+id/needConfirmationHint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

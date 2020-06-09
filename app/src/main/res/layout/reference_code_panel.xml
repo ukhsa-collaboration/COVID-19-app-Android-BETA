@@ -80,7 +80,7 @@
     </LinearLayout>
     </LinearLayout>
 
-    <uk.nhs.nhsx.sonar.android.app.common.widgets.ErrorView
+    <uk.nhs.nhsx.sonar.android.app.widgets.ErrorView
         android:id="@+id/referenceCodeErrorView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

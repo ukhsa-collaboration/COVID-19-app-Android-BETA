@@ -133,7 +133,7 @@
                 android:text="@string/symptoms_date_prompt_all" />
 
 
-            <uk.nhs.nhsx.sonar.android.app.common.widgets.ErrorView
+            <uk.nhs.nhsx.sonar.android.app.widgets.ErrorView
                 android:id="@+id/date_selection_error"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
