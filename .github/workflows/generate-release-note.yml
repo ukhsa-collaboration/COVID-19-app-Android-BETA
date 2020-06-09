@@ -22,15 +22,14 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.DEPLOYMENT_TOKEN }}
-          repository: nhsx/sonar-ios # This will be extracted to separate repo when available
+          repository: nhsx/sonar-ci-tools
           path: ci-tools
-          ref: df8714dd6555a1e2aa9f236c5321ad439d3b27fd # This has to be a full sha, not short.
+          ref: v0.2.0
 
       - name: Generate release notes
         id: generate_release_notes
         uses: ./ci-tools/.github/actions/generate-release-notes
         with:
-          github_token: ${{ secrets.DEPLOYMENT_TOKEN }}
           tracker_token: ${{ secrets.tracker_api_token }}
           revision_range: ${{ github.event.client_payload.revision_range }}
 
