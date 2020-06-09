@@ -36,7 +36,7 @@ const val URL_LATEST_ADVICE_DEFAULT = "https://faq.covid19.nhs.uk/article/KA-010
 
 const val URL_LATEST_ADVICE_SYMPTOMATIC = "https://faq.covid19.nhs.uk/article/KA-01078/en-us"
 
-const val URL_ADVICE_EXPOSED_SYMPTOMATIC = "https://faq.covid19.nhs.uk/article/KA-01088/en-us"
+const val URL_ADVICE_EXPOSED_SYMPTOMATIC = "https://faq.covid19.nhs.uk/article/KA-01085/en-us"
 
 const val URL_LATEST_ADVICE_EXPOSED = "https://faq.covid19.nhs.uk/article/KA-01063/en-us"
 
