@@ -192,12 +192,12 @@ class UserStateMachineTest {
         val exposureDate = DateTime.now()
         val state = buildSymptomaticState()
         every { userStateStorage.get() } returns state
-        every { transitions.transitionOnContactAlert(any(), any()) } returns DefaultState
+        every { transitions.transitionOnExposure(any(), any()) } returns DefaultState
 
         userStateMachine.transitionOnContactAlert(exposureDate)
 
         verify {
-            transitions.transitionOnContactAlert(state, exposureDate)
+            transitions.transitionOnExposure(state, exposureDate)
         }
     }
 
@@ -205,7 +205,7 @@ class UserStateMachineTest {
     fun `transitionOnContactAlert - updates the state storage with new state`() {
         every { userStateStorage.get() } returns DefaultState
         val state = buildExposedState()
-        every { transitions.transitionOnContactAlert(any(), any()) } returns state
+        every { transitions.transitionOnExposure(any(), any()) } returns state
 
         userStateMachine.transitionOnContactAlert(DateTime.now())
 
@@ -217,7 +217,7 @@ class UserStateMachineTest {
     @Test
     fun `transitionOnContactAlert - executes callback the when state is changed`() {
         every { userStateStorage.get() } returns DefaultState
-        every { transitions.transitionOnContactAlert(any(), any()) } returns buildExposedState()
+        every { transitions.transitionOnExposure(any(), any()) } returns buildExposedState()
 
         val onStateChanged = mockk<() -> Unit>(relaxed = true)
 
@@ -232,7 +232,7 @@ class UserStateMachineTest {
     fun `transitionOnContactAlert - does not executes the callback when state is not changed`() {
         val state = buildSymptomaticState()
         every { userStateStorage.get() } returns state
-        every { transitions.transitionOnContactAlert(any(), any()) } returns state
+        every { transitions.transitionOnExposure(any(), any()) } returns state
 
         val onStateChanged = mockk<() -> Unit>()
 

@@ -65,7 +65,7 @@ class UserStateMachine @Inject constructor(
     fun transitionOnContactAlert(date: DateTime, onStateChanged: () -> Unit = {}) {
         val currentState = this.userStateStorage.get()
 
-        val newState = transitions.transitionOnContactAlert(
+        val newState = transitions.transitionOnExposure(
             currentState = currentState,
             exposureDate = date
         )

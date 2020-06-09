@@ -43,7 +43,14 @@ class UserStateSerializationTest {
 
         assertThat(serialize(SymptomaticState(since, until, symptoms)))
             .isEqualTo(
-                """{"symptoms":["COUGH","TEMPERATURE"],"until":1587241302263,"type":"SymptomaticState","since":1387241302263}"""
+                """
+                {
+                    "symptoms":["COUGH","TEMPERATURE"], 
+                    "until":1587241302263,
+                    "type":"SymptomaticState",
+                    "since":1387241302263 
+                }
+                """.trimWhitespaces()
             )
     }
 
@@ -51,11 +58,20 @@ class UserStateSerializationTest {
     fun `serialize exposed symptomatic state`() {
         val since = DateTime(1387241302263L, UTC)
         val until = DateTime(1587241302263L, UTC)
+        val exposedAt = DateTime(1587241302264L, UTC)
         val symptoms = nonEmptySetOf(Symptom.COUGH, Symptom.TEMPERATURE)
 
-        assertThat(serialize(ExposedSymptomaticState(since, until, symptoms)))
+        assertThat(serialize(ExposedSymptomaticState(since, until, exposedAt, symptoms)))
             .isEqualTo(
-                """{"symptoms":["COUGH","TEMPERATURE"],"until":1587241302263,"type":"ExposedSymptomaticState","since":1387241302263}"""
+                """
+                {
+                    "symptoms":["COUGH","TEMPERATURE"],
+                    "until":1587241302263,
+                    "type":"ExposedSymptomaticState",
+                    "since":1387241302263,
+                    "exposedAt":1587241302264
+                }
+                """.trimWhitespaces()
             )
     }
 
@@ -67,7 +83,14 @@ class UserStateSerializationTest {
 
         assertThat(serialize(PositiveState(since, until, symptoms)))
             .isEqualTo(
-                """{"symptoms":["COUGH","TEMPERATURE"],"until":1587241302263,"type":"PositiveState","since":1387241302263}"""
+                """
+                {
+                    "symptoms":["COUGH","TEMPERATURE"],
+                    "until":1587241302263,
+                    "type":"PositiveState",
+                    "since":1387241302263
+                }
+                """.trimWhitespaces()
             )
     }
 
@@ -78,7 +101,14 @@ class UserStateSerializationTest {
 
         assertThat(serialize(PositiveState(since, until, emptySet())))
             .isEqualTo(
-                """{"symptoms":[],"until":1587241302263,"type":"PositiveState","since":1387241302263}"""
+                """
+                {
+                    "symptoms":[],
+                    "until":1587241302263,
+                    "type":"PositiveState",
+                    "since":1387241302263
+                }
+                """.trimWhitespaces()
             )
     }
 
@@ -175,10 +205,12 @@ class UserStateSerializationTest {
     fun `deserialize exposed symptomatic state`() {
         val since = DateTime(1587241300000L, UTC)
         val until = DateTime(1587241302262L, UTC)
+        val exposedAt = DateTime(1587241302264L, UTC)
 
         val state = ExposedSymptomaticState(
             since,
             until,
+            exposedAt,
             nonEmptySetOf(Symptom.COUGH)
         )
         assertThat(
@@ -186,6 +218,7 @@ class UserStateSerializationTest {
                 """{
             "since":1587241300000,
             "until":1587241302262,
+            "exposedAt":1587241302264,
             "symptoms":["COUGH"],
             "type":"ExposedSymptomaticState"
             }"""
@@ -278,4 +311,7 @@ class UserStateSerializationTest {
         assertThat(deserialize("""{"until":1587241302262,"symptoms":[],"type":"SymptomaticState"}"""))
             .isEqualTo(DefaultState)
     }
+
+    private fun String.trimWhitespaces() =
+        replace(Regex("\\s+"), "")
 }

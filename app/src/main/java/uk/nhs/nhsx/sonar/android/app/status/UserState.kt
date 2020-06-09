@@ -57,7 +57,12 @@ sealed class UserState {
             state: ExposedState,
             symptoms: NonEmptySet<Symptom>
         ): ExposedSymptomaticState =
-            ExposedSymptomaticState(symptomsDate.toUtcNormalized(), state.until, symptoms)
+            ExposedSymptomaticState(
+                since = symptomsDate.toUtcNormalized(),
+                until = state.until,
+                exposedAt = state.since,
+                symptoms = symptoms
+            )
 
         fun positive(
             testDate: DateTime,
@@ -187,6 +192,7 @@ data class SymptomaticState(
 data class ExposedSymptomaticState(
     val since: DateTime,
     val until: DateTime,
+    val exposedAt: DateTime,
     val symptoms: NonEmptySet<Symptom>
 ) : UserState()
 

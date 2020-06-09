@@ -82,12 +82,13 @@ class UserStateTest {
     fun `exposedSymptomatic state factory method`() {
         val aSymptomDate = LocalDate(2020, 4, 5)
         val symptoms = nonEmptySetOf(TEMPERATURE)
-        val exposed = buildExposedState()
+        val exposed = buildExposedState(since = LocalDate.now().minusDays(1).toUtcNormalized())
 
         val state = UserState.exposedSymptomatic(aSymptomDate, exposed, symptoms)
 
         assertThat(state.since).isEqualTo(aSymptomDate.toUtcNormalized())
         assertThat(state.until).isEqualTo(exposed.until)
+        assertThat(state.exposedAt).isEqualTo(exposed.since)
         assertThat(state.symptoms).isEqualTo(symptoms)
     }
 
@@ -212,9 +213,10 @@ class UserStateTest {
         assertThat(exposedSymptomaticState.extend(symptoms, today))
             .isEqualTo(
                 ExposedSymptomaticState(
-                    exposedSymptomaticState.since,
-                    tomorrowAt7am,
-                    NonEmptySet.create(symptoms)!!
+                    since = exposedSymptomaticState.since,
+                    until = tomorrowAt7am,
+                    exposedAt = exposedSymptomaticState.exposedAt,
+                    symptoms = NonEmptySet.create(symptoms)!!
                 )
             )
     }

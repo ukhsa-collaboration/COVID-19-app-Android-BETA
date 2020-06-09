@@ -34,6 +34,7 @@ object UserStateSerialization {
                 "type" to state.type(),
                 "since" to state.since.millis,
                 "until" to state.until.millis,
+                "exposedAt" to state.exposedAt.millis,
                 "symptoms" to state.symptoms.map { it.value }
             )
             is PositiveState -> jsonOf(
@@ -79,7 +80,12 @@ object UserStateSerialization {
 
         val until = getUntil()
         val since = getSince() ?: until.minusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC)
-        return ExposedSymptomaticState(since, getUntil(), NonEmptySet.create(symptoms)!!)
+        return ExposedSymptomaticState(
+            since = since,
+            until = getUntil(),
+            exposedAt = getExposedAt(),
+            symptoms = NonEmptySet.create(symptoms)!!
+        )
     }
 
     private fun JSONObject.getPositiveState(): PositiveState? {
@@ -95,11 +101,15 @@ object UserStateSerialization {
             DateTime(it, DateTimeZone.UTC)
         } ?: DateTime.now(DateTimeZone.UTC)
 
-    private fun JSONObject.getSince(): DateTime? {
-        return getLongOrNull("since")?.let {
+    private fun JSONObject.getSince(): DateTime? =
+        getLongOrNull("since")?.let {
             DateTime(it, DateTimeZone.UTC)
         }
-    }
+
+    private fun JSONObject.getExposedAt(): DateTime =
+        getLongOrNull("exposedAt")?.let {
+            DateTime(it, DateTimeZone.UTC)
+        } ?: DateTime.now(DateTimeZone.UTC)
 
     private fun JSONObject.getSymptoms(): Set<Symptom> {
         if (!has("symptoms")) return emptySet()

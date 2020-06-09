@@ -20,8 +20,9 @@ fun buildSymptomaticState(
 fun buildExposedSymptomaticState(
     since: DateTime = LocalDate.now().toUtcNormalized(),
     until: DateTime = LocalDate.now().plusDays(7).toUtcNormalized(),
+    exposedAt: DateTime = since,
     symptoms: NonEmptySet<Symptom> = nonEmptySetOf(Symptom.COUGH)
-) = ExposedSymptomaticState(since, until, symptoms)
+) = ExposedSymptomaticState(since, until, exposedAt, symptoms)
 
 fun buildPositiveState(
     since: DateTime = LocalDate.now().toUtcNormalized(),

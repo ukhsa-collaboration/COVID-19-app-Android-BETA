@@ -128,9 +128,10 @@ class UserStateTransitionsTest {
         assertThat(state)
             .isEqualTo(
                 ExposedSymptomaticState(
-                    symptomDate.toUtcNormalized(),
-                    exposed.until,
-                    symptomsWithTemperature
+                    since = symptomDate.toUtcNormalized(),
+                    until = exposed.until,
+                    exposedAt = exposed.since,
+                    symptoms = symptomsWithTemperature
                 )
             )
     }
@@ -202,7 +203,7 @@ class UserStateTransitionsTest {
     @Test
     fun `test transitionOnContactAlert passes exposure date`() {
         val exposureDate = DateTime.parse("2020-04-21T16:00Z")
-        val newState = transitions.transitionOnContactAlert(DefaultState, exposureDate)
+        val newState = transitions.transitionOnExposure(DefaultState, exposureDate)
 
         assertThat(newState).isInstanceOf(ExposedState::class.java)
         val exposedState = newState as ExposedState
@@ -214,19 +215,19 @@ class UserStateTransitionsTest {
     fun `test transitionOnContactAlert does not change any state other than default`() {
 
         buildExposedState().let {
-            assertThat(transitions.transitionOnContactAlert(it, DateTime.now())).isEqualTo(it)
+            assertThat(transitions.transitionOnExposure(it, DateTime.now())).isEqualTo(it)
         }
 
         buildSymptomaticState().let {
-            assertThat(transitions.transitionOnContactAlert(it, DateTime.now())).isEqualTo(it)
+            assertThat(transitions.transitionOnExposure(it, DateTime.now())).isEqualTo(it)
         }
 
         buildExposedSymptomaticState().let {
-            assertThat(transitions.transitionOnContactAlert(it, DateTime.now())).isEqualTo(it)
+            assertThat(transitions.transitionOnExposure(it, DateTime.now())).isEqualTo(it)
         }
 
         buildPositiveState().let {
-            assertThat(transitions.transitionOnContactAlert(it, DateTime.now())).isEqualTo(it)
+            assertThat(transitions.transitionOnExposure(it, DateTime.now())).isEqualTo(it)
         }
     }
 

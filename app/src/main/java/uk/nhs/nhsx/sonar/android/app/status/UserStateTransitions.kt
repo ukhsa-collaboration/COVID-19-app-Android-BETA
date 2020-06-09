@@ -18,6 +18,10 @@ import javax.inject.Inject
 
 class UserStateTransitions @Inject constructor() {
 
+    /**
+     * User can do the questionnaire when in the
+     * Default or Exposed states.
+     */
     fun diagnose(
         currentState: UserState,
         symptomsDate: LocalDate,
@@ -35,6 +39,11 @@ class UserStateTransitions @Inject constructor() {
         }
     }
 
+    /**
+     * After 7 days of being in one of these states:
+     * Symptomatic, ExposedSymptomatic and Positive states,
+     * The user needs to answer the check in questionnaire.
+     */
     fun diagnoseForCheckin(
         currentState: UserState,
         symptoms: Set<Symptom>,
@@ -51,7 +60,7 @@ class UserStateTransitions @Inject constructor() {
         else
             currentState
 
-    fun transitionOnContactAlert(
+    fun transitionOnExposure(
         currentState: UserState,
         exposureDate: DateTime
     ): UserState =
