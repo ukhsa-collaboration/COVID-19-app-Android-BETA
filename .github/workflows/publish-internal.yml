@@ -12,6 +12,11 @@ jobs:
       - linux
       - aws
 
+    outputs:
+      build-number: ${{ steps.publish.outputs.buildVersion }}
+      tag: ${{ steps.tag-commit.outputs.tag }}
+      previous-tag: ${{ steps.tag-commit.outputs.previous-tag }}
+
     steps:
       - name: Checkout
         id: checkout
@@ -63,9 +68,13 @@ jobs:
       - name: Tag Commit
         id: tag-commit
         run: |
+          previous_tag=$(git tag --list | grep "internal" | tail -n 1)
+          echo "::set-output name=previous-tag::$previous_tag"
+
           tag=internal-${{ steps.publish.outputs.buildVersion }}
           git tag ${tag}
           git push origin ${tag}
+          echo "::set-output name=tag::${tag}"
 
       - name: Notify Slack
         uses: rtCamp/action-slack-notify@96d5e2a64fc78a6b7ac13265f55bee296869967a
@@ -77,3 +86,32 @@ jobs:
           SLACK_MESSAGE: |
             - Internal Build: ${{ steps.publish.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }})
             - APK and AAB are uploaded as job artefacts
+
+  update-pivotal-tracker-backlog:
+    runs-on:
+    - linux
+    - self-hosted
+    - aws
+    needs: publish
+    steps:
+      - name: Checkout Android Project
+        uses: actions/checkout@01aeccc # v2.1.0
+        with:
+          fetch-depth: 0
+
+      - name: Checkout Sonar CI Github Repo
+        uses: actions/checkout@01aeccc #v2.1.0
+        with:
+          token: ${{ secrets.deployment_token }}
+          repository: nhsx/sonar-ci-tools
+          path: ci-tools
+          ref: master
+
+      - name: Update Backlog
+        uses: ./ci-tools/.github/actions/deliver_tracker_stories_with_build
+        with:
+          github_token: ${{ secrets.deployment_token }}
+          tracker_token: ${{ secrets.tracker_api_token }}
+          revision_range: ${{ needs.publish.outputs.previous-tag }}..${{ needs.publish.outputs.tag }}
+          build_version: ${{ needs.publish.outputs.build-number }}
+
