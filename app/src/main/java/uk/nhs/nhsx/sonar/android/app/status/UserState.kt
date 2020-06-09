@@ -194,7 +194,10 @@ data class ExposedSymptomaticState(
     val until: DateTime,
     val exposedAt: DateTime,
     val symptoms: NonEmptySet<Symptom>
-) : UserState()
+) : UserState() {
+
+    fun isWithinExposureWindow() = exposedAt.plusDays(NUMBER_OF_DAYS_IN_EXPOSED).isAfterNow
+}
 
 // State when user has tested and the test result was positive
 data class PositiveState(

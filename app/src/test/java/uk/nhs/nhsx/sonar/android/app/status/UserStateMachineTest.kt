@@ -194,7 +194,7 @@ class UserStateMachineTest {
         every { userStateStorage.get() } returns state
         every { transitions.transitionOnExposure(any(), any()) } returns DefaultState
 
-        userStateMachine.transitionOnContactAlert(exposureDate)
+        userStateMachine.transitionOnExposure(exposureDate)
 
         verify {
             transitions.transitionOnExposure(state, exposureDate)
@@ -207,7 +207,7 @@ class UserStateMachineTest {
         val state = buildExposedState()
         every { transitions.transitionOnExposure(any(), any()) } returns state
 
-        userStateMachine.transitionOnContactAlert(DateTime.now())
+        userStateMachine.transitionOnExposure(DateTime.now())
 
         verify {
             userStateStorage.set(state)
@@ -221,7 +221,7 @@ class UserStateMachineTest {
 
         val onStateChanged = mockk<() -> Unit>(relaxed = true)
 
-        userStateMachine.transitionOnContactAlert(DateTime.now(), onStateChanged)
+        userStateMachine.transitionOnExposure(DateTime.now(), onStateChanged)
 
         verify {
             onStateChanged.invoke()
@@ -236,7 +236,7 @@ class UserStateMachineTest {
 
         val onStateChanged = mockk<() -> Unit>()
 
-        userStateMachine.transitionOnContactAlert(DateTime.now(), onStateChanged)
+        userStateMachine.transitionOnExposure(DateTime.now(), onStateChanged)
 
         verify {
             onStateChanged wasNot Called

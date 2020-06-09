@@ -84,29 +84,23 @@ class UserStateTransitions @Inject constructor() {
             is SymptomaticState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
             is ExposedSymptomaticState ->
-                if (state.since.isAfter(testDate)) state
-                else if(state.exposedAt.plusDays(14).isAfterNow) exposed(state)
-                else DefaultState
-            is PositiveState ->
-                state
-            is ExposedState ->
-                state
-            is DefaultState ->
-                DefaultState
+                when {
+                    state.since.isAfter(testDate) -> state
+                    state.isWithinExposureWindow() -> exposed(state)
+                    else -> DefaultState
+                }
+            is PositiveState -> state
+            is ExposedState -> state
+            is DefaultState -> DefaultState
         }
 
     private fun handlePositiveTestResult(state: UserState, testDate: DateTime): UserState =
         when (state) {
-            is SymptomaticState ->
-                positive(state)
-            is ExposedSymptomaticState ->
-                positive(state)
-            is PositiveState ->
-                state
-            is ExposedState ->
-                positive(testDate)
-            is DefaultState ->
-                positive(testDate)
+            is SymptomaticState -> positive(state)
+            is ExposedSymptomaticState -> positive(state)
+            is PositiveState -> state
+            is ExposedState -> positive(testDate)
+            is DefaultState -> positive(testDate)
         }
 
     private fun isolationNeeded(

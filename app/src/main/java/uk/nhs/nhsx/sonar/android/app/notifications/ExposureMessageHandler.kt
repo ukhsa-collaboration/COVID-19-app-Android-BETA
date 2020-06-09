@@ -12,8 +12,8 @@ class ExposureMessageHandler @Inject constructor(
     private val exposedNotification: ExposedNotification
 ) {
     fun handle(message: ExposureMessage) {
-        userStateMachine.transitionOnContactAlert(
-            date = message.date,
+        userStateMachine.transitionOnExposure(
+            exposureDate = message.date,
             onStateChanged = { exposedNotification.show() }
         )
     }

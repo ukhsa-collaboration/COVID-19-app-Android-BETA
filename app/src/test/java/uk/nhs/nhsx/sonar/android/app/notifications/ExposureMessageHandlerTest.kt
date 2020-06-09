@@ -29,8 +29,8 @@ class ExposureMessageHandlerTest {
         handler.handle(message)
 
         verify(exactly = 1) {
-            userStateStorage.transitionOnContactAlert(
-                date = date,
+            userStateStorage.transitionOnExposure(
+                exposureDate = date,
                 onStateChanged = any()
             )
         }

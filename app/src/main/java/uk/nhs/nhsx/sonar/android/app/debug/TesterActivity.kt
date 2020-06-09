@@ -202,7 +202,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         setExposedState.setOnClickListener {
             showStateDatePicker("Exposure Date") {
                 userStateMachine.reset()
-                userStateMachine.transitionOnContactAlert(it.toUtcNormalized())
+                userStateMachine.transitionOnExposure(it.toUtcNormalized())
             }
         }
 
@@ -216,7 +216,7 @@ class TesterActivity : AppCompatActivity(R.layout.activity_test) {
         setExposedSymptomaticState.setOnClickListener {
             showStateDatePicker("Exposure Date") {
                 userStateMachine.reset()
-                userStateMachine.transitionOnContactAlert(it.toUtcNormalized())
+                userStateMachine.transitionOnExposure(it.toUtcNormalized())
                 userStateMachine.diagnose(it, nonEmptySetOf(TEMPERATURE))
             }
         }

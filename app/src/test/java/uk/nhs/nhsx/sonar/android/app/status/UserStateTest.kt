@@ -16,6 +16,7 @@ import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.status.UserState.Companion.NUMBER_OF_DAYS_IN_EXPOSED
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
@@ -93,6 +94,22 @@ class UserStateTest {
         assertThat(state.until).isEqualTo(exposed.until)
         assertThat(state.exposedAt).isEqualTo(exposed.since)
         assertThat(state.symptoms).isEqualTo(symptoms)
+    }
+
+    @Test
+    fun `isWithinExposureWindow returns true when within the exposure window`() {
+        val state = buildExposedSymptomaticState(
+            exposedAt = LocalDate.now().minusDays(5).toUtcNormalized()
+        )
+        assertThat(state.isWithinExposureWindow()).isTrue()
+    }
+
+    @Test
+    fun `isWithinExposureWindow returns false when outside the exposure window`() {
+        val state = buildExposedSymptomaticState(
+            exposedAt = LocalDate.now().minusDays(NUMBER_OF_DAYS_IN_EXPOSED + 1).toUtcNormalized()
+        )
+        assertThat(state.isWithinExposureWindow()).isFalse()
     }
 
     @Test
