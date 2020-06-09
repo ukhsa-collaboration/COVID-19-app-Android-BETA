@@ -46,12 +46,15 @@ class UserStateTest {
 
     @Test
     fun `exposed state factory method with exposed symptomatic state`() {
-        val originalState = buildExposedSymptomaticState()
+        val originalState = buildExposedSymptomaticState(
+            since = LocalDate.now().toUtcNormalized(),
+            exposedAt = LocalDate.now().minusDays(1).toUtcNormalized()
+        )
         val state = UserState.exposed(originalState)
 
         assertThat(state).isEqualTo(
             ExposedState(
-                since = originalState.since,
+                since = originalState.exposedAt,
                 until = originalState.until
             )
         )

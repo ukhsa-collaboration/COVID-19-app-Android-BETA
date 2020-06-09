@@ -31,7 +31,7 @@ sealed class UserState {
             )
 
         fun exposed(state: ExposedSymptomaticState): ExposedState =
-            ExposedState(state.since, state.until)
+            ExposedState(state.exposedAt, state.until)
 
         fun symptomatic(
             symptomsDate: LocalDate,

@@ -84,7 +84,9 @@ class UserStateTransitions @Inject constructor() {
             is SymptomaticState ->
                 if (state.since.isAfter(testDate)) state else DefaultState
             is ExposedSymptomaticState ->
-                exposed(state)
+                if (state.since.isAfter(testDate)) state
+                else if(state.exposedAt.plusDays(14).isAfterNow) exposed(state)
+                else DefaultState
             is PositiveState ->
                 state
             is ExposedState ->

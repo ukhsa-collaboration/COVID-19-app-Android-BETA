@@ -6,9 +6,11 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import org.assertj.core.api.Assertions.assertThat
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
+import uk.nhs.nhsx.sonar.android.app.util.toUtcNormalized
 
 class UserStateTransitionsOnNegativeResultTest {
     private val transitions = UserStateTransitions()
@@ -43,16 +45,59 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `exposed symptomatic, becomes exposed`() {
-        val exposedSymptomatic = buildExposedSymptomaticState()
-        val testInfo = TestInfo(TestResult.NEGATIVE, exposedSymptomatic.since.plusDays(1))
+    fun `exposed-symptomatic, if symptoms onset is prior to test (within exposure window), becomes exposed`() {
+        val symptomDate = LocalDate.now().minusDays(10).toUtcNormalized()
+        val exposedDate = symptomDate.minusDays(1)
+        val testDateAfterSymptomatic = symptomDate.plusDays(1)
+        val exposedSymptomatic = buildExposedSymptomaticState(
+            since = symptomDate,
+            until = LocalDate.now().toUtcNormalized(),
+            exposedAt = exposedDate
+        )
+        val testInfo = TestInfo(TestResult.NEGATIVE, testDateAfterSymptomatic)
 
         val state = transitions.transitionOnTestResult(exposedSymptomatic, testInfo)
 
-        assertThat(state).isEqualTo(ExposedState(
-            since = exposedSymptomatic.since,
-            until = exposedSymptomatic.until
-        ))
+        assertThat(state).isEqualTo(
+            ExposedState(
+                since = exposedDate,
+                until = exposedSymptomatic.until
+            )
+        )
+    }
+
+    @Test
+    fun `exposed-symptomatic, if symptoms onset is prior to test (outside exposure window), becomes default`() {
+        val symptomDate = LocalDate.now().minusDays(15).toUtcNormalized()
+        val exposedDate = symptomDate.minusDays(5)
+        val testDateAfterSymptomatic = symptomDate.plusDays(1)
+        val exposedSymptomatic = buildExposedSymptomaticState(
+            since = symptomDate,
+            until = LocalDate.now().toUtcNormalized(),
+            exposedAt = exposedDate
+        )
+        val testInfo = TestInfo(TestResult.NEGATIVE, testDateAfterSymptomatic)
+
+        val state = transitions.transitionOnTestResult(exposedSymptomatic, testInfo)
+
+        assertThat(state).isEqualTo(DefaultState)
+    }
+
+    @Test
+    fun `exposed-symptomatic, if symptoms onset is after test, remains exposed-symptomatic`() {
+        val symptomDate = LocalDate.now().minusDays(15).toUtcNormalized()
+        val exposedDate = symptomDate.minusDays(5)
+        val testDateBeforeSymptomatic = symptomDate.minusDays(1)
+        val exposedSymptomatic = buildExposedSymptomaticState(
+            since = symptomDate,
+            until = LocalDate.now().toUtcNormalized(),
+            exposedAt = exposedDate
+        )
+        val testInfo = TestInfo(TestResult.NEGATIVE, testDateBeforeSymptomatic)
+
+        val state = transitions.transitionOnTestResult(exposedSymptomatic, testInfo)
+
+        assertThat(state).isEqualTo(exposedSymptomatic)
     }
 
     @Test
@@ -66,7 +111,7 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `exposed, remains exposed`() {
+    fun `exposed remains exposed`() {
         val exposed = buildExposedState()
         val testInfo = TestInfo(TestResult.NEGATIVE, exposed.since.plusDays(1))
 
