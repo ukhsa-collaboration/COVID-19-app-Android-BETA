@@ -134,11 +134,12 @@ class ConnectedTestRunner {
             { ReferenceCodeActivityTest(testAppContext).testShowsReferenceCode() },
 
             { FlowTest(testAppContext).testRegistration() },
-            { FlowTest(testAppContext).testProximityDataUploadOnSymptomaticState() },
-            { FlowTest(testAppContext).testQuestionnaireFlowWithNoSymptoms() },
+            { FlowTest(testAppContext).testQuestionnaireFlowWithSymptoms() },
+            { FlowTest(testAppContext).testQuestionnaireFlowWithoutSymptoms() },
+            { FlowTest(testAppContext).testCheckInQuestionnaireWithTemperature() },
+            { FlowTest(testAppContext).testCheckInQuestionnaireWithoutTemperature() },
+            { FlowTest(testAppContext).testCheckInNoSymptoms() },
             { FlowTest(testAppContext).testReceivingExposureNotification() },
-            { FlowTest(testAppContext).testExpiredSymptomaticStateRevisitsQuestionnaireAndRemainsToSymptomaticState() },
-            { FlowTest(testAppContext).testExpiredSymptomaticStateUpdatingWithNoSymptomsNavigatesToOkActivity() },
             { FlowTest(testAppContext).testEnableBluetoothThroughNotification() }
         )
 

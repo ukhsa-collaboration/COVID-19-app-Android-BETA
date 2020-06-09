@@ -54,7 +54,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkFeelUnwellIsDisplayed()
     }
 
-    fun testProximityDataUploadOnSymptomaticState() {
+    fun testQuestionnaireFlowWithSymptoms() {
         testAppContext.setFullValidUser()
         startMainActivity()
         testAppContext.simulateDeviceInProximity()
@@ -79,7 +79,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         testAppContext.verifyReceivedProximityRequest()
     }
 
-    fun testQuestionnaireFlowWithNoSymptoms() {
+    fun testQuestionnaireFlowWithoutSymptoms() {
         testAppContext.setFullValidUser()
         startMainActivity()
 
@@ -101,6 +101,8 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         testAppContext.setFullValidUser()
         startMainActivity()
 
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
+
         testAppContext.apply {
             simulateExposureNotificationReceived()
             clickOnNotification(R.string.contact_alert_notification_title, R.string.contact_alert_notification_text)
@@ -109,7 +111,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(ExposedState::class)
     }
 
-    fun testExpiredSymptomaticStateRevisitsQuestionnaireAndRemainsToSymptomaticState() {
+    fun testCheckInQuestionnaireWithTemperature() {
         val date = DateTime.now(UTC).minusSeconds(1)
         val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
@@ -137,7 +139,35 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
     }
 
-    fun testExpiredSymptomaticStateUpdatingWithNoSymptomsNavigatesToOkActivity() {
+    fun testCheckInQuestionnaireWithoutTemperature() {
+        val date = DateTime.now(UTC).minusSeconds(1)
+        val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
+
+        testAppContext.setFullValidUser(expiredSymptomaticState)
+        startMainActivity()
+
+        bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
+        bottomDialogRobot.clickFirstCtaButton()
+
+        diagnoseQuestionRobot.checkProgress(R.string.progress_one_fifth)
+        diagnoseQuestionRobot.answerNoTo(R.id.temperature_question)
+
+        diagnoseQuestionRobot.checkProgress(R.string.progress_two_fifth)
+        diagnoseQuestionRobot.answerNoTo(R.id.cough_question)
+
+        diagnoseQuestionRobot.checkProgress(R.string.progress_three_fifth)
+        diagnoseQuestionRobot.answerNoTo(R.id.anosmia_question)
+
+        diagnoseQuestionRobot.checkProgress(R.string.progress_four_fifth)
+        diagnoseQuestionRobot.answerNoTo(R.id.sneeze_question)
+
+        diagnoseQuestionRobot.checkProgress(R.string.progress_five_fifth)
+        diagnoseQuestionRobot.answerNoTo(R.id.stomach_question)
+
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
+    }
+
+    fun testCheckInNoSymptoms() {
         val date = DateTime.now(UTC).minusSeconds(1)
         val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
