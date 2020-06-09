@@ -209,7 +209,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         }
     }
 
-    fun simulateStatusUpdateReceived() {
+    fun simulateExposureNotificationReceived() {
         val msg = RemoteMessage(
             bundleOf(
                 "type" to "Status Update",

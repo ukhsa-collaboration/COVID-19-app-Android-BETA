@@ -4,6 +4,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withSubstring
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -18,7 +19,9 @@ fun checkViewHasText(@IdRes viewId: Int, @StringRes stringId: Int) {
 }
 
 fun checkViewContainsText(@IdRes viewId: Int, text: String) {
-    onView(withId(viewId)).check(matches(withSubstring(text)))
+    onView(withId(viewId))
+        .check(matches(withSubstring(text)))
+        .check(matches(isDisplayed()))
 }
 
 fun waitForText(@StringRes stringId: Int, timeoutInMs: Long = 500) {

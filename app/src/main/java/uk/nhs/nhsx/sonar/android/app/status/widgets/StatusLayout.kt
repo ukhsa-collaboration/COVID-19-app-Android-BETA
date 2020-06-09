@@ -55,7 +55,7 @@ class DefaultStatusLayout(val state: DefaultState) : StatusLayout() {
     override fun refreshLayout(activity: StatusActivity) {
         createStatusView(
             activity = activity,
-            titleRes = R.string.status_initial_title,
+            titleRes = R.string.status_default_title,
             statusColor = StatusView.Color.BLUE
         )
         showNextStepsAdvice(activity, R.string.status_description_01)

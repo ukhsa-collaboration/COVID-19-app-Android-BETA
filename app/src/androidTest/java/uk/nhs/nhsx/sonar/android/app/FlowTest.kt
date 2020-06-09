@@ -97,12 +97,12 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
-    fun testReceivingStatusUpdateNotification() {
+    fun testReceivingExposureNotification() {
         testAppContext.setFullValidUser()
         startMainActivity()
 
         testAppContext.apply {
-            simulateStatusUpdateReceived()
+            simulateExposureNotificationReceived()
             clickOnNotification(R.string.contact_alert_notification_title, R.string.contact_alert_notification_text)
         }
 

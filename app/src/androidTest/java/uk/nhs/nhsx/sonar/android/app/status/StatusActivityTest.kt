@@ -164,20 +164,49 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
         currentAdviceRobot.checkCorrectStateIsDisplay(symptomaticState)
     }
 
-    fun testStartsViewAndSetsUpCorrectStatusForSymptomaticState() {
-        val since = DateTime.now(UTC).minusDays(1)
-        val until = DateTime.now(UTC).plusDays(1)
-        val state = SymptomaticState(since, until, nonEmptySetOf(TEMPERATURE))
+    fun testShowsCorrectStatusForDefaultState() {
+        startActivity(DefaultState)
+
+        statusRobot.checkStatusTitle(R.string.status_default_title)
+    }
+
+    fun testShowsCorrectStatusForExposedState() {
+        val state = UserState.exposed(LocalDate.now())
+        startActivity(state)
+
+        statusRobot.checkStatusTitle(R.string.status_exposed_title)
+        statusRobot.checkStatusDescription(state)
+    }
+
+    fun testShowsCorrectStatusForSymptomaticState() {
+        val state = UserState.symptomatic(
+            symptomsDate = LocalDate.now().minusDays(1),
+            symptoms = nonEmptySetOf(TEMPERATURE)
+        )
         startActivity(state)
 
         statusRobot.checkStatusTitle(R.string.status_symptomatic_title)
         statusRobot.checkStatusDescription(state)
     }
 
-    fun testStartsViewAndSetsUpCorrectStatusForPositiveTestState() {
-        val since = DateTime.now(UTC).minusDays(1)
-        val until = DateTime.now(UTC).plusDays(1)
-        val state = PositiveState(since, until, nonEmptySetOf(TEMPERATURE))
+    fun testShowsCorrectStatusForExposedSymptomaticState() {
+        val since = LocalDate.now().minusDays(1)
+        val state = UserState.exposedSymptomatic(
+            symptomsDate = since,
+            state = UserState.exposed(since),
+            symptoms = nonEmptySetOf(TEMPERATURE)
+        )
+
+        startActivity(state)
+
+        statusRobot.checkStatusTitle(R.string.status_symptomatic_title)
+        statusRobot.checkStatusDescription(state)
+    }
+
+    fun testShowsCorrectStatusForPositiveTestState() {
+        val state = UserState.positive(
+            testDate = DateTime.now(UTC).minusDays(1)
+        )
         startActivity(state)
 
         statusRobot.checkStatusTitle(R.string.status_positive_test_title)
@@ -241,7 +270,7 @@ class StatusActivityTest(private val testAppContext: TestApplicationContext) {
     fun testHideStatusUpdateNotificationWhenNotClicked() {
         val notificationTitle = R.string.contact_alert_notification_title
 
-        testAppContext.simulateStatusUpdateReceived()
+        testAppContext.simulateExposureNotificationReceived()
         testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = true)
 
         startActivity(UserState.exposed(LocalDate.now()))

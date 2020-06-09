@@ -13,6 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewContainsText
 import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import uk.nhs.nhsx.sonar.android.app.testhelpers.stringFromResId
 import uk.nhs.nhsx.sonar.android.app.testhelpers.waitForText
@@ -22,8 +23,8 @@ import kotlin.reflect.KClass
 class StatusRobot {
 
     fun <T : UserState> checkActivityIsDisplayed(userState: KClass<T>) {
-        val title = when (userState) {
-            DefaultState::class -> R.string.status_initial_title
+        val title: Int = when (userState) {
+            DefaultState::class -> R.string.status_default_title
             ExposedState::class -> R.string.status_exposed_title
             SymptomaticState::class -> R.string.status_symptomatic_title
             PositiveState::class -> R.string.status_positive_test_title
@@ -31,9 +32,7 @@ class StatusRobot {
         }
 
         waitForText(title, 6_000)
-        onView(withId(R.id.statusTitle))
-            .check(matches(isDisplayed()))
-            .check(matches(withText(title)))
+        checkStatusTitle(title)
     }
 
     fun clickBookTestCard() {
@@ -60,11 +59,8 @@ class StatusRobot {
     }
 
     fun checkStatusDescription(state: UserState) {
-        val expected = "Please isolate until ${state.until()
-            .toUiFormat()} when this app will notify you to update your symptoms. Please read your full advice below."
-        onView(withId(R.id.statusDescription))
-            .check(matches(withText(expected)))
-            .check(matches(isDisplayed()))
+        val expected = "Please isolate until ${state.until().toUiFormat()}"
+        checkViewContainsText(R.id.statusDescription, expected)
     }
 
     fun checkBookVirusTestCardIsDisplayed() {
