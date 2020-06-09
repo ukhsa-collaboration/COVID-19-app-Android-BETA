@@ -25,7 +25,7 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `symptomatic, if symptoms onset is prior test, becomes default`() {
+    fun `symptomatic, if test date is after symptoms onset, becomes default`() {
         val symptomatic = buildSymptomaticState()
         val testInfo = TestInfo(TestResult.NEGATIVE, symptomatic.since.plusDays(1))
 
@@ -35,7 +35,7 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `symptomatic, if symptoms onset is after test, remains symptomatic`() {
+    fun `symptomatic, if symptoms onset is after test date, remains symptomatic`() {
         val symptomatic = buildSymptomaticState()
         val testInfo = TestInfo(TestResult.NEGATIVE, symptomatic.since.minusDays(1))
 
@@ -45,7 +45,7 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `exposed-symptomatic, if symptoms onset is prior to test (within exposure window), becomes exposed`() {
+    fun `exposed-symptomatic, if test date is after symptoms onset (within exposure window), becomes exposed`() {
         val symptomDate = LocalDate.now().minusDays(10).toUtcNormalized()
         val exposedDate = symptomDate.minusDays(1)
         val testDateAfterSymptomatic = symptomDate.plusDays(1)
@@ -67,7 +67,7 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `exposed-symptomatic, if symptoms onset is prior to test (outside exposure window), becomes default`() {
+    fun `exposed-symptomatic, if test date is after symptoms onset (outside exposure window), becomes default`() {
         val symptomDate = LocalDate.now().minusDays(15).toUtcNormalized()
         val exposedDate = symptomDate.minusDays(5)
         val testDateAfterSymptomatic = symptomDate.plusDays(1)
@@ -84,7 +84,7 @@ class UserStateTransitionsOnNegativeResultTest {
     }
 
     @Test
-    fun `exposed-symptomatic, if symptoms onset is after test, remains exposed-symptomatic`() {
+    fun `exposed-symptomatic, if symptoms onset is after test date, remains exposed-symptomatic`() {
         val symptomDate = LocalDate.now().minusDays(15).toUtcNormalized()
         val exposedDate = symptomDate.minusDays(5)
         val testDateBeforeSymptomatic = symptomDate.minusDays(1)
