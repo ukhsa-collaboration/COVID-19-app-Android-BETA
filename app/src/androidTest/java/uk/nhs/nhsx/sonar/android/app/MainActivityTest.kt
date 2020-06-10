@@ -1,10 +1,10 @@
 package uk.nhs.nhsx.sonar.android.app
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
+import org.junit.Test
+import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedRobot
 import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
@@ -13,14 +13,15 @@ import uk.nhs.nhsx.sonar.android.app.status.StatusFooterRobot
 import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
-class MainActivityTest(private val testAppContext: TestApplicationContext) {
+@RunWith(AndroidJUnit4::class)
+class MainActivityTest: EspressoTest() {
 
     private val statusRobot = StatusRobot()
     private val statusFooterRobot = StatusFooterRobot()
 
+    @Test
     fun testUnsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()
 
@@ -30,6 +31,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
         robot.checkScreenIsDisplayed()
     }
 
+    @Test
     fun testTabletNotSupported() {
         testAppContext.simulateTablet()
 
@@ -39,7 +41,8 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
         robot.checkScreenIsDisplayed()
     }
 
-    fun testLaunchWhenOnboardingIsFinishedButNotRegistered() {
+    @Test
+    fun testLaunchWhenOnBoardingIsFinishedButNotRegistered() {
         testAppContext.setFinishedOnboarding()
 
         startMainActivity()
@@ -47,6 +50,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
+    @Test
     fun testLaunchWhenStateIsDefault() {
         testAppContext.setFullValidUser(DefaultState)
 
@@ -56,6 +60,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
         statusFooterRobot.checkFooterIsDisplayed()
     }
 
+    @Test
     fun testLaunchWhenStateIsExposed() {
         val exposedState = ExposedState(DateTime.now(UTC), DateTime.now(UTC).plusDays(1))
 
@@ -66,6 +71,7 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
         statusFooterRobot.checkFooterIsDisplayed()
     }
 
+    @Test
     fun testLaunchWhenStateIsSymptomatic() {
         val date = DateTime.now(UTC).plusDays(1)
         val symptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
@@ -78,6 +84,6 @@ class MainActivityTest(private val testAppContext: TestApplicationContext) {
     }
 
     private fun startMainActivity() {
-        onView(withId(R.id.start_main_activity)).perform(click())
+        testAppContext.app.startTestActivity<MainActivity>()
     }
 }

@@ -20,7 +20,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivityTest
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivityTest
-import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
@@ -59,15 +58,6 @@ class ConnectedTestRunner {
     @Test
     fun runAllTests() {
         val tests = listOf(
-            { TabletNotSupportedActivityTest(testAppContext).testDisplaysExpectedViews() },
-
-            { MainActivityTest(testAppContext).testUnsupportedDevice() },
-            { MainActivityTest(testAppContext).testTabletNotSupported() },
-            { MainActivityTest(testAppContext).testLaunchWhenOnboardingIsFinishedButNotRegistered() },
-            { MainActivityTest(testAppContext).testLaunchWhenStateIsDefault() },
-            { MainActivityTest(testAppContext).testLaunchWhenStateIsExposed() },
-            { MainActivityTest(testAppContext).testLaunchWhenStateIsSymptomatic() },
-
             { PostCodeActivityTest(testAppContext).pristineState() },
             { PostCodeActivityTest(testAppContext).emptyPostCodeShowsInvalidHint() },
             { PostCodeActivityTest(testAppContext).invalidPostCodeShowsInvalidHint() },
