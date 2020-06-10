@@ -2,18 +2,14 @@ package uk.nhs.nhsx.sonar.android.app.util
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Environment
 import android.util.Log
 import timber.log.Timber
-import java.io.File
-import java.io.FileWriter
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.Date
 
-
-class FileLogTree(private val context: Context): Timber.DebugTree() {
+class FileLogTree(private val context: Context) : Timber.DebugTree() {
     private val fileHandler: LogFileHandler? = try {
         LogFileHandler(context.filesDir.absolutePath)
     } catch (e: IllegalAccessException) {

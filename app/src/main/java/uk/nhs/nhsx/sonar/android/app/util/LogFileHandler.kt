@@ -4,14 +4,13 @@ import android.os.Environment
 import java.io.File
 import java.io.FileWriter
 
-
 class LogFileHandler(dataDirectory: String) {
     private val path = "log"
     private val fileName = "app.log"
     private var file: File
 
     init {
-        this.file = if(Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
+        this.file = if (Environment.MEDIA_MOUNTED == Environment.getExternalStorageState()) {
             val root = File(
                 dataDirectory,
                 path)
@@ -33,7 +32,7 @@ class LogFileHandler(dataDirectory: String) {
         }
     }
 
-    fun readAllBytes(): ByteArray? = if(file.exists()) file.readBytes() else null
+    fun readAllBytes(): ByteArray? = if (file.exists()) file.readBytes() else null
 
     fun delete() = file.delete()
 }

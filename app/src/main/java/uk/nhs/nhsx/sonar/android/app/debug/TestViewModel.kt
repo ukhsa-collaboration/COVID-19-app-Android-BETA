@@ -37,7 +37,6 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
 
-
 class TestViewModel @Inject constructor(
     private val context: Context,
     private val contactEventDao: ContactEventDao,
@@ -95,11 +94,10 @@ class TestViewModel @Inject constructor(
                     zip.write(contactEvents.toByteArray())
                     zip.putNextEntry(ZipEntry("errors.csv"))
                     zip.write(errors.toByteArray())
-                    if(logFileContent != null) {
+                    if (logFileContent != null) {
                         zip.putNextEntry(ZipEntry("app.log"))
                         zip.write(logFileContent)
                     }
-
                 }
             }
 
