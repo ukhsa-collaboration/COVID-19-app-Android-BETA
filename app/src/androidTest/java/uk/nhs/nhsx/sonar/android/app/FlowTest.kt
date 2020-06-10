@@ -3,14 +3,12 @@ package uk.nhs.nhsx.sonar.android.app
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseRobot
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseQuestionRobot
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewRobot
@@ -26,7 +24,6 @@ import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
-@RunWith(AndroidJUnit4::class)
 class FlowTest : EspressoTest() {
 
     private val mainOnboardingRobot = MainOnboardingRobot()
