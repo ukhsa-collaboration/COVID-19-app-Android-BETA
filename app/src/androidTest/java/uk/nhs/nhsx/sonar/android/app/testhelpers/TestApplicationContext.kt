@@ -13,7 +13,6 @@ import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.UiDevice
@@ -29,7 +28,6 @@ import org.awaitility.kotlin.until
 import org.awaitility.kotlin.untilNotNull
 import org.joda.time.DateTime
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.SonarApplication
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
@@ -57,11 +55,10 @@ import java.util.concurrent.TimeUnit
 import javax.crypto.Mac
 import kotlin.random.Random
 
-class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
+class TestApplicationContext {
 
-    private val testActivity = rule.activity
-    val app = rule.activity.application as SonarApplication
-    val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    val app: SonarApplication = ApplicationProvider.getApplicationContext()
+    val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     private val notificationService = NotificationService()
     private val testRxBleClient = TestRxBleClient(app)
@@ -223,7 +220,7 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         @StringRes notificationTitleRes: Int,
         isDisplayed: Boolean
     ) {
-        val notificationTitle = testActivity.getString(notificationTitleRes)
+        val notificationTitle = app.getString(notificationTitleRes)
 
         device.openNotification()
 
@@ -237,8 +234,8 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         @StringRes notificationTextRes: Int,
         notificationDisplayTimeout: Long = 500
     ) {
-        val notificationTitle = testActivity.getString(notificationTitleRes)
-        val notificationText = testActivity.getString(notificationTextRes)
+        val notificationTitle = app.getString(notificationTitleRes)
+        val notificationText = app.getString(notificationTextRes)
 
         device.openNotification()
 
@@ -268,9 +265,9 @@ class TestApplicationContext(rule: ActivityTestRule<FlowTestStartActivity>) {
         @StringRes notificationActionRes: Int,
         notificationDisplayTimeout: Long = 500
     ) {
-        val notificationTitle = testActivity.getString(notificationTitleRes)
-        val notificationText = testActivity.getString(notificationTextRes)
-        val notificationAction = testActivity.getString(notificationActionRes)
+        val notificationTitle = app.getString(notificationTitleRes)
+        val notificationText = app.getString(notificationTextRes)
+        val notificationAction = app.getString(notificationActionRes)
 
         device.openNotification()
 

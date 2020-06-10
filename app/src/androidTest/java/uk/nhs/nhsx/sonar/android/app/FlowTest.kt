@@ -23,14 +23,11 @@ import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 @RunWith(AndroidJUnit4::class)
-class FlowTest {
-
-    private lateinit var testAppContext: TestApplicationContext
+class FlowTest: EspressoTest() {
 
     private val mainOnboardingRobot = MainOnboardingRobot()
     private val postCodeRobot = PostCodeRobot()
@@ -47,9 +44,7 @@ class FlowTest {
         ActivityTestRule(FlowTestStartActivity::class.java)
 
     @Before
-    fun setup() {
-        testAppContext = TestApplicationContext(activityRule)
-        testAppContext.reset()
+    fun setupFlowTestActivity() {
         testAppContext.app.startTestActivity<FlowTestStartActivity>()
     }
 

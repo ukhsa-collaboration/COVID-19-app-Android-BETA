@@ -25,7 +25,6 @@ import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivityTest
-import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.StatusActivityTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
@@ -46,7 +45,7 @@ class ConnectedTestRunner {
 
     @Before
     fun setup() {
-        testAppContext = TestApplicationContext(activityRule)
+        testAppContext = TestApplicationContext()
     }
 
     private fun resetApp() {
@@ -129,9 +128,7 @@ class ConnectedTestRunner {
             { StatusActivityTest(testAppContext).testShowsEnableNotificationOnResume() },
             { StatusActivityTest(testAppContext).testDoesNotEnableAllowNotificationOnResume() },
             { StatusActivityTest(testAppContext).testGrantNotificationPermission() },
-            { StatusActivityTest(testAppContext).testShowsUpdateSymptomsDialogWhenPositiveStateExpired() },
-
-            { ReferenceCodeActivityTest(testAppContext).testShowsReferenceCode() }
+            { StatusActivityTest(testAppContext).testShowsUpdateSymptomsDialogWhenPositiveStateExpired() }
         )
 
         tests.forEach {

@@ -3,17 +3,21 @@
  */
 package uk.nhs.nhsx.sonar.android.app.referencecode
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.Test
+import org.junit.runner.RunWith
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 
-class ReferenceCodeActivityTest(private val testAppContext: TestApplicationContext) {
+@RunWith(AndroidJUnit4::class)
+class ReferenceCodeActivityTest: EspressoTest() {
 
-    private val app = testAppContext.app
     private val referenceCodeRobot = ReferenceCodeRobot()
 
+    @Test
     fun testShowsReferenceCode() {
         testAppContext.setFullValidUser()
-        app.startTestActivity<ReferenceCodeActivity>()
+        testAppContext.app.startTestActivity<ReferenceCodeActivity>()
         referenceCodeRobot.checkReferenceCodeIs("REF CODE #202")
     }
 }
