@@ -27,7 +27,7 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 @RunWith(AndroidJUnit4::class)
-class FlowTest: EspressoTest() {
+class FlowTest : EspressoTest() {
 
     private val mainOnboardingRobot = MainOnboardingRobot()
     private val postCodeRobot = PostCodeRobot()

@@ -10,7 +10,7 @@ import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
 
 @RunWith(AndroidJUnit4::class)
-class ReferenceCodeActivityTest: EspressoTest() {
+class ReferenceCodeActivityTest : EspressoTest() {
 
     private val referenceCodeRobot = ReferenceCodeRobot()
 

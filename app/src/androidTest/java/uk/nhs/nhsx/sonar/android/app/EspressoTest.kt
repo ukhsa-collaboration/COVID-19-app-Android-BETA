@@ -18,5 +18,4 @@ abstract class EspressoTest {
     fun teardown() {
         testAppContext.shutdownMockServer()
     }
-
 }

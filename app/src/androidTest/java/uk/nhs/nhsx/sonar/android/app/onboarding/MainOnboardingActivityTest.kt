@@ -1,28 +1,24 @@
 package uk.nhs.nhsx.sonar.android.app.onboarding
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import uk.nhs.nhsx.sonar.android.app.R
+import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
+import uk.nhs.nhsx.sonar.android.app.startTestActivity
 
-class MainOnboardingActivityTest {
+class MainOnboardingActivityTest : EspressoTest() {
 
-    private val mainOnboardingRobot = MainOnboardingRobot()
+    private val mainOnBoardingRobot = MainOnboardingRobot()
     private val explanationRobot = ExplanationRobot()
 
+    @Test
     fun testExplanation() {
-        startMainActivity()
+        testAppContext.app.startTestActivity<MainOnboardingActivity>()
 
-        mainOnboardingRobot.checkActivityIsDisplayed()
-        mainOnboardingRobot.clickExplanationLink()
+        mainOnBoardingRobot.checkActivityIsDisplayed()
+        mainOnBoardingRobot.clickExplanationLink()
 
         explanationRobot.checkActivityIsDisplayed()
         explanationRobot.clickBackButton()
 
-        mainOnboardingRobot.checkActivityIsDisplayed()
-    }
-
-    private fun startMainActivity() {
-        onView(withId(R.id.start_main_activity)).perform(click())
+        mainOnBoardingRobot.checkActivityIsDisplayed()
     }
 }
