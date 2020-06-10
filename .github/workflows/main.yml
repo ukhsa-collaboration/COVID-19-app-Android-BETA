@@ -19,6 +19,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Cache Gradle Distribution
+        uses: actions/cache@v2
+        with:
+          path: /root/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/wrapper/gradle-wrapper.properties') }}
+
       - name: Cache Gradle Packages
         uses: actions/cache@v2
         with:
