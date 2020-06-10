@@ -18,7 +18,7 @@ GOOGLE_SERVICES_FILE=app/google-services.json
 mkdir build
 echo "$INPUT_GOOGLE_SERVICES" > $GOOGLE_SERVICES_FILE
 
-./gradlew build packageDebugAndroidTest pactPublish \
+./gradlew test packageDebug packageDebugAndroidTest pactPublish \
     -Psonar.baseUrl="$INPUT_SONAR_BASE_URL" \
     -Psonar.headerValue="$INPUT_SONAR_HEADER_VALUE" \
     -Psonar.analyticsKey="$INPUT_SONAR_ANALYTICS_KEY" \
