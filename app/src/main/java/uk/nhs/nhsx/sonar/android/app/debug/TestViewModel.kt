@@ -30,11 +30,13 @@ import uk.nhs.nhsx.sonar.android.app.contactevents.timestampsToIntervals
 import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
 import uk.nhs.nhsx.sonar.android.app.crypto.CryptogramStorage
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
+import uk.nhs.nhsx.sonar.android.app.util.LogFileHandler
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.io.File
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import javax.inject.Inject
+
 
 class TestViewModel @Inject constructor(
     private val context: Context,
@@ -84,6 +86,8 @@ class TestViewModel @Inject constructor(
                 "${it.timestamp},${it.macAddress},${it.error}"
             }
 
+            val logFileHandler = LogFileHandler(context.filesDir.absolutePath)
+            val logFileContent = logFileHandler.readAllBytes()
             val zipFile = "contact-events-exports.zip"
             activityContext.openFileOutput(zipFile, Context.MODE_PRIVATE).use {
                 ZipOutputStream(it).use { zip ->
@@ -91,8 +95,15 @@ class TestViewModel @Inject constructor(
                     zip.write(contactEvents.toByteArray())
                     zip.putNextEntry(ZipEntry("errors.csv"))
                     zip.write(errors.toByteArray())
+                    if(logFileContent != null) {
+                        zip.putNextEntry(ZipEntry("app.log"))
+                        zip.write(logFileContent)
+                    }
+
                 }
             }
+
+            logFileHandler.delete()
 
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
