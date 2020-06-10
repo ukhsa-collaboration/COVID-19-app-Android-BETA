@@ -2,7 +2,8 @@ package uk.nhs.nhsx.sonar.android.app
 
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
-import org.junit.Test
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
 import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedRobot
 import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
@@ -13,11 +14,12 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
-class MainActivityTest : EspressoTest() {
+class MainActivityTest : EspressoJunit5Test() {
 
     private val statusRobot = StatusRobot()
     private val statusFooterRobot = StatusFooterRobot()
 
+    @DisplayName("Unsupported device")
     @Test
     fun testUnsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()
@@ -38,6 +40,7 @@ class MainActivityTest : EspressoTest() {
         robot.checkScreenIsDisplayed()
     }
 
+    @DisplayName("Launch when on-boarding is finished but not registered")
     @Test
     fun testLaunchWhenOnBoardingIsFinishedButNotRegistered() {
         testAppContext.setFinishedOnboarding()
