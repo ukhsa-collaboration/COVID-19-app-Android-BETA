@@ -45,7 +45,7 @@ class Advertise @Inject constructor(private val bluetoothLeAdvertiser: Bluetooth
 
 private class AdvertisingCallback : AdvertiseCallback() {
     override fun onStartSuccess(settingsInEffect: AdvertiseSettings?) {
-        Timber.i("BluetoothLeAdvertiser Started advertising with settings $settingsInEffect")
+        Timber.d("BluetoothLeAdvertiser Started advertising with settings $settingsInEffect")
     }
 
     override fun onStartFailure(errorCode: Int) {

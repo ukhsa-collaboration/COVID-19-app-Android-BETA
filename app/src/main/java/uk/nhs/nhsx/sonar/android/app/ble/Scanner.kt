@@ -271,12 +271,12 @@ class Scanner @Inject constructor(
     private fun negotiateMTU(connection: RxBleConnection): Single<RxBleConnection> {
         // the overhead appears to be 2 bytes
         return connection.requestMtu(2 + BluetoothIdentifier.SIZE)
-            .doOnSubscribe { Timber.i("Negotiating MTU started") }
+            .doOnSubscribe { Timber.d("Negotiating MTU started") }
             .doOnError { e: Throwable? ->
                 Timber.e("Failed to negotiate MTU: $e")
                 Observable.error<Throwable?>(e)
             }
-            .doOnSuccess { Timber.i("Negotiated MTU: $it") }
+            .doOnSuccess { Timber.d("Negotiated MTU: $it") }
             .ignoreElement()
             .andThen(Single.just(connection))
     }

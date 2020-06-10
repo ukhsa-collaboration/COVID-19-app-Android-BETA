@@ -28,7 +28,7 @@ class NotificationService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        Timber.i("New Message: ${message.messageId} ${message.data}")
+        Timber.d("New Message: ${message.messageId} ${message.data}")
         notificationHandler.handleNewMessage(message.data)
     }
 }
