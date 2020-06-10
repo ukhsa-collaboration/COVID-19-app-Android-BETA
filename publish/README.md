@@ -38,3 +38,16 @@ $ ./release.sh 376e3f v1.2.0
 Above script publishes two builds:
   - the first one uses the staging endpoints and is published to `Staging` track in play store.
   - the second one uses the production endpoints and is published to `Alpha` track in play store.
+  
+### Generate release note
+
+Release notes can be generated over a git revision range. See `man 7 gitrevisions`.
+
+To generate release notes run:
+
+```sh
+$ ./generate-release-note.sh revision_range
+```
+
+The above script will start a workflow that will print out a markdown report of the tracker stories
+that have been accepted in the given revision range. The script prints out a link to the workflow.
