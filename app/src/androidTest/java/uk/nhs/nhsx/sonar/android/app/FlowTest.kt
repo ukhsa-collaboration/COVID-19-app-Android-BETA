@@ -3,8 +3,14 @@ package uk.nhs.nhsx.sonar.android.app
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.rule.ActivityTestRule
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseRobot
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseQuestionRobot
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewRobot
@@ -21,7 +27,10 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
-class FlowTest(private val testAppContext: TestApplicationContext) {
+@RunWith(AndroidJUnit4::class)
+class FlowTest {
+
+    private lateinit var testAppContext: TestApplicationContext
 
     private val mainOnboardingRobot = MainOnboardingRobot()
     private val postCodeRobot = PostCodeRobot()
@@ -33,6 +42,18 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
     private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
 
+    @get:Rule
+    val activityRule: ActivityTestRule<FlowTestStartActivity> =
+        ActivityTestRule(FlowTestStartActivity::class.java)
+
+    @Before
+    fun setup() {
+        testAppContext = TestApplicationContext(activityRule)
+        testAppContext.reset()
+        testAppContext.app.startTestActivity<FlowTestStartActivity>()
+    }
+
+    @Test
     fun testRegistration() {
         testAppContext.simulateBackendDelay(400)
 
@@ -54,6 +75,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkFeelUnwellIsDisplayed()
     }
 
+    @Test
     fun testQuestionnaireFlowWithSymptoms() {
         testAppContext.setFullValidUser()
         startMainActivity()
@@ -79,6 +101,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         testAppContext.verifyReceivedProximityRequest()
     }
 
+    @Test
     fun testQuestionnaireFlowWithoutSymptoms() {
         testAppContext.setFullValidUser()
         startMainActivity()
@@ -97,6 +120,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
+    @Test
     fun testReceivingExposureNotification() {
         testAppContext.setFullValidUser()
         startMainActivity()
@@ -111,6 +135,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(ExposedState::class)
     }
 
+    @Test
     fun testCheckInQuestionnaireWithTemperature() {
         val date = DateTime.now(UTC).minusSeconds(1)
         val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
@@ -139,6 +164,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
     }
 
+    @Test
     fun testCheckInQuestionnaireWithoutTemperature() {
         val date = DateTime.now(UTC).minusSeconds(1)
         val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
@@ -167,6 +193,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
+    @Test
     fun testCheckInNoSymptoms() {
         val date = DateTime.now(UTC).minusSeconds(1)
         val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
@@ -180,6 +207,7 @@ class FlowTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
+    @Test
     fun testEnableBluetoothThroughNotification() {
         testAppContext.setFullValidUser()
         startMainActivity()
