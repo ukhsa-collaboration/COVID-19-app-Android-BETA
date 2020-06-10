@@ -28,7 +28,7 @@ jobs:
           echo ::set-output name=long::$(git rev-parse HEAD)
 
       - name: Cache Gradle Packages
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: /root/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
