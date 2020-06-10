@@ -1,15 +1,16 @@
 package uk.nhs.nhsx.sonar.android.app.onboarding
 
+import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 
-class PostCodeActivityTest(testAppContext: TestApplicationContext) {
+class PostCodeActivityTest : EspressoTest() {
 
-    private val app = testAppContext.app
     private val postCodeRobot = PostCodeRobot()
 
+    @Test
     fun pristineState() {
-        app.startTestActivity<PostCodeActivity>()
+        testAppContext.app.startTestActivity<PostCodeActivity>()
 
         postCodeRobot.checkActivityIsDisplayed()
         postCodeRobot.checkTitleIsDisplayed()
@@ -19,23 +20,26 @@ class PostCodeActivityTest(testAppContext: TestApplicationContext) {
         postCodeRobot.checkRationaleIsVisible()
     }
 
+    @Test
     fun emptyPostCodeShowsInvalidHint() {
-        app.startTestActivity<PostCodeActivity>()
+        testAppContext.app.startTestActivity<PostCodeActivity>()
 
         postCodeRobot.clickContinue()
         postCodeRobot.checkInvalidHintIsDisplayed()
     }
 
+    @Test
     fun invalidPostCodeShowsInvalidHint() {
-        app.startTestActivity<PostCodeActivity>()
+        testAppContext.app.startTestActivity<PostCodeActivity>()
 
         postCodeRobot.enterPostCode("1")
         postCodeRobot.clickContinue()
         postCodeRobot.checkInvalidHintIsDisplayed()
     }
 
+    @Test
     fun validPostCodeProceedsToNextView() {
-        app.startTestActivity<PostCodeActivity>()
+        testAppContext.app.startTestActivity<PostCodeActivity>()
 
         postCodeRobot.enterPostCode("E1")
         postCodeRobot.clickContinue()

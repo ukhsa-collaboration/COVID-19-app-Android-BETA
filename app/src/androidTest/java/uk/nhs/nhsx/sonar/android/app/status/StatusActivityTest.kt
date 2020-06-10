@@ -14,6 +14,8 @@ import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class StatusActivityTest(private val testAppContext: TestApplicationContext) {
 
+    // TODO: testBookTestCardIsDisplayedButNotEnabledWhenRegistrationIsNotFinished
+
     private val app = testAppContext.app
     private val statusRobot = StatusRobot()
     private val applyForTestRobot = ApplyForTestRobot()
