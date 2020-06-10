@@ -1,10 +1,10 @@
 package uk.nhs.nhsx.sonar.android.app.edgecases
 
-import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoJunit5Test
+import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
 
-class TabletNotSupportedActivityTest : EspressoJunit5Test() {
+class TabletNotSupportedActivityTest : EspressoTest() {
 
     private val robot = TabletNotSupportedRobot()
 

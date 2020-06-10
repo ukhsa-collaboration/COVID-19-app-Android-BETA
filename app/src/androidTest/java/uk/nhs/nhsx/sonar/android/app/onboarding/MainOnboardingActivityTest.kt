@@ -1,10 +1,10 @@
 package uk.nhs.nhsx.sonar.android.app.onboarding
 
-import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoJunit5Test
+import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
 
-class MainOnboardingActivityTest : EspressoJunit5Test() {
+class MainOnboardingActivityTest : EspressoTest() {
 
     private val mainOnBoardingRobot = MainOnboardingRobot()
     private val explanationRobot = ExplanationRobot()

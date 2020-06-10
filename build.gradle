@@ -20,7 +20,6 @@ buildscript {
         classpath 'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
         classpath "com.github.triplet.gradle:play-publisher:2.7.5"
         classpath "org.jacoco:org.jacoco.core:0.8.5"
-        classpath "de.mannodermaus.gradle.plugins:android-junit5:1.6.2.0"
     }
 }
 

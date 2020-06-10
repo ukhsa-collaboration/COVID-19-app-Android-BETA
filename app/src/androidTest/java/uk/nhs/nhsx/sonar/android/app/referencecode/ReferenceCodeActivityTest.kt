@@ -3,11 +3,11 @@
  */
 package uk.nhs.nhsx.sonar.android.app.referencecode
 
-import org.junit.jupiter.api.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoJunit5Test
+import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
 
-class ReferenceCodeActivityTest : EspressoJunit5Test() {
+class ReferenceCodeActivityTest : EspressoTest() {
 
     private val referenceCodeRobot = ReferenceCodeRobot()
 
