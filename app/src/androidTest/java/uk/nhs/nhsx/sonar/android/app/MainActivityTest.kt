@@ -19,7 +19,7 @@ class MainActivityTest : EspressoTest() {
     private val statusFooterRobot = StatusFooterRobot()
 
     @Test
-    fun testUnsupportedDevice() {
+    fun unsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()
 
         startMainActivity()
@@ -29,7 +29,7 @@ class MainActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testTabletNotSupported() {
+    fun tabletNotSupported() {
         testAppContext.simulateTablet()
 
         startMainActivity()
@@ -39,7 +39,7 @@ class MainActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testLaunchWhenOnBoardingIsFinishedButNotRegistered() {
+    fun launchWhenOnBoardingIsFinishedButNotRegistered() {
         testAppContext.setFinishedOnboarding()
 
         startMainActivity()
@@ -48,7 +48,7 @@ class MainActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testLaunchWhenStateIsDefault() {
+    fun launchWhenStateIsDefault() {
         testAppContext.setFullValidUser(DefaultState)
 
         startMainActivity()
@@ -58,7 +58,7 @@ class MainActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testLaunchWhenStateIsExposed() {
+    fun launchWhenStateIsExposed() {
         val exposedState = ExposedState(DateTime.now(UTC), DateTime.now(UTC).plusDays(1))
 
         testAppContext.setFullValidUser(exposedState)
@@ -69,7 +69,7 @@ class MainActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testLaunchWhenStateIsSymptomatic() {
+    fun launchWhenStateIsSymptomatic() {
         val date = DateTime.now(UTC).plusDays(1)
         val symptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 

@@ -18,7 +18,7 @@ class DiagnoseSubmitActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testConfirmationIsRequired() {
+    fun confirmationIsRequired() {
         startActivity()
 
         diagnoseSubmitRobot.submit()

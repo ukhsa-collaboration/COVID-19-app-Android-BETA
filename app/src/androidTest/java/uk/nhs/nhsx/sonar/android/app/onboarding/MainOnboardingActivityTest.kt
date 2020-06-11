@@ -9,7 +9,7 @@ class MainOnboardingActivityTest : EspressoTest() {
     private val explanationRobot = ExplanationRobot()
 
     @Test
-    fun testExplanation() {
+    fun explanation() {
         testAppContext.app.startTestActivity<MainOnboardingActivity>()
 
         mainOnBoardingRobot.checkActivityIsDisplayed()

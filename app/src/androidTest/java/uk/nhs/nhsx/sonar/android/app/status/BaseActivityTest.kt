@@ -18,7 +18,7 @@ class BaseActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testResumeWhenBluetoothIsDisabled() {
+    fun resumeWhenBluetoothIsDisabled() {
         startActivity()
 
         triggerResumeAfter {
@@ -33,7 +33,7 @@ class BaseActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testResumeWhenLocationAccessIsDisabled() {
+    fun resumeWhenLocationAccessIsDisabled() {
         startActivity()
 
         testAppContext.disableLocationAccess()
@@ -44,7 +44,7 @@ class BaseActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testResumeWhenLocationPermissionIsRevoked() {
+    fun resumeWhenLocationPermissionIsRevoked() {
         startActivity()
 
         triggerResumeAfter {

@@ -30,7 +30,7 @@ class PermissionActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testUnsupportedDevice() {
+    fun unsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()
 
         startActivity()
@@ -40,7 +40,7 @@ class PermissionActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testEnableBluetooth() {
+    fun enableBluetooth() {
         testAppContext.ensureBluetoothDisabled()
 
         startActivity()
@@ -62,7 +62,7 @@ class PermissionActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testGrantLocationPermission() {
+    fun grantLocationPermission() {
         testAppContext.revokeLocationPermission()
 
         startActivity()
@@ -93,7 +93,7 @@ class PermissionActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testEnableLocationAccess() {
+    fun enableLocationAccess() {
         testAppContext.disableLocationAccess()
 
         startActivity()

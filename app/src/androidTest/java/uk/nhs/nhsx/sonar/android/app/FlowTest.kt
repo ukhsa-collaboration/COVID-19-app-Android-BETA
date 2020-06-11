@@ -46,7 +46,7 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun testRegistration() {
+    fun registration() {
         testAppContext.simulateBackendDelay(400)
 
         startMainActivity()
@@ -68,7 +68,7 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun testQuestionnaireFlowWithSymptoms() {
+    fun questionnaireFlowWithSymptoms() {
         testAppContext.setFullValidUser()
         startMainActivity()
         testAppContext.simulateDeviceInProximity()
@@ -94,7 +94,7 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun testQuestionnaireFlowWithoutSymptoms() {
+    fun questionnaireFlowWithoutSymptoms() {
         testAppContext.setFullValidUser()
         startMainActivity()
 
@@ -113,7 +113,7 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun testReceivingExposureNotification() {
+    fun receivingExposureNotification() {
         testAppContext.setFullValidUser()
         startMainActivity()
 
@@ -128,7 +128,7 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun testCheckInQuestionnaireWithTemperature() {
+    fun checkInQuestionnaireWithTemperature() {
         val date = DateTime.now(UTC).minusSeconds(1)
         val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
@@ -157,7 +157,7 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun testCheckInQuestionnaireWithoutTemperature() {
+    fun checkInQuestionnaireWithoutTemperature() {
         val date = DateTime.now(UTC).minusSeconds(1)
         val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
@@ -186,7 +186,7 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun testCheckInNoSymptoms() {
+    fun checkInNoSymptoms() {
         val date = DateTime.now(UTC).minusSeconds(1)
         val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
@@ -200,7 +200,7 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun testEnableBluetoothThroughNotification() {
+    fun enableBluetoothThroughNotification() {
         testAppContext.setFullValidUser()
         startMainActivity()
         testAppContext.ensureBluetoothDisabled()

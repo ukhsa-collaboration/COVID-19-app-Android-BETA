@@ -29,7 +29,7 @@ class DiagnoseReviewActivityTest : EspressoTest() {
     private val noSymptoms = emptySet<Symptom>()
 
     @Test
-    fun testDisplayingYesAnswers() {
+    fun displayingYesAnswers() {
         startActivity(allSymptoms)
 
         onView(withId(R.id.review_answer_temperature)).check(matches(withText(R.string.i_do_temperature)))
@@ -40,7 +40,7 @@ class DiagnoseReviewActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testDisplayingNoAnswers() {
+    fun displayingNoAnswers() {
         startActivity(noSymptoms)
 
         onView(withId(R.id.review_answer_temperature)).check(matches(withText(R.string.i_do_not_temperature)))
@@ -51,7 +51,7 @@ class DiagnoseReviewActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testSubmittingWithoutDate() {
+    fun submittingWithoutDate() {
         startActivity(someSymptoms)
 
         diagnoseReviewRobot.checkNoDateSelected()
@@ -60,7 +60,7 @@ class DiagnoseReviewActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testShowingCalendarAndCanceling() {
+    fun showingCalendarAndCanceling() {
         startActivity(someSymptoms)
 
         diagnoseReviewRobot.openCalendar()
@@ -69,7 +69,7 @@ class DiagnoseReviewActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testSelectingTodayFromCalendar() {
+    fun selectingTodayFromCalendar() {
         startActivity(someSymptoms)
 
         diagnoseReviewRobot.openCalendar()
@@ -78,7 +78,7 @@ class DiagnoseReviewActivityTest : EspressoTest() {
     }
 
     @Test
-    fun testSelectingYesterdayFromSpinner() {
+    fun selectingYesterdayFromSpinner() {
         startActivity(someSymptoms)
 
         diagnoseReviewRobot.selectYesterday()
