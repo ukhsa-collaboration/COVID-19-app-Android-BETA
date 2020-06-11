@@ -4,6 +4,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.rule.ActivityTestRule
+import org.joda.time.LocalDate
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -12,9 +13,13 @@ import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
+import uk.nhs.nhsx.sonar.android.app.status.Symptom
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
+import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
+import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
-class FlowTest : EspressoTest() {
+class ExposureTest : EspressoTest() {
 
     private val statusRobot = StatusRobot()
 
@@ -32,9 +37,8 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun receivingExposureNotification() {
-        testAppContext.setFullValidUser()
-        startMainActivity()
+    fun whileInNeutral() {
+        startAppWith(UserState.default())
 
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
 
@@ -51,18 +55,25 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun enableBluetoothThroughNotification() {
-        testAppContext.setFullValidUser()
-        startMainActivity()
-        testAppContext.ensureBluetoothDisabled()
-
-        testAppContext.clickOnNotificationAction(
-            notificationTitleRes = R.string.notification_bluetooth_disabled_title,
-            notificationTextRes = R.string.notification_bluetooth_disabled_text,
-            notificationActionRes = R.string.notification_bluetooth_disabled_action
+    fun whileInSymptomatic() {
+        startAppWith(
+            UserState.symptomatic(
+                LocalDate.now(),
+                nonEmptySetOf(Symptom.TEMPERATURE)
+            )
         )
 
-        testAppContext.verifyBluetoothIsEnabled()
-        statusRobot.checkActivityIsDisplayed(DefaultState::class)
+        statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
+
+        testAppContext.apply {
+            simulateExposureNotificationReceived()
+        }
+
+        statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
+    }
+
+    private fun startAppWith(state: UserState) {
+        testAppContext.setFullValidUser(state)
+        startMainActivity()
     }
 }
