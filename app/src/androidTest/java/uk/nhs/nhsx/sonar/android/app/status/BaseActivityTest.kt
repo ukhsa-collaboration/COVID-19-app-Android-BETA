@@ -2,23 +2,23 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
+import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.edgecases.EdgeCaseRobot
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 
-class BaseActivityTest(private val testAppContext: TestApplicationContext) {
+class BaseActivityTest: EspressoTest() {
 
-    private val app = testAppContext.app
     private val statusRobot = StatusRobot()
     private val edgeCaseRobot = EdgeCaseRobot()
 
     private fun startActivity() {
         testAppContext.setFullValidUser(DefaultState)
-
-        app.startTestActivity<StatusActivity>()
+        testAppContext.app.startTestActivity<StatusActivity>()
     }
 
+    @Test
     fun testResumeWhenBluetoothIsDisabled() {
         startActivity()
 
@@ -33,6 +33,7 @@ class BaseActivityTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
+    @Test
     fun testResumeWhenLocationAccessIsDisabled() {
         startActivity()
 
@@ -43,6 +44,7 @@ class BaseActivityTest(private val testAppContext: TestApplicationContext) {
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
+    @Test
     fun testResumeWhenLocationPermissionIsRevoked() {
         startActivity()
 
