@@ -1,6 +1,9 @@
-name: 'Setup build environment'
-description: 'Setup Java, Android SDK'
+name: 'Gradle Action'
+description: 'Run Gradle tasks'
 inputs:
+  tasks:
+    description: 'gradle tasks to run (space separated)'
+    required: true
   googleServices:
     description: 'google-services config file'
     required: true
@@ -20,6 +23,7 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   env:
+    INPUT_TASKS: ${{ inputs.tasks }}
     INPUT_GOOGLE_SERVICES: ${{ inputs.googleServices }}
     INPUT_SONAR_BASE_URL: ${{ inputs.sonarBaseUrl }}
     INPUT_SONAR_HEADER_VALUE: ${{ inputs.sonarHeaderValue }}

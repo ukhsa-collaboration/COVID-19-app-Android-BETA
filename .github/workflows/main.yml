@@ -33,8 +33,9 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle
 
       - name: Build & Test
-        uses: ./.github/actions/build-action
+        uses: ./.github/actions/gradle-action
         with:
+          tasks: ktlint testDebugUnitTest pactPublish packageDebug packageDebugAndroidTest
           googleServices: ${{ secrets.GoogleServices }}
           sonarBaseUrl: ${{ secrets.TestSonarBaseUrl }}
           sonarHeaderValue: ${{ secrets.TestSonarHeaderValue }}
