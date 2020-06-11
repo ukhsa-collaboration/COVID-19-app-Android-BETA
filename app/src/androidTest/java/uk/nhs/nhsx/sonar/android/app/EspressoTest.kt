@@ -33,6 +33,8 @@ abstract class EspressoTest {
         testAppContext.shutdownMockServer()
     }
 
+    protected fun userState() = testAppContext.component.getUserStateStorage().get()
+
     inline fun <reified T : Activity> Context.startTestActivity(config: Intent.() -> Unit = {}) {
         val intent = Intent(this, T::class.java)
             .apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) }

@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app
+package uk.nhs.nhsx.sonar.android.app.scenarios
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -9,8 +9,10 @@ import org.joda.time.DateTimeZone.UTC
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
+import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
+import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.ExposedState
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
@@ -18,30 +20,16 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseCloseRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseQuestionRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseReviewRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseSubmitRobot
-import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.MainOnboardingRobot
-import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.PermissionRobot
-import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.PostCodeRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
-class FlowTest : EspressoTest() {
+class QuestionnaireTest : EspressoTest() {
 
-    private val mainOnboardingRobot =
-        MainOnboardingRobot()
-    private val postCodeRobot =
-        PostCodeRobot()
-    private val permissionRobot =
-        PermissionRobot()
-    private val diagnoseQuestionRobot =
-        DiagnoseQuestionRobot()
-    private val diagnoseCloseRobot =
-        DiagnoseCloseRobot()
-    private val diagnoseReviewRobot =
-        DiagnoseReviewRobot()
-    private val diagnoseSubmitRobot =
-        DiagnoseSubmitRobot()
-    private val statusRobot =
-        StatusRobot()
+    private val diagnoseQuestionRobot = DiagnoseQuestionRobot()
+    private val diagnoseCloseRobot = DiagnoseCloseRobot()
+    private val diagnoseReviewRobot = DiagnoseReviewRobot()
+    private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
+    private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
 
     @get:Rule
@@ -51,28 +39,6 @@ class FlowTest : EspressoTest() {
     @Before
     fun setupFlowTestActivity() {
         testAppContext.app.startTestActivity<FlowTestStartActivity>()
-    }
-
-    @Test
-    fun registration() {
-        testAppContext.simulateBackendDelay(400)
-
-        startMainActivity()
-        mainOnboardingRobot.clickConfirmOnboarding()
-
-        postCodeRobot.checkActivityIsDisplayed()
-        postCodeRobot.enterPostCode("E1")
-        postCodeRobot.clickContinue()
-
-        permissionRobot.checkActivityIsDisplayed()
-        permissionRobot.clickContinue()
-
-        statusRobot.checkActivityIsDisplayed(DefaultState::class)
-        statusRobot.checkFinalisingSetup()
-
-        testAppContext.verifyRegistrationFlow()
-
-        statusRobot.checkFeelUnwellIsDisplayed()
     }
 
     @Test
@@ -118,21 +84,6 @@ class FlowTest : EspressoTest() {
         diagnoseCloseRobot.close()
 
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
-    }
-
-    @Test
-    fun receivingExposureNotification() {
-        testAppContext.setFullValidUser()
-        startMainActivity()
-
-        statusRobot.checkActivityIsDisplayed(DefaultState::class)
-
-        testAppContext.apply {
-            simulateExposureNotificationReceived()
-            clickOnNotification(R.string.contact_alert_notification_title, R.string.contact_alert_notification_text)
-        }
-
-        statusRobot.checkActivityIsDisplayed(ExposedState::class)
     }
 
     @Test
@@ -194,7 +145,7 @@ class FlowTest : EspressoTest() {
     }
 
     @Test
-    fun checkInNoSymptoms() {
+    fun checkInOverlayTapNoSymptoms() {
         val date = DateTime.now(UTC).minusSeconds(1)
         val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
 
@@ -204,22 +155,6 @@ class FlowTest : EspressoTest() {
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickSecondCtaButton()
 
-        statusRobot.checkActivityIsDisplayed(DefaultState::class)
-    }
-
-    @Test
-    fun enableBluetoothThroughNotification() {
-        testAppContext.setFullValidUser()
-        startMainActivity()
-        testAppContext.ensureBluetoothDisabled()
-
-        testAppContext.clickOnNotificationAction(
-            notificationTitleRes = R.string.notification_bluetooth_disabled_title,
-            notificationTextRes = R.string.notification_bluetooth_disabled_text,
-            notificationActionRes = R.string.notification_bluetooth_disabled_action
-        )
-
-        testAppContext.verifyBluetoothIsEnabled()
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
