@@ -2,7 +2,6 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.EspressoTest
-import uk.nhs.nhsx.sonar.android.app.startTestActivity
 
 class MainOnboardingActivityTest : EspressoTest() {
 

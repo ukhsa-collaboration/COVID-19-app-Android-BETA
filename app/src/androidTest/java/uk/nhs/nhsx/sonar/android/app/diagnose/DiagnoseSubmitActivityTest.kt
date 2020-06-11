@@ -3,11 +3,10 @@ package uk.nhs.nhsx.sonar.android.app.diagnose
 import org.joda.time.DateTime
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.EspressoTest
-import uk.nhs.nhsx.sonar.android.app.startTestActivity
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 
-class DiagnoseSubmitActivityTest: EspressoTest() {
+class DiagnoseSubmitActivityTest : EspressoTest() {
 
     private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
 

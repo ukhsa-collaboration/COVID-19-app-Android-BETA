@@ -13,13 +13,12 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.edgecases.EdgeCaseRobot
-import uk.nhs.nhsx.sonar.android.app.startTestActivity
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import kotlin.test.fail
 
-class PermissionActivityTest: EspressoTest() {
+class PermissionActivityTest : EspressoTest() {
 
     private val permissionRobot = PermissionRobot()
     private val statusRobot = StatusRobot()

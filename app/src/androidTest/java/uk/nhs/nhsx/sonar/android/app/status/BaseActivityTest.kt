@@ -6,9 +6,8 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.edgecases.EdgeCaseRobot
-import uk.nhs.nhsx.sonar.android.app.startTestActivity
 
-class BaseActivityTest: EspressoTest() {
+class BaseActivityTest : EspressoTest() {
 
     private val statusRobot = StatusRobot()
     private val edgeCaseRobot = EdgeCaseRobot()
