@@ -9,27 +9,28 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
+import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.edgecases.EdgeCaseRobot
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import kotlin.test.fail
 
-class PermissionActivityTest(private val testAppContext: TestApplicationContext) {
+class PermissionActivityTest: EspressoTest() {
 
-    private val app = testAppContext.app
     private val permissionRobot = PermissionRobot()
     private val statusRobot = StatusRobot()
     private val edgeCaseRobot = EdgeCaseRobot()
 
     private fun startActivity() {
         testAppContext.setValidPostcode()
-        app.startTestActivity<PermissionActivity>()
+        testAppContext.app.startTestActivity<PermissionActivity>()
     }
 
+    @Test
     fun testUnsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()
 
@@ -39,6 +40,7 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
         edgeCaseRobot.checkTitle(R.string.device_not_supported_title)
     }
 
+    @Test
     fun testEnableBluetooth() {
         testAppContext.ensureBluetoothDisabled()
 
@@ -60,6 +62,7 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
+    @Test
     fun testGrantLocationPermission() {
         testAppContext.revokeLocationPermission()
 
@@ -90,6 +93,7 @@ class PermissionActivityTest(private val testAppContext: TestApplicationContext)
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
+    @Test
     fun testEnableLocationAccess() {
         testAppContext.disableLocationAccess()
 

@@ -20,7 +20,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewActivityTest
 import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitActivityTest
-import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.BaseActivityTest
 import uk.nhs.nhsx.sonar.android.app.status.StatusActivityTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
@@ -57,11 +56,6 @@ class ConnectedTestRunner {
     @Test
     fun runAllTests() {
         val tests = listOf(
-            { PermissionActivityTest(testAppContext).testUnsupportedDevice() },
-            { PermissionActivityTest(testAppContext).testEnableBluetooth() },
-            { PermissionActivityTest(testAppContext).testGrantLocationPermission() },
-            { PermissionActivityTest(testAppContext).testEnableLocationAccess() },
-
             { BaseActivityTest(testAppContext).testResumeWhenBluetoothIsDisabled() },
             { BaseActivityTest(testAppContext).testResumeWhenLocationAccessIsDisabled() },
             { BaseActivityTest(testAppContext).testResumeWhenLocationPermissionIsRevoked() },
