@@ -11,4 +11,4 @@ gcloud:
     orientation: portrait
 
 flank:
-  max-test-shards: 1
+  max-test-shards: 20

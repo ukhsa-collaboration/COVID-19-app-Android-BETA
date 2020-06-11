@@ -26,13 +26,12 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import kotlin.reflect.KClass
 
-class NegativeTestResultTest : EspressoTest() {
+class InvalidTestResultTest : EspressoTest() {
 
     private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
     private val today = LocalDate.now()
     private val yesterday = today.minusDays(1)
-    private val tomorrow = today.plusDays(1)
 
     @get:Rule
     val activityRule: ActivityTestRule<FlowTestStartActivity> =
@@ -47,14 +46,14 @@ class NegativeTestResultTest : EspressoTest() {
     fun tookTestWhileInNeutral() {
         startAppWith(UserState.default())
 
-        receiveNegativeTestResult(today)
+        receiveInvalidTestResult(today)
 
-        dismissNegativeTestResult()
+        dismissInvalidTestResult()
         verifyStatusIs(DefaultState::class)
     }
 
     @Test
-    fun tookTestAfterBecomingSymptomatic() {
+    fun tookTestWhileInSymptomatic() {
         val state = UserState.symptomatic(
             symptomsDate = yesterday,
             symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
@@ -62,24 +61,9 @@ class NegativeTestResultTest : EspressoTest() {
 
         startAppWith(state)
 
-        receiveNegativeTestResult(today)
+        receiveInvalidTestResult(today)
 
-        dismissNegativeTestResult()
-        verifyStatusIs(DefaultState::class)
-    }
-
-    @Test
-    fun tookTestBeforeBecomingSymptomatic() {
-        val state = UserState.symptomatic(
-            symptomsDate = tomorrow,
-            symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        )
-
-        startAppWith(state)
-
-        receiveNegativeTestResult(today)
-
-        dismissNegativeTestResult()
+        dismissInvalidTestResult()
         verifyStatusIs(SymptomaticState::class)
     }
 
@@ -91,9 +75,9 @@ class NegativeTestResultTest : EspressoTest() {
 
         startAppWith(state)
 
-        receiveNegativeTestResult(today)
+        receiveInvalidTestResult(today)
 
-        dismissNegativeTestResult()
+        dismissInvalidTestResult()
         verifyStatusIs(ExposedState::class)
     }
 
@@ -105,9 +89,9 @@ class NegativeTestResultTest : EspressoTest() {
 
         startAppWith(state)
 
-        receiveNegativeTestResult(today)
+        receiveInvalidTestResult(today)
 
-        dismissNegativeTestResult()
+        dismissInvalidTestResult()
         verifyStatusIs(PositiveState::class)
     }
 
@@ -124,47 +108,9 @@ class NegativeTestResultTest : EspressoTest() {
 
         startAppWith(state)
 
-        receiveNegativeTestResult(today)
+        receiveInvalidTestResult(today)
 
-        dismissNegativeTestResult()
-        verifyStatusIs(ExposedState::class)
-    }
-
-    @Test
-    fun tookTestWhileInExposedSymptomaticOutsideExposureWindow() {
-        val exposedState = UserState.exposed(
-            exposureDate = yesterday.minusDays(14)
-        )
-        val state = UserState.exposedSymptomatic(
-            symptomsDate = yesterday,
-            state = exposedState,
-            symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        )
-
-        startAppWith(state)
-
-        receiveNegativeTestResult(today)
-
-        dismissNegativeTestResult()
-        verifyStatusIs(DefaultState::class)
-    }
-
-    @Test
-    fun tookTestBeforeBecomingExposedSymptomatic() {
-        val exposedState = UserState.exposed(
-            exposureDate = today
-        )
-        val state = UserState.exposedSymptomatic(
-            symptomsDate = today,
-            state = exposedState,
-            symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        )
-
-        startAppWith(state)
-
-        receiveNegativeTestResult(yesterday)
-
-        dismissNegativeTestResult()
+        dismissInvalidTestResult()
         verifyStatusIs(ExposedSymptomaticState::class)
     }
 
@@ -172,11 +118,11 @@ class NegativeTestResultTest : EspressoTest() {
         onView(withId(R.id.start_main_activity)).perform(click())
     }
 
-    private fun receiveNegativeTestResult(testDate: LocalDate) {
+    private fun receiveInvalidTestResult(testDate: LocalDate) {
         testAppContext.apply {
             simulateTestResultNotificationReceived(
                 TestInfo(
-                    result = TestResult.NEGATIVE,
+                    result = TestResult.INVALID,
                     date = testDate.toDateTime(LocalTime.now())
                 )
             )
@@ -191,8 +137,8 @@ class NegativeTestResultTest : EspressoTest() {
         statusRobot.checkActivityIsDisplayed(userState)
     }
 
-    private fun dismissNegativeTestResult() {
-        bottomDialogRobot.checkTestResultDialogIsDisplayed(TestResult.NEGATIVE)
+    private fun dismissInvalidTestResult() {
+        bottomDialogRobot.checkTestResultDialogIsDisplayed(TestResult.INVALID)
         bottomDialogRobot.clickSecondCtaButton()
     }
 
