@@ -1,0 +1,14 @@
+gcloud:
+  record-video: true
+  app: app/build/outputs/apk/debug/app-debug.apk
+  test: app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk
+  environment-variables:
+    clearPackageData: true
+  device:
+  - model: aljeter_n
+    version: 26
+    locale: en
+    orientation: portrait
+
+flank:
+  max-test-shards: 10
