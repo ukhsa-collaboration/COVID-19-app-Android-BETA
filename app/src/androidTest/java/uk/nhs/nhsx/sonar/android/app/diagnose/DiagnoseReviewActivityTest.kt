@@ -5,6 +5,8 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.joda.time.LocalDate
+import org.junit.Test
+import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.startTestActivity
@@ -12,15 +14,13 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.values
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 
-class DiagnoseReviewActivityTest(testAppContext: TestApplicationContext) {
+class DiagnoseReviewActivityTest: EspressoTest() {
 
-    private val app = testAppContext.app
     private val diagnoseReviewRobot = DiagnoseReviewRobot()
 
     private fun startActivity(symptoms: Set<Symptom>) {
-        app.startTestActivity<DiagnoseReviewActivity> {
+        testAppContext.app.startTestActivity<DiagnoseReviewActivity> {
             putSymptoms(symptoms)
         }
     }
@@ -29,6 +29,7 @@ class DiagnoseReviewActivityTest(testAppContext: TestApplicationContext) {
     private val someSymptoms = setOf(COUGH, TEMPERATURE)
     private val noSymptoms = emptySet<Symptom>()
 
+    @Test
     fun testDisplayingYesAnswers() {
         startActivity(allSymptoms)
 
@@ -39,6 +40,7 @@ class DiagnoseReviewActivityTest(testAppContext: TestApplicationContext) {
         onView(withId(R.id.review_answer_stomach)).check(matches(withText(R.string.i_do_stomach)))
     }
 
+    @Test
     fun testDisplayingNoAnswers() {
         startActivity(noSymptoms)
 
@@ -49,6 +51,7 @@ class DiagnoseReviewActivityTest(testAppContext: TestApplicationContext) {
         onView(withId(R.id.review_answer_stomach)).check(matches(withText(R.string.i_do_not_stomach)))
     }
 
+    @Test
     fun testSubmittingWithoutDate() {
         startActivity(someSymptoms)
 
@@ -57,6 +60,7 @@ class DiagnoseReviewActivityTest(testAppContext: TestApplicationContext) {
         diagnoseReviewRobot.checkDateErrorIsDisplayed()
     }
 
+    @Test
     fun testShowingCalendarAndCanceling() {
         startActivity(someSymptoms)
 
@@ -65,6 +69,7 @@ class DiagnoseReviewActivityTest(testAppContext: TestApplicationContext) {
         diagnoseReviewRobot.checkNoDateSelected()
     }
 
+    @Test
     fun testSelectingTodayFromCalendar() {
         startActivity(someSymptoms)
 
@@ -73,6 +78,7 @@ class DiagnoseReviewActivityTest(testAppContext: TestApplicationContext) {
         diagnoseReviewRobot.checkSelectedDate(LocalDate.now())
     }
 
+    @Test
     fun testSelectingYesterdayFromSpinner() {
         startActivity(someSymptoms)
 
