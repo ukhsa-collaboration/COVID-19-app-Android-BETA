@@ -68,7 +68,8 @@ class GattWrapper(
         if (device == null ||
             descriptor == null ||
             !descriptor.isNotifyDescriptor() ||
-            !descriptor.characteristic.isKeepAlive()
+            !descriptor.characteristic.isKeepAlive() ||
+            !descriptor.characteristic.isDeviceIdentifier()
         ) {
             if (responseNeeded)
                 server?.sendResponse(
