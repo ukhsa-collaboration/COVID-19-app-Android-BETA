@@ -12,10 +12,11 @@ import androidx.test.uiautomator.Until
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.edgecases.EdgeCaseRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.EdgeCaseRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.PermissionRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 import kotlin.test.fail
 
 class PermissionActivityTest : EspressoTest() {

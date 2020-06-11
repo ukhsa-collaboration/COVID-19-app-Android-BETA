@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app.diagnose
+package uk.nhs.nhsx.sonar.android.app.testhelpers.robots
 
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes

@@ -3,20 +3,22 @@ package uk.nhs.nhsx.sonar.android.app
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone.UTC
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedRobot
-import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DeviceNotSupportedRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.TabletNotSupportedRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
-import uk.nhs.nhsx.sonar.android.app.status.StatusFooterRobot
-import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusFooterRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class MainActivityTest : EspressoTest() {
 
-    private val statusRobot = StatusRobot()
-    private val statusFooterRobot = StatusFooterRobot()
+    private val statusRobot =
+        StatusRobot()
+    private val statusFooterRobot =
+        StatusFooterRobot()
 
     @Test
     fun unsupportedDevice() {
@@ -24,7 +26,8 @@ class MainActivityTest : EspressoTest() {
 
         startMainActivity()
 
-        val robot = DeviceNotSupportedRobot()
+        val robot =
+            DeviceNotSupportedRobot()
         robot.checkScreenIsDisplayed()
     }
 
@@ -34,7 +37,8 @@ class MainActivityTest : EspressoTest() {
 
         startMainActivity()
 
-        val robot = TabletNotSupportedRobot()
+        val robot =
+            TabletNotSupportedRobot()
         robot.checkScreenIsDisplayed()
     }
 

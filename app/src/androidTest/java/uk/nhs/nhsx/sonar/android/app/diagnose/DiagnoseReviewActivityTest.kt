@@ -13,6 +13,7 @@ import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.values
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseReviewRobot
 
 class DiagnoseReviewActivityTest : EspressoTest() {
 

@@ -5,7 +5,8 @@ import androidx.test.uiautomator.Until
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.edgecases.EdgeCaseRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.EdgeCaseRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 
 class BaseActivityTest : EspressoTest() {
 

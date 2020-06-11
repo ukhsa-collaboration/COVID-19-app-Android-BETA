@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app.onboarding
+package uk.nhs.nhsx.sonar.android.app.testhelpers.robots
 
 import androidx.core.text.HtmlCompat
 import androidx.test.espresso.Espresso.closeSoftKeyboard

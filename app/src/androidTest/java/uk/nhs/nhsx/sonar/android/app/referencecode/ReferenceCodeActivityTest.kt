@@ -5,6 +5,7 @@ package uk.nhs.nhsx.sonar.android.app.referencecode
 
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.EspressoTest
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.ReferenceCodeRobot
 
 class ReferenceCodeActivityTest : EspressoTest() {
 

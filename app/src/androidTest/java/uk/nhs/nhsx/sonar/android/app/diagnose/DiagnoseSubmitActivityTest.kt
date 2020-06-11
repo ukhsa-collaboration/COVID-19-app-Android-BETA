@@ -5,6 +5,7 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseSubmitRobot
 
 class DiagnoseSubmitActivityTest : EspressoTest() {
 

@@ -9,7 +9,10 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.ApplyForTestRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.CurrentAdviceRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class StatusActivityTest : EspressoTest() {
@@ -20,6 +23,7 @@ class StatusActivityTest : EspressoTest() {
     private val applyForTestRobot = ApplyForTestRobot()
     private val currentAdviceRobot = CurrentAdviceRobot()
     private val bottomDialogRobot = BottomDialogRobot()
+
     private val expiredSymptomaticState = SymptomaticState(
         DateTime.now(UTC).minusSeconds(1),
         DateTime.now(UTC).minusSeconds(1),

@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app.status
+package uk.nhs.nhsx.sonar.android.app.testhelpers.robots
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click

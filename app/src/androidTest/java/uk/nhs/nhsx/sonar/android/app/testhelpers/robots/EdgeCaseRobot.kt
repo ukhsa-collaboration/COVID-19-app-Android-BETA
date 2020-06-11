@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app.edgecases
+package uk.nhs.nhsx.sonar.android.app.testhelpers.robots
 
 import androidx.annotation.StringRes
 import androidx.test.espresso.Espresso.onView

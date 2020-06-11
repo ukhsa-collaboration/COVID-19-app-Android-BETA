@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app.status
+package uk.nhs.nhsx.sonar.android.app.testhelpers.robots
 
 import android.view.View
 import androidx.annotation.StringRes
@@ -13,6 +13,11 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.hamcrest.CoreMatchers.not
 import org.hamcrest.Matcher
 import uk.nhs.nhsx.sonar.android.app.R
+import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedState
+import uk.nhs.nhsx.sonar.android.app.status.PositiveState
+import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
+import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewContainsText
 import uk.nhs.nhsx.sonar.android.app.testhelpers.checkViewHasText
 import uk.nhs.nhsx.sonar.android.app.testhelpers.stringFromResId

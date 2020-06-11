@@ -9,31 +9,39 @@ import org.joda.time.DateTimeZone.UTC
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseCloseRobot
-import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseQuestionRobot
-import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseReviewRobot
-import uk.nhs.nhsx.sonar.android.app.diagnose.DiagnoseSubmitRobot
-import uk.nhs.nhsx.sonar.android.app.onboarding.MainOnboardingRobot
-import uk.nhs.nhsx.sonar.android.app.onboarding.PermissionRobot
-import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeRobot
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
-import uk.nhs.nhsx.sonar.android.app.status.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseCloseRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseQuestionRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseReviewRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseSubmitRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.MainOnboardingRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.PermissionRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.PostCodeRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class FlowTest : EspressoTest() {
 
-    private val mainOnboardingRobot = MainOnboardingRobot()
-    private val postCodeRobot = PostCodeRobot()
-    private val permissionRobot = PermissionRobot()
-    private val diagnoseQuestionRobot = DiagnoseQuestionRobot()
-    private val diagnoseCloseRobot = DiagnoseCloseRobot()
-    private val diagnoseReviewRobot = DiagnoseReviewRobot()
-    private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
-    private val statusRobot = StatusRobot()
+    private val mainOnboardingRobot =
+        MainOnboardingRobot()
+    private val postCodeRobot =
+        PostCodeRobot()
+    private val permissionRobot =
+        PermissionRobot()
+    private val diagnoseQuestionRobot =
+        DiagnoseQuestionRobot()
+    private val diagnoseCloseRobot =
+        DiagnoseCloseRobot()
+    private val diagnoseReviewRobot =
+        DiagnoseReviewRobot()
+    private val diagnoseSubmitRobot =
+        DiagnoseSubmitRobot()
+    private val statusRobot =
+        StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
 
     @get:Rule
