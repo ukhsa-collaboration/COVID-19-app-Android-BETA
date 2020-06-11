@@ -49,6 +49,7 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Comp
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.encodedSecretKey
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.TestNotificationManagerHelper
+import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.nio.ByteBuffer
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit
@@ -211,6 +212,17 @@ class TestApplicationContext {
             bundleOf(
                 "type" to "Status Update",
                 "status" to "Potential"
+            )
+        )
+        notificationService.onMessageReceived(msg)
+    }
+
+    fun simulateTestResultNotificationReceived(testInfo: TestInfo) {
+        val msg = RemoteMessage(
+            bundleOf(
+                "type" to "Test Result",
+                "result" to "${testInfo.result}",
+                "testTimestamp" to testInfo.date.toUtcIsoFormat()
             )
         )
         notificationService.onMessageReceived(msg)

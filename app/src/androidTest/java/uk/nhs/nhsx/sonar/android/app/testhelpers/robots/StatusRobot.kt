@@ -15,6 +15,7 @@ import org.hamcrest.Matcher
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
+import uk.nhs.nhsx.sonar.android.app.status.ExposedSymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.PositiveState
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.UserState
@@ -32,8 +33,9 @@ class StatusRobot {
             DefaultState::class -> R.string.status_default_title
             ExposedState::class -> R.string.status_exposed_title
             SymptomaticState::class -> R.string.status_symptomatic_title
+            ExposedSymptomaticState::class -> R.string.status_symptomatic_title
             PositiveState::class -> R.string.status_positive_test_title
-            else -> throw IllegalArgumentException("Not able to match title: $userState")
+            else -> throw IllegalArgumentException("StatusRobot: not able to match title: $userState")
         }
 
         waitForText(title, 6_000)
