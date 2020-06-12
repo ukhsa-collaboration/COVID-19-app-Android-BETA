@@ -66,9 +66,21 @@ class StatusActivityTest : EspressoTest() {
     }
 
     @Test
-    fun feelUnwellCardIsDisplayedWhenInDefaultState() {
+    fun showsDefaultState() {
         startActivity(DefaultState)
+
+        statusRobot.checkAppIsWorking()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
+        statusRobot.checkStatusDescriptionIsNotDisplayed()
+
+        statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsDisplayed()
+
+        statusRobot.swipeToBottom()
+
+        statusRobot.checkInformationAboutTestingIsDisplayed()
+        statusRobot.checkWorkplaceGuidanceIsDisplayed()
+        statusRobot.checkNhsServicesLinkIsDisplayed()
     }
 
     @Test
@@ -179,13 +191,6 @@ class StatusActivityTest : EspressoTest() {
         currentAdviceRobot.checkActivityIsDisplayed()
 
         currentAdviceRobot.checkCorrectStateIsDisplay(symptomaticState)
-    }
-
-    @Test
-    fun showsCorrectStatusForDefaultState() {
-        startActivity(DefaultState)
-
-        statusRobot.checkStatusTitle(R.string.status_default_title)
     }
 
     @Test

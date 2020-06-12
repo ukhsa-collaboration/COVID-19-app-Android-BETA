@@ -15,7 +15,9 @@ import androidx.test.uiautomator.Until
 import kotlin.test.fail
 
 fun checkViewHasText(@IdRes viewId: Int, @StringRes stringId: Int) {
-    onView(withId(viewId)).check(matches(withText(stringId)))
+    onView(withId(viewId))
+        .check(matches(withText(stringId)))
+        .check(matches(isDisplayed()))
 }
 
 fun checkViewContainsText(@IdRes viewId: Int, text: String) {
