@@ -13,13 +13,11 @@ class CurrentAdviceTest : ScenarioTest() {
     private val testData = TestData()
 
     @Test
-    fun clickOnCurrentAdviceShowsCurrentAdvice() {
+    fun navigatesIntoCurrentAdviceBySelectingCard() {
         startAppWith(testData.symptomaticState)
 
         statusRobot.clickCurrentAdviceCard()
 
         currentAdviceRobot.checkActivityIsDisplayed()
-
-        currentAdviceRobot.checkCorrectStateIsDisplay(testData.symptomaticState)
     }
 }
