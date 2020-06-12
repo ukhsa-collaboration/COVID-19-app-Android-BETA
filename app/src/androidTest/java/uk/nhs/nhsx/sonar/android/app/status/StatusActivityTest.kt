@@ -75,6 +75,7 @@ class StatusActivityTest : EspressoTest() {
 
         statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsDisplayed()
+        statusRobot.checkBookVirusTestCardIsNotDisplayed()
 
         statusRobot.swipeToBottom()
 
@@ -93,6 +94,7 @@ class StatusActivityTest : EspressoTest() {
 
         statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsDisplayed()
+        statusRobot.checkBookVirusTestCardIsNotDisplayed()
 
         statusRobot.swipeToBottom()
 
@@ -102,9 +104,22 @@ class StatusActivityTest : EspressoTest() {
     }
 
     @Test
-    fun feelUnwellCardIsNotDisplayedWhenInSymptomaticState() {
+    fun showsSymptomaticState() {
         startActivity(symptomaticState)
+
+        statusRobot.checkAppIsWorking()
+        statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
+        statusRobot.checkStatusDescription(symptomaticState)
+
+        statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsNotDisplayed()
+        statusRobot.checkBookVirusTestCardIsDisplayed()
+
+        statusRobot.swipeToBottom()
+
+        statusRobot.checkInformationAboutTestingIsDisplayed()
+        statusRobot.checkWorkplaceGuidanceIsDisplayed()
+        statusRobot.checkNhsServicesLinkIsDisplayed()
     }
 
     @Test
