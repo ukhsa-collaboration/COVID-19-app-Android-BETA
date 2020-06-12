@@ -123,9 +123,22 @@ class StatusActivityTest : EspressoTest() {
     }
 
     @Test
-    fun feelUnwellCardIsNotDisplayedWhenInPositiveState() {
+    fun showsPositiveState() {
         startActivity(positiveState)
+
+        statusRobot.checkAppIsWorking()
+        statusRobot.checkActivityIsDisplayed(PositiveState::class)
+        statusRobot.checkStatusDescription(positiveState)
+
+        statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsNotDisplayed()
+        statusRobot.checkBookVirusTestCardIsNotDisplayed()
+
+        statusRobot.swipeToBottom()
+
+        statusRobot.checkInformationAboutTestingIsDisplayed()
+        statusRobot.checkWorkplaceGuidanceIsDisplayed()
+        statusRobot.checkNhsServicesLinkIsDisplayed()
     }
 
     @Test
