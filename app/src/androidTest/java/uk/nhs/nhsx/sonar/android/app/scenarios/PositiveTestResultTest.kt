@@ -15,19 +15,17 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.status.PositiveState
-import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.UserState
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
-import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import kotlin.reflect.KClass
 
 class PositiveTestResultTest : EspressoTest() {
 
     private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
-    private val today = LocalDate.now()
-    private val yesterday = today.minusDays(1)
+    private val testData = TestData()
 
     @get:Rule
     val activityRule: ActivityTestRule<FlowTestStartActivity> =
@@ -40,9 +38,9 @@ class PositiveTestResultTest : EspressoTest() {
 
     @Test
     fun tookTestWhileInNeutral() {
-        startAppWith(UserState.default())
+        startAppWith(testData.defaultState)
 
-        receivePositiveTestResult(today)
+        receivePositiveTestResult(testData.today)
 
         dismissPositiveTestResult()
         verifyStatusIs(PositiveState::class)
@@ -50,14 +48,11 @@ class PositiveTestResultTest : EspressoTest() {
 
     @Test
     fun tookTestWhileInSymptomatic() {
-        val state = UserState.symptomatic(
-            symptomsDate = yesterday,
-            symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        )
+        val state = testData.symptomaticYesterday()
 
         startAppWith(state)
 
-        receivePositiveTestResult(today)
+        receivePositiveTestResult(testData.today)
 
         dismissPositiveTestResult()
         verifyStatusIs(PositiveState::class)
@@ -65,13 +60,11 @@ class PositiveTestResultTest : EspressoTest() {
 
     @Test
     fun tookTestWhileInExposed() {
-        val state = UserState.exposed(
-            exposureDate = yesterday
-        )
+        val state = testData.exposedYesterday()
 
         startAppWith(state)
 
-        receivePositiveTestResult(today)
+        receivePositiveTestResult(testData.today)
 
         dismissPositiveTestResult()
         verifyStatusIs(PositiveState::class)
@@ -79,13 +72,11 @@ class PositiveTestResultTest : EspressoTest() {
 
     @Test
     fun tookTestWhileInPositive() {
-        val state = UserState.positive(
-            testDate = today.toDateTime(LocalTime.now())
-        )
+        val state = testData.positiveToday()
 
         startAppWith(state)
 
-        receivePositiveTestResult(today)
+        receivePositiveTestResult(testData.today)
 
         dismissPositiveTestResult()
         verifyStatusIs(PositiveState::class)
@@ -93,18 +84,11 @@ class PositiveTestResultTest : EspressoTest() {
 
     @Test
     fun tookTestWhileInExposedSymptomaticWithinExposureWindow() {
-        val exposedState = UserState.exposed(
-            exposureDate = yesterday
-        )
-        val state = UserState.exposedSymptomatic(
-            symptomsDate = yesterday,
-            state = exposedState,
-            symptoms = nonEmptySetOf(Symptom.TEMPERATURE)
-        )
+        val state = testData.exposedSymptomaticYesterday()
 
         startAppWith(state)
 
-        receivePositiveTestResult(today)
+        receivePositiveTestResult(testData.today)
 
         dismissPositiveTestResult()
         verifyStatusIs(PositiveState::class)
