@@ -84,9 +84,21 @@ class StatusActivityTest : EspressoTest() {
     }
 
     @Test
-    fun feelUnwellCardIsDisplayedWhenInExposedState() {
+    fun showsExposedState() {
         startActivity(exposedState)
+
+        statusRobot.checkAppIsWorking()
+        statusRobot.checkActivityIsDisplayed(ExposedState::class)
+        statusRobot.checkStatusDescription(exposedState)
+
+        statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsDisplayed()
+
+        statusRobot.swipeToBottom()
+
+        statusRobot.checkInformationAboutTestingIsDisplayed()
+        statusRobot.checkWorkplaceGuidanceIsDisplayed()
+        statusRobot.checkNhsServicesLinkIsDisplayed()
     }
 
     @Test
