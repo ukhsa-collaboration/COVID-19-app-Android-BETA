@@ -1,44 +1,22 @@
 package uk.nhs.nhsx.sonar.android.app.scenarios
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.rule.ActivityTestRule
-import org.joda.time.LocalDate
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoTest
-import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.ExposedState
-import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
-import uk.nhs.nhsx.sonar.android.app.status.UserState
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
+import uk.nhs.nhsx.sonar.android.app.testhelpers.base.ScenarioTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
-import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
-class ExposureTest : EspressoTest() {
+class ExposureTest : ScenarioTest() {
 
     private val statusRobot = StatusRobot()
-
-    @get:Rule
-    val activityRule: ActivityTestRule<FlowTestStartActivity> =
-        ActivityTestRule(FlowTestStartActivity::class.java)
-
-    @Before
-    fun setupFlowTestActivity() {
-        testAppContext.app.startTestActivity<FlowTestStartActivity>()
-    }
-
-    private fun startMainActivity() {
-        onView(withId(R.id.start_main_activity)).perform(click())
-    }
+    private val testData = TestData()
 
     @Test
     fun whileInNeutral() {
-        startAppWith(UserState.default())
+        startAppWith(testData.defaultState)
 
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
 
@@ -56,12 +34,7 @@ class ExposureTest : EspressoTest() {
 
     @Test
     fun whileInSymptomatic() {
-        startAppWith(
-            UserState.symptomatic(
-                LocalDate.now(),
-                nonEmptySetOf(Symptom.TEMPERATURE)
-            )
-        )
+        startAppWith(testData.symptomaticYesterday())
 
         statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
 
@@ -70,10 +43,5 @@ class ExposureTest : EspressoTest() {
         }
 
         statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
-    }
-
-    private fun startAppWith(state: UserState) {
-        testAppContext.setFullValidUser(state)
-        startMainActivity()
     }
 }

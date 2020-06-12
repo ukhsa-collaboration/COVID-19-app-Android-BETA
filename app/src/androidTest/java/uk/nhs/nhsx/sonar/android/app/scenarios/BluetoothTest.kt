@@ -1,39 +1,20 @@
 package uk.nhs.nhsx.sonar.android.app.scenarios
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.rule.ActivityTestRule
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoTest
-import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
+import uk.nhs.nhsx.sonar.android.app.testhelpers.base.ScenarioTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 
-class BluetoothTest : EspressoTest() {
+class BluetoothTest : ScenarioTest() {
 
     private val statusRobot = StatusRobot()
-
-    @get:Rule
-    val activityRule: ActivityTestRule<FlowTestStartActivity> =
-        ActivityTestRule(FlowTestStartActivity::class.java)
-
-    @Before
-    fun setupFlowTestActivity() {
-        testAppContext.app.startTestActivity<FlowTestStartActivity>()
-    }
-
-    private fun startMainActivity() {
-        onView(withId(R.id.start_main_activity)).perform(click())
-    }
+    private val testData = TestData()
 
     @Test
     fun enableBluetoothThroughNotification() {
-        testAppContext.setFullValidUser()
-        startMainActivity()
+        startAppWith(testData.defaultState)
         testAppContext.ensureBluetoothDisabled()
 
         testAppContext.clickOnNotificationAction(

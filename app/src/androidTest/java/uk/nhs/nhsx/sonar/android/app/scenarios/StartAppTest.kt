@@ -1,26 +1,23 @@
 package uk.nhs.nhsx.sonar.android.app.scenarios
 
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoTest
-import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
+import uk.nhs.nhsx.sonar.android.app.testhelpers.base.ScenarioTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DeviceNotSupportedRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.TabletNotSupportedRobot
 
-class StartAppTest : EspressoTest() {
+class StartAppTest : ScenarioTest() {
 
     private val statusRobot = StatusRobot()
-
-    private fun startMainActivity() {
-        testAppContext.app.startTestActivity<MainActivity>()
-    }
+    private val testData = TestData()
 
     @Test
     fun unsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()
 
-        startMainActivity()
+        startAppWith(testData.defaultState)
 
         val robot = DeviceNotSupportedRobot()
         robot.checkScreenIsDisplayed()
@@ -30,7 +27,7 @@ class StartAppTest : EspressoTest() {
     fun tabletNotSupported() {
         testAppContext.simulateTablet()
 
-        startMainActivity()
+        startAppWith(testData.defaultState)
 
         val robot = TabletNotSupportedRobot()
         robot.checkScreenIsDisplayed()
@@ -40,7 +37,7 @@ class StartAppTest : EspressoTest() {
     fun launchWhenOnBoardingIsFinishedButNotRegistered() {
         testAppContext.setFinishedOnboarding()
 
-        startMainActivity()
+        startAppWith(testData.defaultState)
 
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }

@@ -3,7 +3,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoTest
+import uk.nhs.nhsx.sonar.android.app.testhelpers.base.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult

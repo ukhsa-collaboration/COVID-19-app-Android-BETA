@@ -1,42 +1,25 @@
 package uk.nhs.nhsx.sonar.android.app.scenarios
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.rule.ActivityTestRule
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoTest
-import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
-import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
+import uk.nhs.nhsx.sonar.android.app.testhelpers.base.ScenarioTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.MainOnboardingRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.PermissionRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.PostCodeRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 
-class OnBoardingTest : EspressoTest() {
+class OnBoardingTest : ScenarioTest() {
 
     private val mainOnBoardingRobot = MainOnboardingRobot()
     private val postCodeRobot = PostCodeRobot()
     private val permissionRobot = PermissionRobot()
     private val statusRobot = StatusRobot()
 
-    @get:Rule
-    val activityRule: ActivityTestRule<FlowTestStartActivity> =
-        ActivityTestRule(FlowTestStartActivity::class.java)
-
-    @Before
-    fun setupFlowTestActivity() {
-        testAppContext.app.startTestActivity<FlowTestStartActivity>()
-    }
-
     @Test
     fun registration() {
         testAppContext.simulateBackendDelay(400)
 
-        startMainActivity()
+        startAppWithEmptyState()
         mainOnBoardingRobot.clickConfirmOnboarding()
 
         postCodeRobot.checkActivityIsDisplayed()
@@ -53,9 +36,5 @@ class OnBoardingTest : EspressoTest() {
 
         statusRobot.waitForRegistrationToComplete()
         statusRobot.checkFeelUnwellIsDisplayed()
-    }
-
-    private fun startMainActivity() {
-        onView(withId(R.id.start_main_activity)).perform(click())
     }
 }

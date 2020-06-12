@@ -1,29 +1,19 @@
 package uk.nhs.nhsx.sonar.android.app.scenarios
 
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.rule.ActivityTestRule
-import org.joda.time.DateTime
-import org.joda.time.DateTimeZone.UTC
-import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoTest
-import uk.nhs.nhsx.sonar.android.app.FlowTestStartActivity
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
+import uk.nhs.nhsx.sonar.android.app.testhelpers.base.ScenarioTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseCloseRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseQuestionRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseReviewRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseSubmitRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
-import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
-class QuestionnaireTest : EspressoTest() {
+class QuestionnaireTest : ScenarioTest() {
 
     private val diagnoseQuestionRobot = DiagnoseQuestionRobot()
     private val diagnoseCloseRobot = DiagnoseCloseRobot()
@@ -31,20 +21,12 @@ class QuestionnaireTest : EspressoTest() {
     private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
     private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
-
-    @get:Rule
-    val activityRule: ActivityTestRule<FlowTestStartActivity> =
-        ActivityTestRule(FlowTestStartActivity::class.java)
-
-    @Before
-    fun setupFlowTestActivity() {
-        testAppContext.app.startTestActivity<FlowTestStartActivity>()
-    }
+    private val testData = TestData()
 
     @Test
     fun questionnaireFlowWithSymptoms() {
-        testAppContext.setFullValidUser()
-        startMainActivity()
+        startAppWith(testData.defaultState)
+
         testAppContext.simulateDeviceInProximity()
 
         statusRobot.clickNotFeelingWellCard()
@@ -69,8 +51,7 @@ class QuestionnaireTest : EspressoTest() {
 
     @Test
     fun questionnaireFlowWithoutSymptoms() {
-        testAppContext.setFullValidUser()
-        startMainActivity()
+        startAppWith(testData.defaultState)
 
         statusRobot.clickNotFeelingWellCard()
 
@@ -88,11 +69,7 @@ class QuestionnaireTest : EspressoTest() {
 
     @Test
     fun checkInQuestionnaireWithTemperature() {
-        val date = DateTime.now(UTC).minusSeconds(1)
-        val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
-
-        testAppContext.setFullValidUser(expiredSymptomaticState)
-        startMainActivity()
+        startAppWith(testData.expiredSymptomaticState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickFirstCtaButton()
@@ -117,11 +94,7 @@ class QuestionnaireTest : EspressoTest() {
 
     @Test
     fun checkInQuestionnaireWithoutTemperature() {
-        val date = DateTime.now(UTC).minusSeconds(1)
-        val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
-
-        testAppContext.setFullValidUser(expiredSymptomaticState)
-        startMainActivity()
+        startAppWith(testData.expiredSymptomaticState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickFirstCtaButton()
@@ -146,19 +119,11 @@ class QuestionnaireTest : EspressoTest() {
 
     @Test
     fun checkInOverlayTapNoSymptoms() {
-        val date = DateTime.now(UTC).minusSeconds(1)
-        val expiredSymptomaticState = SymptomaticState(date, date, nonEmptySetOf(TEMPERATURE))
-
-        testAppContext.setFullValidUser(expiredSymptomaticState)
-        startMainActivity()
+        startAppWith(testData.expiredSymptomaticState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickSecondCtaButton()
 
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
-    }
-
-    private fun startMainActivity() {
-        onView(withId(R.id.start_main_activity)).perform(click())
     }
 }
