@@ -39,7 +39,7 @@ class StatusActivityTest : EspressoTest() {
     private val exposedState = UserState.exposed(LocalDate.now())
 
     private val exposedSymptomaticState = UserState.exposedSymptomatic(
-        symptomsDate =  LocalDate.now().minusDays(1),
+        symptomsDate = LocalDate.now().minusDays(1),
         state = exposedState,
         symptoms = nonEmptySetOf(TEMPERATURE)
     )
@@ -256,74 +256,6 @@ class StatusActivityTest : EspressoTest() {
         currentAdviceRobot.checkActivityIsDisplayed()
 
         currentAdviceRobot.checkCorrectStateIsDisplay(symptomaticState)
-    }
-
-    @Test
-    fun showsCorrectStatusForExposedState() {
-        val state = UserState.exposed(LocalDate.now())
-        startActivity(state)
-
-        statusRobot.checkStatusTitle(R.string.status_exposed_title)
-        statusRobot.checkStatusDescription(state)
-    }
-
-    @Test
-    fun showsCorrectStatusForSymptomaticState() {
-        val state = UserState.symptomatic(
-            symptomsDate = LocalDate.now().minusDays(1),
-            symptoms = nonEmptySetOf(TEMPERATURE)
-        )
-        startActivity(state)
-
-        statusRobot.checkStatusTitle(R.string.status_symptomatic_title)
-        statusRobot.checkStatusDescription(state)
-    }
-
-    @Test
-    fun showsCorrectStatusForExposedSymptomaticState() {
-        val since = LocalDate.now().minusDays(1)
-        val state = UserState.exposedSymptomatic(
-            symptomsDate = since,
-            state = UserState.exposed(since),
-            symptoms = nonEmptySetOf(TEMPERATURE)
-        )
-
-        startActivity(state)
-
-        statusRobot.checkStatusTitle(R.string.status_symptomatic_title)
-        statusRobot.checkStatusDescription(state)
-    }
-
-    @Test
-    fun showsCorrectStatusForPositiveTestState() {
-        val state = UserState.positive(
-            testDate = DateTime.now(UTC).minusDays(1)
-        )
-        startActivity(state)
-
-        statusRobot.checkStatusTitle(R.string.status_positive_test_title)
-        statusRobot.checkStatusDescription(state)
-    }
-
-    @Test
-    fun bookVirusTestIsNotDisplayedWhenInSymptomaticTestState() {
-        startActivity(symptomaticState)
-
-        statusRobot.checkBookVirusTestCardIsDisplayed()
-    }
-
-    @Test
-    fun bookVirusTestIsNotDisplayedWhenInPositiveTestState() {
-        startActivity(positiveState)
-
-        statusRobot.checkBookVirusTestCardIsNotDisplayed()
-    }
-
-    @Test
-    fun bookVirusTestIsNotDisplayedWhenInExposedState() {
-        startActivity(exposedState)
-
-        statusRobot.checkBookVirusTestCardIsNotDisplayed()
     }
 
     @Test
