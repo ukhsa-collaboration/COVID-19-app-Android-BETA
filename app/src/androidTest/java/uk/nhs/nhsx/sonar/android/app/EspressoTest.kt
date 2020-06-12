@@ -10,6 +10,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
+import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
+import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 
@@ -34,6 +36,11 @@ abstract class EspressoTest {
     }
 
     protected fun userState() = testAppContext.component.getUserStateStorage().get()
+
+    protected fun startStatusActivityWith(state: UserState) {
+        testAppContext.setFullValidUser(state)
+        testAppContext.app.startTestActivity<StatusActivity>()
+    }
 
     inline fun <reified T : Activity> Context.startTestActivity(config: Intent.() -> Unit = {}) {
         val intent = Intent(this, T::class.java)
