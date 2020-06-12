@@ -1,50 +1,21 @@
 package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
-import org.joda.time.DateTimeZone.UTC
 import org.joda.time.LocalDate
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
-import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 
 class StatusActivityTest : EspressoTest() {
 
     private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
     private val testData = TestData()
-
-    private val expiredSymptomaticState = SymptomaticState(
-        DateTime.now(UTC).minusSeconds(1),
-        DateTime.now(UTC).minusSeconds(1),
-        nonEmptySetOf(TEMPERATURE)
-    )
-
-    private val exposedState = UserState.exposed(LocalDate.now())
-
-    private val exposedSymptomaticState = UserState.exposedSymptomatic(
-        symptomsDate = LocalDate.now().minusDays(1),
-        state = exposedState,
-        symptoms = nonEmptySetOf(TEMPERATURE)
-    )
-
-    private val positiveState = PositiveState(
-        DateTime.now(UTC).minusDays(1),
-        DateTime.now(UTC).plusDays(1),
-        nonEmptySetOf(TEMPERATURE)
-    )
-
-    private val expiredPositiveState = PositiveState(
-        DateTime.now(UTC).minusDays(15),
-        DateTime.now(UTC).minusDays(1),
-        nonEmptySetOf(TEMPERATURE)
-    )
 
     private fun showsTestResultDialogOnResume(testResult: TestResult, state: UserState) {
         testAppContext.addTestInfo(TestInfo(testResult, DateTime.now()))
@@ -78,7 +49,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsDefaultState() {
-        startStatusActivityWith(DefaultState)
+        startStatusActivityWith(testData.defaultState)
 
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
@@ -97,11 +68,11 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsExposedState() {
-        startStatusActivityWith(exposedState)
+        startStatusActivityWith(testData.exposedState)
 
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(ExposedState::class)
-        statusRobot.checkStatusDescription(exposedState)
+        statusRobot.checkStatusDescription(testData.exposedState)
 
         statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsDisplayed()
@@ -135,11 +106,11 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsExposedSymptomaticState() {
-        startStatusActivityWith(exposedSymptomaticState)
+        startStatusActivityWith(testData.exposedSymptomaticState)
 
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(ExposedSymptomaticState::class)
-        statusRobot.checkStatusDescription(exposedSymptomaticState)
+        statusRobot.checkStatusDescription(testData.exposedSymptomaticState)
 
         statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsNotDisplayed()
@@ -154,11 +125,11 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsPositiveState() {
-        startStatusActivityWith(positiveState)
+        startStatusActivityWith(testData.positiveState)
 
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(PositiveState::class)
-        statusRobot.checkStatusDescription(positiveState)
+        statusRobot.checkStatusDescription(testData.positiveState)
 
         statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsNotDisplayed()
@@ -203,7 +174,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsRecoveryDialogOnResume() {
-        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.setFullValidUser(testData.defaultState)
         testAppContext.addRecoveryMessage()
 
         testAppContext.app.startTestActivity<StatusActivity>()
@@ -215,7 +186,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun bottomDialogWhenStateIsExpiredSelectingUpdatingSymptoms() {
-        startStatusActivityWith(expiredSymptomaticState)
+        startStatusActivityWith(testData.expiredSymptomaticState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickFirstCtaButton()
@@ -224,7 +195,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun bottomDialogWhenStateIsExpiredSelectingNoSymptoms() {
-        startStatusActivityWith(expiredSymptomaticState)
+        startStatusActivityWith(testData.expiredSymptomaticState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickSecondCtaButton()
@@ -233,7 +204,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsUpdateSymptomsDialogWhenPositiveStateExpired() {
-        startStatusActivityWith(expiredPositiveState)
+        startStatusActivityWith(testData.expiredPositiveState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickSecondCtaButton()
@@ -272,17 +243,17 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsPositiveTestResultDialogOnResumeForExposedState() {
-        showsTestResultDialogOnResume(TestResult.POSITIVE, exposedState)
+        showsTestResultDialogOnResume(TestResult.POSITIVE, testData.exposedState)
     }
 
     @Test
     fun showsNegativeTestResultDialogOnResumeForExposedState() {
-        showsTestResultDialogOnResume(TestResult.NEGATIVE, exposedState)
+        showsTestResultDialogOnResume(TestResult.NEGATIVE, testData.exposedState)
     }
 
     @Test
     fun showsInvalidTestResultDialogOnResumeForExposedState() {
-        showsTestResultDialogOnResume(TestResult.INVALID, exposedState)
+        showsTestResultDialogOnResume(TestResult.INVALID, testData.exposedState)
     }
 
     @Test
@@ -301,7 +272,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsEnableNotificationOnResume() {
-        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.setFullValidUser(testData.defaultState)
         testAppContext.revokeNotificationsPermission()
 
         testAppContext.app.startTestActivity<StatusActivity>()
@@ -311,7 +282,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun doesNotEnableAllowNotificationOnResume() {
-        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.setFullValidUser(testData.defaultState)
         testAppContext.grantNotificationsPermission()
 
         testAppContext.app.startTestActivity<StatusActivity>()
@@ -321,7 +292,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun grantNotificationPermission() {
-        testAppContext.setFullValidUser(DefaultState)
+        testAppContext.setFullValidUser(testData.defaultState)
         testAppContext.revokeNotificationsPermission()
 
         testAppContext.app.startTestActivity<StatusActivity>()
