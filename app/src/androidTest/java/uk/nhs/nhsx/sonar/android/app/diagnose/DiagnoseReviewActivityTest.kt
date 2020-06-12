@@ -6,13 +6,13 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import org.joda.time.LocalDate
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.diagnose.review.DiagnoseReviewActivity
 import uk.nhs.nhsx.sonar.android.app.status.Symptom
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.values
+import uk.nhs.nhsx.sonar.android.app.testhelpers.base.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseReviewRobot
 
 class DiagnoseReviewActivityTest : EspressoTest() {

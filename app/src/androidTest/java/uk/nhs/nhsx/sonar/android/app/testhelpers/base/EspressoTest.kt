@@ -1,4 +1,4 @@
-package uk.nhs.nhsx.sonar.android.app
+package uk.nhs.nhsx.sonar.android.app.testhelpers.base
 
 import android.app.Activity
 import android.content.Context
@@ -26,7 +26,8 @@ abstract class EspressoTest {
 
     @Before
     fun setup() {
-        testAppContext = TestApplicationContext()
+        testAppContext =
+            TestApplicationContext()
         testAppContext.reset()
     }
 

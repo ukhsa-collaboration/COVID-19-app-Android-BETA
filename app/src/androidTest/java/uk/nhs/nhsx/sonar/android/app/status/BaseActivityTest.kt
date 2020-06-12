@@ -3,7 +3,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.Until
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.EspressoTest
+import uk.nhs.nhsx.sonar.android.app.testhelpers.base.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.EdgeCaseRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
