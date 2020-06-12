@@ -45,6 +45,11 @@ class StatusRobot {
         onView(withId(R.id.root_container)).perform(ViewActions.swipeUp())
     }
 
+    fun waitForRegistrationToComplete() {
+        // job retries after at least 10 seconds
+        waitForText(R.string.registration_everything_is_working_ok, timeoutInMs = 20000)
+    }
+
     fun clickCurrentAdviceCard() {
         onView(withId(R.id.readLatestAdvice)).perform(click())
     }
@@ -63,14 +68,14 @@ class StatusRobot {
 
     fun checkFinalisingSetup() {
         checkViewHasText(R.id.registrationStatusText, R.string.registration_finalising_setup)
-        verifyCheckMySymptomsButton(not(isEnabled()))
+        verifyFeelUnwellCard(not(isEnabled()))
     }
 
     fun checkAppIsWorking() {
         checkViewHasText(R.id.registrationStatusText, R.string.registration_everything_is_working_ok)
     }
 
-    fun checkStatusTitle(@StringRes stringRes: Int) {
+    private fun checkStatusTitle(@StringRes stringRes: Int) {
         checkViewHasText(R.id.statusTitle, stringRes)
     }
 
@@ -108,14 +113,17 @@ class StatusRobot {
     }
 
     fun checkFeelUnwellIsNotDisplayed() {
-        onView(withId(R.id.feelUnwell)).check(matches(not(isDisplayed())))
+        verifyFeelUnwellCard(not(isDisplayed()))
     }
 
     fun checkFeelUnwellIsDisplayed() {
-        // job retries after at least 10 seconds
-        waitForText(R.string.registration_everything_is_working_ok, timeoutInMs = 20000)
-        verifyCheckMySymptomsButton(isDisplayed())
-        verifyCheckMySymptomsButton(isEnabled())
+        verifyFeelUnwellCard(isDisplayed())
+        verifyFeelUnwellCard(isEnabled())
+    }
+
+    fun checkFeelUnwellIsDisabled() {
+        verifyFeelUnwellCard(isDisplayed())
+        verifyFeelUnwellCard(not(isEnabled()))
     }
 
     fun checkEnableNotificationsIsDisplayed() {
@@ -126,7 +134,7 @@ class StatusRobot {
         onView(withId(R.id.notificationPanel)).check(matches(not(isDisplayed())))
     }
 
-    private fun verifyCheckMySymptomsButton(matcher: Matcher<View>) {
+    private fun verifyFeelUnwellCard(matcher: Matcher<View>) {
         onView(withId(R.id.feelUnwell)).check(matches(matcher))
     }
 }

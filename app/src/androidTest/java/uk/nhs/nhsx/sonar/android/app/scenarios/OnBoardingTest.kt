@@ -51,6 +51,7 @@ class OnBoardingTest : EspressoTest() {
 
         testAppContext.verifyRegistrationFlow()
 
+        statusRobot.waitForRegistrationToComplete()
         statusRobot.checkFeelUnwellIsDisplayed()
     }
 
