@@ -72,6 +72,26 @@ class StatusActivityTest : EspressoTest() {
     }
 
     @Test
+    fun showsDefaultStateWhenRegistrationNotFinished() {
+        testAppContext.setFinishedOnboarding()
+        testAppContext.app.startTestActivity<StatusActivity>()
+
+        statusRobot.checkFinalisingSetup()
+        statusRobot.checkActivityIsDisplayed(DefaultState::class)
+        statusRobot.checkStatusDescriptionIsNotDisplayed()
+
+        statusRobot.checkCurrentAdviceCardIsDisplayed()
+        statusRobot.checkFeelUnwellIsDisabled()
+        statusRobot.checkBookVirusTestCardIsNotDisplayed()
+
+        statusRobot.swipeToBottom()
+
+        statusRobot.checkInformationAboutTestingIsDisplayed()
+        statusRobot.checkWorkplaceGuidanceIsDisplayed()
+        statusRobot.checkNhsServicesLinkIsDisplayed()
+    }
+
+    @Test
     fun showsDefaultState() {
         startActivity(DefaultState)
 
@@ -177,6 +197,7 @@ class StatusActivityTest : EspressoTest() {
         testAppContext.simulateBackendResponse(error = false)
         testAppContext.verifyRegistrationRetry()
 
+        statusRobot.waitForRegistrationToComplete()
         statusRobot.checkFeelUnwellIsDisplayed()
     }
 
