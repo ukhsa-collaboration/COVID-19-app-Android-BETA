@@ -38,6 +38,12 @@ class StatusActivityTest : EspressoTest() {
 
     private val exposedState = UserState.exposed(LocalDate.now())
 
+    private val exposedSymptomaticState = UserState.exposedSymptomatic(
+        symptomsDate =  LocalDate.now().minusDays(1),
+        state = exposedState,
+        symptoms = nonEmptySetOf(TEMPERATURE)
+    )
+
     private val positiveState = PositiveState(
         DateTime.now(UTC).minusDays(1),
         DateTime.now(UTC).plusDays(1),
@@ -110,6 +116,25 @@ class StatusActivityTest : EspressoTest() {
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
         statusRobot.checkStatusDescription(symptomaticState)
+
+        statusRobot.checkCurrentAdviceCardIsDisplayed()
+        statusRobot.checkFeelUnwellIsNotDisplayed()
+        statusRobot.checkBookVirusTestCardIsDisplayed()
+
+        statusRobot.swipeToBottom()
+
+        statusRobot.checkInformationAboutTestingIsDisplayed()
+        statusRobot.checkWorkplaceGuidanceIsDisplayed()
+        statusRobot.checkNhsServicesLinkIsDisplayed()
+    }
+
+    @Test
+    fun showsExposedSymptomaticState() {
+        startActivity(exposedSymptomaticState)
+
+        statusRobot.checkAppIsWorking()
+        statusRobot.checkActivityIsDisplayed(ExposedSymptomaticState::class)
+        statusRobot.checkStatusDescription(exposedSymptomaticState)
 
         statusRobot.checkCurrentAdviceCardIsDisplayed()
         statusRobot.checkFeelUnwellIsNotDisplayed()
