@@ -45,9 +45,16 @@ class GattServer @Inject constructor(
 
     private val identityCharacteristic = BluetoothGattCharacteristic(
         SONAR_IDENTITY_CHARACTERISTIC_UUID,
-        PROPERTY_READ,
-        PERMISSION_READ
-    )
+        PROPERTY_READ + PROPERTY_WRITE + PROPERTY_WRITE_NO_RESPONSE + PROPERTY_NOTIFY,
+        PERMISSION_READ + PERMISSION_WRITE
+    ).also {
+        it.addDescriptor(
+            BluetoothGattDescriptor(
+                NOTIFY_DESCRIPTOR_UUID,
+                PERMISSION_READ + PERMISSION_WRITE
+            )
+        )
+    }
 
     private val service: BluetoothGattService =
         BluetoothGattService(SONAR_SERVICE_UUID, SERVICE_TYPE_PRIMARY)
