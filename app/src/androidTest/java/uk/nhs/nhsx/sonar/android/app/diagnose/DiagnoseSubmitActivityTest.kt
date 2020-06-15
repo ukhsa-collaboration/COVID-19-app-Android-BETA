@@ -11,16 +11,12 @@ class DiagnoseSubmitActivityTest : EspressoTest() {
 
     private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
 
-    private fun startActivity() {
-        testAppContext.app.startTestActivity<DiagnoseSubmitActivity> {
+    @Test
+    fun confirmationIsRequired() {
+        startTestActivity<DiagnoseSubmitActivity> {
             putSymptoms(setOf(COUGH, TEMPERATURE))
             putExtra("SYMPTOMS_DATE", DateTime.now().millis)
         }
-    }
-
-    @Test
-    fun confirmationIsRequired() {
-        startActivity()
 
         diagnoseSubmitRobot.submit()
         diagnoseSubmitRobot.checkConfirmationIsNeeded()

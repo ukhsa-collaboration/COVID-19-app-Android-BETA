@@ -19,19 +19,15 @@ class DiagnoseReviewActivityTest : EspressoTest() {
 
     private val diagnoseReviewRobot = DiagnoseReviewRobot()
 
-    private fun startActivity(symptoms: Set<Symptom>) {
-        testAppContext.app.startTestActivity<DiagnoseReviewActivity> {
-            putSymptoms(symptoms)
-        }
-    }
-
     private val allSymptoms = values().toSet()
     private val someSymptoms = setOf(COUGH, TEMPERATURE)
     private val noSymptoms = emptySet<Symptom>()
 
     @Test
     fun displayingYesAnswers() {
-        startActivity(allSymptoms)
+        startTestActivity<DiagnoseReviewActivity> {
+            putSymptoms(allSymptoms)
+        }
 
         onView(withId(R.id.review_answer_temperature)).check(matches(withText(R.string.i_do_temperature)))
         onView(withId(R.id.review_answer_cough)).check(matches(withText(R.string.i_do_cough)))
@@ -42,7 +38,9 @@ class DiagnoseReviewActivityTest : EspressoTest() {
 
     @Test
     fun displayingNoAnswers() {
-        startActivity(noSymptoms)
+        startTestActivity<DiagnoseReviewActivity> {
+            putSymptoms(noSymptoms)
+        }
 
         onView(withId(R.id.review_answer_temperature)).check(matches(withText(R.string.i_do_not_temperature)))
         onView(withId(R.id.review_answer_cough)).check(matches(withText(R.string.i_do_not_cough)))
@@ -53,7 +51,9 @@ class DiagnoseReviewActivityTest : EspressoTest() {
 
     @Test
     fun submittingWithoutDate() {
-        startActivity(someSymptoms)
+        startTestActivity<DiagnoseReviewActivity> {
+            putSymptoms(someSymptoms)
+        }
 
         diagnoseReviewRobot.checkNoDateSelected()
         diagnoseReviewRobot.submit()
@@ -62,7 +62,9 @@ class DiagnoseReviewActivityTest : EspressoTest() {
 
     @Test
     fun showingCalendarAndCanceling() {
-        startActivity(someSymptoms)
+        startTestActivity<DiagnoseReviewActivity> {
+            putSymptoms(someSymptoms)
+        }
 
         diagnoseReviewRobot.openCalendar()
         diagnoseReviewRobot.cancelCalendar()
@@ -71,7 +73,9 @@ class DiagnoseReviewActivityTest : EspressoTest() {
 
     @Test
     fun selectingTodayFromCalendar() {
-        startActivity(someSymptoms)
+        startTestActivity<DiagnoseReviewActivity> {
+            putSymptoms(someSymptoms)
+        }
 
         diagnoseReviewRobot.openCalendar()
         diagnoseReviewRobot.okCalendar()
@@ -80,7 +84,9 @@ class DiagnoseReviewActivityTest : EspressoTest() {
 
     @Test
     fun selectingYesterdayFromSpinner() {
-        startActivity(someSymptoms)
+        startTestActivity<DiagnoseReviewActivity> {
+            putSymptoms(someSymptoms)
+        }
 
         diagnoseReviewRobot.selectYesterday()
         diagnoseReviewRobot.checkSelectedDate(R.string.yesterday)

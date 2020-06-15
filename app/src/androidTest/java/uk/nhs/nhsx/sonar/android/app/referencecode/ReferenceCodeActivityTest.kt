@@ -14,7 +14,7 @@ class ReferenceCodeActivityTest : EspressoTest() {
     @Test
     fun showsReferenceCode() {
         testAppContext.setFullValidUser()
-        testAppContext.app.startTestActivity<ReferenceCodeActivity>()
+        startTestActivity<ReferenceCodeActivity>()
         referenceCodeRobot.checkReferenceCodeIs("REF CODE #202")
     }
 }
