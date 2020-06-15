@@ -19,18 +19,12 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import androidx.work.WorkManager
 import com.google.firebase.messaging.RemoteMessage
-import kotlinx.coroutines.runBlocking
 import net.danlew.android.joda.JodaTimeAndroid
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.until
 import org.awaitility.kotlin.untilNotNull
-import org.joda.time.DateTime
-import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.SonarApplication
-import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
-import uk.nhs.nhsx.sonar.android.app.crypto.Cryptogram
-import uk.nhs.nhsx.sonar.android.app.crypto.encodeAsSecondsSinceEpoch
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
@@ -47,61 +41,23 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Comp
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.TestNotificationManagerHelper
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
-import java.nio.ByteBuffer
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit
 import javax.crypto.Mac
-import kotlin.random.Random
 
 class TestApplicationContext {
 
     val app: SonarApplication = ApplicationProvider.getApplicationContext()
+
     val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     private val notificationService = NotificationService()
-    private val testRxBleClient = TestRxBleClient(app)
-    private var eventNumber = 0
-    private val startTime = DateTime.parse("2020-04-01T14:33:13Z")
-    private val currentTimestampProvider = {
-        eventNumber++
-        Timber.d("Sending event nr $eventNumber")
-        when (eventNumber) {
-            1 -> {
-                startTime
-            }
-            2, 3 -> DateTime.parse("2020-04-01T14:34:43Z") // +90 seconds
-            4 -> DateTime.parse("2020-04-01T14:44:53Z") // +610 seconds
-            else -> throw IllegalStateException()
-        }
-    }
-    private val countryCode = "GB".toByteArray()
-    private val transmissionTime = ByteBuffer.wrap(startTime.encodeAsSecondsSinceEpoch()).int
-    private val firstDeviceSignature = Random.nextBytes(16)
-    private val secondDeviceSignature = Random.nextBytes(16)
-    private val firstDeviceId = BluetoothIdentifier(
-        countryCode,
-        Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)),
-        -6,
-        transmissionTime,
-        firstDeviceSignature
-    )
-    private val secondDeviceId = BluetoothIdentifier(
-        countryCode,
-        Cryptogram.fromBytes(Random.nextBytes(Cryptogram.SIZE)),
-        -8,
-        transmissionTime + 90,
-        secondDeviceSignature
-    )
-
-    private val testBluetoothModule = TestBluetoothModule(
-        app,
-        testRxBleClient,
-        currentTimestampProvider,
-        scanIntervalLength = 2
-    )
 
     private val testLocationHelper = TestLocationHelper(AndroidLocationHelper(app))
+
     private val testNotificationManagerHelper = TestNotificationManagerHelper(true)
+
+    private val proximityEvents = TestProximityEvents(app)
 
     private val server = TestMockServer()
 
@@ -125,7 +81,7 @@ class TestApplicationContext {
                 )
             )
             .persistenceModule(PersistenceModule(app))
-            .bluetoothModule(testBluetoothModule)
+            .bluetoothModule(proximityEvents.testBluetoothModule)
             .cryptoModule(CryptoModule(app, keyStore))
             .networkModule(NetworkModule(server.url(), "someValue", "buildInfo"))
             .testNotificationsModule(TestNotificationsModule())
@@ -279,14 +235,7 @@ class TestApplicationContext {
     }
 
     fun verifyReceivedProximityRequest() {
-        server.verifyReceivedProximityRequest(
-            firstDeviceId = firstDeviceId,
-            firstDeviceSignature = firstDeviceSignature,
-            secondDeviceId = secondDeviceId,
-            secondDeviceSignature = secondDeviceSignature,
-            transmissionTime = transmissionTime,
-            countryCode = countryCode
-        )
+        server.verifyReceivedProximityRequest(proximityEvents.testProximityEvent)
     }
 
     private fun verifySonarIdAndSecretKeyAndPublicKey() {
@@ -344,53 +293,16 @@ class TestApplicationContext {
         server.simulateBackendResponse(error)
     }
 
+    fun simulateUnsupportedDevice() {
+        proximityEvents.simulateUnsupportedDevice()
+    }
+
+    fun simulateTablet() {
+        proximityEvents.simulateTablet()
+    }
+
     fun simulateDeviceInProximity() {
-        val dao = component.getAppDatabase().contactEventDao()
-
-        testRxBleClient.emitScanResults(
-            ScanResultArgs(
-                encryptedId = firstDeviceId.asBytes(),
-                macAddress = "06-00-00-00-00-00",
-                rssiList = listOf(10),
-                txPower = -5
-            ),
-            ScanResultArgs(
-                encryptedId = secondDeviceId.asBytes(),
-                macAddress = "07-00-00-00-00-00",
-                rssiList = listOf(40),
-                txPower = -1
-            )
-        )
-
-        await until {
-            runBlocking { dao.getAll().size } == 2
-        }
-
-        testRxBleClient.emitScanResults(
-            ScanResultArgs(
-                encryptedId = firstDeviceId.asBytes(),
-                macAddress = "06-00-00-00-00-00",
-                rssiList = listOf(20),
-                txPower = -5
-            )
-        )
-
-        await until {
-            runBlocking { dao.get(firstDeviceId.cryptogram.asBytes())!!.rssiValues.size } == 2
-        }
-
-        testRxBleClient.emitScanResults(
-            ScanResultArgs(
-                encryptedId = firstDeviceId.asBytes(),
-                macAddress = "06-00-00-00-00-00",
-                rssiList = listOf(15),
-                txPower = -5
-            )
-        )
-
-        await until {
-            runBlocking { dao.get(firstDeviceId.cryptogram.asBytes())!!.rssiValues.size } == 3
-        }
+        proximityEvents.simulateDeviceInProximity()
     }
 
     private fun simulateActivationCodeReceived() {
@@ -400,14 +312,6 @@ class TestApplicationContext {
 
     fun simulateBackendDelay(delayInMillis: Long) {
         server.simulateBackendDelay(delayInMillis)
-    }
-
-    fun simulateUnsupportedDevice() {
-        testBluetoothModule.simulateUnsupportedDevice = true
-    }
-
-    fun simulateTablet() {
-        testBluetoothModule.simulateTablet = true
     }
 
     fun disableLocationAccess() {
@@ -461,7 +365,7 @@ class TestApplicationContext {
             getActivationCodeProvider().clear()
         }
 
-        testBluetoothModule.reset()
+        proximityEvents.testBluetoothModule.reset()
         testLocationHelper.reset()
 
         WorkManager.getInstance(app).cancelAllWork()

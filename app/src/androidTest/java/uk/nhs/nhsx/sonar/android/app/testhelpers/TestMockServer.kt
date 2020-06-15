@@ -7,7 +7,6 @@ package uk.nhs.nhsx.sonar.android.app.testhelpers
 import android.util.Base64
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
-import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.http.jsonOf
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
@@ -64,14 +63,7 @@ class TestMockServer {
             .contains("""{"activationCode":"test activation code #001","pushToken":"test firebase token #010",""")
     }
 
-    fun verifyReceivedProximityRequest(
-        firstDeviceId: BluetoothIdentifier,
-        firstDeviceSignature: ByteArray,
-        secondDeviceId: BluetoothIdentifier,
-        secondDeviceSignature: ByteArray,
-        transmissionTime: Int,
-        countryCode: ByteArray
-    ) {
+    fun verifyReceivedProximityRequest(proximityEvent: TestProximityEvent) {
         val lastRequest = mockServer.takeRequest(500, TimeUnit.MILLISECONDS)
 
         assertThat(lastRequest).isNotNull()
@@ -87,7 +79,7 @@ class TestMockServer {
         assertThat(body).contains(
             jsonOf(
                 "encryptedRemoteContactId" to Base64.encodeToString(
-                    firstDeviceId.cryptogram.asBytes(),
+                    proximityEvent.firstDeviceId.cryptogram.asBytes(),
                     Base64.DEFAULT
                 ),
                 "rssiValues" to Base64.encodeToString(
@@ -99,15 +91,15 @@ class TestMockServer {
                 "duration" to 700,
                 "txPowerInProtocol" to -6,
                 "txPowerAdvertised" to -5,
-                "hmacSignature" to Base64.encodeToString(firstDeviceSignature, Base64.DEFAULT),
-                "transmissionTime" to transmissionTime,
-                "countryCode" to ByteBuffer.wrap(countryCode).short
+                "hmacSignature" to Base64.encodeToString(proximityEvent.firstDeviceSignature, Base64.DEFAULT),
+                "transmissionTime" to proximityEvent.transmissionTime,
+                "countryCode" to ByteBuffer.wrap(proximityEvent.countryCode).short
             )
         )
         assertThat(body).contains(
             jsonOf(
                 "encryptedRemoteContactId" to Base64.encodeToString(
-                    secondDeviceId.cryptogram.asBytes(),
+                    proximityEvent.secondDeviceId.cryptogram.asBytes(),
                     Base64.DEFAULT
                 ),
                 "rssiValues" to Base64.encodeToString(
@@ -119,9 +111,9 @@ class TestMockServer {
                 "duration" to 60,
                 "txPowerInProtocol" to -8,
                 "txPowerAdvertised" to -1,
-                "hmacSignature" to Base64.encodeToString(secondDeviceSignature, Base64.DEFAULT),
-                "transmissionTime" to transmissionTime + 90,
-                "countryCode" to ByteBuffer.wrap(countryCode).short
+                "hmacSignature" to Base64.encodeToString(proximityEvent.secondDeviceSignature, Base64.DEFAULT),
+                "transmissionTime" to proximityEvent.transmissionTime + 90,
+                "countryCode" to ByteBuffer.wrap(proximityEvent.countryCode).short
 
             )
         )
