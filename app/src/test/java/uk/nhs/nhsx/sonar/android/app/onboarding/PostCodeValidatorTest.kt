@@ -9,14 +9,11 @@ import io.mockk.mockk
 import io.mockk.verifyAll
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
-import uk.nhs.nhsx.sonar.android.app.analytics.partialPostcodeProvided
 
 class PostCodeValidatorTest {
 
     private val postCodeProvider = mockk<PostCodeProvider>(relaxed = true)
-    private val analytics = mockk<SonarAnalytics>(relaxed = true)
-    private val validator = PostCodeValidator(postCodeProvider, analytics)
+    private val validator = PostCodeValidator(postCodeProvider)
 
     @Test
     fun emptyPostCode() {
@@ -26,7 +23,6 @@ class PostCodeValidatorTest {
 
         verifyAll {
             postCodeProvider wasNot Called
-            analytics wasNot Called
         }
     }
 
@@ -38,7 +34,6 @@ class PostCodeValidatorTest {
 
         verifyAll {
             postCodeProvider wasNot Called
-            analytics wasNot Called
         }
     }
 
@@ -50,7 +45,6 @@ class PostCodeValidatorTest {
 
         verifyAll {
             postCodeProvider.set("SW15")
-            analytics.trackEvent(partialPostcodeProvided())
         }
     }
 }

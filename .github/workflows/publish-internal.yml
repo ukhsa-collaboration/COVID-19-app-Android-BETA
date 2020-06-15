@@ -48,7 +48,6 @@ jobs:
           signingKeyStorePassword: ${{ secrets.signingKeyStorePassword }}
           signingKeyPassword: ${{ secrets.signingKeyPassword }}
           sonarHeaderValue: ${{ secrets.TestSonarHeaderValue }}
-          sonarAnalyticsKey: ${{ secrets.TestSonarAnalyticsKey }}
           sonarBaseUrl: ${{ secrets.TestSonarBaseUrl }}
           sonarUrlApplyCoronavirusTest: https://self-referral.test-for-coronavirus.service.gov.uk/cta-start
           commitSha: ${{ steps.commitsha.outputs.short }}

@@ -4,18 +4,10 @@
 
 package uk.nhs.nhsx.sonar.android.app.registration
 
-import androidx.work.Data
 import com.android.volley.ClientError
 import timber.log.Timber
-import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
-import uk.nhs.nhsx.sonar.android.app.analytics.registrationActivationCallFailed
-import uk.nhs.nhsx.sonar.android.app.analytics.registrationFailedWaitingForActivationNotification
-import uk.nhs.nhsx.sonar.android.app.analytics.registrationFailedWaitingForFCMToken
-import uk.nhs.nhsx.sonar.android.app.analytics.registrationSendTokenCallFailed
-import uk.nhs.nhsx.sonar.android.app.analytics.registrationSucceeded
 import uk.nhs.nhsx.sonar.android.app.di.module.AppModule
 import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeProvider
-import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.ACTIVATION_CODE_TIMED_OUT
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -27,12 +19,11 @@ class RegistrationUseCase @Inject constructor(
     private val sonarIdProvider: SonarIdProvider,
     private val postCodeProvider: PostCodeProvider,
     private val activationCodeProvider: ActivationCodeProvider,
-    private val analytics: SonarAnalytics,
     @Named(AppModule.DEVICE_MODEL) private val deviceModel: String,
     @Named(AppModule.DEVICE_OS_VERSION) private val deviceOsVersion: String
 ) {
 
-    suspend fun register(inputData: Data): RegistrationResult {
+    suspend fun register(): RegistrationResult {
         try {
             if (sonarIdProvider.hasProperSonarId()) {
                 Timber.d("Already registered")
@@ -40,10 +31,6 @@ class RegistrationUseCase @Inject constructor(
             }
             val activationCode = activationCodeProvider.get()
             if (activationCode.isEmpty()) {
-                if (inputData.getBoolean(ACTIVATION_CODE_TIMED_OUT, false)) {
-                    analytics.trackEvent(registrationFailedWaitingForActivationNotification())
-                }
-
                 val firebaseToken = getFirebaseToken()
                 Timber.d("firebaseToken = $firebaseToken")
                 registerDevice(firebaseToken)
@@ -56,7 +43,6 @@ class RegistrationUseCase @Inject constructor(
             Timber.d("sonarId = $sonarId")
             storeSonarId(sonarId)
             Timber.d("sonarId stored")
-            analytics.trackEvent(registrationSucceeded())
             return RegistrationResult.Success
         } catch (e: ClientError) {
             // TODO: delete firebase token?
@@ -72,14 +58,12 @@ class RegistrationUseCase @Inject constructor(
         try {
             tokenRetriever.retrieveToken()
         } catch (e: Exception) {
-            analytics.trackEvent(registrationFailedWaitingForFCMToken())
             throw e
         }
 
     private suspend fun registerDevice(firebaseToken: String) =
         residentApi
             .register(firebaseToken)
-            .onError { analytics.trackEvent(registrationSendTokenCallFailed(it.code)) }
             .toCoroutineUnsafe()
 
     private suspend fun registerResident(
@@ -97,7 +81,6 @@ class RegistrationUseCase @Inject constructor(
 
         return residentApi
             .confirmDevice(confirmation)
-            .onError { analytics.trackEvent(registrationActivationCallFailed(it.code)) }
             .map { it.id }
             .toCoroutineUnsafe()
     }

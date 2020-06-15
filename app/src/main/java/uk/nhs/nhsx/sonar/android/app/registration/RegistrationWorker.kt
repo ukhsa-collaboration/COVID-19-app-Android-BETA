@@ -15,7 +15,7 @@ class RegistrationWorker(appContext: Context, private val workerParams: WorkerPa
     private val work by lazy { appComponent.registrationWork() }
 
     override suspend fun doWork(): Result =
-        work.doWork(workerParams.inputData)
+        work.doWork()
 
     companion object {
         const val WAITING_FOR_ACTIVATION_CODE = "WAITING_FOR_ACTIVATION_CODE"

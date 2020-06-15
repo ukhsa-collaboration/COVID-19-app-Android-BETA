@@ -13,9 +13,6 @@ inputs:
   sonarHeaderValue:
     description: 'Sonar header value'
     required: true
-  sonarAnalyticsKey:
-    description: 'Sonar analytics key'
-    required: true
   pactBrokerUrl:
     description: 'URL of pact broker'
     required: true
@@ -27,5 +24,4 @@ runs:
     INPUT_GOOGLE_SERVICES: ${{ inputs.googleServices }}
     INPUT_SONAR_BASE_URL: ${{ inputs.sonarBaseUrl }}
     INPUT_SONAR_HEADER_VALUE: ${{ inputs.sonarHeaderValue }}
-    INPUT_SONAR_ANALYTICS_KEY: ${{ inputs.sonarAnalyticsKey }}
     INPUT_PACTBROKER_URL: ${{ inputs.pactBrokerUrl }}

@@ -25,10 +25,8 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Rule
 import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.ACTIVATION_CODE_TIMED_OUT
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager.Companion.REGISTRATION_WORK
 import java.util.concurrent.TimeUnit
-import kotlin.test.assertEquals
 
 @ExperimentalCoroutinesApi
 class RegistrationManagerTest {
@@ -68,8 +66,7 @@ class RegistrationManagerTest {
         verify {
             sut.createWorkRequest(
                 30,
-                TimeUnit.MINUTES,
-                activationCodeTimedOut = false
+                TimeUnit.MINUTES
             )
         }
     }
@@ -78,12 +75,10 @@ class RegistrationManagerTest {
     fun createWorkRequest() {
         val workRequest = sut.createWorkRequest(
             100,
-            TimeUnit.MILLISECONDS,
-            activationCodeTimedOut = false
+            TimeUnit.MILLISECONDS
         )
         val workSpec = workRequest.workSpec
         assertThat(workSpec.initialDelay).isEqualTo(100)
-        assertThat(workSpec.input.getBoolean(ACTIVATION_CODE_TIMED_OUT, true)).isFalse()
     }
 
     @Test
@@ -134,12 +129,7 @@ class RegistrationManagerTest {
         val capturedRequest = workRequest.captured
         val workSpec = capturedRequest.workSpec
 
-        assertEquals(
-            ONE_HOUR_IN_MILLIS,
-            workSpec.initialDelay,
-            "WorkRequest initial delay is not one hour"
-        )
-        assertThat(workSpec.input.getBoolean(ACTIVATION_CODE_TIMED_OUT, false)).isTrue()
+        assertThat(workSpec.initialDelay).isEqualTo(ONE_HOUR_IN_MILLIS)
     }
 
     companion object {

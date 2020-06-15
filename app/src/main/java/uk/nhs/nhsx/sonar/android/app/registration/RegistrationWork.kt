@@ -4,7 +4,6 @@
 
 package uk.nhs.nhsx.sonar.android.app.registration
 
-import androidx.work.Data
 import androidx.work.ListenableWorker
 import androidx.work.workDataOf
 import timber.log.Timber
@@ -12,8 +11,8 @@ import javax.inject.Inject
 
 class RegistrationWork @Inject constructor(private val registrationUseCase: RegistrationUseCase) {
 
-    suspend fun doWork(inputData: Data): ListenableWorker.Result {
-        val result = registrationUseCase.register(inputData)
+    suspend fun doWork(): ListenableWorker.Result {
+        val result = registrationUseCase.register()
         Timber.tag("RegistrationUseCase").d("doWork result = $result")
 
         return when (result) {

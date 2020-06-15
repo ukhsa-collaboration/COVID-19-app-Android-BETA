@@ -5,7 +5,6 @@
 package uk.nhs.nhsx.sonar.android.app.registration
 
 import androidx.work.ListenableWorker
-import androidx.work.workDataOf
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -24,28 +23,28 @@ class RegistrationWorkTest {
 
     @Test
     fun onSuccess() = runBlockingTest {
-        coEvery { registrationUseCase.register(any()) } returns RegistrationResult.Success
+        coEvery { registrationUseCase.register() } returns RegistrationResult.Success
 
-        val result = sut.doWork(workDataOf("foo" to "bar"))
+        val result = sut.doWork()
 
         assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
-        coVerify { registrationUseCase.register(workDataOf("foo" to "bar")) }
+        coVerify { registrationUseCase.register() }
     }
 
     @Test
     fun onError() = runBlockingTest {
-        coEvery { registrationUseCase.register(any()) } returns RegistrationResult.Error
+        coEvery { registrationUseCase.register() } returns RegistrationResult.Error
 
-        val result = sut.doWork(workDataOf())
+        val result = sut.doWork()
 
         assertThat(result).isInstanceOf(ListenableWorker.Result.Retry::class.java)
     }
 
     @Test
     fun onWaitingForActivationCode() = runBlockingTest {
-        coEvery { registrationUseCase.register(any()) } returns RegistrationResult.WaitingForActivationCode
+        coEvery { registrationUseCase.register() } returns RegistrationResult.WaitingForActivationCode
 
-        val result = sut.doWork(workDataOf())
+        val result = sut.doWork()
 
         assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
 

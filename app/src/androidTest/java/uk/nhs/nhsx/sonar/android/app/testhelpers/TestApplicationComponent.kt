@@ -11,8 +11,6 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import org.joda.time.DateTime
-import uk.nhs.nhsx.sonar.android.app.analytics.AnalyticEvent
-import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 import uk.nhs.nhsx.sonar.android.app.ble.DebugBleEventTracker
 import uk.nhs.nhsx.sonar.android.app.ble.NoOpBleEventEmitter
 import uk.nhs.nhsx.sonar.android.app.ble.SaveContactWorker
@@ -105,10 +103,4 @@ class TestNotificationsModule {
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
         TestTokenRetriever()
-}
-
-class TestAnalytics : SonarAnalytics {
-    override fun trackEvent(event: AnalyticEvent) {
-        // Do nothing
-    }
 }

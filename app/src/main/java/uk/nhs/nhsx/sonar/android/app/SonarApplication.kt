@@ -18,7 +18,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.BuildConfig.BASE_URL
 import uk.nhs.nhsx.sonar.android.app.BuildConfig.SONAR_HEADER_VALUE
-import uk.nhs.nhsx.sonar.android.app.analytics.AppCenterAnalytics
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWorker
 import uk.nhs.nhsx.sonar.android.app.crypto.PROVIDER_NAME
 import uk.nhs.nhsx.sonar.android.app.di.ApplicationComponent
@@ -98,8 +97,7 @@ class SonarApplication : Application() {
                 AppModule(
                     this,
                     AndroidLocationHelper(this),
-                    AndroidNotificationManagerHelper(this),
-                    AppCenterAnalytics()
+                    AndroidNotificationManagerHelper(this)
                 )
             )
             .persistenceModule(PersistenceModule(this))

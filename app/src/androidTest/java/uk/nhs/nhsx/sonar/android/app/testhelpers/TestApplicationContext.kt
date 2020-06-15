@@ -125,7 +125,6 @@ class TestApplicationContext {
                     app,
                     testLocationHelper,
                     testNotificationManagerHelper,
-                    TestAnalytics(),
                     ActivationCodeWaitTime(10, TimeUnit.SECONDS)
                 )
             )

@@ -12,7 +12,6 @@ import dagger.Module
 import dagger.Provides
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import uk.nhs.nhsx.sonar.android.app.analytics.SonarAnalytics
 import uk.nhs.nhsx.sonar.android.app.contactevents.ContactEventDao
 import uk.nhs.nhsx.sonar.android.app.contactevents.DeleteOutdatedEventsWork
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
@@ -26,7 +25,6 @@ class AppModule(
     private val applicationContext: Context,
     private val locationHelper: LocationHelper,
     private val notificaitonManagerHelper: NotificationManagerHelper,
-    private val sonarAnalytics: SonarAnalytics,
     private val activationCodeWaitTime: ActivationCodeWaitTime = ActivationCodeWaitTime(
         1,
         TimeUnit.HOURS
@@ -80,12 +78,8 @@ class AppModule(
         WorkManager.getInstance(context)
 
     @Provides
-    fun provideSonarAnalytics(): SonarAnalytics =
-        sonarAnalytics
-
-    @Provides
-    fun provideDeleteOutdatedEventsWork(dao: ContactEventDao, analytics: SonarAnalytics): DeleteOutdatedEventsWork =
-        DeleteOutdatedEventsWork(dao, analytics)
+    fun provideDeleteOutdatedEventsWork(dao: ContactEventDao): DeleteOutdatedEventsWork =
+        DeleteOutdatedEventsWork(dao)
 
     companion object {
         const val DISPATCHER_DEFAULT = "DISPATCHER_DEFAULT"

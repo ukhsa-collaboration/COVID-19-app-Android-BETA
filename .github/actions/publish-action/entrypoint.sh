@@ -17,7 +17,6 @@ validate "$INPUT_SIGNING_KEY_ALIAS" "signingKeyStoreAlias"
 validate "$INPUT_SIGNING_KEY_STORE_PASSWORD" "signingKeyStorePassword"
 validate "$INPUT_SIGNING_KEY_PASSWORD" "signingKeyPassword"
 validate "$INPUT_SONAR_HEADER_VALUE" "sonarHeaderValue"
-validate "$INPUT_SONAR_ANALYTICS_KEY" "sonarAnalyticsKey"
 validate "$INPUT_SONAR_BASE_URL" "sonarBaseUrl"
 validate "$INPUT_SONAR_URL_APPLY_CORONAVIRUS_TEST" "sonarUrlApplyCoronavirusTest"
 validate "$INPUT_COMMIT_SHA" "commitSha"
@@ -39,7 +38,6 @@ base64 -d build/keystore.txt > "$SIGNING_KEY_STORE_FILE"
    --track="$INPUT_PLAY_TRACK" \
    -Pgitcommit="${INPUT_COMMIT_SHA:0:7}" \
    -Psonar.headerValue="$INPUT_SONAR_HEADER_VALUE" \
-   -Psonar.analyticsKey="$INPUT_SONAR_ANALYTICS_KEY" \
    -Psonar.baseUrl="$INPUT_SONAR_BASE_URL" \
    -Psonar.urlApplyCoronavirusTest="$INPUT_SONAR_URL_APPLY_CORONAVIRUS_TEST" \
    -Pplay-enabled \

@@ -54,13 +54,8 @@ android {
             throw new MissingPropertyException("Missing property `sonar.headerValue` please see README for instructions")
         }
 
-        def analyticsKey = findProperty("sonar.analyticsKey") ?: {
-            throw new MissingPropertyException("Missing property `sonar.analyticsKey` please see README for instructions")
-        }
-
         buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
         buildConfigField("String", "SONAR_HEADER_VALUE", "\"$headerValue\"")
-        buildConfigField("String", "SONAR_ANALYTICS_KEY", "\"${analyticsKey}\"")
 
         buildConfigField("String", "SONAR_SERVICE_UUID", "\"${property("sonar.serviceUuid")}\"")
         buildConfigField("String", "SONAR_ENCODED_BACKGROUND_IOS_SERVICE_UUID", "\"${property("sonar.encodedBackgroundIosServiceUuid")}\"")

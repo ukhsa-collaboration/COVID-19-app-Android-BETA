@@ -17,7 +17,6 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkRequest.MIN_BACKOFF_MILLIS
-import androidx.work.workDataOf
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -45,8 +44,7 @@ class RegistrationManager @Inject constructor(
 
     fun register(
         initialDelayValue: Long = 0,
-        initialDelayTimeUnit: TimeUnit = TimeUnit.SECONDS,
-        activationCodeTimedOut: Boolean = false
+        initialDelayTimeUnit: TimeUnit = TimeUnit.SECONDS
     ) {
         // Need it for the thread confinement and LiveData can be observed on the Main Thread only
         launch {
@@ -54,7 +52,7 @@ class RegistrationManager @Inject constructor(
                 .d("register initialDelaySeconds = $initialDelayValue")
 
             val registrationWorkRequest =
-                createWorkRequest(initialDelayValue, initialDelayTimeUnit, activationCodeTimedOut)
+                createWorkRequest(initialDelayValue, initialDelayTimeUnit)
 
             workManager.enqueueUniqueWork(
                 REGISTRATION_WORK,
@@ -88,16 +86,14 @@ class RegistrationManager @Inject constructor(
     private fun scheduleRegisterRetryAfterActivationCodeWaitTimeExpires() {
         register(
             activationCodeWaitTime.timeDelay,
-            activationCodeWaitTime.timeUnit,
-            activationCodeTimedOut = true
+            activationCodeWaitTime.timeUnit
         )
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun createWorkRequest(
         initialDelaySeconds: Long,
-        initialDelayTimeUnit: TimeUnit,
-        activationCodeTimedOut: Boolean
+        initialDelayTimeUnit: TimeUnit
     ): OneTimeWorkRequest {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -111,11 +107,6 @@ class RegistrationManager @Inject constructor(
                 MIN_BACKOFF_MILLIS,
                 TimeUnit.MILLISECONDS
             )
-            .setInputData(
-                workDataOf(
-                    ACTIVATION_CODE_TIMED_OUT to activationCodeTimedOut
-                )
-            )
             .build()
     }
 
@@ -124,6 +115,5 @@ class RegistrationManager @Inject constructor(
 
     companion object {
         const val REGISTRATION_WORK = "registration"
-        const val ACTIVATION_CODE_TIMED_OUT = "activationCodeTimedOut"
     }
 }

@@ -39,7 +39,6 @@ jobs:
           googleServices: ${{ secrets.GoogleServices }}
           sonarBaseUrl: ${{ secrets.TestSonarBaseUrl }}
           sonarHeaderValue: ${{ secrets.TestSonarHeaderValue }}
-          sonarAnalyticsKey: ${{ secrets.TestSonarAnalyticsKey }}
           pactBrokerUrl: https://sonar-pact-broker-app.apps.nonprod.aws.cp.data.england.nhs.uk
 
       - name: Upload pacts

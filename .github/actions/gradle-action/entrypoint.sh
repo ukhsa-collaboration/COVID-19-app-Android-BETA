@@ -12,7 +12,6 @@ validate "$INPUT_TASKS" "tasks"
 validate "$INPUT_GOOGLE_SERVICES" "googleServices"
 validate "$INPUT_SONAR_BASE_URL" "sonarBaseUrl"
 validate "$INPUT_SONAR_HEADER_VALUE" "sonarHeaderValue"
-validate "$INPUT_SONAR_ANALYTICS_KEY" "sonarAnalyticsKey"
 validate "$INPUT_PACTBROKER_URL" "pactbrokerUrl"
 
 mkdir -p app/pacts
@@ -26,5 +25,4 @@ echo "$INPUT_GOOGLE_SERVICES" > $GOOGLE_SERVICES_FILE
 ./gradlew $INPUT_TASKS \
     -Psonar.baseUrl="$INPUT_SONAR_BASE_URL" \
     -Psonar.headerValue="$INPUT_SONAR_HEADER_VALUE" \
-    -Psonar.analyticsKey="$INPUT_SONAR_ANALYTICS_KEY" \
     -Ppactbroker.url="$INPUT_PACTBROKER_URL"
