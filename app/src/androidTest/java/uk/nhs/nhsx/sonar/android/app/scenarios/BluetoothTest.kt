@@ -13,7 +13,7 @@ class BluetoothTest : ScenarioTest() {
     @Test
     fun enableBluetoothThroughNotification() {
         startAppWith(testData.defaultState)
-        testAppContext.ensureBluetoothDisabled()
+        testAppContext.bluetoothSettings.ensureBluetoothDisabled()
 
         testAppContext.clickOnNotificationAction(
             notificationTitleRes = R.string.notification_bluetooth_disabled_title,
@@ -21,7 +21,7 @@ class BluetoothTest : ScenarioTest() {
             notificationActionRes = R.string.notification_bluetooth_disabled_action
         )
 
-        testAppContext.verifyBluetoothIsEnabled()
+        testAppContext.bluetoothSettings.verifyBluetoothIsEnabled()
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 }

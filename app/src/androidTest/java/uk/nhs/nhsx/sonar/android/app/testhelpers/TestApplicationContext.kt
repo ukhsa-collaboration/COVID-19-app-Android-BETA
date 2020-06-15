@@ -4,8 +4,6 @@
 
 package uk.nhs.nhsx.sonar.android.app.testhelpers
 
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
 import android.content.Intent
 import android.util.Base64
 import androidx.annotation.StringRes
@@ -34,7 +32,6 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Comp
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.RESIDENT_ID
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.SECRET_KEY
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.encodedSecretKey
-import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.TestNotificationManagerHelper
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit
@@ -44,11 +41,13 @@ class TestApplicationContext {
 
     val app: SonarApplication = ApplicationProvider.getApplicationContext()
 
+    private val testNotificationManagerHelper = TestNotificationManagerHelper(true)
+
     val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-    private val testLocationHelper = TestLocationHelper(AndroidLocationHelper(app))
+    val appPermissions = AppPermissions(app, testNotificationManagerHelper)
 
-    private val testNotificationManagerHelper = TestNotificationManagerHelper(true)
+    val bluetoothSettings = BluetoothSettings(app)
 
     private val proximityEvents = TestProximityEvents(app)
 
@@ -64,7 +63,7 @@ class TestApplicationContext {
         .appModule(
             AppModule(
                 app,
-                testLocationHelper,
+                appPermissions.testLocationHelper,
                 testNotificationManagerHelper,
                 ActivationCodeWaitTime(10, TimeUnit.SECONDS)
             )
@@ -114,23 +113,7 @@ class TestApplicationContext {
         storage.set("E1")
     }
 
-    private fun bluetoothAdapter(): BluetoothAdapter {
-        val context = app.applicationContext
-        val manager = context.getSystemService(BluetoothManager::class.java) as BluetoothManager
-        return manager.adapter
-    }
-
-    fun ensureBluetoothDisabled() {
-        bluetoothAdapter().let {
-            it.disable()
-            await until { !it.isEnabled }
-        }
-    }
-
-    fun isNotificationDisplayed(
-        @StringRes notificationTitleRes: Int,
-        isDisplayed: Boolean
-    ) {
+    fun isNotificationDisplayed(@StringRes notificationTitleRes: Int, isDisplayed: Boolean) {
         val notificationTitle = app.getString(notificationTitleRes)
 
         device.openNotification()
@@ -199,12 +182,6 @@ class TestApplicationContext {
 
         action.click()
         device.pressBack()
-    }
-
-    fun verifyBluetoothIsEnabled() {
-        bluetoothAdapter().let {
-            await until { it.isEnabled }
-        }
     }
 
     fun verifyRegistrationFlow() {
@@ -285,32 +262,6 @@ class TestApplicationContext {
         server.simulateBackendDelay(delayInMillis)
     }
 
-    fun disableLocationAccess() {
-        testLocationHelper.locationEnabled = false
-        app.sendBroadcast(Intent(testLocationHelper.providerChangedIntentAction))
-    }
-
-    fun enableLocationAccess() {
-        testLocationHelper.locationEnabled = true
-        app.sendBroadcast(Intent(testLocationHelper.providerChangedIntentAction))
-    }
-
-    fun revokeLocationPermission() {
-        testLocationHelper.locationPermissionsGranted = false
-    }
-
-    fun grantLocationPermission() {
-        testLocationHelper.locationPermissionsGranted = true
-    }
-
-    fun revokeNotificationsPermission() {
-        testNotificationManagerHelper.notificationEnabled = false
-    }
-
-    fun grantNotificationsPermission() {
-        testNotificationManagerHelper.notificationEnabled = true
-    }
-
     fun waitUntilCannotFindText(@StringRes stringId: Int, timeoutInMs: Long = 500) {
         device.wait(Until.gone(By.text(app.getString(stringId))), timeoutInMs)
     }
@@ -318,13 +269,6 @@ class TestApplicationContext {
     private fun closeNotificationPanel() {
         val it = Intent(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)
         app.baseContext.sendBroadcast(it)
-    }
-
-    private fun ensureBluetoothEnabled() {
-        bluetoothAdapter().let {
-            it.enable()
-            await until { it.isEnabled }
-        }
     }
 
     private fun reset() {
@@ -337,12 +281,12 @@ class TestApplicationContext {
         }
 
         proximityEvents.testBluetoothModule.reset()
-        testLocationHelper.reset()
+        appPermissions.testLocationHelper.reset()
 
         WorkManager.getInstance(app).cancelAllWork()
 
         closeNotificationPanel()
-        ensureBluetoothEnabled()
+        bluetoothSettings.ensureBluetoothEnabled()
     }
 
     fun userState() = component.getUserStateStorage().get()

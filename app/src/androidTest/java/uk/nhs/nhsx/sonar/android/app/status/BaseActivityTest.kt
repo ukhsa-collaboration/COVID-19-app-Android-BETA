@@ -23,7 +23,7 @@ class BaseActivityTest : EspressoTest() {
         startActivity()
 
         triggerResumeAfter {
-            testAppContext.ensureBluetoothDisabled()
+            testAppContext.bluetoothSettings.ensureBluetoothDisabled()
         }
 
         edgeCaseRobot.checkTitle(R.string.re_enable_bluetooth_title)
@@ -37,10 +37,10 @@ class BaseActivityTest : EspressoTest() {
     fun resumeWhenLocationAccessIsDisabled() {
         startActivity()
 
-        testAppContext.disableLocationAccess()
+        testAppContext.appPermissions.disableLocationAccess()
         edgeCaseRobot.checkTitle(R.string.re_enable_location_title)
 
-        testAppContext.enableLocationAccess()
+        testAppContext.appPermissions.enableLocationAccess()
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
@@ -49,14 +49,14 @@ class BaseActivityTest : EspressoTest() {
         startActivity()
 
         triggerResumeAfter {
-            testAppContext.revokeLocationPermission()
+            testAppContext.appPermissions.revokeLocationPermission()
         }
 
         edgeCaseRobot.checkTitle(R.string.re_allow_location_permission_title)
         edgeCaseRobot.clickTakeAction()
 
         testAppContext.device.wait(Until.gone(By.text("Allow this app to access your location to continue")), 500)
-        testAppContext.grantLocationPermission()
+        testAppContext.appPermissions.grantLocationPermission()
         testAppContext.device.pressBack()
 
         statusRobot.checkActivityIsDisplayed(DefaultState::class)

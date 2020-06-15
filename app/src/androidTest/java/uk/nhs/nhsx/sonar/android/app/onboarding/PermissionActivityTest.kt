@@ -38,7 +38,7 @@ class PermissionActivityTest : EspressoTest() {
 
     @Test
     fun enableBluetooth() {
-        testAppContext.ensureBluetoothDisabled()
+        testAppContext.bluetoothSettings.ensureBluetoothDisabled()
         testAppContext.setValidPostcode()
 
         startTestActivity<PermissionActivity>()
@@ -55,13 +55,13 @@ class PermissionActivityTest : EspressoTest() {
             button.click()
         }
 
-        testAppContext.verifyBluetoothIsEnabled()
+        testAppContext.bluetoothSettings.verifyBluetoothIsEnabled()
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
     }
 
     @Test
     fun grantLocationPermission() {
-        testAppContext.revokeLocationPermission()
+        testAppContext.appPermissions.revokeLocationPermission()
         testAppContext.setValidPostcode()
 
         startTestActivity<PermissionActivity>()
@@ -83,7 +83,7 @@ class PermissionActivityTest : EspressoTest() {
         testAppContext.waitUntilCannotFindText(R.string.grant_location_permission_title_pre_10)
 
         // moving on...
-        testAppContext.grantLocationPermission()
+        testAppContext.appPermissions.grantLocationPermission()
         testAppContext.device.pressBack()
 
         permissionRobot.checkActivityIsDisplayed()
@@ -93,7 +93,7 @@ class PermissionActivityTest : EspressoTest() {
 
     @Test
     fun enableLocationAccess() {
-        testAppContext.disableLocationAccess()
+        testAppContext.appPermissions.disableLocationAccess()
 
         testAppContext.setValidPostcode()
         startTestActivity<PermissionActivity>()
@@ -103,7 +103,7 @@ class PermissionActivityTest : EspressoTest() {
             .check(matches(withText(R.string.enable_location_service_title)))
 
         onView(withId(R.id.takeActionButton)).perform(click())
-        testAppContext.enableLocationAccess()
+        testAppContext.appPermissions.enableLocationAccess()
         testAppContext.device.pressBack()
 
         permissionRobot.checkActivityIsDisplayed()

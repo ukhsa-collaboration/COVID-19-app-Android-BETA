@@ -270,7 +270,7 @@ class StatusActivityTest : EspressoTest() {
     @Test
     fun showsEnableNotificationOnResume() {
         testAppContext.setFullValidUser(testData.defaultState)
-        testAppContext.revokeNotificationsPermission()
+        testAppContext.appPermissions.revokeNotificationsPermission()
 
         startTestActivity<StatusActivity>()
 
@@ -280,7 +280,7 @@ class StatusActivityTest : EspressoTest() {
     @Test
     fun doesNotEnableAllowNotificationOnResume() {
         testAppContext.setFullValidUser(testData.defaultState)
-        testAppContext.grantNotificationsPermission()
+        testAppContext.appPermissions.grantNotificationsPermission()
 
         startTestActivity<StatusActivity>()
 
@@ -290,14 +290,14 @@ class StatusActivityTest : EspressoTest() {
     @Test
     fun grantNotificationPermission() {
         testAppContext.setFullValidUser(testData.defaultState)
-        testAppContext.revokeNotificationsPermission()
+        testAppContext.appPermissions.revokeNotificationsPermission()
 
         startTestActivity<StatusActivity>()
 
         statusRobot.clickEnableNotifications()
         testAppContext.waitUntilCannotFindText(R.string.enable_notifications_title)
 
-        testAppContext.grantNotificationsPermission()
+        testAppContext.appPermissions.grantNotificationsPermission()
         testAppContext.device.pressBack()
 
         statusRobot.checkEnableNotificationsIsNotDisplayed()
