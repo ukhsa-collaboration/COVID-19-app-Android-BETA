@@ -6,7 +6,6 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
 import uk.nhs.nhsx.sonar.android.app.testhelpers.base.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
@@ -15,12 +14,11 @@ class StatusActivityTest : EspressoTest() {
 
     private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
-    private val testData = TestData()
 
     private fun showsTestResultDialogOnResume(testResult: TestResult, state: UserState) {
         testAppContext.addTestInfo(TestInfo(testResult, DateTime.now()))
 
-        startStatusActivityWith(state)
+        startActivityWithState<StatusActivity>(state)
 
         bottomDialogRobot.checkTestResultDialogIsDisplayed(testResult)
         bottomDialogRobot.clickSecondCtaButton()
@@ -49,7 +47,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsDefaultState() {
-        startStatusActivityWith(testData.defaultState)
+        startActivityWithState<StatusActivity>(testData.defaultState)
 
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
@@ -68,7 +66,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsExposedState() {
-        startStatusActivityWith(testData.exposedState)
+        startActivityWithState<StatusActivity>(testData.exposedState)
 
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(ExposedState::class)
@@ -87,7 +85,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsSymptomaticState() {
-        startStatusActivityWith(testData.symptomaticState)
+        startActivityWithState<StatusActivity>(testData.symptomaticState)
 
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(SymptomaticState::class)
@@ -106,7 +104,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsExposedSymptomaticState() {
-        startStatusActivityWith(testData.exposedSymptomaticState)
+        startActivityWithState<StatusActivity>(testData.exposedSymptomaticState)
 
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(ExposedSymptomaticState::class)
@@ -125,7 +123,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsPositiveState() {
-        startStatusActivityWith(testData.positiveState)
+        startActivityWithState<StatusActivity>(testData.positiveState)
 
         statusRobot.checkAppIsWorking()
         statusRobot.checkActivityIsDisplayed(PositiveState::class)
@@ -186,7 +184,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun bottomDialogWhenStateIsExpiredSelectingUpdatingSymptoms() {
-        startStatusActivityWith(testData.expiredSymptomaticState)
+        startActivityWithState<StatusActivity>(testData.expiredSymptomaticState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickFirstCtaButton()
@@ -195,7 +193,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun bottomDialogWhenStateIsExpiredSelectingNoSymptoms() {
-        startStatusActivityWith(testData.expiredSymptomaticState)
+        startActivityWithState<StatusActivity>(testData.expiredSymptomaticState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickSecondCtaButton()
@@ -204,7 +202,7 @@ class StatusActivityTest : EspressoTest() {
 
     @Test
     fun showsUpdateSymptomsDialogWhenPositiveStateExpired() {
-        startStatusActivityWith(testData.expiredPositiveState)
+        startActivityWithState<StatusActivity>(testData.expiredPositiveState)
 
         bottomDialogRobot.checkUpdateSymptomsDialogIsDisplayed()
         bottomDialogRobot.clickSecondCtaButton()
@@ -263,7 +261,7 @@ class StatusActivityTest : EspressoTest() {
         testAppContext.simulateExposureNotificationReceived()
         testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = true)
 
-        startStatusActivityWith(UserState.exposed(LocalDate.now()))
+        startActivityWithState<StatusActivity>(UserState.exposed(LocalDate.now()))
 
         testAppContext.isNotificationDisplayed(notificationTitle, isDisplayed = false)
 

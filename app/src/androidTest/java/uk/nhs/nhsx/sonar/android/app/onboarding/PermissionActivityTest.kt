@@ -3,7 +3,7 @@ package uk.nhs.nhsx.sonar.android.app.onboarding
 import android.os.Build
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.uiautomator.By
@@ -25,16 +25,12 @@ class PermissionActivityTest : EspressoTest() {
     private val statusRobot = StatusRobot()
     private val edgeCaseRobot = EdgeCaseRobot()
 
-    private fun startActivity() {
-        testAppContext.setValidPostcode()
-        startTestActivity<PermissionActivity>()
-    }
-
     @Test
     fun unsupportedDevice() {
         testAppContext.simulateUnsupportedDevice()
+        testAppContext.setValidPostcode()
 
-        startActivity()
+        startTestActivity<PermissionActivity>()
         permissionRobot.clickContinue()
 
         edgeCaseRobot.checkTitle(R.string.device_not_supported_title)
@@ -43,8 +39,9 @@ class PermissionActivityTest : EspressoTest() {
     @Test
     fun enableBluetooth() {
         testAppContext.ensureBluetoothDisabled()
+        testAppContext.setValidPostcode()
 
-        startActivity()
+        startTestActivity<PermissionActivity>()
         permissionRobot.clickContinue()
 
         testAppContext.device.apply {
@@ -65,8 +62,9 @@ class PermissionActivityTest : EspressoTest() {
     @Test
     fun grantLocationPermission() {
         testAppContext.revokeLocationPermission()
+        testAppContext.setValidPostcode()
 
-        startActivity()
+        startTestActivity<PermissionActivity>()
         permissionRobot.clickContinue()
 
         if (Build.VERSION.SDK_INT >= 29) {
@@ -97,11 +95,12 @@ class PermissionActivityTest : EspressoTest() {
     fun enableLocationAccess() {
         testAppContext.disableLocationAccess()
 
-        startActivity()
+        testAppContext.setValidPostcode()
+        startTestActivity<PermissionActivity>()
         permissionRobot.clickContinue()
 
         onView(withId(R.id.edgeCaseTitle))
-            .check(ViewAssertions.matches(withText(R.string.enable_location_service_title)))
+            .check(matches(withText(R.string.enable_location_service_title)))
 
         onView(withId(R.id.takeActionButton)).perform(click())
         testAppContext.enableLocationAccess()
