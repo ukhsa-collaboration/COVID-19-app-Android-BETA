@@ -10,14 +10,15 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.runner.RunWith
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
-import uk.nhs.nhsx.sonar.android.app.status.StatusActivity
 import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestApplicationContext
+import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
-import kotlin.reflect.KClass
 
 @RunWith(AndroidJUnit4::class)
 abstract class EspressoTest {
+
+    protected val testData = TestData()
 
     @get:Rule
     val permissionRule: GrantPermissionRule =
@@ -27,8 +28,7 @@ abstract class EspressoTest {
 
     @Before
     fun setup() {
-        testAppContext =
-            TestApplicationContext()
+        testAppContext = TestApplicationContext()
         testAppContext.reset()
     }
 
@@ -39,20 +39,9 @@ abstract class EspressoTest {
 
     protected fun userState() = testAppContext.component.getUserStateStorage().get()
 
-    protected fun startStatusActivityWith(state: UserState) {
+    protected inline fun <reified T : Activity> startActivityWithState(state: UserState = DefaultState) {
         testAppContext.setFullValidUser(state)
-        startTestActivity<StatusActivity>()
-    }
-
-    protected fun <T : Activity> startActivity(kClass: KClass<T>, state: UserState = DefaultState) {
-        testAppContext.setFullValidUser(state)
-
-        val intent = Intent(testAppContext.app, kClass.java)
-            .apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) }
-
-        InstrumentationRegistry
-            .getInstrumentation()
-            .startActivitySync(intent)
+        startTestActivity<T>()
     }
 
     protected inline fun <reified T : Activity> startTestActivity(config: Intent.() -> Unit = {}) {

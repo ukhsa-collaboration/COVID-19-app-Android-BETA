@@ -4,7 +4,6 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
-import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
 import uk.nhs.nhsx.sonar.android.app.testhelpers.base.ScenarioTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.DiagnoseCloseRobot
@@ -21,7 +20,6 @@ class QuestionnaireTest : ScenarioTest() {
     private val diagnoseSubmitRobot = DiagnoseSubmitRobot()
     private val statusRobot = StatusRobot()
     private val bottomDialogRobot = BottomDialogRobot()
-    private val testData = TestData()
 
     @Test
     fun questionnaireFlowWithSymptoms() {
