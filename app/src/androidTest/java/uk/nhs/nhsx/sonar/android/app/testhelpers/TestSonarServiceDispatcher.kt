@@ -8,6 +8,7 @@ import android.util.Base64
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.RecordedRequest
+import timber.log.Timber
 import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 import javax.crypto.KeyGenerator
@@ -51,6 +52,9 @@ class TestSonarServiceDispatcher : Dispatcher() {
             }
 
         response.setHeadersDelay(delay, TimeUnit.MILLISECONDS)
+
+        Timber.d("Mock Request: $request")
+        Timber.d("Mock Response: $response")
 
         return response
     }

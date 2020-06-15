@@ -29,12 +29,11 @@ abstract class EspressoTest {
     @Before
     fun setup() {
         testAppContext = TestApplicationContext()
-        testAppContext.reset()
     }
 
     @After
     fun teardown() {
-        testAppContext.shutdownMockServer()
+        testAppContext.teardown()
     }
 
     protected fun userState() = testAppContext.component.getUserStateStorage().get()

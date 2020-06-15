@@ -163,7 +163,6 @@ class StatusActivityTest : EspressoTest() {
         startTestActivity<StatusActivity>()
         statusRobot.checkFinalisingSetup()
 
-        testAppContext.verifyReceivedRegistrationRequest()
         testAppContext.verifyRegistrationFlow()
 
         statusRobot.waitForRegistrationToComplete()

@@ -85,7 +85,8 @@ class TestBluetoothModule(
 
     override fun provideDeviceDetection(): DeviceDetection =
         if (simulateUnsupportedDevice || simulateTablet) {
-            val adapter = if (simulateUnsupportedDevice) null else BluetoothAdapter.getDefaultAdapter()
+            val adapter =
+                if (simulateUnsupportedDevice) null else BluetoothAdapter.getDefaultAdapter()
             DeviceDetection(adapter, appContext, simulateTablet)
         } else {
             super.provideDeviceDetection()
@@ -102,5 +103,7 @@ class TestNotificationsModule {
 
     @Provides
     fun provideTokenRetriever(): TokenRetriever =
-        TestTokenRetriever()
+        object : TokenRetriever {
+            override suspend fun retrieveToken() = "test firebase token #010"
+        }
 }
