@@ -64,12 +64,11 @@ class GattWrapper(
         responseNeeded: Boolean,
         requestId: Int
     ) {
-        // TODO: Reject Indication requests
+
         if (device == null ||
             descriptor == null ||
-            !descriptor.isNotifyDescriptor() &&
-            (!descriptor.characteristic.isKeepAlive() ||
-            !descriptor.characteristic.isDeviceIdentifier())
+            !descriptor.isNotifyDescriptor() ||
+            !(descriptor.characteristic.isKeepAlive() || descriptor.characteristic.isDeviceIdentifier())
         ) {
             if (responseNeeded)
                 server?.sendResponse(
@@ -81,6 +80,11 @@ class GattWrapper(
                 )
             return
         }
+
+        // Will be setting up a separate job later on
+        if (descriptor.characteristic.isDeviceIdentifier())
+            return
+
         Timber.d("Device $device has subscribed to keep alive.")
         coroutineScope.launch {
             Timber.d("Starting notify job")

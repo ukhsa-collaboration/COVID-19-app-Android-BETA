@@ -155,6 +155,19 @@ class GattWrapperTest {
     }
 
     @Test
+    fun `allows notification to be set up for identity characteristic but does not send out values yet`() {
+        val notifyDescriptor = mockk<BluetoothGattDescriptor>()
+        every { notifyDescriptor.characteristic.uuid } returns SONAR_IDENTITY_CHARACTERISTIC_UUID
+        every { notifyDescriptor.uuid } returns NOTIFY_DESCRIPTOR_UUID
+
+        gattWrapper.respondToDescriptorWrite(device, notifyDescriptor, true, 75)
+
+        verify(exactly = 0) { server.sendResponse(device, 75, GATT_FAILURE, 0, byteArrayOf()) }
+        coroutineScope.advanceTimeBy(8_000)
+        verify(exactly = 0) { server.notifyCharacteristicChanged(any(), any(), any()) }
+    }
+
+    @Test
     fun `rejects descriptor writes for unknown identifiers`() {
         val unknownDescriptor = mockk<BluetoothGattDescriptor>()
         every { unknownDescriptor.characteristic.uuid } returns UUID.randomUUID()
@@ -165,7 +178,7 @@ class GattWrapperTest {
         every { unknownDescriptor.uuid } returns NOTIFY_DESCRIPTOR_UUID
         gattWrapper.respondToDescriptorWrite(device, unknownDescriptor, true, 75)
 
-        verify { server.sendResponse(device, 75, GATT_FAILURE, 0, byteArrayOf()) }
+        verify(exactly = 2) { server.sendResponse(device, 75, GATT_FAILURE, 0, byteArrayOf()) }
     }
 
     @Test
