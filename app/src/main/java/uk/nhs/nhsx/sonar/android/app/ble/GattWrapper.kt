@@ -67,9 +67,9 @@ class GattWrapper(
         // TODO: Reject Indication requests
         if (device == null ||
             descriptor == null ||
-            !descriptor.isNotifyDescriptor() ||
-            !descriptor.characteristic.isKeepAlive() ||
-            !descriptor.characteristic.isDeviceIdentifier()
+            !descriptor.isNotifyDescriptor() &&
+            (!descriptor.characteristic.isKeepAlive() ||
+            !descriptor.characteristic.isDeviceIdentifier())
         ) {
             if (responseNeeded)
                 server?.sendResponse(

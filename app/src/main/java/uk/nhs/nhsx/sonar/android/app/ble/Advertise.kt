@@ -19,6 +19,7 @@ class Advertise @Inject constructor(private val bluetoothLeAdvertiser: Bluetooth
         AdvertiseData.Builder()
             .addServiceUuid(ParcelUuid(SONAR_SERVICE_UUID))
             .setIncludeDeviceName(false)
+            .addManufacturerData(GOOGLE_BLUETOOTH_MANUFACTURE_ID, byteArrayOf())
             .setIncludeTxPowerLevel(true)
             .build()
 
