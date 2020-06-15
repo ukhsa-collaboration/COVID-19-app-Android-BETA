@@ -1,7 +1,6 @@
 package uk.nhs.nhsx.sonar.android.app.testhelpers.base
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -42,7 +41,7 @@ abstract class EspressoTest {
 
     protected fun startStatusActivityWith(state: UserState) {
         testAppContext.setFullValidUser(state)
-        testAppContext.app.startTestActivity<StatusActivity>()
+        startTestActivity<StatusActivity>()
     }
 
     protected fun <T : Activity> startActivity(kClass: KClass<T>, state: UserState = DefaultState) {
@@ -56,8 +55,8 @@ abstract class EspressoTest {
             .startActivitySync(intent)
     }
 
-    inline fun <reified T : Activity> Context.startTestActivity(config: Intent.() -> Unit = {}) {
-        val intent = Intent(this, T::class.java)
+    protected inline fun <reified T : Activity> startTestActivity(config: Intent.() -> Unit = {}) {
+        val intent = Intent(testAppContext.app, T::class.java)
             .apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) }
             .apply(config)
 

@@ -18,7 +18,7 @@ abstract class ScenarioTest : EspressoTest() {
 
     @Before
     fun setupFlowTestActivity() {
-        testAppContext.app.startTestActivity<FlowTestStartActivity>()
+        startTestActivity<FlowTestStartActivity>()
     }
 
     protected fun startAppWith(state: UserState) {

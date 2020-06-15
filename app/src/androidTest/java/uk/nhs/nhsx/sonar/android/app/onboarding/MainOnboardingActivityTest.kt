@@ -12,7 +12,7 @@ class MainOnboardingActivityTest : EspressoTest() {
 
     @Test
     fun explanation() {
-        testAppContext.app.startTestActivity<MainOnboardingActivity>()
+        startTestActivity<MainOnboardingActivity>()
 
         mainOnBoardingRobot.checkActivityIsDisplayed()
         mainOnBoardingRobot.clickExplanationLink()

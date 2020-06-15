@@ -10,7 +10,7 @@ class DeviceNotSupportedActivityTest : EspressoTest() {
 
     @Test
     fun displaysExpectedViews() {
-        testAppContext.app.startTestActivity<DeviceNotSupportedActivity>()
+        startTestActivity<DeviceNotSupportedActivity>()
 
         robot.checkScreenIsDisplayed()
     }

@@ -27,7 +27,7 @@ class PermissionActivityTest : EspressoTest() {
 
     private fun startActivity() {
         testAppContext.setValidPostcode()
-        testAppContext.app.startTestActivity<PermissionActivity>()
+        startTestActivity<PermissionActivity>()
     }
 
     @Test

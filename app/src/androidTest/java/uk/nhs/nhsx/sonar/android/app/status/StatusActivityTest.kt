@@ -3,11 +3,11 @@ package uk.nhs.nhsx.sonar.android.app.status
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.testhelpers.base.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestData
+import uk.nhs.nhsx.sonar.android.app.testhelpers.base.EspressoTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 
@@ -30,7 +30,7 @@ class StatusActivityTest : EspressoTest() {
     @Test
     fun showsDefaultStateWhenRegistrationNotFinished() {
         testAppContext.setFinishedOnboarding()
-        testAppContext.app.startTestActivity<StatusActivity>()
+        startTestActivity<StatusActivity>()
 
         statusRobot.checkFinalisingSetup()
         statusRobot.checkActivityIsDisplayed(DefaultState::class)
@@ -147,7 +147,7 @@ class StatusActivityTest : EspressoTest() {
         testAppContext.setFinishedOnboarding()
         testAppContext.simulateBackendResponse(error = true)
 
-        testAppContext.app.startTestActivity<StatusActivity>()
+        startTestActivity<StatusActivity>()
         statusRobot.checkFinalisingSetup()
 
         testAppContext.simulateBackendResponse(error = false)
@@ -162,7 +162,7 @@ class StatusActivityTest : EspressoTest() {
         testAppContext.setFinishedOnboarding()
         testAppContext.simulateBackendDelay(400)
 
-        testAppContext.app.startTestActivity<StatusActivity>()
+        startTestActivity<StatusActivity>()
         statusRobot.checkFinalisingSetup()
 
         testAppContext.verifyReceivedRegistrationRequest()
@@ -177,7 +177,7 @@ class StatusActivityTest : EspressoTest() {
         testAppContext.setFullValidUser(testData.defaultState)
         testAppContext.addRecoveryMessage()
 
-        testAppContext.app.startTestActivity<StatusActivity>()
+        startTestActivity<StatusActivity>()
 
         bottomDialogRobot.checkRecoveryDialogIsDisplayed()
         bottomDialogRobot.clickSecondCtaButton()
@@ -275,7 +275,7 @@ class StatusActivityTest : EspressoTest() {
         testAppContext.setFullValidUser(testData.defaultState)
         testAppContext.revokeNotificationsPermission()
 
-        testAppContext.app.startTestActivity<StatusActivity>()
+        startTestActivity<StatusActivity>()
 
         statusRobot.checkEnableNotificationsIsDisplayed()
     }
@@ -285,7 +285,7 @@ class StatusActivityTest : EspressoTest() {
         testAppContext.setFullValidUser(testData.defaultState)
         testAppContext.grantNotificationsPermission()
 
-        testAppContext.app.startTestActivity<StatusActivity>()
+        startTestActivity<StatusActivity>()
 
         statusRobot.checkEnableNotificationsIsNotDisplayed()
     }
@@ -295,7 +295,7 @@ class StatusActivityTest : EspressoTest() {
         testAppContext.setFullValidUser(testData.defaultState)
         testAppContext.revokeNotificationsPermission()
 
-        testAppContext.app.startTestActivity<StatusActivity>()
+        startTestActivity<StatusActivity>()
 
         statusRobot.clickEnableNotifications()
         testAppContext.waitUntilCannotFindText(R.string.enable_notifications_title)

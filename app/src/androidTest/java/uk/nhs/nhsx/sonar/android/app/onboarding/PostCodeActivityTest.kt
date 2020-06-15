@@ -10,7 +10,7 @@ class PostCodeActivityTest : EspressoTest() {
 
     @Test
     fun pristineState() {
-        testAppContext.app.startTestActivity<PostCodeActivity>()
+        startTestActivity<PostCodeActivity>()
 
         postCodeRobot.checkActivityIsDisplayed()
         postCodeRobot.checkTitleIsDisplayed()
@@ -22,7 +22,7 @@ class PostCodeActivityTest : EspressoTest() {
 
     @Test
     fun emptyPostCodeShowsInvalidHint() {
-        testAppContext.app.startTestActivity<PostCodeActivity>()
+        startTestActivity<PostCodeActivity>()
 
         postCodeRobot.clickContinue()
         postCodeRobot.checkInvalidHintIsDisplayed()
@@ -30,7 +30,7 @@ class PostCodeActivityTest : EspressoTest() {
 
     @Test
     fun invalidPostCodeShowsInvalidHint() {
-        testAppContext.app.startTestActivity<PostCodeActivity>()
+        startTestActivity<PostCodeActivity>()
 
         postCodeRobot.enterPostCode("1")
         postCodeRobot.clickContinue()
@@ -39,7 +39,7 @@ class PostCodeActivityTest : EspressoTest() {
 
     @Test
     fun validPostCodeProceedsToNextView() {
-        testAppContext.app.startTestActivity<PostCodeActivity>()
+        startTestActivity<PostCodeActivity>()
 
         postCodeRobot.enterPostCode("E1")
         postCodeRobot.clickContinue()
