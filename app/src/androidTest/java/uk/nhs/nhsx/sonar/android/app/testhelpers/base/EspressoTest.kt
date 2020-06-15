@@ -36,7 +36,7 @@ abstract class EspressoTest {
         testAppContext.teardown()
     }
 
-    protected fun userState() = testAppContext.component.getUserStateStorage().get()
+    protected fun userState() = testAppContext.userState()
 
     protected inline fun <reified T : Activity> startActivityWithState(state: UserState = DefaultState) {
         testAppContext.setFullValidUser(state)

@@ -6,11 +6,9 @@ package uk.nhs.nhsx.sonar.android.app.testhelpers
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.content.ContextWrapper
 import android.content.Intent
 import android.util.Base64
 import androidx.annotation.StringRes
-import androidx.core.os.bundleOf
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
@@ -18,7 +16,6 @@ import androidx.test.uiautomator.Direction
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import androidx.work.WorkManager
-import com.google.firebase.messaging.RemoteMessage
 import net.danlew.android.joda.JodaTimeAndroid
 import org.assertj.core.api.Assertions.assertThat
 import org.awaitility.kotlin.await
@@ -30,7 +27,6 @@ import uk.nhs.nhsx.sonar.android.app.di.module.CryptoModule
 import uk.nhs.nhsx.sonar.android.app.di.module.NetworkModule
 import uk.nhs.nhsx.sonar.android.app.di.module.PersistenceModule
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
-import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
 import uk.nhs.nhsx.sonar.android.app.registration.ActivationCodeWaitTime
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
 import uk.nhs.nhsx.sonar.android.app.status.UserState
@@ -40,7 +36,6 @@ import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Comp
 import uk.nhs.nhsx.sonar.android.app.testhelpers.TestSonarServiceDispatcher.Companion.encodedSecretKey
 import uk.nhs.nhsx.sonar.android.app.util.AndroidLocationHelper
 import uk.nhs.nhsx.sonar.android.app.util.TestNotificationManagerHelper
-import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
 import java.security.KeyStore
 import java.util.concurrent.TimeUnit
 import javax.crypto.Mac
@@ -51,51 +46,41 @@ class TestApplicationContext {
 
     val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-    private val notificationService = NotificationService()
-
     private val testLocationHelper = TestLocationHelper(AndroidLocationHelper(app))
 
     private val testNotificationManagerHelper = TestNotificationManagerHelper(true)
 
     private val proximityEvents = TestProximityEvents(app)
 
+    private val notificationEmulator = TestNotificationEmulator(app)
+
     private val server = TestMockServer()
 
-    val component: TestAppComponent
+    private val keyStore: KeyStore = KeyStore.getInstance("AndroidKeyStore")
+        .apply { load(null) }
+        .apply { aliases().asSequence().forEach { deleteEntry(it) } }
+
+    private val component: TestAppComponent = DaggerTestAppComponent.builder()
+        .appModule(
+            AppModule(
+                app,
+                testLocationHelper,
+                testNotificationManagerHelper,
+                ActivationCodeWaitTime(10, TimeUnit.SECONDS)
+            )
+        )
+        .persistenceModule(PersistenceModule(app))
+        .bluetoothModule(proximityEvents.testBluetoothModule)
+        .cryptoModule(CryptoModule(app, keyStore))
+        .networkModule(NetworkModule(server.url(), "someValue", "buildInfo"))
+        .testNotificationsModule(TestNotificationsModule())
+        .build()
 
     init {
         JodaTimeAndroid.init(app)
 
-        val keyStore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
-        keyStore.aliases().asSequence().forEach { keyStore.deleteEntry(it) }
-
-        server.start()
-
-        component = DaggerTestAppComponent.builder()
-            .appModule(
-                AppModule(
-                    app,
-                    testLocationHelper,
-                    testNotificationManagerHelper,
-                    ActivationCodeWaitTime(10, TimeUnit.SECONDS)
-                )
-            )
-            .persistenceModule(PersistenceModule(app))
-            .bluetoothModule(proximityEvents.testBluetoothModule)
-            .cryptoModule(CryptoModule(app, keyStore))
-            .networkModule(NetworkModule(server.url(), "someValue", "buildInfo"))
-            .testNotificationsModule(TestNotificationsModule())
-            .build()
-
         app.appComponent = component
-
-        notificationService.let {
-            val contextField = ContextWrapper::class.java.getDeclaredField("mBase")
-            contextField.isAccessible = true
-            contextField.set(it, app)
-
-            app.appComponent.inject(it)
-        }
+        app.appComponent.inject(notificationEmulator.notificationService)
 
         reset()
     }
@@ -269,24 +254,15 @@ class TestApplicationContext {
     }
 
     fun simulateExposureNotificationReceived() {
-        val msg = RemoteMessage(
-            bundleOf(
-                "type" to "Status Update",
-                "status" to "Potential"
-            )
-        )
-        notificationService.onMessageReceived(msg)
+        notificationEmulator.simulateExposureNotificationReceived()
     }
 
     fun simulateTestResultNotificationReceived(testInfo: TestInfo) {
-        val msg = RemoteMessage(
-            bundleOf(
-                "type" to "Test Result",
-                "result" to "${testInfo.result}",
-                "testTimestamp" to testInfo.date.toUtcIsoFormat()
-            )
-        )
-        notificationService.onMessageReceived(msg)
+        notificationEmulator.simulateTestResultNotificationReceived(testInfo)
+    }
+
+    private fun simulateActivationCodeReceived() {
+        notificationEmulator.simulateActivationCodeReceived()
     }
 
     fun simulateBackendResponse(error: Boolean) {
@@ -303,11 +279,6 @@ class TestApplicationContext {
 
     fun simulateDeviceInProximity() {
         proximityEvents.simulateDeviceInProximity()
-    }
-
-    private fun simulateActivationCodeReceived() {
-        val msg = RemoteMessage(bundleOf("activationCode" to "test activation code #001"))
-        notificationService.onMessageReceived(msg)
     }
 
     fun simulateBackendDelay(delayInMillis: Long) {
@@ -373,6 +344,8 @@ class TestApplicationContext {
         closeNotificationPanel()
         ensureBluetoothEnabled()
     }
+
+    fun userState() = component.getUserStateStorage().get()
 }
 
 fun stringFromResId(@StringRes stringRes: Int): String {

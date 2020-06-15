@@ -14,15 +14,14 @@ import java.util.concurrent.TimeUnit
 class TestMockServer {
 
     private val testDispatcher = TestSonarServiceDispatcher()
-    private val mockServer = MockWebServer()
+
+    private val mockServer = MockWebServer().apply {
+        dispatcher = testDispatcher
+        start(43239)
+    }
 
     fun url(): String =
         mockServer.url("").toString().removeSuffix("/")
-
-    fun start() {
-        mockServer.dispatcher = testDispatcher
-        mockServer.start(43239)
-    }
 
     fun shutdown() {
         mockServer.shutdown()
