@@ -21,10 +21,10 @@ import org.junit.Rule
 import org.junit.Test
 import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.status.OkViewModel
+import uk.nhs.nhsx.sonar.android.app.status.StatusViewModel
 
 @ExperimentalCoroutinesApi
-class OkViewModelTest {
+class StatusViewModelTest {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -37,7 +37,7 @@ class OkViewModelTest {
     private val onboardingStatusProvider = mockk<OnboardingStatusProvider>(relaxed = true)
     private val sonarIdProvider = mockk<SonarIdProvider>(relaxed = true)
     private val registrationManager = mockk<RegistrationManager>(relaxed = true)
-    private val sut = OkViewModel(onboardingStatusProvider, sonarIdProvider, registrationManager)
+    private val sut = StatusViewModel(onboardingStatusProvider, sonarIdProvider, registrationManager)
 
     @Before
     fun setUp() {

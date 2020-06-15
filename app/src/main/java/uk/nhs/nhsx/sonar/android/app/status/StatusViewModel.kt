@@ -14,7 +14,7 @@ import uk.nhs.nhsx.sonar.android.app.status.RegistrationState.InProgress
 import uk.nhs.nhsx.sonar.android.app.util.map
 import javax.inject.Inject
 
-class OkViewModel @Inject constructor(
+class StatusViewModel @Inject constructor(
     private val onboardingStatusProvider: OnboardingStatusProvider,
     private val sonarIdProvider: SonarIdProvider,
     private val registrationManager: RegistrationManager

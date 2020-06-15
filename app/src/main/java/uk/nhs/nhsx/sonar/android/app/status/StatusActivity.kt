@@ -70,8 +70,8 @@ class StatusActivity : BaseActivity() {
     lateinit var sonarIdProvider: SonarIdProvider
 
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory<OkViewModel>
-    private val viewModel: OkViewModel by viewModels { viewModelFactory }
+    lateinit var viewModelFactory: ViewModelFactory<StatusViewModel>
+    private val viewModel: StatusViewModel by viewModels { viewModelFactory }
 
     /** Used in default state */
     internal lateinit var recoveryDialog: BottomDialog
