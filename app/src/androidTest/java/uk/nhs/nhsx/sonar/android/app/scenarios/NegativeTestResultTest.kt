@@ -128,7 +128,7 @@ class NegativeTestResultTest : ScenarioTest() {
     }
 
     @Test
-    fun clicksTestResultMeaning() {
+    fun tookTestAndClicksTestResultMeaning() {
         startAppWith(testData.defaultState)
 
         receiveNegativeTestResult(testData.today)
