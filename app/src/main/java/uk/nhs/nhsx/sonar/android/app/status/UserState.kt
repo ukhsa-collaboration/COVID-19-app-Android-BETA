@@ -42,7 +42,7 @@ sealed class UserState {
             val since = symptomsDate.toUtcNormalized()
 
             // if symptomsDate > 7 days ago then symptomatic state is until tomorrow
-            // if symptomsDate <= 7 days ago then symptomatic state is until suggested
+            // if symptomsDate <= 7 days ago then symptomatic state is until 7 days after symptomsDate
             val until = since.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).latest(today.nextDay())
 
             return SymptomaticState(
@@ -71,9 +71,9 @@ sealed class UserState {
 
             val since = testDate.toLocalDate().toUtcNormalized()
 
-            // if testDate > 7 days ago then positive state is until tomorrow
-            // if testDate <= 7 days ago then positive state is until suggested
-            val until = since.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).latest(today.nextDay())
+            // if testDate > 7 days ago then positive state is until today
+            // if testDate <= 7 days ago then positive state is until 7 days after testDate
+            val until = since.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).latest(today.toUtcNormalized())
 
             return PositiveState(
                 since,

@@ -40,8 +40,8 @@ class UserStateTransitions @Inject constructor() {
     }
 
     /**
-     * After 7 days of being in one of these states:
-     * Symptomatic, ExposedSymptomatic and Positive states,
+     * After 7 days of being symptomatic/positive
+     * or after 14 days in exposed-symptomatic
      * The user needs to answer the check in questionnaire.
      */
     fun diagnoseForCheckin(

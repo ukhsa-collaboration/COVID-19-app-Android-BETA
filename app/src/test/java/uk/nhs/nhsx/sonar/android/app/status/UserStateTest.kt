@@ -117,9 +117,9 @@ class UserStateTest {
         val over7daysAgo = DateTime.parse("2020-04-02T11:11:11.000Z")
         val state = UserState.positive(over7daysAgo, today)
 
-        val tomorrowAt7 = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
+        val todayAt7 = DateTime(2020, 4, 10, 7, 0).toDateTime(DateTimeZone.UTC)
         assertThat(state.symptoms).isEmpty()
-        assertThat(state.until).isEqualTo(tomorrowAt7)
+        assertThat(state.until).isEqualTo(todayAt7)
     }
 
     @Test
