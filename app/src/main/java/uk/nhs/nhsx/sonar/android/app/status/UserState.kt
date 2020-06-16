@@ -86,9 +86,9 @@ sealed class UserState {
             state: SymptomaticState,
             today: LocalDate = LocalDate.now()
         ): PositiveState = PositiveState(
-                state.since,
-                state.since.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).latest(today.toUtcNormalized()),
-                state.symptoms
+            state.since,
+            state.since.plusDays(NUMBER_OF_DAYS_IN_SYMPTOMATIC).latest(today.toUtcNormalized()),
+            state.symptoms
         )
 
         fun positive(
@@ -131,7 +131,7 @@ sealed class UserState {
             is PositiveState -> ISOLATE
         }
 
-    fun extend(symptoms: Set<Symptom>, today: LocalDate = LocalDate.now()): UserState =
+    fun extendAfterCheckin(symptoms: Set<Symptom>, today: LocalDate = LocalDate.now()): UserState =
         when (this) {
             is PositiveState -> this.copy(
                 symptoms = symptoms,
@@ -141,8 +141,9 @@ sealed class UserState {
                 symptoms = NonEmptySet.create(symptoms)!!,
                 until = today.plusDays(1).toUtcNormalized()
             )
-            is ExposedSymptomaticState -> this.copy(
+            is ExposedSymptomaticState -> SymptomaticState(
                 symptoms = NonEmptySet.create(symptoms)!!,
+                since = this.since,
                 until = today.plusDays(1).toUtcNormalized()
             )
             is ExposedState -> this

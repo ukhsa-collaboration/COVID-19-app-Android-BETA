@@ -50,7 +50,7 @@ class UserStateTransitions @Inject constructor() {
         today: LocalDate = LocalDate.now()
     ): UserState =
         when {
-            hasTemperature(symptoms) -> currentState.extend(symptoms, today)
+            hasTemperature(symptoms) -> currentState.extendAfterCheckin(symptoms, today)
             else -> DefaultState
         }
 

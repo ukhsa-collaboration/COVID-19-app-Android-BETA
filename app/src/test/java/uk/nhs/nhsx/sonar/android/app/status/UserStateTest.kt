@@ -196,11 +196,11 @@ class UserStateTest {
     }
 
     @Test
-    fun `extend positive state`() {
+    fun `extendAfterCheckin positive state`() {
         val symptoms = setOf(TEMPERATURE, COUGH, ANOSMIA)
         val tomorrowAt7am = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
 
-        assertThat(positiveState.extend(symptoms, today))
+        assertThat(positiveState.extendAfterCheckin(symptoms, today))
             .isEqualTo(
                 PositiveState(
                     positiveState.since,
@@ -211,11 +211,11 @@ class UserStateTest {
     }
 
     @Test
-    fun `extend symptomatic state`() {
+    fun `extendAfterCheckin symptomatic state`() {
         val symptoms = setOf(TEMPERATURE, ANOSMIA)
         val tomorrowAt7am = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
 
-        assertThat(symptomaticState.extend(symptoms, today))
+        assertThat(symptomaticState.extendAfterCheckin(symptoms, today))
             .isEqualTo(
                 SymptomaticState(
                     symptomaticState.since,
@@ -226,25 +226,24 @@ class UserStateTest {
     }
 
     @Test
-    fun `extend exposed symptomatic state`() {
+    fun `extendAfterCheckin exposed-symptomatic state`() {
         val symptoms = setOf(TEMPERATURE, ANOSMIA)
         val tomorrowAt7am = DateTime(2020, 4, 11, 7, 0).toDateTime(DateTimeZone.UTC)
 
-        assertThat(exposedSymptomaticState.extend(symptoms, today))
+        assertThat(exposedSymptomaticState.extendAfterCheckin(symptoms, today))
             .isEqualTo(
-                ExposedSymptomaticState(
+                SymptomaticState(
                     since = exposedSymptomaticState.since,
                     until = tomorrowAt7am,
-                    exposedAt = exposedSymptomaticState.exposedAt,
                     symptoms = NonEmptySet.create(symptoms)!!
                 )
             )
     }
 
     @Test
-    fun `extend other state`() {
-        assertThat(exposedState.extend(emptySet())).isEqualTo(exposedState)
-        assertThat(DefaultState.extend(emptySet())).isEqualTo(DefaultState)
+    fun `extendAfterCheckin other state`() {
+        assertThat(exposedState.extendAfterCheckin(emptySet())).isEqualTo(exposedState)
+        assertThat(DefaultState.extendAfterCheckin(emptySet())).isEqualTo(DefaultState)
     }
 
     @Test
