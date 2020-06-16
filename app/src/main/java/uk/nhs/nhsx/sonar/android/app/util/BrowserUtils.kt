@@ -53,3 +53,5 @@ const val URL_NHS_NOT_SUPPORTED_DEVICE = "https://faq.covid19.nhs.uk/article/KA-
 const val URL_NHS_TABLET_DEVICE = "https://faq.covid19.nhs.uk/article/KA-01079/en-us"
 
 const val WORKPLACE_GUIDANCE = "https://faq.covid19.nhs.uk/article/KA-01072/en-us"
+
+const val URL_TEST_RESULT_MEANING = "https://faq.covid19.nhs.uk/article/KA-01088/en-us"

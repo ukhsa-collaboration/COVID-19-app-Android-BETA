@@ -15,6 +15,7 @@ import uk.nhs.nhsx.sonar.android.app.status.SymptomaticState
 import uk.nhs.nhsx.sonar.android.app.status.UserState
 import uk.nhs.nhsx.sonar.android.app.testhelpers.base.ScenarioTest
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.BottomDialogRobot
+import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.ReferenceCodeRobot
 import uk.nhs.nhsx.sonar.android.app.testhelpers.robots.StatusRobot
 import uk.nhs.nhsx.sonar.android.app.util.nonEmptySetOf
 import kotlin.reflect.KClass
@@ -22,6 +23,7 @@ import kotlin.reflect.KClass
 class NegativeTestResultTest : ScenarioTest() {
 
     private val statusRobot = StatusRobot()
+    private val referenceCodeRobot = ReferenceCodeRobot()
     private val bottomDialogRobot = BottomDialogRobot()
 
     @Test
@@ -123,6 +125,17 @@ class NegativeTestResultTest : ScenarioTest() {
 
         dismissNegativeTestResult()
         verifyStatusIs(ExposedSymptomaticState::class)
+    }
+
+    @Test
+    fun clicksTestResultMeaning() {
+        startAppWith(testData.defaultState)
+
+        receiveNegativeTestResult(testData.today)
+
+        bottomDialogRobot.clickFirstCtaButton()
+
+        referenceCodeRobot.checkActivityIsDisplayed()
     }
 
     private fun receiveNegativeTestResult(testDate: LocalDate) {

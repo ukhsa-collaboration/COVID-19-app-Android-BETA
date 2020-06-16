@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        tools:text="@string/recovery_dialog_title" />
+        tools:text="Title" />
 
     <TextView
         android:id="@+id/bottomDialogText"
@@ -31,7 +31,7 @@
         android:textAlignment="textStart"
         android:textColor="@color/text_sub_title"
         android:textSize="16sp"
-        tools:text="@string/recovery_dialog_description" />
+        tools:text="Description" />
 
     <Button
         android:id="@+id/bottomDialogFirstCta"
@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:visibility="gone"
-        tools:text="@string/update_my_symptoms"
+        tools:text="First cta"
         tools:visibility="visible" />
 
     <Button

@@ -16,4 +16,13 @@ class ReferenceCodeActivityTest : EspressoTest() {
         startActivityWithState<ReferenceCodeActivity>()
         referenceCodeRobot.checkReferenceCodeIs("REF CODE #202")
     }
+
+    @Test
+    fun showsTestResultMeaning() {
+        val intent = ReferenceCodeActivity.intentWithFocusKey(testAppContext.app)
+
+        startTestActivity(intent)
+
+        referenceCodeRobot.checkTestResultMeaningSection()
+    }
 }

@@ -35,29 +35,63 @@ class BottomDialogRobot {
     }
 
     fun checkTestResultDialogIsDisplayed(testResult: TestResult) {
-        onView(withId(R.id.bottomDialogTitle)).check(matches(isDisplayed()))
-        onView(withId(R.id.bottomDialogText)).check(matches(isDisplayed()))
-        onView(withId(R.id.bottomDialogFirstCta)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.bottomDialogSecondCta)).check(matches(isDisplayed()))
-        onView(withId(R.id.bottomDialogSecondCta)).check(matches(withText(R.string.close)))
-
-        val (title, description) = when (testResult) {
-            TestResult.NEGATIVE -> Pair(
-                R.string.negative_test_result_title,
-                R.string.negative_test_result_description
-            )
-            TestResult.POSITIVE -> Pair(
-                R.string.positive_test_result_title,
-                R.string.positive_test_result_description
-            )
-            TestResult.INVALID -> Pair(
-                R.string.invalid_test_result_title,
-                R.string.invalid_test_result_description
-            )
+        when (testResult) {
+            TestResult.NEGATIVE -> checkNegativeTestResultDialog()
+            TestResult.POSITIVE -> checkPositiveTestResultDialog()
+            TestResult.INVALID -> checkInvalidTestResultDialog()
         }
+    }
 
-        onView(withId(R.id.bottomDialogTitle)).check(matches(withText(title)))
-        onView(withId(R.id.bottomDialogText)).check(matches(withText(description)))
+    private fun checkNegativeTestResultDialog() {
+        onView(withId(R.id.bottomDialogTitle))
+            .check(matches(withText(R.string.negative_test_result_title)))
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.bottomDialogText))
+            .check(matches(withText(R.string.negative_test_result_description)))
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.bottomDialogFirstCta))
+            .check(matches(isDisplayed()))
+            .check(matches(withText(R.string.test_result_meaning_title)))
+
+        onView(withId(R.id.bottomDialogSecondCta))
+            .check(matches(isDisplayed()))
+            .check(matches(withText(R.string.close)))
+    }
+
+    private fun checkPositiveTestResultDialog() {
+        onView(withId(R.id.bottomDialogTitle))
+            .check(matches(withText(R.string.positive_test_result_title)))
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.bottomDialogText))
+            .check(matches(withText(R.string.positive_test_result_description)))
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.bottomDialogFirstCta))
+            .check(matches(not(isDisplayed())))
+
+        onView(withId(R.id.bottomDialogSecondCta))
+            .check(matches(isDisplayed()))
+            .check(matches(withText(R.string.close)))
+    }
+
+    private fun checkInvalidTestResultDialog() {
+        onView(withId(R.id.bottomDialogTitle))
+            .check(matches(withText(R.string.invalid_test_result_title)))
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.bottomDialogText))
+            .check(matches(withText(R.string.invalid_test_result_description)))
+            .check(matches(isDisplayed()))
+
+        onView(withId(R.id.bottomDialogFirstCta))
+            .check(matches(not(isDisplayed())))
+
+        onView(withId(R.id.bottomDialogSecondCta))
+            .check(matches(isDisplayed()))
+            .check(matches(withText(R.string.close)))
     }
 
     fun clickFirstCtaButton() {

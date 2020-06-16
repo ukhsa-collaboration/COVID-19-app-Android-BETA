@@ -267,4 +267,7 @@
     <string name="invalid_test_result_description">Thank you for getting tested. However, due to an unclear test result your advice has not been changed. Please book another test. You have been sent an email or text with more information.</string>
     <string name="medical_emergency_call">If you have a medical emergency, please call 999. If you require medical help near you, please go to 111 online.</string>
     <string name="error_title">There is a problem</string>
+    <string name="test_result_meaning_title">What your test result means</string>
+    <string name="test_result_meaning_description">If you take a test to check if you have coronavirus (COVID-19), there are 3 types of result you can get.</string>
+    <string name="test_result_meaning_url"><u>Learn about these test results</u></string>
 </resources>

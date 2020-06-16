@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/root_container">
 
     <include
         android:id="@+id/toolbar"
         layout="@layout/white_banner" />
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -27,6 +30,7 @@
 
             <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
                 style="@style/TextViewStatus"
+                android:id="@+id/reference_code_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
@@ -92,10 +96,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 android:text="@string/reference_code_description_3"
                 android:textColor="@color/text_primary_color" />
 
+            <uk.nhs.nhsx.sonar.android.app.widgets.AccessibilityTextView
+                style="@style/TextViewStatusSubTitleHeading"
+                android:id="@+id/testResultMeaningTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="6dp"
+                android:text="@string/test_result_meaning_title"
+                android:textColor="@color/text_primary_color"
+                android:textStyle="bold" />
+
+            <TextView
+                style="@style/TextViewStatusSubTitle"
+                android:id="@+id/testResultMeaningDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:text="@string/test_result_meaning_description"
+                android:textColor="@color/text_primary_color" />
+
+            <TextView
+                android:id="@+id/testResultMeaningUrl"
+                style="@style/PrimaryTextLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginBottom="24dp"
+                android:text="@string/test_result_meaning_url" />
 
         </LinearLayout>
     </ScrollView>

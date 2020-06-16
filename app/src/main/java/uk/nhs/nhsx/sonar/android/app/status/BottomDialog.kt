@@ -52,6 +52,10 @@ class BottomDialog(
     fun setTextResId(@StringRes textResId: Int) {
         bottomDialogText.setText(textResId)
     }
+
+    fun setFirstCtaVisibility(visible: Boolean) {
+        bottomDialogFirstCta.isVisible = visible
+    }
 }
 
 data class BottomDialogConfiguration(

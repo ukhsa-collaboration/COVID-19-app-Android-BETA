@@ -9,6 +9,7 @@ import uk.nhs.nhsx.sonar.android.app.R
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
+import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
 import uk.nhs.nhsx.sonar.android.app.status.BottomDialog
 import uk.nhs.nhsx.sonar.android.app.status.BottomDialogConfiguration
 import uk.nhs.nhsx.sonar.android.app.status.DefaultState
@@ -160,6 +161,7 @@ fun createTestResultDialog(activity: Activity, userInbox: UserInbox): BottomDial
     val configuration = BottomDialogConfiguration(
         titleResId = R.string.negative_test_result_title,
         textResId = R.string.negative_test_result_description,
+        firstCtaResId = R.string.test_result_meaning_title,
         secondCtaResId = R.string.close,
         isHideable = false
     )
@@ -167,6 +169,10 @@ fun createTestResultDialog(activity: Activity, userInbox: UserInbox): BottomDial
         onCancel = {
             userInbox.dismissTestInfo()
             activity.finish()
+        },
+        onFirstCtaClick = {
+            userInbox.dismissTestInfo()
+            ReferenceCodeActivity.startWithFocusOnTestResultMeaning(activity)
         },
         onSecondCtaClick = {
             userInbox.dismissTestInfo()
@@ -184,7 +190,10 @@ fun createStatusDescriptionForSymptomaticAndPositive(
     )
 }
 
-fun createStatusDescriptionForExposed(activity: StatusActivity, userState: UserState): String {
+fun createStatusDescriptionForExposed(
+    activity: StatusActivity,
+    userState: UserState
+): String {
     return activity.getString(
         R.string.follow_until_exposed,
         userState.until().toUiFormat()
@@ -231,14 +240,17 @@ fun handleTestResult(activity: StatusActivity, testResultDialog: BottomDialog) {
             TestResult.POSITIVE -> {
                 testResultDialog.setTitleResId(R.string.positive_test_result_title)
                 testResultDialog.setTextResId(R.string.positive_test_result_description)
+                testResultDialog.setFirstCtaVisibility(visible = false)
             }
             TestResult.NEGATIVE -> {
                 testResultDialog.setTitleResId(R.string.negative_test_result_title)
                 testResultDialog.setTextResId(R.string.negative_test_result_description)
+                testResultDialog.setFirstCtaVisibility(visible = true)
             }
             TestResult.INVALID -> {
                 testResultDialog.setTitleResId(R.string.invalid_test_result_title)
                 testResultDialog.setTextResId(R.string.invalid_test_result_description)
+                testResultDialog.setFirstCtaVisibility(visible = false)
             }
         }
         testResultDialog.showExpanded()
