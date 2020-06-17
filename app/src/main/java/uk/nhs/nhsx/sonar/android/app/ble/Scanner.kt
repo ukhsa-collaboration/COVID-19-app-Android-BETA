@@ -40,7 +40,8 @@ class Scanner @Inject constructor(
     private val currentTimestampProvider: () -> DateTime = { DateTime.now(DateTimeZone.UTC) },
     @Named(BluetoothModule.SCAN_INTERVAL_LENGTH)
     private val scanIntervalLength: Int,
-    base64Decoder: (String) -> ByteArray = { Base64.decode(it, Base64.DEFAULT) }
+    base64Decoder: (String) -> ByteArray = { Base64.decode(it, Base64.DEFAULT) },
+    val base64Encoder: (ByteArray) -> String = { Base64.encodeToString(it, Base64.DEFAULT) }
 ) {
 
     private var knownDevices: MutableMap<String, BluetoothIdentifier> = mutableMapOf()
@@ -243,6 +244,10 @@ class Scanner @Inject constructor(
         connectionDisposable.dispose()
         val identifier = BluetoothIdentifier.fromBytes(event.identifier)
         updateKnownDevices(identifier, macAddress)
+        Timber.d(
+            "seen MAC $macAddress as ${base64Encoder(identifier.cryptogram.asBytes()).drop(2)
+                .dropLast(55)}"
+        )
         storeEvent(event, scope, txPowerAdvertised)
     }
 
@@ -262,10 +267,7 @@ class Scanner @Inject constructor(
         }
         knownDevices.remove(previousMac?.key)
         knownDevices[macAddress] = identifier
-        Timber.d(
-            "Previous MAC was ${previousMac?.key}, new is $macAddress for ${identifier.cryptogram.asBytes()
-                .map { it.toInt() }
-                .joinToString("")}")
+        Timber.d("Previous MAC was ${previousMac?.key}, new is $macAddress")
     }
 
     private fun negotiateMTU(connection: RxBleConnection): Single<RxBleConnection> {
@@ -286,7 +288,8 @@ class Scanner @Inject constructor(
     }
 
     private fun storeEvent(event: Event, scope: CoroutineScope, txPowerAdvertised: Int) {
-        Timber.d("Event $event")
+
+        Timber.d("Storing ${base64Encoder(BluetoothIdentifier.fromBytes(event.identifier).cryptogram.asBytes())}")
         eventEmitter.successfulContactEvent(
             event.identifier,
             listOf(event.rssi),

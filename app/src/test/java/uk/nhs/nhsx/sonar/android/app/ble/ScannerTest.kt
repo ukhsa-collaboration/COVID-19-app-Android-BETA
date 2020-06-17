@@ -56,6 +56,16 @@ class ScannerTest {
     @get:Rule
     val logAllOnFailuresRule: TimberTestRule = TimberTestRule.logAllWhenTestFails()
 
+    val scanner = Scanner(
+        bleClient,
+        saveContactWorker,
+        eventEmitter = DebugBleEventTracker { Base64.getEncoder().encodeToString(it) },
+        currentTimestampProvider = { timestamp },
+        scanIntervalLength = 1,
+        base64Decoder = { Base64.getDecoder().decode(it) },
+        base64Encoder = { Base64.getEncoder().encodeToString(it) }
+    )
+
     @Before
     fun setUp() {
         Timber.plant(Timber.DebugTree())
@@ -115,16 +125,7 @@ class ScannerTest {
     @Test
     fun connectionWithSingularDevice() =
         runBlocking {
-            val scan = Scanner(
-                bleClient,
-                saveContactWorker,
-                eventEmitter = DebugBleEventTracker { Base64.getEncoder().encodeToString(it) },
-                currentTimestampProvider = { timestamp },
-                scanIntervalLength = 1,
-                base64Decoder = { Base64.getDecoder().decode(it) }
-            )
-
-            scan.start(coroutineScope)
+            scanner.start(coroutineScope)
             coroutineScope.advanceTimeBy(1_000)
 
             try {
@@ -140,22 +141,13 @@ class ScannerTest {
                     }
                 }
             } finally {
-                scan.stop()
+                scanner.stop()
             }
         }
 
     @Test
     fun cachesIdentifierAgainstMacAddress() = runBlocking {
-            val scan = Scanner(
-                bleClient,
-                saveContactWorker,
-                eventEmitter = DebugBleEventTracker { Base64.getEncoder().encodeToString(it) },
-                currentTimestampProvider = { timestamp },
-                scanIntervalLength = 1,
-                base64Decoder = { Base64.getDecoder().decode(it) }
-            )
-
-            scan.start(coroutineScope)
+            scanner.start(coroutineScope)
             coroutineScope.advanceTimeBy(30_000)
 
             try {
@@ -180,7 +172,7 @@ class ScannerTest {
                     verify(exactly = 2) { connection.readCharacteristic(any<UUID>()) }
                 }
             } finally {
-                scan.stop()
+                scanner.stop()
             }
         }
 
@@ -197,7 +189,8 @@ class ScannerTest {
                 eventEmitter = eventEmitter,
                 currentTimestampProvider = { timestamp },
                 scanIntervalLength = 1,
-                base64Decoder = { Base64.getDecoder().decode(it) }
+                base64Decoder = { Base64.getDecoder().decode(it) },
+                base64Encoder = { Base64.getEncoder().encodeToString(it) }
             )
 
             scan.start(coroutineScope)
@@ -236,7 +229,8 @@ class ScannerTest {
                 eventEmitter = eventEmitter,
                 currentTimestampProvider = { timestamp },
                 scanIntervalLength = 1,
-                base64Decoder = { Base64.getDecoder().decode(it) }
+                base64Decoder = { Base64.getDecoder().decode(it) },
+                base64Encoder = { Base64.getEncoder().encodeToString(it) }
             )
 
             scan.start(coroutineScope)
