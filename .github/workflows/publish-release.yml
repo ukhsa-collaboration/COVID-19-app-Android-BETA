@@ -53,7 +53,7 @@ jobs:
 
       - name: Create Release
         id: create_release
-        uses: fleskesvor/create-release@1a72e235c178bf2ae6c51a8ae36febc24568c5fe
+        uses: actions/create-release@v1.1.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
