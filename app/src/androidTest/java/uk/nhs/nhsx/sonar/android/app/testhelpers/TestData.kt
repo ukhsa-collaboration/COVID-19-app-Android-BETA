@@ -30,6 +30,10 @@ class TestData {
         exposureDate = today
     )
 
+    val expiredExposedState = UserState.exposed(
+        exposureDate = today.minusDays(15)
+    )
+
     val symptomaticState = SymptomaticState(
         since = DateTime.now(DateTimeZone.UTC).minusDays(1),
         until = DateTime.now(DateTimeZone.UTC).plusDays(1),

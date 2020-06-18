@@ -15,7 +15,7 @@ class BottomDialog(
     configuration: BottomDialogConfiguration,
     onCancel: () -> Unit = {},
     onFirstCtaClick: () -> Unit = {},
-    onSecondCtaClick: () -> Unit
+    onSecondCtaClick: () -> Unit = {}
 ) : BottomSheetDialog(context, R.style.PersistentBottomSheet) {
     init {
         setContentView(layoutInflater.inflate(R.layout.bottom_sheet, null))

@@ -9,7 +9,7 @@ import android.content.Context
 import android.content.Intent
 import uk.nhs.nhsx.sonar.android.app.appComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.notifications.reminders.ReminderScheduler
 import uk.nhs.nhsx.sonar.android.app.registration.RegistrationManager
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import javax.inject.Inject
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class BootCompletedReceiver : BroadcastReceiver() {
 
     @Inject
-    lateinit var reminders: Reminders
+    lateinit var reminderScheduler: ReminderScheduler
 
     @Inject
     lateinit var sonarIdProvider: SonarIdProvider
@@ -36,7 +36,7 @@ class BootCompletedReceiver : BroadcastReceiver() {
     }
 
     private fun setReminder() {
-        reminders.reschedulePendingCheckInReminder()
+        reminderScheduler.reschedulePendingReminder()
     }
 
     private fun startBluetoothService(context: Context) {

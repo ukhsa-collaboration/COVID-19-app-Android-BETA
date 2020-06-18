@@ -209,6 +209,15 @@ class StatusActivityTest : EspressoTest() {
     }
 
     @Test
+    fun showsAdviceDialogWhenExposedStateExpired() {
+        startActivityWithState<StatusActivity>(testData.expiredExposedState)
+
+        bottomDialogRobot.checkAdviceDialogIsDisplayed()
+        bottomDialogRobot.clickSecondCtaButton()
+        bottomDialogRobot.checkBottomDialogIsNotDisplayed()
+    }
+
+    @Test
     fun showsPositiveTestResultDialogOnResumeForDefaultState() {
         showsTestResultDialogOnResume(TestResult.POSITIVE, DefaultState)
     }

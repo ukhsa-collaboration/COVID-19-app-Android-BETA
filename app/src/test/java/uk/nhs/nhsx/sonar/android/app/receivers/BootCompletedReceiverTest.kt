@@ -15,25 +15,25 @@ import org.junit.Test
 import testsupport.TestIntent
 import testsupport.mockContextWithMockedAppComponent
 import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.notifications.reminders.ReminderScheduler
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 
 class BootCompletedReceiverTest {
 
     private val sonarIdProvider = mockk<SonarIdProvider>()
-    private val reminders = mockk<Reminders>()
+    private val reminderScheduler = mockk<ReminderScheduler>()
     private val context = mockContextWithMockedAppComponent()
 
     private val receiver = BootCompletedReceiver().also {
         it.sonarIdProvider = sonarIdProvider
-        it.reminders = reminders
+        it.reminderScheduler = reminderScheduler
     }
 
     @Before
     fun setUp() {
         mockkObject(BluetoothService)
 
-        every { reminders.reschedulePendingCheckInReminder() } returns Unit
+        every { reminderScheduler.reschedulePendingReminder() } returns Unit
         every { BluetoothService.start(any()) } returns Unit
     }
 
@@ -46,7 +46,7 @@ class BootCompletedReceiverTest {
         verifyAll {
             sonarIdProvider wasNot Called
             BluetoothService wasNot Called
-            reminders wasNot Called
+            reminderScheduler wasNot Called
         }
     }
 
@@ -59,7 +59,7 @@ class BootCompletedReceiverTest {
 
         verifyAll {
             BluetoothService.start(context)
-            reminders.reschedulePendingCheckInReminder()
+            reminderScheduler.reschedulePendingReminder()
         }
     }
 
@@ -71,7 +71,7 @@ class BootCompletedReceiverTest {
 
         verifyAll {
             BluetoothService wasNot Called
-            reminders.reschedulePendingCheckInReminder()
+            reminderScheduler.reschedulePendingReminder()
         }
     }
 }

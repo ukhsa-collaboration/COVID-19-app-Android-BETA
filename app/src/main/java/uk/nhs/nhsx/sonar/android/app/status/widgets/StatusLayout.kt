@@ -54,7 +54,7 @@ object StatusLayoutFactory {
 class DefaultStatusLayout(val state: DefaultState) : StatusLayout() {
 
     override fun refreshLayout(activity: StatusActivity) {
-        createStatusView(
+        updateStatusView(
             activity = activity,
             titleRes = R.string.status_default_title,
             statusColor = StatusView.Color.BLUE
@@ -76,7 +76,7 @@ class DefaultStatusLayout(val state: DefaultState) : StatusLayout() {
 class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
 
     override fun refreshLayout(activity: StatusActivity) {
-        createStatusView(
+        updateStatusView(
             activity = activity,
             titleRes = R.string.status_exposed_title,
             statusDescription = createStatusDescriptionForExposed(
@@ -92,8 +92,19 @@ class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
     override fun onResume(activity: StatusActivity) {
         activity.exposedNotification.hide()
 
-        activity.userStateMachine.transitionOnExpiredExposedState()
-        activity.refreshState()
+        if (state.hasExpired()) {
+            val configuration = BottomDialogConfiguration(
+                isHideable = false,
+                titleResId = R.string.advice_dialog_title,
+                textResId = R.string.advice_dialog_description,
+                secondCtaResId = R.string.close
+            )
+
+            BottomDialog(activity, configuration).showExpanded()
+            activity.expiredExposedReminderNotification.hide()
+            activity.userStateMachine.transitionOnExpiredExposedState()
+            activity.refreshState()
+        }
 
         handleTestResult(activity, activity.testResultDialog)
     }
@@ -102,7 +113,7 @@ class ExposedStatusLayout(val state: ExposedState) : StatusLayout() {
 class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
 
     override fun refreshLayout(activity: StatusActivity) {
-        createStatusView(
+        updateStatusView(
             activity = activity,
             titleRes = R.string.status_symptomatic_title,
             statusDescription = createStatusDescriptionForSymptomaticAndPositive(
@@ -123,7 +134,7 @@ class SymptomaticStatusLayout(val state: UserState) : StatusLayout() {
 class PositiveStatusLayout(val state: PositiveState) : StatusLayout() {
 
     override fun refreshLayout(activity: StatusActivity) {
-        createStatusView(
+        updateStatusView(
             activity = activity,
             titleRes = R.string.status_positive_test_title,
             statusDescription = createStatusDescriptionForSymptomaticAndPositive(
@@ -140,14 +151,14 @@ class PositiveStatusLayout(val state: PositiveState) : StatusLayout() {
     }
 }
 
-private fun createStatusView(
+private fun updateStatusView(
     activity: StatusActivity,
     @StringRes titleRes: Int,
     statusColor: StatusView.Color,
     statusDescription: String? = null
 ) {
     val statusView = activity.findViewById<StatusView>(R.id.statusView)
-    statusView.setup(
+    statusView.update(
         StatusView.Configuration(
             title = activity.getString(titleRes),
             description = statusDescription,
@@ -180,7 +191,7 @@ fun createTestResultDialog(activity: Activity, userInbox: UserInbox): BottomDial
     )
 }
 
-fun createStatusDescriptionForSymptomaticAndPositive(
+private fun createStatusDescriptionForSymptomaticAndPositive(
     activity: StatusActivity,
     userState: UserState
 ): String {
@@ -190,7 +201,7 @@ fun createStatusDescriptionForSymptomaticAndPositive(
     )
 }
 
-fun createStatusDescriptionForExposed(
+private fun createStatusDescriptionForExposed(
     activity: StatusActivity,
     userState: UserState
 ): String {

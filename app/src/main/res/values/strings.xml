@@ -148,6 +148,8 @@
     <string name="update_symptoms_prompt_with_negative_test">Thank you for getting tested. You have been sent an email or text with more information.\n\nIf you are having symptoms, please update your symptoms to see the latest advice for you. If you do not have any symptoms, you can now follow the advice for the general public.</string>
     <string name="update_my_symptoms">Update my symptoms</string>
     <string name="no_symptoms">I no longer have symptoms</string>
+    <string name="advice_dialog_title">Your advice has changed</string>
+    <string name="advice_dialog_description">You can stop self-isolating and can now follow the advice for the general public. Thank you for playing your part in the fight against coronavirus.</string>
     <string name="recovery_dialog_title">Thank you for updating your symptoms</string>
     <string name="recovery_dialog_description">Although you still have some symptoms you can now stop self-isolating and follow the current advice for the general public.</string>
     <string name="enable_bluetooth_title">Your permission is needed to allow the use of Bluetooth</string>
@@ -195,9 +197,9 @@
     <string name="enable_permissions">Enable permissions</string>
     <string name="notification_action_open_app">Open App</string>
     <string name="checkin_notification_title">How are you feeling today?</string>
-    <string name="checkin_notification_text">Please open the app to update your symptoms and view your latest advice.
-        Your help saves lives.
-    </string>
+    <string name="checkin_notification_text">Please open the app to update your symptoms and view your latest advice. Your help saves lives.</string>
+    <string name="expired_exposed_notification_title">Your advice has changed</string>
+    <string name="expired_exposed_notification_description">Please open the app to learn what to do next. Your help saves lives.</string>
     <string name="device_not_supported_title">Your phone does not support Bluetooth Low Energy sufficiently for this app to work</string>
     <string name="device_not_supported_rationale">We continue to validate and expand the number of mobile devices capable of using the NHS COVID-19 app. Find more information on Bluetooth Low Energy here:</string>
     <string name="confirm_diagnosis_text_1">The information you have provided will be used to help protect your community and the NHS. The NHS needs accurate data on the number of people with symptoms.</string>

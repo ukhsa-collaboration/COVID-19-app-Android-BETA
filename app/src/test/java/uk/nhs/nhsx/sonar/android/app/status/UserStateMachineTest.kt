@@ -15,7 +15,7 @@ import org.junit.Test
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.TestResult
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
-import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.notifications.reminders.ReminderScheduler
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
@@ -25,14 +25,14 @@ class UserStateMachineTest {
 
     private val transitions = mockk<UserStateTransitions>(relaxUnitFun = true)
     private val userStateStorage = mockk<UserStateStorage>(relaxUnitFun = true)
-    private val reminders = mockk<Reminders>(relaxUnitFun = true)
+    private val reminderScheduler = mockk<ReminderScheduler>(relaxUnitFun = true)
     private val userInbox = mockk<UserInbox>(relaxUnitFun = true)
 
     private val userStateMachine = UserStateMachine(
         transitions = transitions,
         userStateStorage = userStateStorage,
         userInbox = userInbox,
-        reminders = reminders
+        reminderScheduler = reminderScheduler
     )
 
     @Test
@@ -70,8 +70,8 @@ class UserStateMachineTest {
         userStateMachine.diagnose(LocalDate.now(), nonEmptySetOf(COUGH))
 
         verify {
-            reminders.cancelCheckinReminder()
-            reminders.scheduleCheckInReminder(any())
+            reminderScheduler.cancelReminders()
+            reminderScheduler.scheduleCheckInReminder(any())
         }
     }
 
@@ -188,7 +188,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnContactAlert - delegates to transition with current state and exposure date`() {
+    fun `transitionOnExposure - delegates to transition with current state and exposure date`() {
         val exposureDate = DateTime.now()
         val state = buildSymptomaticState()
         every { userStateStorage.get() } returns state
@@ -202,7 +202,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnContactAlert - updates the state storage with new state`() {
+    fun `transitionOnExposure - updates the state storage with new state`() {
         every { userStateStorage.get() } returns DefaultState
         val state = buildExposedState()
         every { transitions.transitionOnExposure(any(), any()) } returns state
@@ -215,7 +215,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnContactAlert - executes callback the when state is changed`() {
+    fun `transitionOnExposure - executes callback the when state is changed`() {
         every { userStateStorage.get() } returns DefaultState
         every { transitions.transitionOnExposure(any(), any()) } returns buildExposedState()
 
@@ -229,7 +229,22 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnContactAlert - does not executes the callback when state is not changed`() {
+    fun `transitionOnExposure - schedules reminder when state is changed`() {
+        every { userStateStorage.get() } returns DefaultState
+        val newState = buildExposedState()
+        every { transitions.transitionOnExposure(any(), any()) } returns newState
+
+        val onStateChanged = mockk<() -> Unit>(relaxed = true)
+
+        userStateMachine.transitionOnExposure(DateTime.now(), onStateChanged)
+
+        verify {
+            reminderScheduler.scheduleExpiredExposedReminder(newState.until)
+        }
+    }
+
+    @Test
+    fun `transitionOnExposure - does not execute the callback when state is not changed`() {
         val state = buildSymptomaticState()
         every { userStateStorage.get() } returns state
         every { transitions.transitionOnExposure(any(), any()) } returns state
@@ -240,6 +255,21 @@ class UserStateMachineTest {
 
         verify {
             onStateChanged wasNot Called
+        }
+    }
+
+    @Test
+    fun `transitionOnExposure - does not set reminder when the state is not changed`() {
+        val state = buildSymptomaticState()
+        every { userStateStorage.get() } returns state
+        every { transitions.transitionOnExposure(any(), any()) } returns state
+
+        val onStateChanged = mockk<() -> Unit>()
+
+        userStateMachine.transitionOnExposure(DateTime.now(), onStateChanged)
+
+        verify {
+            reminderScheduler wasNot Called
         }
     }
 
@@ -278,8 +308,8 @@ class UserStateMachineTest {
         userStateMachine.transitionOnTestResult(TestInfo(TestResult.POSITIVE, DateTime.now()))
 
         verify {
-            reminders.cancelCheckinReminder()
-            reminders.scheduleCheckInReminder(any())
+            reminderScheduler.cancelReminders()
+            reminderScheduler.scheduleCheckInReminder(any())
         }
     }
 

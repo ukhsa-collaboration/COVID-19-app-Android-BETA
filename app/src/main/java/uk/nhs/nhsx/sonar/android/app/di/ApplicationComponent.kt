@@ -31,7 +31,7 @@ import uk.nhs.nhsx.sonar.android.app.interstitials.ApplyForTestActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationChannels
 import uk.nhs.nhsx.sonar.android.app.notifications.NotificationService
-import uk.nhs.nhsx.sonar.android.app.notifications.ReminderBroadcastReceiver
+import uk.nhs.nhsx.sonar.android.app.notifications.reminders.ReminderBroadcastReceiver
 import uk.nhs.nhsx.sonar.android.app.notifications.TokenRefreshWork
 import uk.nhs.nhsx.sonar.android.app.onboarding.EnableLocationActivity
 import uk.nhs.nhsx.sonar.android.app.onboarding.GrantLocationPermissionActivity

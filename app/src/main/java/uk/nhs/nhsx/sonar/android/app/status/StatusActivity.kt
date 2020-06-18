@@ -28,6 +28,7 @@ import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
 import uk.nhs.nhsx.sonar.android.app.interstitials.CurrentAdviceActivity
 import uk.nhs.nhsx.sonar.android.app.interstitials.WorkplaceGuidanceActivity
 import uk.nhs.nhsx.sonar.android.app.notifications.CheckInReminderNotification
+import uk.nhs.nhsx.sonar.android.app.notifications.ExpiredExposedReminderNotification
 import uk.nhs.nhsx.sonar.android.app.notifications.ExposedNotification
 import uk.nhs.nhsx.sonar.android.app.notifications.TestResultNotification
 import uk.nhs.nhsx.sonar.android.app.referencecode.ReferenceCodeActivity
@@ -59,6 +60,9 @@ class StatusActivity : BaseActivity() {
 
     @Inject
     lateinit var checkInReminderNotification: CheckInReminderNotification
+
+    @Inject
+    lateinit var expiredExposedReminderNotification: ExpiredExposedReminderNotification
 
     @Inject
     lateinit var exposedNotification: ExposedNotification

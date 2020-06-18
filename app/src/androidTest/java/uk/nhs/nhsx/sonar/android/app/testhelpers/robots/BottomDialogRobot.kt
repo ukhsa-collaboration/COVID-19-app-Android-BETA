@@ -34,6 +34,23 @@ class BottomDialogRobot {
         onView(withId(R.id.bottomDialogSecondCta)).check(matches(withText(R.string.no_symptoms)))
     }
 
+    fun checkAdviceDialogIsDisplayed() {
+        onView(withId(R.id.bottomDialogTitle))
+            .check(matches(isDisplayed()))
+            .check(matches(withText(R.string.advice_dialog_title)))
+
+        onView(withId(R.id.bottomDialogText))
+            .check(matches(isDisplayed()))
+            .check(matches(withText(R.string.advice_dialog_description)))
+
+        onView(withId(R.id.bottomDialogFirstCta))
+            .check(matches(not(isDisplayed())))
+
+        onView(withId(R.id.bottomDialogSecondCta))
+            .check(matches(isDisplayed()))
+            .check(matches(withText(R.string.close)))
+    }
+
     fun checkTestResultDialogIsDisplayed(testResult: TestResult) {
         when (testResult) {
             TestResult.NEGATIVE -> checkNegativeTestResultDialog()

@@ -6,7 +6,7 @@ package uk.nhs.nhsx.sonar.android.app.status
 
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
-import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.notifications.reminders.ReminderScheduler
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.AT_RISK
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.ISOLATE
 import uk.nhs.nhsx.sonar.android.app.status.DisplayState.OK
@@ -150,15 +150,16 @@ sealed class UserState {
             is DefaultState -> this
         }
 
-    fun scheduleCheckInReminder(reminders: Reminders) {
-        reminders.cancelCheckinReminder()
+    fun scheduleReminder(reminderScheduler: ReminderScheduler) {
+        reminderScheduler.cancelReminders()
 
         if (hasExpired()) return
 
         return when (this) {
-            is SymptomaticState -> reminders.scheduleCheckInReminder(until)
-            is ExposedSymptomaticState -> reminders.scheduleCheckInReminder(until)
-            is PositiveState -> reminders.scheduleCheckInReminder(until)
+            is SymptomaticState -> reminderScheduler.scheduleCheckInReminder(until)
+            is ExposedSymptomaticState -> reminderScheduler.scheduleCheckInReminder(until)
+            is PositiveState -> reminderScheduler.scheduleCheckInReminder(until)
+            is ExposedState -> reminderScheduler.scheduleExpiredExposedReminder(until)
             else -> Unit
         }
     }

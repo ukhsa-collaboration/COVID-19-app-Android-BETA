@@ -12,7 +12,7 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.LocalDate
 import org.junit.Test
-import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.notifications.reminders.ReminderScheduler
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.ANOSMIA
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.COUGH
 import uk.nhs.nhsx.sonar.android.app.status.Symptom.TEMPERATURE
@@ -292,57 +292,57 @@ class UserStateTest {
     }
 
     @Test
-    fun `scheduleCheckInReminder - when states are not expired`() {
-        val reminders = mockk<Reminders>(relaxUnitFun = true)
+    fun `scheduleReminder - when states are not expired`() {
+        val reminders = mockk<ReminderScheduler>(relaxUnitFun = true)
 
-        symptomaticState.scheduleCheckInReminder(reminders)
-        verify { reminders.cancelCheckinReminder() }
+        exposedState.scheduleReminder(reminders)
+        verify { reminders.cancelReminders() }
+        verify(exactly = 1) { reminders.scheduleExpiredExposedReminder(exposedState.until) }
+        clearMocks(reminders)
+
+        symptomaticState.scheduleReminder(reminders)
+        verify { reminders.cancelReminders() }
         verify(exactly = 1) { reminders.scheduleCheckInReminder(symptomaticState.until) }
         clearMocks(reminders)
 
-        exposedSymptomaticState.scheduleCheckInReminder(reminders)
-        verify { reminders.cancelCheckinReminder() }
+        exposedSymptomaticState.scheduleReminder(reminders)
+        verify { reminders.cancelReminders() }
         verify(exactly = 1) { reminders.scheduleCheckInReminder(exposedSymptomaticState.until) }
         clearMocks(reminders)
 
-        positiveState.scheduleCheckInReminder(reminders)
-        verify { reminders.cancelCheckinReminder() }
+        positiveState.scheduleReminder(reminders)
+        verify { reminders.cancelReminders() }
         verify(exactly = 1) { reminders.scheduleCheckInReminder(positiveState.until) }
         clearMocks(reminders)
     }
 
     @Test
-    fun `scheduleCheckInReminder - when states are expired`() {
-        val reminders = mockk<Reminders>(relaxUnitFun = true)
+    fun `scheduleReminder - when states are expired`() {
+        val reminders = mockk<ReminderScheduler>(relaxUnitFun = true)
 
-        expiredSymptomaticState.scheduleCheckInReminder(reminders)
-        verify { reminders.cancelCheckinReminder() }
+        expiredExposedState.scheduleReminder(reminders)
+        verify { reminders.cancelReminders() }
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
-        expiredExposedSymptomaticState.scheduleCheckInReminder(reminders)
-        verify { reminders.cancelCheckinReminder() }
+        expiredSymptomaticState.scheduleReminder(reminders)
+        verify { reminders.cancelReminders() }
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
 
-        expiredPositiveState.scheduleCheckInReminder(reminders)
-        verify { reminders.cancelCheckinReminder() }
+        expiredExposedSymptomaticState.scheduleReminder(reminders)
+        verify { reminders.cancelReminders() }
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
-    }
 
-    @Test
-    fun `scheduleCheckInReminder - for exposed state`() {
-        val reminders = mockk<Reminders>(relaxUnitFun = true)
-
-        exposedState.scheduleCheckInReminder(reminders)
-        verify { reminders.cancelCheckinReminder() }
+        expiredPositiveState.scheduleReminder(reminders)
+        verify { reminders.cancelReminders() }
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
     }
 
     @Test
-    fun `scheduleCheckInReminder - for default state`() {
-        val reminders = mockk<Reminders>(relaxUnitFun = true)
+    fun `scheduleReminder - for default state`() {
+        val reminders = mockk<ReminderScheduler>(relaxUnitFun = true)
 
-        DefaultState.scheduleCheckInReminder(reminders)
-        verify { reminders.cancelCheckinReminder() }
+        DefaultState.scheduleReminder(reminders)
+        verify { reminders.cancelReminders() }
         verify(exactly = 0) { reminders.scheduleCheckInReminder(any()) }
     }
 

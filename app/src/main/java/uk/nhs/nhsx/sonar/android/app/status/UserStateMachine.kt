@@ -9,7 +9,7 @@ import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import uk.nhs.nhsx.sonar.android.app.inbox.TestInfo
 import uk.nhs.nhsx.sonar.android.app.inbox.UserInbox
-import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.notifications.reminders.ReminderScheduler
 import uk.nhs.nhsx.sonar.android.app.util.NonEmptySet
 import uk.nhs.nhsx.sonar.android.app.util.SharedPreferenceSerializingProvider
 import javax.inject.Inject
@@ -18,7 +18,7 @@ class UserStateMachine @Inject constructor(
     private val transitions: UserStateTransitions,
     private val userStateStorage: UserStateStorage,
     private val userInbox: UserInbox,
-    private val reminders: Reminders
+    private val reminderScheduler: ReminderScheduler
 ) {
 
     fun state(): UserState = userStateStorage.get()
@@ -38,7 +38,7 @@ class UserStateMachine @Inject constructor(
             userInbox.addRecovery()
         }
 
-        newState.scheduleCheckInReminder(reminders)
+        newState.scheduleReminder(reminderScheduler)
         this.userStateStorage.set(newState)
     }
 
@@ -72,6 +72,7 @@ class UserStateMachine @Inject constructor(
 
         if (newState != currentState) {
             this.userStateStorage.set(newState)
+            newState.scheduleReminder(reminderScheduler)
             onStateChanged()
         }
     }
@@ -82,7 +83,7 @@ class UserStateMachine @Inject constructor(
         val newState = transitions.transitionOnTestResult(currentState, testInfo)
 
         this.userStateStorage.set(newState)
-        newState.scheduleCheckInReminder(reminders)
+        newState.scheduleReminder(reminderScheduler)
         userInbox.addTestInfo(testInfo)
     }
 

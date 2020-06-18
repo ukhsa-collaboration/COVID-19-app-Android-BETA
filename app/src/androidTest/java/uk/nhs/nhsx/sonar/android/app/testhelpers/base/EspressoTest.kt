@@ -45,6 +45,7 @@ abstract class EspressoTest {
 
     protected fun startTestActivity(intent: Intent, state: UserState = DefaultState) {
         testAppContext.setFullValidUser(state)
+
         intent.apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         }

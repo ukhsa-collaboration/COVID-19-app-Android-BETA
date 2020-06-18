@@ -26,7 +26,7 @@ class StatusView @JvmOverloads constructor(
         inflater.inflate(R.layout.view_status, this)
     }
 
-    fun setup(configuration: Configuration) {
+    fun update(configuration: Configuration) {
         val background = when (configuration.statusColor) {
             Color.BLUE -> R.drawable.initial_card_background
             Color.ORANGE -> R.drawable.symptomatic_card_background

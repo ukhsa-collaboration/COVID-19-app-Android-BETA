@@ -163,7 +163,7 @@
 
         <receiver android:name=".receivers.TurnBluetoothOnReceiver" />
         <receiver android:name=".receivers.ServiceRestarterBroadcastReceiver" />
-        <receiver android:name=".notifications.ReminderBroadcastReceiver">
+        <receiver android:name=".notifications.reminders.ReminderBroadcastReceiver">
 
         </receiver>
 

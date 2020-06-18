@@ -12,15 +12,15 @@ import io.mockk.verifyAll
 import org.junit.Test
 import testsupport.TestIntent
 import testsupport.mockContextWithMockedAppComponent
-import uk.nhs.nhsx.sonar.android.app.notifications.Reminders
+import uk.nhs.nhsx.sonar.android.app.notifications.reminders.ReminderScheduler
 
 class PackageReplacedReceiverTest {
 
-    private val reminders = mockk<Reminders>()
+    private val reminderScheduler = mockk<ReminderScheduler>()
     private val context = mockContextWithMockedAppComponent()
 
     private val receiver = PackageReplacedReceiver().also {
-        it.reminders = reminders
+        it.reminderScheduler = reminderScheduler
     }
 
     @Test
@@ -30,18 +30,18 @@ class PackageReplacedReceiverTest {
         receiver.onReceive(context, intent)
 
         verifyAll {
-            reminders wasNot Called
+            reminderScheduler wasNot Called
         }
     }
 
     @Test
     fun `onReceive - with package-replaced intent action`() {
-        every { reminders.reschedulePendingCheckInReminder() } returns Unit
+        every { reminderScheduler.reschedulePendingReminder() } returns Unit
 
         receiver.onReceive(context, TestIntent(Intent.ACTION_MY_PACKAGE_REPLACED))
 
         verifyAll {
-            reminders.reschedulePendingCheckInReminder()
+            reminderScheduler.reschedulePendingReminder()
         }
     }
 }

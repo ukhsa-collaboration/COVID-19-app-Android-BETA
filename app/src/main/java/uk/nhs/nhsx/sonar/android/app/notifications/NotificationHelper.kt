@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
 const val NOTIFICATION_ID_LOCATION_IS_DISABLED = 1338
-const val NOTIFICATION_CHECK_IN_REMINDER = 1340
+const val NOTIFICATION_REMINDER = 1340
 const val NOTIFICATION_EXPOSED = 10001
 const val NOTIFICATION_TEST_RESULT = 10002
 
@@ -76,7 +76,7 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
     fun hide() {
         NotificationManagerCompat
             .from(context)
-            .cancel(NOTIFICATION_CHECK_IN_REMINDER)
+            .cancel(NOTIFICATION_REMINDER)
     }
 
     fun show() {
@@ -86,9 +86,35 @@ class CheckInReminderNotification @Inject constructor(private val context: Conte
         showNotification(
             context,
             ContactAndCheckin,
-            NOTIFICATION_CHECK_IN_REMINDER,
+            NOTIFICATION_REMINDER,
             context.getString(R.string.checkin_notification_title),
             context.getString(R.string.checkin_notification_text),
+            context.getString(R.string.notification_action_open_app),
+            actionPendingIntent,
+            autoCancel = true,
+            isOngoing = false
+        )
+    }
+}
+
+class ExpiredExposedReminderNotification @Inject constructor(private val context: Context) {
+
+    fun hide() {
+        NotificationManagerCompat
+            .from(context)
+            .cancel(NOTIFICATION_REMINDER)
+    }
+
+    fun show() {
+        val actionPendingIntent =
+            PendingIntent.getActivity(context, 0, StatusActivity.getIntent(context), FLAG_UPDATE_CURRENT)
+
+        showNotification(
+            context,
+            ContactAndCheckin,
+            NOTIFICATION_REMINDER,
+            context.getString(R.string.expired_exposed_notification_title),
+            context.getString(R.string.expired_exposed_notification_description),
             context.getString(R.string.notification_action_open_app),
             actionPendingIntent,
             autoCancel = true,
