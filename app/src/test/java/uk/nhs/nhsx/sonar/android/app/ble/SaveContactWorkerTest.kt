@@ -24,22 +24,6 @@ class SaveContactWorkerTest {
     private val saveContactWorker = SaveContactWorker(testDispatcher, contactEventDao)
 
     @Test
-    fun `does not save events that contain too short bluetooth identifier`() {
-        runBlocking {
-            saveContactWorker.createOrUpdateContactEvent(this, ByteArray(63), -42, DateTime.now(), 47)
-            coVerify(exactly = 0) { contactEventDao.createOrUpdate(any()) }
-        }
-    }
-
-    @Test
-    fun `does not save events that contain too long bluetooth identifier`() {
-        runBlocking {
-            saveContactWorker.createOrUpdateContactEvent(this, ByteArray(150), -42, DateTime.now(), 47)
-            coVerify(exactly = 0) { contactEventDao.createOrUpdate(any()) }
-        }
-    }
-
-    @Test
     fun `saves correct events`() {
         runBlocking {
             val countryCode = byteArrayOf('G'.toByte(), 'B'.toByte())
@@ -55,7 +39,7 @@ class SaveContactWorkerTest {
             val timestamp = DateTime.now()
             saveContactWorker.createOrUpdateContactEvent(
                 this,
-                bluetoothIdentifier.asBytes(),
+                bluetoothIdentifier,
                 -42,
                 timestamp,
                 -8

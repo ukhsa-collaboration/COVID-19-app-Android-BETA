@@ -145,7 +145,7 @@ class Scanner @Inject constructor(
         }
     }
 
-    private fun readIdAndRssi(): (RxBleConnection) -> Single<Event> =
+    private fun readIdAndRssi(): (RxBleConnection) -> Single<Pair<ByteArray, Int>> =
         { connection ->
             negotiateMTU(connection)
                 .flatMap {
@@ -155,23 +155,17 @@ class Scanner @Inject constructor(
                     Single.zip(
                         it.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID),
                         it.readRssi(),
-                        BiFunction<ByteArray, Int, Event> { characteristicValue, rssi ->
-                            Event(characteristicValue, rssi, currentTimestampProvider())
+                        BiFunction<ByteArray, Int, Pair<ByteArray, Int>> { characteristicValue, rssi ->
+                            characteristicValue to rssi
                         }
                     )
                 }
         }
 
-    private fun readOnlyRssi(identifier: BluetoothIdentifier): (RxBleConnection) -> Single<Event> =
+    private fun readOnlyRssi(identifier: BluetoothIdentifier): (RxBleConnection) -> Single<Pair<ByteArray, Int>> =
         { connection: RxBleConnection ->
-            connection.readRssi().flatMap { rssi ->
-                Single.just(
-                    Event(
-                        identifier.asBytes(),
-                        rssi,
-                        currentTimestampProvider()
-                    )
-                )
+            connection.readRssi().map { rssi ->
+                identifier.asBytes() to rssi
             }
         }
 
@@ -180,7 +174,7 @@ class Scanner @Inject constructor(
         macAddress: String,
         txPowerAdvertised: Int,
         coroutineScope: CoroutineScope,
-        readOperation: (RxBleConnection) -> Single<Event>
+        readOperation: (RxBleConnection) -> Single<Pair<ByteArray, Int>>
     ) {
         val compositeDisposable = CompositeDisposable()
         device
@@ -194,9 +188,10 @@ class Scanner @Inject constructor(
             }
             .take(1)
             .blockingSubscribe(
-                { event ->
+                { (identifier, rssi) ->
                     onReadSuccess(
-                        event,
+                        identifier,
+                        rssi,
                         compositeDisposable,
                         macAddress,
                         txPowerAdvertised,
@@ -236,21 +231,25 @@ class Scanner @Inject constructor(
         }.firstOrError()
 
     private fun onReadSuccess(
-        event: Event,
+        identifierBytes: ByteArray,
+        rssi: Int,
         connectionDisposable: CompositeDisposable,
         macAddress: String,
         txPowerAdvertised: Int,
         scope: CoroutineScope
     ) {
         connectionDisposable.dispose()
-        val identifier = BluetoothIdentifier.fromBytes(event.identifier)
+        if (identifierBytes.size != BluetoothIdentifier.SIZE) {
+            throw IllegalArgumentException("Identifier has wrong size, must be ${BluetoothIdentifier.SIZE}, was ${identifierBytes.size}")
+        }
+        val identifier = BluetoothIdentifier.fromBytes(identifierBytes)
         updateKnownDevices(identifier, macAddress)
         Timber.d(
             "seen MAC $macAddress as ${base64Encoder(identifier.cryptogram.asBytes())
                 .drop(2)
                 .take(12)}"
         )
-        storeEvent(event, scope, txPowerAdvertised)
+        storeEvent(identifier, rssi, scope, txPowerAdvertised)
     }
 
     private fun onReadError(
@@ -289,27 +288,24 @@ class Scanner @Inject constructor(
         Timber.e("Scan failed with: $e")
     }
 
-    private fun storeEvent(event: Event, scope: CoroutineScope, txPowerAdvertised: Int) {
+    private fun storeEvent(
+        identifier: BluetoothIdentifier,
+        rssi: Int,
+        scope: CoroutineScope,
+        txPowerAdvertised: Int
+    ) {
         eventEmitter.successfulContactEvent(
-            event.identifier,
-            listOf(event.rssi),
+            identifier,
+            listOf(rssi),
             txPowerAdvertised
         )
 
         saveContactWorker.createOrUpdateContactEvent(
             scope,
-            event.identifier,
-            event.rssi,
-            event.timestamp,
+            identifier,
+            rssi,
+            currentTimestampProvider(),
             txPowerAdvertised
         )
     }
-
-    // We're really just using this as a bundle, and never comparing different events.
-    @Suppress("ArrayInDataClass")
-    private data class Event(
-        val identifier: ByteArray,
-        val rssi: Int,
-        val timestamp: DateTime
-    )
 }

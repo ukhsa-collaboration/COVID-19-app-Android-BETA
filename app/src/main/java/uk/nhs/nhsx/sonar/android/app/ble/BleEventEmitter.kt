@@ -11,13 +11,12 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import uk.nhs.nhsx.sonar.android.app.util.toUtcIsoFormat
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface BleEventEmitter {
     fun successfulContactEvent(
-        id: ByteArray,
+        identifier: BluetoothIdentifier,
         rssiValues: List<Int>,
         txPowerAdvertised: Int
     )
@@ -59,15 +58,11 @@ class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
     }
 
     override fun successfulContactEvent(
-        id: ByteArray,
+        identifier: BluetoothIdentifier,
         rssiValues: List<Int>,
         txPowerAdvertised: Int
     ) {
-        val identifier = try {
-            BluetoothIdentifier.fromBytes(id)
-        } catch (e: Exception) {
-            return
-        }
+
         val idString = base64Encoder(identifier.cryptogram.asBytes())
             .replace("\n", "")
 
@@ -99,7 +94,13 @@ class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
 
     override fun errorEvent(macAddress: String, error: Throwable) {
         synchronized(lock) {
-            errorEvents.plusAssign(BleError(getCurrentTimeStamp().toUtcIsoFormat(), macAddress, error))
+            errorEvents.plusAssign(
+                BleError(
+                    getCurrentTimeStamp().toUtcIsoFormat(),
+                    macAddress,
+                    error
+                )
+            )
         }
     }
 
@@ -115,7 +116,7 @@ class DebugBleEventTracker @Inject constructor() : BleEventEmitter {
 @Singleton
 class NoOpBleEventEmitter @Inject constructor() : BleEventEmitter {
     override fun successfulContactEvent(
-        id: ByteArray,
+        identifier: BluetoothIdentifier,
         rssiValues: List<Int>,
         txPowerAdvertised: Int
     ) {

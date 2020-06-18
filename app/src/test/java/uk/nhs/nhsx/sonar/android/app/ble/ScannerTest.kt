@@ -34,6 +34,7 @@ import uk.nhs.nhsx.sonar.android.app.crypto.BluetoothIdentifier
 import java.util.Base64
 import java.util.UUID
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 @ExperimentalCoroutinesApi
 class ScannerTest {
@@ -49,7 +50,7 @@ class ScannerTest {
     private val period = 50L
     private val txPower = 47
 
-    private lateinit var identifier: ByteArray
+    private lateinit var identifier: BluetoothIdentifier
 
     private val coroutineScope = TestCoroutineScope()
 
@@ -101,9 +102,9 @@ class ScannerTest {
         )
         every { connection.readRssi() } returns Single.just(rssi)
 
-        identifier = ByteArray(BluetoothIdentifier.SIZE) { 1 }
+        identifier = BluetoothIdentifier.fromBytes(Random.Default.nextBytes(BluetoothIdentifier.SIZE))
         every { connection.readCharacteristic(SONAR_IDENTITY_CHARACTERISTIC_UUID) } returns Single.just(
-            identifier
+            identifier.asBytes()
         )
 
         every {

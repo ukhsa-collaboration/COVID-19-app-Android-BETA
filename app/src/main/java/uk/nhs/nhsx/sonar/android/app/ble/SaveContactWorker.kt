@@ -24,7 +24,7 @@ class SaveContactWorker @Inject constructor(
 
     fun createOrUpdateContactEvent(
         scope: CoroutineScope,
-        id: ByteArray,
+        bluetoothIdentifier: BluetoothIdentifier,
         rssi: Int,
         timestamp: DateTime,
         txPowerAdvertised: Int
@@ -32,11 +32,6 @@ class SaveContactWorker @Inject constructor(
         scope.launch {
             withContext(dispatcher) {
                 try {
-                    if (id.size != BluetoothIdentifier.SIZE) {
-                        throw IllegalArgumentException("Identifier has wrong size, must be ${BluetoothIdentifier.SIZE}, was ${id.size}")
-                    }
-                    val bluetoothIdentifier = BluetoothIdentifier.fromBytes(id)
-
                     val contactEvent =
                         ContactEvent(
                             sonarId = bluetoothIdentifier.cryptogram.asBytes(),
