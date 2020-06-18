@@ -108,6 +108,7 @@ class GattWrapper(
 
                     keepAliveCharacteristic.value = randomValueGenerator()
                     connectedSubscribers.forEach {
+                        Timber.d("Sending keepalive notification to ${it.address}")
                         server?.notifyCharacteristicChanged(it, keepAliveCharacteristic, false)
                     }
                 }

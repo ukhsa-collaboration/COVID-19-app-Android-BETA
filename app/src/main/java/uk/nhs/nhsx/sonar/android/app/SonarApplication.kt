@@ -51,10 +51,7 @@ class SonarApplication : Application() {
         FirebaseApp.initializeApp(this)
 
         when (BuildConfig.BUILD_TYPE) {
-            "internal" -> {
-                Timber.plant(Timber.DebugTree())
-            }
-            "debug" -> {
+            "internal", "debug" -> {
                 Timber.plant(Timber.DebugTree())
                 Timber.plant(FileLogTree(this))
                 logFirebaseToken()

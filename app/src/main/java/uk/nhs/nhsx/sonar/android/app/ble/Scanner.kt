@@ -186,6 +186,7 @@ class Scanner @Inject constructor(
         device
             .establishConnection(false)
             .flatMapSingle {
+                Timber.d("Connected to $macAddress")
                 readOperation(it)
             }
             .doOnSubscribe {
@@ -245,8 +246,9 @@ class Scanner @Inject constructor(
         val identifier = BluetoothIdentifier.fromBytes(event.identifier)
         updateKnownDevices(identifier, macAddress)
         Timber.d(
-            "seen MAC $macAddress as ${base64Encoder(identifier.cryptogram.asBytes()).drop(2)
-                .dropLast(55)}"
+            "seen MAC $macAddress as ${base64Encoder(identifier.cryptogram.asBytes())
+                .drop(2)
+                .take(12)}"
         )
         storeEvent(event, scope, txPowerAdvertised)
     }
@@ -288,8 +290,6 @@ class Scanner @Inject constructor(
     }
 
     private fun storeEvent(event: Event, scope: CoroutineScope, txPowerAdvertised: Int) {
-
-        Timber.d("Storing ${base64Encoder(BluetoothIdentifier.fromBytes(event.identifier).cryptogram.asBytes())}")
         eventEmitter.successfulContactEvent(
             event.identifier,
             listOf(event.rssi),

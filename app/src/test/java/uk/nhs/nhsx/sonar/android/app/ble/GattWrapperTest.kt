@@ -72,6 +72,8 @@ class GattWrapperTest {
         identifierBytes = bluetoothIdentifier.asBytes()
         every { bluetoothIdProvider.provideBluetoothPayload() } returns bluetoothIdentifier
         every { bluetoothIdProvider.canProvideIdentifier() } returns true
+
+        every { device.address } returns "abc-def"
     }
 
     @After
