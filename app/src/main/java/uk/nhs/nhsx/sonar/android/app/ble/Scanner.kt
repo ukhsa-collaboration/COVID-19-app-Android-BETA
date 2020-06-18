@@ -45,7 +45,7 @@ class Scanner @Inject constructor(
 ) {
 
     private var knownDevices: MutableMap<String, BluetoothIdentifier> = mutableMapOf()
-    private var devices: MutableList<Pair<ScanResult, Int>> = mutableListOf()
+    private var devices: MutableList<ScanResult> = mutableListOf()
 
     private val sonarServiceUuidFilter = ScanFilter.Builder()
         .setServiceUuid(ParcelUuid(SONAR_SERVICE_UUID))
@@ -123,10 +123,11 @@ class Scanner @Inject constructor(
     }
 
     private fun connectToEachDiscoveredDevice(coroutineScope: CoroutineScope) {
-        devices.distinctBy { it.first.bleDevice }.forEach { (scanResult, txPowerAdvertised) ->
+        devices.distinctBy { it.bleDevice }.forEach { scanResult ->
             val macAddress = scanResult.bleDevice.macAddress
             val device = scanResult.bleDevice
             val identifier = knownDevices[macAddress]
+            val txPowerAdvertised = scanResult.scanRecord.txPowerLevel
 
             val operation = if (identifier != null) {
                 readOnlyRssi(identifier)
@@ -217,7 +218,7 @@ class Scanner @Inject constructor(
             .subscribe(
                 {
                     Timber.d("Scan found = ${it.bleDevice}")
-                    devices.add(Pair(it, it.scanRecord.txPowerLevel))
+                    devices.add(it)
                 },
                 ::scanError
             )
