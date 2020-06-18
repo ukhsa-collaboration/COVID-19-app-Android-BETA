@@ -4,11 +4,13 @@
 
 package uk.nhs.nhsx.sonar.android.app.crypto
 
+import android.util.Base64
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.joda.time.Days
 import org.joda.time.Interval
 import org.joda.time.Period
+import timber.log.Timber
 import uk.nhs.nhsx.sonar.android.app.ble.Identifier
 import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
 import javax.inject.Inject
@@ -65,6 +67,11 @@ class CryptogramProvider @Inject constructor(
         validityDate: DateTime
     ): Cryptogram {
         val cryptogram = generateCryptogram(validityDate)
+        Timber.d(
+            "my cryptogram is now ${Base64.encodeToString(cryptogram.asBytes(), Base64.DEFAULT)
+                .drop(2)
+                .take(12)}"
+        )
         updateStorage(validityDate, cryptogram)
         return cryptogram
     }
