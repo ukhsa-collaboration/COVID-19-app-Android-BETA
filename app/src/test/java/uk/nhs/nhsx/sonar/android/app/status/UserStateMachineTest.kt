@@ -50,7 +50,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `diagnose - updates the state storage with new state`() {
+    fun `diagnose - when state is changed, saves the new state`() {
         val state = buildSymptomaticState()
         every { userStateStorage.get() } returns DefaultState
         every { transitions.diagnose(any(), any(), any()) } returns state
@@ -63,7 +63,19 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `diagnose - cancels current reminder and schedules a new one for the new state`() {
+    fun `diagnose - when state is not changed, does not update the state storage`() {
+        every { userStateStorage.get() } returns DefaultState
+        every { transitions.diagnose(any(), any(), any()) } returns DefaultState
+
+        userStateMachine.diagnose(LocalDate.now(), nonEmptySetOf(COUGH))
+
+        verify(exactly = 0) {
+            userStateStorage.set(any())
+        }
+    }
+
+    @Test
+    fun `diagnose - when state is changed, cancels current reminder and schedules a new one`() {
         every { userStateStorage.get() } returns DefaultState
         every { transitions.diagnose(any(), any(), any()) } returns buildSymptomaticState()
 
@@ -72,6 +84,18 @@ class UserStateMachineTest {
         verify {
             reminderScheduler.cancelReminders()
             reminderScheduler.scheduleCheckInReminder(any())
+        }
+    }
+
+    @Test
+    fun `diagnose - when state is not changed, does not reschedule the reminder`() {
+        every { userStateStorage.get() } returns DefaultState
+        every { transitions.diagnose(any(), any(), any()) } returns DefaultState
+
+        userStateMachine.diagnose(LocalDate.now(), nonEmptySetOf(COUGH))
+
+        verify {
+            reminderScheduler wasNot Called
         }
     }
 
@@ -113,7 +137,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `diagnoseCheckIn - updates the state storage with new state`() {
+    fun `diagnoseCheckIn - saves the new state`() {
         every { userStateStorage.get() } returns DefaultState
         val state = buildSymptomaticState()
         every { transitions.diagnoseForCheckin(any(), any()) } returns state
@@ -126,7 +150,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `diagnoseCheckIn - adds recovery message to inbox when new state is default`() {
+    fun `diagnoseCheckIn - when new state is default, adds recovery message to inbox`() {
         every { userStateStorage.get() } returns DefaultState
         every { transitions.diagnoseForCheckin(any(), any()) } returns DefaultState
 
@@ -138,7 +162,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `diagnoseCheckIn - does not add recovery message when state is default but user has no symptom`() {
+    fun `diagnoseCheckIn - when new state is default but user has no symptoms, does not add recovery message`() {
         every { userStateStorage.get() } returns DefaultState
         every { transitions.diagnoseForCheckin(any(), any()) } returns DefaultState
 
@@ -150,7 +174,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `diagnoseCheckIn - does not add recovery message when state is not default`() {
+    fun `diagnoseCheckIn - when new state is not default, does not add recovery message`() {
         every { userStateStorage.get() } returns DefaultState
         every { transitions.diagnoseForCheckin(any(), any()) } returns buildSymptomaticState()
 
@@ -175,7 +199,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnExpiredExposedState - updates the state storage with new state`() {
+    fun `transitionOnExpiredExposedState - saves the new state`() {
         val state = buildExposedState()
         every { userStateStorage.get() } returns state
         every { transitions.transitionOnExpiredExposedState(any()) } returns state
@@ -202,7 +226,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnExposure - updates the state storage with new state`() {
+    fun `transitionOnExposure - saves the new state`() {
         every { userStateStorage.get() } returns DefaultState
         val state = buildExposedState()
         every { transitions.transitionOnExposure(any(), any()) } returns state
@@ -229,7 +253,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnExposure - schedules reminder when state is changed`() {
+    fun `transitionOnExposure - when state is changed, cancels current reminder and schedules a new one for the new state`() {
         every { userStateStorage.get() } returns DefaultState
         val newState = buildExposedState()
         every { transitions.transitionOnExposure(any(), any()) } returns newState
@@ -239,12 +263,13 @@ class UserStateMachineTest {
         userStateMachine.transitionOnExposure(DateTime.now(), onStateChanged)
 
         verify {
+            reminderScheduler.cancelReminders()
             reminderScheduler.scheduleExpiredExposedReminder(newState.until)
         }
     }
 
     @Test
-    fun `transitionOnExposure - does not execute the callback when state is not changed`() {
+    fun `transitionOnExposure - when state is not changed, does not execute the callback`() {
         val state = buildSymptomaticState()
         every { userStateStorage.get() } returns state
         every { transitions.transitionOnExposure(any(), any()) } returns state
@@ -259,7 +284,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnExposure - does not set reminder when the state is not changed`() {
+    fun `transitionOnExposure - when state is not changed, does not reschedule the reminder`() {
         val state = buildSymptomaticState()
         every { userStateStorage.get() } returns state
         every { transitions.transitionOnExposure(any(), any()) } returns state
@@ -288,7 +313,7 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnTestResult - updates the state storage with new state`() {
+    fun `transitionOnTestResult - when state is changed, saves the new state`() {
         every { userStateStorage.get() } returns DefaultState
         val state = buildSymptomaticState()
         every { transitions.transitionOnTestResult(any(), any()) } returns state
@@ -301,7 +326,19 @@ class UserStateMachineTest {
     }
 
     @Test
-    fun `transitionOnTestResult - cancels current reminder and schedules a new one for the new state`() {
+    fun `transitionOnTestResult - when state is not changed, does not update the state storage`() {
+        every { userStateStorage.get() } returns DefaultState
+        every { transitions.transitionOnTestResult(any(), any()) } returns DefaultState
+
+        userStateMachine.transitionOnTestResult(TestInfo(TestResult.POSITIVE, DateTime.now()))
+
+        verify(exactly = 0) {
+            userStateStorage.set(any())
+        }
+    }
+
+    @Test
+    fun `transitionOnTestResult - when state is changed, cancels current reminder and schedules a new one for the new state`() {
         every { userStateStorage.get() } returns DefaultState
         every { transitions.transitionOnTestResult(any(), any()) } returns buildSymptomaticState()
 
@@ -310,6 +347,18 @@ class UserStateMachineTest {
         verify {
             reminderScheduler.cancelReminders()
             reminderScheduler.scheduleCheckInReminder(any())
+        }
+    }
+
+    @Test
+    fun `transitionOnTestResult - when state is not changed, does not reschedule the reminder`() {
+        every { userStateStorage.get() } returns DefaultState
+        every { transitions.transitionOnTestResult(any(), any()) } returns DefaultState
+
+        userStateMachine.transitionOnTestResult(TestInfo(TestResult.POSITIVE, DateTime.now()))
+
+        verify {
+            reminderScheduler wasNot Called
         }
     }
 
@@ -335,6 +384,13 @@ class UserStateMachineTest {
 
     @Test
     fun `hasAnyOfMainSymptoms - with anything other than cough, temperature or loss of smell`() {
-        assertThat(userStateMachine.hasAnyOfMainSymptoms(setOf(Symptom.NAUSEA, Symptom.SNEEZE))).isFalse()
+        assertThat(
+            userStateMachine.hasAnyOfMainSymptoms(
+                setOf(
+                    Symptom.NAUSEA,
+                    Symptom.SNEEZE
+                )
+            )
+        ).isFalse()
     }
 }

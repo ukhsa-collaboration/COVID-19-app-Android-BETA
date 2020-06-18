@@ -38,8 +38,10 @@ class UserStateMachine @Inject constructor(
             userInbox.addRecovery()
         }
 
-        newState.scheduleReminder(reminderScheduler)
-        this.userStateStorage.set(newState)
+        if (newState != currentState) {
+            this.userStateStorage.set(newState)
+            newState.scheduleReminder(reminderScheduler)
+        }
     }
 
     fun diagnoseCheckIn(symptoms: Set<Symptom>) {
@@ -82,8 +84,10 @@ class UserStateMachine @Inject constructor(
 
         val newState = transitions.transitionOnTestResult(currentState, testInfo)
 
-        this.userStateStorage.set(newState)
-        newState.scheduleReminder(reminderScheduler)
+        if (newState != currentState) {
+            this.userStateStorage.set(newState)
+            newState.scheduleReminder(reminderScheduler)
+        }
         userInbox.addTestInfo(testInfo)
     }
 
