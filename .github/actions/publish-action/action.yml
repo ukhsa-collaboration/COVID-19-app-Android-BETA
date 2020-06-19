@@ -56,7 +56,6 @@ runs:
     INPUT_SIGNING_KEY_STORE_PASSWORD: ${{ inputs.signingKeyStorePassword }}
     INPUT_SIGNING_KEY_PASSWORD: ${{ inputs.signingKeyPassword }}
     INPUT_SONAR_HEADER_VALUE: ${{ inputs.sonarHeaderValue }}
-    INPUT_SONAR_ANALYTICS_KEY: ${{ inputs.sonarAnalyticsKey }}
     INPUT_SONAR_BASE_URL: ${{ inputs.sonarBaseUrl }}
     INPUT_SONAR_URL_APPLY_CORONAVIRUS_TEST: ${{ inputs.sonarUrlApplyCoronavirusTest }}
     INPUT_COMMIT_SHA: ${{ inputs.commitSha }}
