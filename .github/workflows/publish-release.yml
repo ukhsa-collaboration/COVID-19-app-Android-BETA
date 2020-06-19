@@ -8,11 +8,7 @@ jobs:
 
   publish:
     runs-on:
-      - self-hosted
-      - linux
-      - aws
-      - blue
-
+      - ubuntu-latest
     steps:
       - name: Checkout
         id: checkout
