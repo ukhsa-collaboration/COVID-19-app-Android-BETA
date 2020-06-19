@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright © 2020 NHSX. All rights reserved.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="14dp"
+    android:viewportWidth="20"
+    android:viewportHeight="14">
+    <path
+        android:pathData="M7.3623,7.2065H19.2609"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.4"
+        android:fillColor="#00000000"
+        android:strokeColor="#005EB8"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M19.3917,7.2065L17.5259,5.3652"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.4"
+        android:fillColor="#00000000"
+        android:strokeColor="#005EB8"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M19.3917,7.2065L17.5259,9.0478"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.4"
+        android:fillColor="#00000000"
+        android:strokeColor="#005EB8"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M11.6208,13.2171H3.2001C2.2018,13.2171 1.3916,12.4069 1.3916,11.4085V2.996C1.3916,1.9977 2.2018,1.1875 3.2001,1.1875H11.6208C12.6192,1.1875 13.4212,1.9977 13.4212,2.996V11.4167C13.4293,12.4069 12.6192,13.2171 11.6208,13.2171Z"
+        android:strokeLineJoin="round"
+        android:strokeWidth="1.4"
+        android:fillColor="#00000000"
+        android:strokeColor="#005EB8"
+        android:strokeLineCap="round"/>
+</vector>

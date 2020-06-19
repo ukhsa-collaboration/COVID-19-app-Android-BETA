@@ -10,93 +10,43 @@ import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
-import android.content.Intent
 import android.os.Build
-import android.provider.Settings
+import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import uk.nhs.nhsx.sonar.android.app.MainActivity
 import uk.nhs.nhsx.sonar.android.app.R
-import uk.nhs.nhsx.sonar.android.app.TurnBluetoothOnReceiver
-import javax.inject.Inject
 
-const val NOTIFICATION_ID_BLUETOOTH_IS_DISABLED = 1337
-const val NOTIFICATION_ID_LOCATION_IS_DISABLED = 1338
-const val NOTIFICATION_CHECK_IN_REMINDER = 1340
-const val NOTIFICATION_SERVICE_ID = 10001
+const val NOTIFICATION_END_OF_LIFE = 2000
 
-class BluetoothNotificationHelper(val context: Context) {
-
-    fun hideBluetoothIsDisabled() {
-        NotificationManagerCompat
-            .from(context)
-            .cancel(NOTIFICATION_ID_BLUETOOTH_IS_DISABLED)
-    }
-
-    fun hideLocationIsDisabled() {
-        NotificationManagerCompat
-            .from(context)
-            .cancel(NOTIFICATION_ID_LOCATION_IS_DISABLED)
-    }
-
-    fun showBluetoothIsDisabled() {
-        val intent = TurnBluetoothOnReceiver.intent(context)
-        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, FLAG_UPDATE_CURRENT)
-
-        showNotification(
-            context,
-            NOTIFICATION_ID_BLUETOOTH_IS_DISABLED,
-            context.getString(R.string.notification_bluetooth_disabled_title),
-            context.getString(R.string.notification_bluetooth_disabled_text),
-            context.getString(R.string.notification_bluetooth_disabled_action),
-            pendingIntent
-        )
-    }
-
-    fun showLocationIsDisabled() {
-        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, FLAG_UPDATE_CURRENT)
-
-        showNotification(
-            context,
-            NOTIFICATION_ID_LOCATION_IS_DISABLED,
-            context.getString(R.string.notification_location_disabled_title),
-            context.getString(R.string.notification_location_disabled_text),
-            context.getString(R.string.notification_location_disabled_action),
-            pendingIntent
-        )
-    }
-}
-
-class CheckInReminderNotification @Inject constructor(private val context: Context) {
+class EndOfLifeNotification(private val context: Context) {
 
     fun hide() {
         NotificationManagerCompat
             .from(context)
-            .cancel(NOTIFICATION_CHECK_IN_REMINDER)
+            .cancel(NOTIFICATION_END_OF_LIFE)
     }
 
-    fun show() {
+    fun show(
+        @StringRes title: Int,
+        @StringRes description: Int,
+        @StringRes action: Int
+    ) {
+
         val actionPendingIntent =
             PendingIntent.getActivity(context, 0, MainActivity.getIntent(context), FLAG_UPDATE_CURRENT)
 
         showNotification(
             context,
-            NOTIFICATION_CHECK_IN_REMINDER,
-            context.getString(R.string.checkin_notification_title),
-            context.getString(R.string.checkin_notification_text),
-            context.getString(R.string.checkin_notification_action),
+            NOTIFICATION_END_OF_LIFE,
+            context.getString(title),
+            context.getString(description),
+            context.getString(action),
             actionPendingIntent,
             autoCancel = true,
             isOngoing = false
         )
     }
-}
-
-fun Context.cancelStatusNotification() {
-    NotificationManagerCompat
-        .from(this)
-        .cancel(NOTIFICATION_SERVICE_ID)
 }
 
 fun Context.notificationBuilder(): NotificationCompat.Builder =

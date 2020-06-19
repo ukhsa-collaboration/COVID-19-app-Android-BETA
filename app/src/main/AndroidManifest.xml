@@ -1,42 +1,25 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © 2020 NHSX. All rights reserved.
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="uk.nhs.nhsx.sonar.android.app">
 
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!--  Fine location needed for bluetooth on Android 9+ : https://developer.android.com/guide/topics/connectivity/bluetooth-le   -->
-    <!--  Our minimum is 26 at the moment   -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-
-    <uses-feature
-        android:name="android.hardware.bluetooth_le"
-        android:required="true" />
 
     <application
         android:name=".SonarApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
@@ -49,33 +32,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".diagnose.DiagnoseTemperatureActivity" />
-        <activity android:name=".status.AtRiskActivity" />
-        <activity android:name=".status.OkActivity" />
-        <activity android:name=".status.IsolateActivity" />
-        <activity android:name=".FlowTestStartActivity" />
-        <activity android:name=".onboarding.PermissionActivity" />
-        <activity android:name=".onboarding.ExplanationActivity" />
-        <activity android:name=".debug.TesterActivity" />
-        <activity android:name=".diagnose.review.DiagnoseReviewActivity" />
-        <activity android:name=".diagnose.DiagnoseCoughActivity" />
-        <activity
-            android:name=".onboarding.PostCodeActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".diagnose.DiagnoseCloseActivity" />
-        <activity android:name=".onboarding.EnableBluetoothActivity" />
-        <activity android:name=".onboarding.GrantLocationPermissionActivity" />
-        <activity android:name=".onboarding.EnableLocationActivity" />
-        <activity android:name=".edgecases.ReEnableBluetoothActivity" />
-        <activity android:name=".edgecases.ReAllowGrantLocationPermissionActivity" />
-        <activity android:name=".edgecases.ReEnableLocationActivity" />
-        <activity android:name=".edgecases.DeviceNotSupportedActivity" />
-        <activity android:name=".diagnose.DiagnoseSubmitActivity" />
-        <activity android:name=".edgecases.TabletNotSupportedActivity" />
-
-        <service
-            android:name=".ble.BluetoothService"
-            android:enabled="true" />
 
         <service
             android:name=".notifications.NotificationService"
@@ -85,37 +41,6 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".BootCompletedReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".PackageReplacedReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".TurnBluetoothOnReceiver" />
-        <receiver android:name=".ServiceRestarterBroadcastReceiver" />
-        <receiver android:name=".notifications.ReminderBroadcastReceiver">
-
-        </receiver>
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="uk.nhs.nhsx.sonar.android.app.exports"
-            android:exported="false"
-            android:grantUriPermissions="true">
-
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
-
-
     </application>
-
 
 </manifest>

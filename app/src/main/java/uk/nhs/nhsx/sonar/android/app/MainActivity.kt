@@ -7,84 +7,33 @@ package uk.nhs.nhsx.sonar.android.app
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.confirm_onboarding
-import kotlinx.android.synthetic.main.activity_main.explanation_link
-import uk.nhs.nhsx.sonar.android.app.ble.BluetoothService
-import uk.nhs.nhsx.sonar.android.app.edgecases.DeviceNotSupportedActivity
-import uk.nhs.nhsx.sonar.android.app.edgecases.TabletNotSupportedActivity
-import uk.nhs.nhsx.sonar.android.app.onboarding.ExplanationActivity
-import uk.nhs.nhsx.sonar.android.app.onboarding.OnboardingStatusProvider
-import uk.nhs.nhsx.sonar.android.app.onboarding.PostCodeActivity
-import uk.nhs.nhsx.sonar.android.app.registration.SonarIdProvider
-import uk.nhs.nhsx.sonar.android.app.status.OkActivity
-import uk.nhs.nhsx.sonar.android.app.status.UserStateStorage
-import uk.nhs.nhsx.sonar.android.app.status.navigateTo
-import javax.inject.Inject
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.aboutUrl
+import kotlinx.android.synthetic.main.activity_main.feelUnwellUrl
+import kotlinx.android.synthetic.main.activity_main.uninstallUrl
+import uk.nhs.nhsx.sonar.android.app.util.openUrl
 
-class MainActivity : ColorInversionAwareActivity() {
-
-    @Inject
-    lateinit var userStateStorage: UserStateStorage
-
-    @Inject
-    lateinit var sonarIdProvider: SonarIdProvider
-
-    @Inject
-    lateinit var onboardingStatusProvider: OnboardingStatusProvider
-
-    @Inject
-    lateinit var deviceDetection: DeviceDetection
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appComponent.inject(this)
-
-        when {
-            deviceDetection.isTablet() -> {
-                finish()
-                TabletNotSupportedActivity.start(this)
-                return
-            }
-            deviceDetection.isUnsupported() -> {
-                finish()
-                DeviceNotSupportedActivity.start(this)
-                return
-            }
-            sonarIdProvider.hasProperSonarId() -> {
-                BluetoothService.start(this)
-                navigateTo(userStateStorage.get())
-                return
-            }
-            onboardingStatusProvider.get() -> {
-                OkActivity.start(this)
-                finish()
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                return
-            }
-        }
 
         setContentView(R.layout.activity_main)
 
-        confirm_onboarding.setOnClickListener {
-            PostCodeActivity.start(this)
+        feelUnwellUrl.setOnClickListener {
+            openUrl("https://faq.covid19.nhs.uk/article/KA-01078/en-us")
         }
 
-        explanation_link.setOnClickListener {
-            ExplanationActivity.start(this)
+        uninstallUrl.setOnClickListener {
+            openUrl("https://faq.covid19.nhs.uk/article/KA-01098/en-us")
         }
-    }
 
-    override fun handleInversion(inversionModeEnabled: Boolean) {
-        if (inversionModeEnabled) {
-            confirm_onboarding.setBackgroundResource(R.drawable.button_round_background_inversed)
-        } else {
-            confirm_onboarding.setBackgroundResource(R.drawable.button_round_background)
+        aboutUrl.setOnClickListener {
+            openUrl("https://faq.covid19.nhs.uk/article/KA-01097/en-us")
         }
     }
 
     companion object {
-        fun start(context: Context) =
-            context.startActivity(getIntent(context))
 
         fun getIntent(context: Context) =
             Intent(context, MainActivity::class.java)
