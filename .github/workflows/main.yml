@@ -11,9 +11,7 @@ jobs:
 
   build:
     runs-on:
-      - self-hosted
-      - linux
-      - aws
+      - ubuntu-latest
 
     steps:
       - name: Checkout
