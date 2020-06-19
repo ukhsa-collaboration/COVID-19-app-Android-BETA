@@ -98,14 +98,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/about" />
 
-            <TextView
-                android:id="@+id/support"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="16sp"
-                android:lineSpacingMultiplier="1.2"
-                android:text="@string/supporting_nhs" />
-
         </LinearLayout>
 
     </ScrollView>

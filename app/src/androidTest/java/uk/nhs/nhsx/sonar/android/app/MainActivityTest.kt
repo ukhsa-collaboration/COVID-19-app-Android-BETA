@@ -24,10 +24,6 @@ class MainActivityTest {
         onView(withId(R.id.description))
             .check(matches(isDisplayed()))
             .check(matches(withText(R.string.no_longer_in_use_description)))
-
-        onView(withId(R.id.support))
-            .check(matches(isDisplayed()))
-            .check(matches(withText(R.string.supporting_nhs)))
     }
 
     @Test

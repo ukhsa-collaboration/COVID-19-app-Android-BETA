@@ -10,8 +10,7 @@
     <string name="main_notification_channel_name">General</string>
 
     <string name="no_longer_in_use_title">This app is no longer in use</string>
-    <string name="no_longer_in_use_description">The Isle of Wight trial is now complete and the app is no longer working or collecting contact information. Please uninstall the app.</string>
-    <string name="supporting_nhs">Thank you for participating in the trial and playing a vital role in supporting the NHS.</string>
+    <string name="no_longer_in_use_description">The Isle of Wight trial is now complete and the app is no longer operational. Please uninstall the app. Thank you for participating in the trial and playing a vital role in supporting the NHS.</string>
     <string name="feel_unwell">I feel unwell</string>
     <string name="about">About the app</string>
     <string name="uninstall">How to uninstall the app</string>
