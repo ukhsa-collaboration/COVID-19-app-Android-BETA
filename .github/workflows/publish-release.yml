@@ -10,9 +10,7 @@ jobs:
     outputs:
       shortref: ${{ steps.commitsha.outputs.short }}
     runs-on:
-      - self-hosted
-      - linux
-      - aws
+      - ubuntu-latest
 
     steps:
       - name: Checkout
@@ -130,18 +128,3 @@ jobs:
             - Staging Build: ${{ steps.publish_staging.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }})
             - Alpha Build: ${{ steps.publish_alpha.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }})
             - Release Url: ${{ steps.create_release.outputs.html_url }}
-
-  tag-pact:
-    runs-on:
-      - self-hosted
-      - linux
-      - aws
-
-    needs: publish
-    container: pactfoundation/pact-cli
-
-    steps:
-      - name: Tag published version in pact broker
-        run: pact-broker create-version-tag --tag "${{ github.event.client_payload.tag }}" --pacticipant 'Android App' --version ${{ needs.publish.outputs.shortref }}
-        env:
-          PACT_BROKER_BASE_URL: https://sonar-pact-broker-app.apps.nonprod.aws.cp.data.england.nhs.uk

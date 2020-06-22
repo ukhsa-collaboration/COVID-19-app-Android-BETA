@@ -8,9 +8,7 @@ jobs:
 
   publish:
     runs-on:
-      - self-hosted
-      - linux
-      - aws
+      - ubuntu-latest
 
     outputs:
       build-number: ${{ steps.publish.outputs.buildVersion }}
@@ -85,31 +83,4 @@ jobs:
           SLACK_MESSAGE: |
             - Internal Build: ${{ steps.publish.outputs.buildVersion }}(${{ steps.commitsha.outputs.short }})
             - APK and AAB are uploaded as job artefacts
-
-  update-pivotal-tracker-backlog:
-    runs-on:
-    - linux
-    - self-hosted
-    - aws
-    needs: publish
-    steps:
-      - name: Checkout Android Project
-        uses: actions/checkout@01aeccc # v2.1.0
-        with:
-          fetch-depth: 0
-
-      - name: Checkout Sonar CI Github Repo
-        uses: actions/checkout@01aeccc #v2.1.0
-        with:
-          token: ${{ secrets.deployment_token }}
-          repository: nhsx/sonar-ci-tools
-          path: ci-tools
-          ref: v0.2.0
-
-      - name: Update Backlog
-        uses: ./ci-tools/.github/actions/deliver_tracker_stories_with_build
-        with:
-          tracker_token: ${{ secrets.tracker_api_token }}
-          revision_range: ${{ needs.publish.outputs.previous-tag }}..${{ needs.publish.outputs.tag }}
-          build_version: ${{ needs.publish.outputs.build-number }}
 
