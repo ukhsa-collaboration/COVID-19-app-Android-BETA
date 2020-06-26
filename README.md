@@ -1,5 +1,4 @@
 # Sonar Co-Locate for Android
-![CI](https://github.com/nhsx/sonar-colocate-android/workflows/CI/badge.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Release: BETA](https://img.shields.io/badge/Release-BETA-orange)
 
